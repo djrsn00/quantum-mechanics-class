@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <title>Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)"
+                  stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none"
+                   stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8"
+                stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none"
+                   stroke="url(#logo-spectrum)" stroke-width="1.6"
+                   transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none"
+                stroke="#edffef" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static"
+             viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse"
+                  x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 464 83"/>
+            <path class="track-violet" d="M218 54C265 80 333 97 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M218 46v16m-8-8h16"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button"
+              aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden></nav>
+  </header>
+
+  <main class="site-main" aria-label="Learning path">
+    <div class="topic-grid">
+
+      <a class="topic-link accent-red" href="index.html">
+        <span class="topic-step">00</span>
+        <span class="topic-title">HOME</span>
+      </a>
+
+      <a class="topic-link accent-red" href="./lessons/1_start_here/1_start_here.html">
+        <span class="topic-step">01</span>
+        <span class="topic-title">Start Here</span>
+      </a>
+      <a class="topic-link accent-orange" href="./lessons/2_classical_states/2_classical_states.html">
+        <span class="topic-step">02</span>
+        <span class="topic-title">Classical States</span>
+      </a>
+      <a class="topic-link accent-yellow" href="./lessons/3_waves_and_interference/3_waves_and_interference.html">
+        <span class="topic-step">03</span>
+        <span class="topic-title">Waves and Interference</span>
+      </a>
+      <a class="topic-link accent-green" href="./lessons/4_probability/4_probability.html">
+        <span class="topic-step">04</span>
+        <span class="topic-title">Probability</span>
+      </a>
+      <a class="topic-link accent-blue" href="./lessons/5_math_bridge/5_math_bridge.html">
+        <span class="topic-step">05</span>
+        <span class="topic-title">Math Bridge</span>
+      </a>
+      <a class="topic-link accent-violet" href="./lessons/6_complex_numbers_and_phase/6_complex_numbers_and_phase.html">
+        <span class="topic-step">06</span>
+        <span class="topic-title">Complex Numbers and Phase</span>
+      </a>
+      <a class="topic-link accent-red" href="./lessons/7_vectors_and_inner_products/7_vectors_and_inner_products.html">
+        <span class="topic-step">07</span>
+        <span class="topic-title">Vectors and Inner Products</span>
+      </a>
+      <a class="topic-link accent-orange" href="./lessons/8_bases_and-coordinates/8_bases_and-coordinates.html">
+        <span class="topic-step">08</span>
+        <span class="topic-title">Bases and Coordinates</span>
+      </a>
+      <a class="topic-link accent-yellow" href="./lessons/9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html">
+        <span class="topic-step">09</span>
+        <span class="topic-title">Matrices and Eigenvectors</span>
+      </a>
+      <a class="topic-link accent-green" href="./lessons/10_calculus_bridge/10_calculus_bridge.html">
+        <span class="topic-step">10</span>
+        <span class="topic-title">Calculus Bridge</span>
+      </a>
+      <a class="topic-link accent-blue" href="./lessons/11_quantum_states/11_quantum_states.html">
+        <span class="topic-step">11</span>
+        <span class="topic-title">Quantum States</span>
+      </a>
+      <a class="topic-link accent-violet" href="./lessons/12_superposition_and_relative_phase/12_superposition_and_relative_phase.html">
+        <span class="topic-step">12</span>
+        <span class="topic-title">Superposition and Relative Phase</span>
+      </a>
+      <a class="topic-link accent-red" href="./lessons/13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html">
+        <span class="topic-step">13</span>
+        <span class="topic-title">Measurement and the Born Rule</span>
+      </a>
+      <a class="topic-link accent-orange" href="./lessons/14_observables_and_operators/14_observables_and_operators.html">
+        <span class="topic-step">14</span>
+        <span class="topic-title">Observables and Operators</span>
+      </a>
+      <a class="topic-link accent-yellow" href="./lessons/15_expectation_and_uncertainty/15_expectation_and_uncertainty.html">
+        <span class="topic-step">15</span>
+        <span class="topic-title">Expectation and Uncertainty</span>
+      </a>
+      <a class="topic-link accent-green" href="./lessons/16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html">
+        <span class="topic-step">16</span>
+        <span class="topic-title">Spin and Stern–Gerlach</span>
+      </a>
+      <a class="topic-link accent-blue" href="./lessons/17_time_evolution/17_time_evolution.html">
+        <span class="topic-step">17</span>
+        <span class="topic-title">Time Evolution</span>
+      </a>
+      <a class="topic-link accent-violet" href="./lessons/18_composite_systems/18_composite_systems.html">
+        <span class="topic-step">18</span>
+        <span class="topic-title">Composite Systems</span>
+      </a>
+      <a class="topic-link accent-red" href="./lessons/19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html">
+        <span class="topic-step">19</span>
+        <span class="topic-title">Entanglement and Bell’s Theorem</span>
+      </a>
+      <a class="topic-link accent-orange" href="./lessons/20_wavefunctions/20_wavefunctions.html">
+        <span class="topic-step">20</span>
+        <span class="topic-title">Wavefunctions</span>
+      </a>
+      <a class="topic-link accent-yellow" href="./lessons/21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html">
+        <span class="topic-step">21</span>
+        <span class="topic-title">Continuous Probability and Momentum</span>
+      </a>
+      <a class="topic-link accent-green" href="./lessons/22_the_one_dimensional_schrodinger_equation/22_the_one_dimensional_schrodinger_equation.html">
+        <span class="topic-step">22</span>
+        <span class="topic-title">The One-Dimensional Schrödinger Equation</span>
+      </a>
+      <a class="topic-link accent-blue" href="./lessons/23_the_infinite_square_well/23_the_infinite_square_well.html">
+        <span class="topic-step">23</span>
+        <span class="topic-title">The Infinite Square Well</span>
+      </a>
+      <a class="topic-link accent-violet" href="./lessons/24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html">
+        <span class="topic-step">24</span>
+        <span class="topic-title">Finite Wells and Tunneling</span>
+      </a>
+      <a class="topic-link accent-red" href="./lessons/25_the_harmonic_oscillator/25_the_harmonic_oscillator.html">
+        <span class="topic-step">25</span>
+        <span class="topic-title">The Harmonic Oscillator</span>
+      </a>
+      <a class="topic-link accent-orange" href="./lessons/26_angular_momentum/26_angular_momentum.html">
+        <span class="topic-step">26</span>
+        <span class="topic-title">Angular Momentum</span>
+      </a>
+      <a class="topic-link accent-yellow" href="./lessons/27_the_hydrogen_atom/27_the_hydrogen_atom.html">
+        <span class="topic-step">27</span>
+        <span class="topic-title">The Hydrogen Atom</span>
+      </a>
+      <a class="topic-link accent-green" href="./lessons/28_identical_particles/28_identical_particles.html">
+        <span class="topic-step">28</span>
+        <span class="topic-title">Identical Particles</span>
+      </a>
+      <a class="topic-link accent-blue" href="./lessons/29_approximation_methods/29_approximation_methods.html">
+        <span class="topic-step">29</span>
+        <span class="topic-title">Approximation Methods</span>
+      </a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>
