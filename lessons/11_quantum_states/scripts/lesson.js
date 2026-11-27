@@ -654,6 +654,160 @@ const QS_SCALE_OPS = {
 };
 const qsScaleRecord = (c, op, before) => c.s.records.findLast(r => r.op === op && qsNear(r.before, before, 1e-9));
 
+// --- Station data: norms, inner products and the recurring formats -------------
+
+const QS_LEDGER_PSI = [[1, 2], [2, -1]];
+const QS_LEDGER_ROWS = {
+  aa: { name: "α*α", basis: "⟨0|0⟩ = 1" },
+  ab: { name: "α*β", basis: "⟨0|1⟩ = 0" },
+  ba: { name: "β*α", basis: "⟨1|0⟩ = 0" },
+  bb: { name: "β*β", basis: "⟨1|1⟩ = 1" }
+};
+
+const QS_OVERLAP_PHI = [[1 / Math.sqrt(3), 1 / Math.sqrt(3)], [1 / Math.sqrt(3), 0]];
+
+const QS_SWITCH = {
+  s1: { text: "(1/√2, i/√2)ᵀ", v: [[qsRoot2, 0], [0, qsRoot2]] },
+  s2: { text: "((1 + i)/2, (1 − i)/2)ᵀ", v: [[0.5, 0.5], [0.5, -0.5]] },
+  s4: { text: "((2 + i)/3, 2/3)ᵀ", v: [[2 / 3, 1 / 3], [2 / 3, 0]] }
+};
+const qsRebuild = (plus, minus) => [qsScale(qsAdd(plus, minus), qsRoot2), qsScale(qsSub(plus, minus), qsRoot2)];
+
+function qsSwitchGrader(key, plus, minus, work) {
+  return c => {
+    if (c.val("case") !== key) return qsSetup("Choose |ψ⟩ = " + QS_SWITCH[key].text + " first.");
+    const cp = c.cx("cp"), cm = c.cx("cm");
+    if (qsFitsC(cp, minus) && qsFitsC(cm, plus)) return qsGrade(false, "Those are swapped. c₊ = ⟨+|ψ⟩ = (α + β)/√2 uses the plus sign.");
+    return qsGrade(qsFitsC(cp, plus) && qsFitsC(cm, minus), "Compute (α + β)/√2 and (α − β)/√2. The rebuild readout tells you when your pair reproduces ψ.", work);
+  };
+}
+
+const QS_DESIGN = {
+  quarter: { a2: 1 / 4, b2: 3 / 4, bAngle: 90,
+    hint: ["|α| = 1/2 and |β| = √3/2.", "β at +90° lies on the positive imaginary axis: β = (√3/2)i."] },
+  third: { a2: 2 / 3, b2: 1 / 3, bAngle: 180, alphaNonreal: true,
+    hint: ["|β| = 1/√3 and β at 180° is −1/√3.", "α = (1 + i)/√3 has |α|² = 2/3 and is nonreal."] },
+  half: { a2: 1 / 2, b2: 1 / 2, aAngle: 90, bAngle: -45,
+    hint: ["α at 90° with |α| = 1/√2 is i/√2.", "β at −45° with |β| = 1/√2 is (1 − i)/2."] },
+  tenth: { a2: 9 / 10, b2: 1 / 10, bAngle: 135, alphaNegativeReal: true,
+    hint: ["|β| = √(1/10) ≈ 0.3162. At 135°, both parts have size |β|/√2 ≈ 0.2236.", "α is negative real with |α| = √(9/10) ≈ 0.9487."] }
+};
+
+function qsDesignGrader(key) {
+  return c => {
+    const card = QS_DESIGN[key];
+    const a = c.cx("a"), b = c.cx("b");
+    const a2 = qsAbs2(a), b2 = qsAbs2(b);
+    const misses = [];
+    if (!qsNear(a2, card.a2)) misses.push("|α|² is " + qsFmt(a2) + ", not " + qsFmt(card.a2) + ".");
+    if (!qsNear(b2, card.b2)) misses.push("|β|² is " + qsFmt(b2) + ", not " + qsFmt(card.b2) + ".");
+    if (qsAbs(b) < 1e-9 || !qsAngleFits(qsArg(b), card.bAngle)) misses.push("β must point at " + qsDeg(card.bAngle) + ".");
+    if (card.aAngle !== undefined && (qsAbs(a) < 1e-9 || !qsAngleFits(qsArg(a), card.aAngle))) misses.push("α must point at " + qsDeg(card.aAngle) + ".");
+    if (card.alphaNonreal && !qsNonreal(a)) misses.push("α needs a nonzero imaginary part.");
+    if (card.alphaNegativeReal && !(Math.abs(a[1]) <= QS_TOLERANCE && a[0] < 0)) misses.push("α must be a negative real number.");
+    return qsGrade(!misses.length, misses.join(" "),
+      "Your state " + qsVec([a, b]) + " has |α|² = " + qsFmt(a2) + ", |β|² = " + qsFmt(b2) + ", and ‖ψ‖² = " + qsFmt(a2 + b2) +
+      ". β points at " + qsDeg(qsArg(b)) + (qsAbs(a) > 1e-9 ? " and α at " + qsDeg(qsArg(a)) : "") + ". Other states meet these targets too.");
+  };
+}
+
+// Error Detective: the first wrong line and the mistake it makes.
+const QS_CASES = {
+  conj: { line: "2", kind: "conj", text: "⟨φ|ψ⟩ for φ = (1/√2, i/√2)ᵀ and ψ = (i/√2, 1/√2)ᵀ",
+    fix: "The bra conjugates each entry: ⟨φ| = (1/√2, −i/√2). Then ⟨φ|ψ⟩ = (1/√2)(i/√2) + (−i/√2)(1/√2) = i/2 − i/2 = 0. The two states are orthogonal." },
+  square: { line: "3", kind: "square", text: "normalizing (1 + i, 1 − 2i)ᵀ",
+    fix: "Divide by the norm √7, not by 7: ((1 + i)/√7, (1 − 2i)/√7)ᵀ. Dividing by 7 leaves ‖ψ‖² = 7/49 = 1/7." },
+  zsq: { line: "2", kind: "zsq", text: "‖ψ‖² for (1 + 2i, 4i)ᵀ",
+    fix: "The squared norm uses |4i|² = (4i)*(4i) = (−4i)(4i) = 16, not (4i)² = −16. So ‖ψ‖² = 5 + 16 = 21, and the state normalizes to (1 + 2i, 4i)ᵀ/√21." },
+  zero: { line: "3", kind: "zero", text: "normalizing (0, 0)ᵀ",
+    fix: "Normalizing divides by ‖ψ‖ = 0, which is undefined, and every scaling of the zero pair is still zero. The zero pair has no normalized version. (1/√2, 1/√2)ᵀ is a different state, not a rescaling of (0, 0)ᵀ." },
+  order: { line: "2", kind: "order", text: "the bra of ((1 + i)/2)|1⟩ + (i/√2)|0⟩ in ℬ = (|0⟩, |1⟩)",
+    fix: "In ℬ the coefficient of |0⟩ goes first: the column is (i/√2, (1 + i)/2)ᵀ. So ⟨ψ| = (−i/√2, (1 − i)/2) and α* = −i/√2." }
+};
+
+function qsDetectiveGrader(key) {
+  return c => {
+    const line = c.choice(key + "-line"), kind = c.choice(key + "-kind");
+    const answer = QS_CASES[key];
+    if (line !== answer.line) return qsGrade(false, "Line " + line + " is not where the solution first goes wrong. Start at line 1 and ask whether each line follows from the one before.");
+    return qsGrade(kind === answer.kind, "Line " + line + " is the first wrong line, but that is not the mistake it makes. Which rule does it break?",
+      "Line " + line + " is wrong. " + answer.fix);
+  };
+}
+
+function qsDetectivePlan(key) {
+  const r = qsRoot2;
+  if (key === "conj") return { planes: [
+    qsPlane("first entries", "accent", [qsArrow([r, 0], "alpha", "φ₁"), qsArrow([0, r], "beta", "ψ₁")]),
+    qsPlane("second entries", "accent", [qsArrow([0, r], "alpha", "φ₂"), qsArrow([r, 0], "beta", "ψ₂")])],
+  desc: "φ in blue and ψ in orange, one plane per entry." };
+  if (key === "square") return { planes: qsAlphaBeta(
+    [qsArrow([1, 1], "alpha", "start", { dashed: true }), qsArrow([1 / 7, 1 / 7], "warn", "claimed")],
+    [qsArrow([1, -2], "beta", "start", { dashed: true }), qsArrow([1 / 7, -2 / 7], "warn", "claimed")], { limit: 2.5 }),
+  desc: "The starting pair dashed and the claimed result in red. The circle has radius 1." };
+  if (key === "zsq") return { planes: qsAlphaBeta([qsArrow([1, 2], "alpha", "1 + 2i")], [qsArrow([0, 4], "beta", "4i")], { limit: 4 }),
+    desc: "α = 1 + 2i and β = 4i. A length can’t be negative, and neither can its square." };
+  if (key === "zero") return { planes: qsAlphaBeta(
+    [qsArrow([0, 0], "alpha", "α = 0"), qsArrow([r, 0], "warn", "claimed", { dashed: true })],
+    [qsArrow([0, 0], "beta", "β = 0"), qsArrow([r, 0], "warn", "claimed", { dashed: true })]),
+  desc: "Both entries are at the origin. The claimed result is drawn dashed in red." };
+  return { planes: [
+    qsPlane("claimed top entry", "warn", [qsArrow([0.5, 0.5], "warn", "(1 + i)/2")]),
+    qsPlane("claimed bottom entry", "warn", [qsArrow([0, r], "warn", "i/√2")])],
+  desc: "The column claimed on line 2, top entry first." };
+}
+
+// --- Station data: previews and extras ----------------------------------------------
+
+const QS_SYSTEMS = {
+  photon: { labels: ["|H⟩", "|V⟩"], meaning: "photon polarization: |0⟩ = |H⟩ is horizontal and |1⟩ = |V⟩ is vertical" },
+  photonv: { labels: ["|V⟩", "|H⟩"], meaning: "photon polarization in the other textbook’s convention: |0⟩ = |V⟩ and |1⟩ = |H⟩" },
+  spin: { labels: ["|↑⟩", "|↓⟩"], meaning: "electron spin along z: |0⟩ = |↑⟩ is up and |1⟩ = |↓⟩ is down" },
+  atom: { labels: ["|g⟩", "|e⟩"], meaning: "two atomic energy levels: |0⟩ = |g⟩ is the ground level and |1⟩ = |e⟩ is the excited level" }
+};
+
+function qsSystemGrader(system, top, bottom, swappedHint, work) {
+  return c => {
+    if (c.val("system") !== system) return qsSetup("Choose the matching system and labels first.");
+    const t = c.cx("top"), b = c.cx("bot");
+    if (qsFitsC(t, bottom) && qsFitsC(b, top)) return qsGrade(false, swappedHint);
+    return qsGrade(qsFitsC(t, top) && qsFitsC(b, bottom), "Match each coefficient to the label it multiplies, then use the column order |0⟩, |1⟩.", work);
+  };
+}
+
+const QS_THREE_PHI = [[1 / Math.sqrt(3), 0], [1 / Math.sqrt(3), 0], [1 / Math.sqrt(3), 0]];
+const qsThreeRecord = (c, before) => c.s.records.findLast(r => r.before.every((z, k) => qsNearC(z, before[k], QS_TOLERANCE)));
+
+const QS_BARS_PICKS = {
+  a: "0.5 and 0.6 add to 1.1. The bars of a normalized state add to 1.",
+  c: "A squared magnitude can’t be negative.",
+  d: "0.3 and 0.3 add to 0.6, so this state isn’t normalized."
+};
+
+const QS_BLOCH_STATES = {
+  zero: { text: "|0⟩", label: "|0⟩", polar: 0, azimuth: 0, tone: "gamma" },
+  one: { text: "|1⟩", label: "|1⟩", polar: 180, azimuth: 0, tone: "gamma" },
+  plus: { text: "|+⟩", label: "|+⟩", polar: 90, azimuth: 0, tone: "beta" },
+  minus: { text: "|−⟩", label: "|−⟩", polar: 90, azimuth: 180, tone: "beta" },
+  plusi: { text: "(|0⟩ + i|1⟩)/√2", label: "(1, i)/√2", polar: 90, azimuth: 90, tone: "alpha" },
+  minusi: { text: "(|0⟩ − i|1⟩)/√2", label: "(1, −i)/√2", polar: 90, azimuth: 270, tone: "alpha" }
+};
+const qsSamePoint = (a, b) => {
+  const p = qsBlochPoint(a), q = qsBlochPoint(b);
+  return Math.hypot(p[0] - q[0], p[1] - q[1], p[2] - q[2]) < 1e-6;
+};
+
+function qsBlochGrader(keys, hint) {
+  return c => {
+    const missing = keys.filter(key => !c.s.pins[key]);
+    if (missing.length) return qsSetup("Pin " + missing.map(key => QS_BLOCH_STATES[key].text).join(", ") + " first.");
+    const wrong = keys.filter(key => !qsSamePoint(c.s.pins[key], QS_BLOCH_STATES[key]));
+    return qsGrade(!wrong.length, "Check " + wrong.map(key => QS_BLOCH_STATES[key].text).join(" and ") + ". " + hint,
+      keys.map(key => QS_BLOCH_STATES[key].text + " at θ = " + QS_BLOCH_STATES[key].polar + "°" +
+        (QS_BLOCH_STATES[key].polar % 180 ? ", φ = " + QS_BLOCH_STATES[key].azimuth + "°" : "")).join(" · ") + ".");
+  };
+}
+
 // --- Stations ---------------------------------------------------------------
 
 const qsStations = {
@@ -950,6 +1104,428 @@ const qsStations = {
           "k = √10 ≈ 3.1623 scales 1/10 by 10, back to ‖ψ‖² = 1. Dividing by 10 and multiplying by √10 is the same as dividing by √10 = ‖ψ‖ once.");
       }]
     }
+  },
+
+  // 7 · Conjugate Mirror (Bra Builder) ---------------------------------------------------------
+  mirror: {
+    show(c) {
+      const z = c.quietCx("z");
+      if (!z) {
+        c.put("state", "Enter z to see it in the mirror.");
+        return { planes: [qsPlane("z and its mirror image z*", "accent", [], { limit: 2 })], caption: "enter z", desc: "Empty complex plane." };
+      }
+      const square = qsMul(z, z), size = qsAbs2(z);
+      const limit = Math.min(4, Math.max(1, Math.ceil(Math.max(...[...z, ...square, size].map(Math.abs)))));
+      c.put("state", "z = " + qsCx(z) + " · z* = " + qsCx(qsConj(z)) + ". The real axis is the mirror. Yellow marks z², green marks z*z.");
+      return {
+        planes: [qsPlane("z and its mirror image z*", "accent", [
+          qsArrow(z, "accent", "z"), qsArrow(qsConj(z), "accent", "z*", { dashed: true }),
+          qsArrow(square, "mark", "z²", { dot: true }), qsArrow([size, 0], "gamma", "z*z", { dot: true })], { limit, circle: null })],
+        caption: "the real axis is the mirror",
+        desc: "z = " + qsCx(z) + " and its conjugate " + qsCx(qsConj(z)) + " mirrored across the real axis. A yellow dot marks z² and a green dot on the real axis marks z*z."
+      };
+    },
+    checks: {
+      bra: ["⟨ψ| = (α*, β*): conjugate each entry and write them as a row.", "Conjugating flips the sign of the imaginary part only.", c => {
+        const a = c.cx("bra-a"), b = c.cx("bra-b"), ket = [[2 / 3, -1 / 3], [0, 2 / 3]];
+        if (qsFitsV([a, b], ket)) return qsGrade(false, "That row is the ket written sideways. The bra also conjugates each entry.");
+        const want = ket.map(qsConj);
+        if (qsFitsC(a, want[0]) !== qsFitsC(b, want[1])) return qsGrade(false, "One entry is right. Conjugate both entries.");
+        return qsGrade(qsFitsV([a, b], want), "Flip the sign of each imaginary part, and keep each real part.",
+          "|ψ⟩ = ((2 − i)/3, 2i/3)ᵀ, so ⟨ψ| = ((2 + i)/3, −2i/3). Check: ⟨ψ|ψ⟩ = 5/9 + 4/9 = 1.");
+      }],
+      square: ["(1 + i)² = 1 + 2i + i².", "z*z = (1 − i)(1 + i) = 1 − i².", c => {
+        const square = c.cx("sq"), size = c.ans("abs-ans");
+        if (qsFitsC(square, [2, 0])) return qsGrade(false, "2 is |z|², not z². Expand (1 + i)(1 + i) and use i² = −1.");
+        if (qsFits(size, 0)) return qsGrade(false, "z*z multiplies z by its conjugate, not by itself.");
+        return qsGrade(qsFitsC(square, [0, 2]) && qsFits(size, 2), "Expand each product and use i² = −1.",
+          "z² = 1 + 2i + i² = 2i, which is not real. z*z = 1 − i² = 2 = |z|², which is real and positive. A squared norm uses z*z.");
+      }],
+      negative: ["z² is negative real when z lies on the imaginary axis.", "|z|² = 4 means |z| = 2.", c => {
+        const z = c.cx("z");
+        return qsGrade(qsNear(qsAbs2(z), 4) && qsNearC(qsMul(z, z), [-4, 0], 0.01),
+          "Now z = " + qsCx(z) + ": z² = " + qsCx(qsMul(z, z)) + " and |z|² = " + qsFmt(qsAbs2(z)) + ".",
+          "z = " + qsCx(z) + " gives z² = −4 but |z|² = 4. This is the 4i trap at a smaller size: (4i)² = −16 while |4i|² = 16.");
+      }],
+      real: ["z² = |z|² needs z* = z.", "Which numbers are their own mirror images?", c => {
+        const z = c.cx("z");
+        if (qsAbs(z) < 0.01) return qsGrade(false, "Use a nonzero z.");
+        return qsGrade(Math.abs(z[1]) <= QS_TOLERANCE, "Now z² = " + qsCx(qsMul(z, z)) + " and |z|² = " + qsFmt(qsAbs2(z)) + ".",
+          "z = " + qsCx(z) + " is real, so z* = z and z² = z*z = " + qsFmt(qsAbs2(z)) + ". For every nonreal z, z² and |z|² differ.");
+      }]
+    }
+  },
+
+  // 8 · Squared Norm Ledger ---------------------------------------------------------------------------
+  ledger: {
+    show(c) {
+      const rows = Object.keys(QS_LEDGER_ROWS).map(key => ({ key, z: c.quietCx(key), zero: c.checked(key + "-zero") }));
+      const kept = rows.filter(row => !row.zero);
+      const total = kept.every(row => row.z) ? kept.reduce((sum, row) => qsAdd(sum, row.z), [0, 0]) : null;
+      c.put("state", "|ψ⟩ = (1 + 2i)|0⟩ + (2 − i)|1⟩." + (total ? " The lines you kept add to " + qsCx(total) + "." : " Fill in the lines you keep to see their sum."));
+      const tones = { aa: "alpha", ab: "accent", ba: "gamma", bb: "beta" };
+      return {
+        planes: [
+          qsPlane("α = 1 + 2i", "alpha", [qsArrow(QS_LEDGER_PSI[0], "alpha", "α"), qsArrow(qsConj(QS_LEDGER_PSI[0]), "alpha", "α*", { dashed: true })], { limit: 3, circle: null }),
+          qsPlane("β = 2 − i", "beta", [qsArrow(QS_LEDGER_PSI[1], "beta", "β"), qsArrow(qsConj(QS_LEDGER_PSI[1]), "beta", "β*", { dashed: true })], { limit: 3, circle: null }),
+          qsPlane("your ledger products", "accent", rows.filter(row => row.z).map(row => qsArrow(row.z, tones[row.key], QS_LEDGER_ROWS[row.key].name, { dashed: row.zero })), { limit: 6, circle: null })],
+        caption: "the four products of the expansion",
+        desc: "α and β with their conjugates, and the four products you entered. Products on lines you marked as vanishing are dashed."
+      };
+    },
+    checks: {
+      diag: ["α*α = (1 − 2i)(1 + 2i).", "Each diagonal product is a squared magnitude, so it is real.", c => {
+        const aa = c.cx("aa"), bb = c.cx("bb"), total = c.ans("total");
+        if (qsFitsC(aa, [-3, 4])) return qsGrade(false, "−3 + 4i is α², not α*α. Conjugate the first factor.");
+        return qsGrade(qsFitsC(aa, [5, 0]) && qsFitsC(bb, [5, 0]) && qsFits(total, 10), "Multiply each entry by its own conjugate, then add the two results.",
+          "α*α = 1 + 4 = 5 and β*β = 4 + 1 = 5. With the cross terms gone, ‖ψ‖² = 5 + 5 = 10.");
+      }],
+      cross: ["α*β = (1 − 2i)(2 − i).", "β*α is the conjugate of α*β.", c => {
+        const ab = c.cx("ab"), ba = c.cx("ba");
+        if (qsFitsC(ab, [0, 5]) && qsFitsC(ba, [0, -5])) return qsGrade(false, "Those are swapped. In α*β, only α is conjugated.");
+        return qsGrade(qsFitsC(ab, [0, -5]) && qsFitsC(ba, [0, 5]), "Expand each product and use i² = −1.",
+          "α*β = 2 − i − 4i + 2i² = −5i and β*α = 2 + 4i + i + 2i² = 5i. They are conjugates of each other. Each one multiplies ⟨0|1⟩ or ⟨1|0⟩, which is 0, so both lines vanish.");
+      }],
+      trap: ["|2 + 3i|² = 4 + 9.", "Square magnitudes, not the numbers themselves.", c => {
+        const answer = c.ans("trap-ans");
+        if (qsFits(answer, -5)) return qsGrade(false, "−5 is the real part of (2 + 3i)² + (−1 + i)². A squared norm adds |z|², not z².");
+        return qsGrade(qsFits(answer, 15), "Add (real part)² + (imaginary part)² for both entries.",
+          "‖ψ‖² = |2 + 3i|² + |−1 + i|² = 13 + 2 = 15.");
+      }],
+      vanish: ["⟨0|1⟩ and ⟨1|0⟩ are 0 in an orthonormal basis.", "⟨0|0⟩ and ⟨1|1⟩ are 1.", c => {
+        const marks = Object.fromEntries(Object.keys(QS_LEDGER_ROWS).map(key => [key, c.checked(key + "-zero")]));
+        return qsGrade(marks.ab && marks.ba && !marks.aa && !marks.bb, "Mark exactly the lines whose basis inner product is 0.",
+          "The α*β and β*α lines vanish because ⟨0|1⟩ = ⟨1|0⟩ = 0. The α*α and β*β lines survive because ⟨0|0⟩ = ⟨1|1⟩ = 1.");
+      }]
+    }
+  },
+
+  // 9 · State Overlap Lab -------------------------------------------------------------------------------
+  overlap: {
+    actions: {
+      swap(c) {
+        for (const [a, b] of [["f0", "p0"], ["f1", "p1"]]) {
+          for (const part of ["-re", "-im"]) {
+            const keep = c.val(a + part);
+            c.set(a + part, c.val(b + part));
+            c.set(b + part, keep);
+          }
+        }
+        return "φ and ψ swapped.";
+      }
+    },
+    show(c) {
+      const f = [c.quietCx("f0"), c.quietCx("f1")], p = [c.quietCx("p0"), c.quietCx("p1")];
+      const ready = f.every(Boolean) && p.every(Boolean);
+      const unlocked = c.revealed("compute");
+      c.put("state", ready
+        ? "‖φ‖² = " + qsFmt(qsNorm2(f)) + " · ‖ψ‖² = " + qsFmt(qsNorm2(p)) + " · ⟨φ|ψ⟩ = " +
+          (unlocked ? qsCx(qsInner(f, p)) : "? (the calculator unlocks after you compute one overlap by hand)") + "."
+        : "Fill in both states.");
+      return {
+        planes: [0, 1].map(k => qsPlane("entry " + (k + 1) + " · coefficient of |" + k + "⟩", "accent", [
+          ...(f[k] ? [qsArrow(f[k], "alpha", "φ")] : []), ...(p[k] ? [qsArrow(p[k], "beta", "ψ")] : [])])),
+        caption: "φ in blue, ψ in orange",
+        desc: "Each plane shows one entry of φ in blue and of ψ in orange."
+      };
+    },
+    checks: {
+      compute: ["⟨φ|ψ⟩ = φ₁*ψ₁ + φ₂*ψ₂. Conjugate φ, not ψ.", "φ₁* = (1 − i)/√3. Multiply by i/√2, then add (1/√3)(1/√2).", c => {
+        const answer = c.cx("ov"), want = [2 / Math.sqrt(6), 1 / Math.sqrt(6)];
+        if (qsFitsC(answer, qsConj(want))) return qsGrade(false, "That is ⟨ψ|φ⟩. In ⟨φ|ψ⟩ the bra φ is the one conjugated.");
+        return qsGrade(qsFitsC(answer, want), "Conjugate each entry of φ, multiply by the matching entry of ψ, and add.",
+          "⟨φ|ψ⟩ = ((1 − i)/√3)(i/√2) + (1/√3)(1/√2) = (i + 1 + 1)/√6 = (2 + i)/√6 ≈ 0.8165 + 0.4082i. The calculator in the readout is now unlocked.");
+      }],
+      swap: ["Now ψ is the bra.", "⟨ψ|φ⟩ = ⟨φ|ψ⟩*.", c => {
+        const answer = c.cx("sw"), want = [2 / Math.sqrt(6), -1 / Math.sqrt(6)];
+        if (qsFitsC(answer, qsConj(want))) return qsGrade(false, "That is ⟨φ|ψ⟩ again. Swapping the order conjugates the result.");
+        return qsGrade(qsFitsC(answer, want), "Conjugate ψ this time, or conjugate your first answer.",
+          "⟨ψ|φ⟩ = (−i/√2)((1 + i)/√3) + (1/√2)(1/√3) = (2 − i)/√6, the conjugate of ⟨φ|ψ⟩.");
+      }],
+      build: ["You need φ₁*ψ₁ + φ₂*ψ₂ = 0 with φ₁* = (1 − i)/√3 and φ₂* = 1/√3.", "Try ψ = (1/√3, −(1 − i)/√3)ᵀ.", c => {
+        const f = [c.cx("f0"), c.cx("f1")], p = [c.cx("p0"), c.cx("p1")];
+        if (!qsFitsV(f, QS_OVERLAP_PHI)) return qsSetup("Keep φ = ((1 + i)/√3, 1/√3)ᵀ. Use Reset this station to restore it.");
+        const overlap = qsInner(f, p);
+        if (!qsNear(qsNorm2(p), 1)) return qsGrade(false, "ψ needs norm 1. Its squared norm is " + qsFmt(qsNorm2(p)) + ".");
+        return qsGrade(qsAbs(overlap) <= QS_DERIVED, "⟨φ|ψ⟩ = " + qsCx(overlap) + ". Both its real and imaginary parts must vanish.",
+          "ψ = " + qsVec(p) + " has norm 1 and ⟨φ|ψ⟩ = " + qsCx(overlap) + ", so ψ is orthogonal to φ. Other orthogonal states work too.");
+      }],
+      trap: ["Conjugate φ: φ* = (1, 1 − i)/√3.", "(1 − i)(−1) cancels 1·(1 − i).", c => {
+        const answer = c.cx("tr");
+        if (qsFitsC(answer, [0, -2 / 3])) return qsGrade(false, "−2i/3 comes from skipping the conjugate on φ.");
+        return qsGrade(qsFitsC(answer, [0, 0]), "Conjugate φ’s entries first, then multiply and add.",
+          "⟨φ|ψ⟩ = (1/3)[1·(1 − i) + (1 − i)(−1)] = 0, so the states are orthogonal. Without the conjugate you get −2i/3 and miss it.");
+      }]
+    }
+  },
+
+  // 10 · Basis Switch ---------------------------------------------------------------------------------------
+  switch: {
+    show(c) {
+      const state = QS_SWITCH[c.val("case")];
+      const plus = c.quietCx("cp"), minus = c.quietCx("cm");
+      const rebuilt = plus && minus ? qsRebuild(plus, minus) : null;
+      const match = rebuilt && rebuilt.every((z, k) => qsNearC(z, state.v[k], QS_TOLERANCE * 2));
+      c.put("state", "|ψ⟩ = " + state.text + " in the z basis (|0⟩, |1⟩). " + (rebuilt
+        ? "Your c₊|+⟩ + c₋|−⟩ " + (match ? "rebuilds ψ." : "does not rebuild ψ yet.")
+        : "Enter c₊ and c₋ to rebuild ψ."));
+      return {
+        planes: qsAlphaBeta(
+          [qsArrow(state.v[0], "alpha", "ψ", { dashed: true }), ...(rebuilt ? [qsArrow(rebuilt[0], "accent", "rebuilt")] : [])],
+          [qsArrow(state.v[1], "beta", "ψ", { dashed: true }), ...(rebuilt ? [qsArrow(rebuilt[1], "accent", "rebuilt")] : [])]),
+        caption: "dashed: ψ · solid: c₊|+⟩ + c₋|−⟩",
+        desc: "ψ’s z-basis coefficients are dashed. The coefficients rebuilt from your c₊ and c₋ are solid."
+      };
+    },
+    checks: {
+      plus: ["c₊ = (α + β)/√2 and c₋ = (α − β)/√2.", "α + β = (1 + i)/√2.",
+        qsSwitchGrader("s1", [0.5, 0.5], [0.5, -0.5], "c₊ = (1/√2 + i/√2)/√2 = (1 + i)/2 and c₋ = (1 − i)/2. Check: |c₊|² + |c₋|² = 1/2 + 1/2 = 1.")],
+      second: ["α + β = 1 and α − β = i.", "Divide each by √2.",
+        qsSwitchGrader("s2", [qsRoot2, 0], [0, qsRoot2], "α + β = 1 and α − β = i, so c₊ = 1/√2 and c₋ = i/√2. Check: 1/2 + 1/2 = 1.")],
+      back: ["α = (c₊ + c₋)/√2 and β = (c₊ − c₋)/√2.", "c₊ + c₋ = (1 + i)/√2.", c => {
+        const a = c.cx("rv-a"), b = c.cx("rv-b"), alpha = [0.5, 0.5], beta = [-0.5, 0.5];
+        if (qsFitsC(a, beta) && qsFitsC(b, alpha)) return qsGrade(false, "Those are swapped. α = (c₊ + c₋)/√2 uses the plus sign.");
+        return qsGrade(qsFitsC(a, alpha) && qsFitsC(b, beta), "Use |+⟩ = (|0⟩ + |1⟩)/√2 and |−⟩ = (|0⟩ − |1⟩)/√2 and collect the |0⟩ and |1⟩ terms.",
+          "α = (i/√2 + 1/√2)/√2 = (1 + i)/2 and β = (i/√2 − 1/√2)/√2 = (−1 + i)/2.");
+      }],
+      weights: ["c₊ = (α + β)/√2 = (4 + i)/(3√2).", "|c₋|² = |α − β|²/2 = |i/3|²/2.", c => {
+        const plus = c.ans("pp-ans"), minus = c.ans("mm-ans");
+        if (qsFits(plus, 5 / 9) && qsFits(minus, 4 / 9)) return qsGrade(false, "5/9 and 4/9 are |α|² and |β|² in the z basis. Find the x-basis coefficients first.");
+        return qsGrade(qsFits(plus, 17 / 18) && qsFits(minus, 1 / 18), "Find c₊ and c₋, then take their squared magnitudes.",
+          "c₊ = (4 + i)/(3√2), so |c₊|² = 17/18. c₋ = i/(3√2), so |c₋|² = 1/18. They add to 1, as |α|² + |β|² = 5/9 + 4/9 does: the norm doesn’t depend on the orthonormal basis.");
+      }]
+    }
+  },
+
+  // 11 · State Designer ----------------------------------------------------------------------------------------
+  designer: {
+    show(c) {
+      const a = c.quietCx("a"), b = c.quietCx("b");
+      const card = QS_DESIGN[c.open()];
+      const angle = z => (qsAbs(z) < 1e-9 ? "undefined" : qsDeg(qsArg(z)));
+      c.put("state", a && b
+        ? "|α|² = " + qsFmt(qsAbs2(a)) + " · |β|² = " + qsFmt(qsAbs2(b)) + " · ‖ψ‖² = " + qsFmt(qsNorm2([a, b])) +
+          " · angle of α " + angle(a) + " · angle of β " + angle(b) + "."
+        : "Enter α and β.");
+      const planes = qsAlphaBeta(a ? [qsArrow(a, "alpha", "α")] : [], b ? [qsArrow(b, "beta", "β")] : []);
+      if (card?.aAngle !== undefined) planes[0].rays = [{ angle: card.aAngle, tone: "alpha" }];
+      if (card) planes[1].rays = [{ angle: card.bAngle, tone: "beta" }];
+      return { planes, caption: card ? "dotted rays: the required angles" : "open a card to see its targets",
+        desc: "Your α and β with a unit circle." + (card ? " Dotted rays mark the angles the open card requires." : "") };
+    },
+    checks: Object.fromEntries(Object.keys(QS_DESIGN).map(key => [key, [...QS_DESIGN[key].hint, qsDesignGrader(key)]]))
+  },
+
+  // 12 · Error Detective ---------------------------------------------------------------------------------------
+  detective: {
+    show(c) {
+      const key = c.open() ?? "conj";
+      const plan = qsDetectivePlan(key);
+      c.put("state", c.open() ? "Case file open: " + QS_CASES[key].text + "." : "Open a case file. Showing case 1.");
+      return { ...plan, caption: QS_CASES[key].text };
+    },
+    checks: {
+      conj: ["Line 1 is correct: both states are normalized.", "How is a bra built from a ket?", qsDetectiveGrader("conj")],
+      square: ["Lines 1 and 2 are correct.", "What number do you divide by to normalize?", qsDetectiveGrader("square")],
+      zsq: ["Line 1 is correct.", "A squared magnitude can never be negative.", qsDetectiveGrader("zsq")],
+      zero: ["Lines 1 and 2 are correct: the norm is 0.", "What happens when you divide by the norm here?", qsDetectiveGrader("zero")],
+      order: ["Line 1 is correct.", "Which basis ket comes first in ℬ?", qsDetectiveGrader("order")]
+    }
+  },
+
+  // 13 · Same Math, Different Systems (Quantum Preview) --------------------------------------------------
+  systems: {
+    show(c) {
+      const system = QS_SYSTEMS[c.val("system")];
+      const top = c.quietCx("top"), bottom = c.quietCx("bot");
+      const [first, second] = system.labels;
+      c.put("state", "Labels: " + system.meaning + "." + (top && bottom
+        ? " Your column reads as |ψ⟩ = (" + qsCx(top) + ")" + first + " + (" + qsCx(bottom) + ")" + second + ", with ‖ψ‖² = " + qsFmt(qsNorm2([top, bottom])) + "."
+        : " Enter a column to read it in these labels."));
+      return {
+        planes: [
+          qsPlane("coefficient of |0⟩ = " + first, "alpha", top ? [qsArrow(top, "alpha", first)] : []),
+          qsPlane("coefficient of |1⟩ = " + second, "beta", bottom ? [qsArrow(bottom, "beta", second)] : [])],
+        caption: "same column, new labels",
+        desc: "Your column drawn as two arrows. The first entry multiplies " + first + " and the second multiplies " + second + "."
+      };
+    },
+    checks: {
+      atom: ["Relabeling changes the names on |0⟩ and |1⟩, not the numbers.", "|H⟩ plays the role of |0⟩, and so does |g⟩.",
+        qsSystemGrader("atom", [0.5, 0.5], [qsRoot2, 0], "Those are swapped. |g⟩ is |0⟩ here, so its coefficient goes first.",
+          "The photon column is ((1 + i)/2, 1/√2)ᵀ. In the atom labels the column is the same: |ψ⟩ = ((1 + i)/2)|g⟩ + (1/√2)|e⟩.")],
+      spin: ["|↑⟩ is |0⟩ and |↓⟩ is |1⟩.", "The written ket lists |↓⟩ first. The column still starts with |0⟩.",
+        qsSystemGrader("spin", [Math.sqrt(2 / 3), 0], [0, 1 / Math.sqrt(3)], "Those are in the written order. The coefficient of |↑⟩ = |0⟩ goes first.",
+          "|ψ⟩ = √(2/3)|↑⟩ + (i/√3)|↓⟩, so the column is (√(2/3), i/√3)ᵀ ≈ (0.8165, 0.5774i)ᵀ. Check: 2/3 + 1/3 = 1.")],
+      same: ["Try the same column with each system.", "The numbers don’t move when the labels change.", c => {
+        const marks = ["same-col", "same-norm", "same-label", "same-meaning"].map(name => c.checked(name));
+        return qsGrade(marks[0] && marks[1] && !marks[2] && !marks[3], "Tick only what is identical for the photon, the spin and the atom.",
+          "The column of amplitudes and ‖ψ‖² are the same mathematics in every system. The label on |1⟩ (|V⟩, |↓⟩ or |e⟩) and what it physically means change.");
+      }],
+      convention: ["In this convention |V⟩ is the first basis ket.", "So the coefficient of |V⟩, 1/√2, goes on top.",
+        qsSystemGrader("photonv", [qsRoot2, 0], [0.5, 0.5], "That is the column for |0⟩ = |H⟩. In this convention |V⟩ comes first.",
+          "With |0⟩ = |V⟩ and |1⟩ = |H⟩, ((1 + i)/2)|H⟩ + (1/√2)|V⟩ has the column (1/√2, (1 + i)/2)ᵀ. Same state, different convention, swapped column, as in the Translator.")]
+    }
+  },
+
+  // 14 · Three-Level States ------------------------------------------------------------------------------
+  three: {
+    start(c) { c.s.v = null; c.s.prev = null; c.s.records = []; },
+    actions: {
+      load(c) {
+        c.s.v = [c.cx("a"), c.cx("b"), c.cx("g")];
+        c.s.prev = null;
+        return "Loaded |ψ⟩ = " + qsVec(c.s.v) + ".";
+      },
+      divide(c) {
+        if (!c.s.v) return "Load a state first.";
+        const d = c.ans("d");
+        if (d === 0) throw new QsFieldError(c.field("d"), "Dividing by 0 is undefined.", true);
+        const before = c.s.v;
+        c.s.prev = before;
+        c.s.v = before.map(z => qsScale(z, 1 / d));
+        c.s.records.push({ before, d, after: c.s.v });
+        if (c.s.records.length > 12) c.s.records.shift();
+        return "Divided every entry by " + qsFmt(d) + ".";
+      },
+      drop(c) {
+        if (!c.s.v) return "Load a state first.";
+        c.s.prev = c.s.v;
+        c.s.v = [c.s.v[0], c.s.v[1], [0, 0]];
+        return "Set γ to 0. The other entries are unchanged.";
+      }
+    },
+    show(c) {
+      const { v, prev } = c.s;
+      const names = ["α", "β", "γ"], tones = ["alpha", "beta", "gamma"];
+      c.put("state", v
+        ? "|ψ⟩ = " + qsVec(v) + ". " + (qsNorm2(v) === 0 ? "This is the zero state." : qsNear(qsNorm2(v), 1) ? "Normalized." : "Not normalized yet.")
+        : "Enter α, β and γ, then load the state.");
+      return {
+        planes: [0, 1, 2].map(k => qsPlane(names[k] + " · coefficient of |" + k + "⟩", tones[k], [
+          ...(prev ? [qsArrow(prev[k], tones[k], "", { dashed: true })] : []), ...(v ? [qsArrow(v[k], tones[k], names[k])] : [])], { limit: 1.5 })),
+        caption: "dashed: before the last step · circle: radius 1",
+        desc: v ? "Three coefficient planes for " + qsVec(v) + "." + (prev ? " The state before the last step is dashed." : "") : "Three empty coefficient planes."
+      };
+    },
+    checks: {
+      norm: ["Add |α|² + |β|² + |γ|².", "|1 + i|² = 2.", c => {
+        const answer = c.ans("norm-ans");
+        if (qsFits(answer, 2)) return qsGrade(false, "2 is the norm ‖ψ‖. The squared norm is its square.");
+        return qsGrade(qsFits(answer, 4), "Add the three squared magnitudes 1, 1 and |1 + i|².", "‖ψ‖² = |1|² + |i|² + |1 + i|² = 1 + 1 + 2 = 4, so ‖ψ‖ = 2.");
+      }],
+      divide: ["The divisor is ‖ψ‖, the square root of ‖ψ‖² = 4.", "A positive divisor shrinks the arrows without turning them.", c => {
+        const record = qsThreeRecord(c, [[1, 0], [0, 1], [1, 1]]);
+        if (!record) return qsSetup("Load (1, i, 1 + i)ᵀ and divide it by your chosen d.");
+        if (qsFits(record.d, 4)) return qsGrade(false, "4 is the squared norm. Dividing by it leaves ‖ψ‖² = 1/4.");
+        return qsGrade(qsFits(record.d, 2), "That divisor left ‖ψ‖² = " + qsFmt(qsNorm2(record.after)) + ". Use the norm, and keep it positive.",
+          "Dividing by ‖ψ‖ = 2 gives (1/2, i/2, (1 + i)/2)ᵀ, with squared norm 1/4 + 1/4 + 1/2 = 1.");
+      }],
+      drop: ["After γ = 0, ‖ψ‖² = 1/4 + 1/4 = 1/2.", "Divide by √(1/2) = 1/√2.", c => {
+        const record = qsThreeRecord(c, [[0.5, 0], [0, 0.5], [0, 0]]);
+        if (!record) return qsSetup("Load (1/2, i/2, (1 + i)/2)ᵀ, set γ to 0, then divide.");
+        if (qsFits(record.d, 0.5)) return qsGrade(false, "1/2 is the squared norm. Divide by its square root.");
+        return qsGrade(record.d > 0 && qsNear(qsNorm2(record.after), 1), "That left ‖ψ‖² = " + qsFmt(qsNorm2(record.after)) + ". Divide by the positive norm.",
+          "After dropping γ, ‖ψ‖² = 1/2 and ‖ψ‖ = 1/√2. Dividing gives (1/√2, i/√2, 0)ᵀ.");
+      }],
+      orth: ["You need α + β + γ = 0, because every entry of the bra is 1/√3.", "Try (1/2, i/2, (−1 − i)/2)ᵀ.", c => {
+        const v = c.s.v;
+        if (!v) return qsSetup("Load a state first.");
+        const overlap = qsInner(QS_THREE_PHI, v);
+        if (!qsNear(qsNorm2(v), 1)) return qsGrade(false, "Normalize the state first. Its squared norm is " + qsFmt(qsNorm2(v)) + ".");
+        if (qsAbs(overlap) > QS_DERIVED) return qsGrade(false, "The overlap with (1, 1, 1)ᵀ/√3 is " + qsCx(overlap) + ", not 0.");
+        return qsGrade(v.some(qsNonreal), "This state is orthogonal, but give at least one entry a nonzero imaginary part.",
+          qsVec(v) + " has norm 1 and ⟨φ|ψ⟩ = (α + β + γ)/√3 = 0. The rules are the same as with two entries, with one more term in each sum.");
+      }]
+    }
+  },
+
+  // 15 · Born Bars Preview ------------------------------------------------------------------------------
+  bars: {
+    show(c) {
+      const a = c.quietCx("a"), b = c.quietCx("b");
+      if (!a || !b) {
+        c.put("state", "Enter α and β.");
+        return { bars: { items: [] }, caption: "enter a state", desc: "No bars yet." };
+      }
+      const a2 = qsAbs2(a), b2 = qsAbs2(b), n2 = a2 + b2;
+      const normalized = qsNear(n2, 1);
+      c.put("state", normalized
+        ? "Normalized. The bars are |α|² = " + qsFmt(a2) + " and |β|² = " + qsFmt(b2) + "."
+        : n2 === 0 ? "The zero pair has no bars." : "Not normalized: the outlined bars add to " + qsFmt(n2) + ", not 1. Normalize before reading them.");
+      return {
+        bars: { max: Math.max(1, Math.ceil(Math.max(a2, b2))), note: normalized ? "squared magnitudes of a normalized state" : "outlined: not normalized",
+          items: [{ label: "|α|² · |0⟩", value: a2, tone: "alpha", outline: !normalized }, { label: "|β|² · |1⟩", value: b2, tone: "beta", outline: !normalized }] },
+        caption: normalized ? "bars add to 1" : "normalize first",
+        desc: "Bar chart of |α|² = " + qsFmt(a2) + " and |β|² = " + qsFmt(b2) + (normalized ? "." : ". The state is not normalized, so the bars are outlined.")
+      };
+    },
+    checks: {
+      read: ["|(1 + i)/√3|² = 2/3.", "|i/√3|² = 1/3.", c => {
+        const zero = c.ans("r0-ans"), one = c.ans("r1-ans");
+        if (qsFits(zero, Math.sqrt(2 / 3))) return qsGrade(false, "That is |α|, the length of the arrow. The bar is its square.");
+        return qsGrade(qsFits(zero, 2 / 3) && qsFits(one, 1 / 3), "Square each magnitude.", "|α|² = 2/3 and |β|² = 1/3. They add to 1.");
+      }],
+      raw: ["Normalize first: ‖ψ‖² = 5 + 4 = 9.", "Each bar is |entry|²/‖ψ‖².", c => {
+        const zero = c.ans("w0-ans"), one = c.ans("w1-ans");
+        if (qsFits(zero, 5) && qsFits(one, 4)) return qsGrade(false, "5 and 4 add to 9, not 1. Normalize before reading bars.");
+        return qsGrade(qsFits(zero, 5 / 9) && qsFits(one, 4 / 9), "Divide each squared magnitude by ‖ψ‖² = 9.",
+          "The normalized state is ((2 − i)/3, 2i/3)ᵀ, with bars 5/9 and 4/9.");
+      }],
+      valid: ["Each bar is a squared magnitude.", "Which set is nonnegative and adds to 1?", c => {
+        const pick = c.choice("valid-pick");
+        return qsGrade(pick === "b", QS_BARS_PICKS[pick] ?? "Check both conditions.",
+          "0.25 and 0.75 are both nonnegative and add to 1, so they can be |α|² and |β|² of a normalized state, for example (1/2, (√3/2)i)ᵀ.");
+      }]
+    }
+  },
+
+  // 16 · Bloch Sphere Preview (3D) -----------------------------------------------------------------------
+  bloch: {
+    start(c) { c.s.pins = {}; },
+    drag(c, dx, dy) {
+      c.set("yaw", ((Math.round((Number(c.val("yaw")) - dx * 0.5) / 5) * 5) % 360 + 360) % 360);
+      c.set("tilt", Math.max(-60, Math.min(60, Math.round((Number(c.val("tilt")) + dy * 0.3) / 5) * 5)));
+    },
+    actions: {
+      pin(c) {
+        const key = c.val("target");
+        c.s.pins[key] = { polar: c.num("polar"), azimuth: c.num("azimuth") };
+        return "Pinned " + QS_BLOCH_STATES[key].text + " at θ = " + c.val("polar") + "°, φ = " + c.val("azimuth") + "°.";
+      },
+      clear(c) { c.s.pins = {}; return "All pins cleared."; }
+    },
+    show(c) {
+      const marker = { polar: c.num("polar"), azimuth: c.num("azimuth") };
+      const point = qsBlochPoint(marker);
+      const points = Object.entries(c.s.pins).map(([key, pin]) => ({ point: qsBlochPoint(pin), tone: QS_BLOCH_STATES[key].tone, label: QS_BLOCH_STATES[key].label }));
+      if (c.open() === "read") points.push({ point: qsBlochPoint({ polar: 60, azimuth: 0 }), tone: "warn", label: "?", size: 6.5 });
+      c.put("state", "Marker at θ = " + marker.polar + "°, φ = " + marker.azimuth + "° · (x, y, z) = (" + point.map(qsFmt).join(", ") + ").");
+      c.list("pins", Object.entries(c.s.pins).map(([key, pin]) => QS_BLOCH_STATES[key].text + " pinned at θ = " + pin.polar + "°, φ = " + pin.azimuth + "°"));
+      return {
+        sphere: { yaw: c.num("yaw"), tilt: c.num("tilt"), marker, points },
+        caption: "turn " + c.val("yaw") + "°, tilt " + c.val("tilt") + "°",
+        desc: "A sphere with |0⟩ at the top and |1⟩ at the bottom. The marker is at θ = " + marker.polar + "°, φ = " + marker.azimuth + "°." +
+          (points.length ? " Points shown: " + points.map(p => p.label).join(", ") + "." : "")
+      };
+    },
+    checks: {
+      axis: ["|0⟩ has |α| = 1, so θ = 0°. |1⟩ has |α| = 0, so θ = 180°.", "|+⟩ and |−⟩ have |α| = 1/√2, so θ = 90°. Use the longitude table for φ.",
+        qsBlochGrader(["zero", "one", "plus", "minus"], "Use |α| = cos(θ/2) for the latitude and the table for the longitude.")],
+      y: ["Both states have |α| = 1/√2, so θ = 90°.", "β/α = i gives φ = 90°, and β/α = −i gives φ = 270°.",
+        qsBlochGrader(["plusi", "minusi"], "Read β/α for each state and look up its longitude.")],
+      read: ["|α| = cos(60°/2) = cos 30°.", "cos 30° = √3/2, and the point lies on the +x meridian, where β/α is positive.", c => {
+        const pick = c.choice("read-pick");
+        return qsGrade(pick === "a", pick === "b" ? "That state has |α| = 1/2, which sits at θ = 120°, below the equator." : "That state sits on the equator at θ = 90°.",
+          "θ = 60° gives |α| = cos 30° = √3/2 and |β| = sin 30° = 1/2. On the +x meridian β/α is positive, so the point is (√3/2, 1/2)ᵀ.");
+      }],
+      opposite: ["(1, i)/√2 sits at +y. The opposite point is −y.", "Compute ⟨ψ|χ⟩ = (1·1 + (−i)(−i))/2.", c => {
+        const pick = c.choice("opp-pick"), overlap = c.cx("opp");
+        if (pick !== "a") return qsGrade(false, "Find the state pinned at −y in the longitude table.");
+        return qsGrade(qsFitsC(overlap, [0, 0]), "Conjugate the first state: ⟨ψ| = (1, −i)/√2. Then multiply and add.",
+          "The antipode of (1, i)/√2 is (1, −i)/√2, and ⟨ψ|χ⟩ = (1 + (−i)(−i))/2 = (1 − 1)/2 = 0. Opposite points on this sphere are orthogonal states, like |0⟩ and |1⟩.");
+      }]
+    }
   }
 };
 
@@ -1090,6 +1666,9 @@ function initializeStatesArcade(root) {
   function refresh() {
     if (!active || !details.open) return;
     plan = active.spec.show(active);
+    for (const output of active.panel.querySelectorAll("output[data-qs-for]")) {
+      qsSetText(output, active.val(output.dataset.qsFor).replace("-", "−") + (output.dataset.qsUnit ?? ""));
+    }
     qsSetText(title, active.panel.querySelector("h4").textContent + (plan.caption ? " · " + plan.caption : ""));
     qsSetText(desc, plan.desc || "");
     if (plan.sphere) {
@@ -1398,9 +1977,17 @@ function qsDrawPlanes(planes, shapes, words) {
           points: ex + "," + ey + " " + (bx - uy * wing) + "," + (by + ux * wing) + " " + (bx + uy * wing) + "," + (by - ux * wing) }));
       }
       if (item.label) {
-        const away = length < 3 ? [10, -10] : [((ex - cx) / (length || 1)) * 14, ((ey - cy) / (length || 1)) * 14];
-        words.push(qsNode("text", { class: "qs-label", "data-tone": itemTone, x: ex + away[0], y: ey + away[1] + 4,
-          "text-anchor": Math.abs(away[0]) < 4 ? "middle" : away[0] > 0 ? "start" : "end" }, item.label + (clip < 1 ? " (off scale)" : "")));
+        // Past the tip and a little to one side, so a label never hides an arrow along the same line.
+        const ux = (ex - cx) / (length || 1), uy = (ey - cy) / (length || 1);
+        const away = length < 3 ? [10, -10] : [ux * 12 + uy * 9, uy * 12 - ux * 9];
+        // Keep the whole label inside the 560-wide viewBox (about 8.5 px per character).
+        const text = item.label + (clip < 1 ? " (off scale)" : "");
+        const span = text.length * 8.5;
+        let x = ex + away[0], anchor = Math.abs(away[0]) < 4 ? "middle" : away[0] > 0 ? "start" : "end";
+        const left = anchor === "start" ? x : anchor === "end" ? x - span : x - span / 2;
+        if (left + span > 556) { x = 556; anchor = "end"; }
+        else if (left < 4) { x = 4; anchor = "start"; }
+        words.push(qsNode("text", { class: "qs-label", "data-tone": itemTone, x, y: ey + away[1] + 4, "text-anchor": anchor }, text));
       }
     }
   });

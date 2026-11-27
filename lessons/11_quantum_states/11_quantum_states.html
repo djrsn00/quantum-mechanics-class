@@ -448,6 +448,22 @@
                 <option value="inspector">5 · Valid State Inspector</option>
                 <option value="scaling">6 · Scaling Trap</option>
               </optgroup>
+              <optgroup label="Norms and inner products">
+                <option value="mirror">7 · Conjugate Mirror (Bra Builder)</option>
+                <option value="ledger">8 · Squared Norm Ledger</option>
+                <option value="overlap">9 · State Overlap Lab</option>
+                <option value="switch">10 · Basis Switch</option>
+              </optgroup>
+              <optgroup label="Recurring formats">
+                <option value="designer">11 · State Designer</option>
+                <option value="detective">12 · Error Detective</option>
+                <option value="systems">13 · Same Math, Different Systems</option>
+              </optgroup>
+              <optgroup label="Extras">
+                <option value="three">14 · Three-Level States</option>
+                <option value="bars">15 · Born Bars Preview</option>
+                <option value="bloch">16 · Bloch Sphere Preview (3D)</option>
+              </optgroup>
             </select>
           </label>
           <p id="qs-progress" role="status">0 of 64 missions completed this session.</p>
@@ -721,6 +737,465 @@
             <details class="qs-math">
               <summary>Show the math</summary>
               <p>For any number c, ‖cψ‖ = |c| ‖ψ‖, so ‖cψ‖² = |c|² ‖ψ‖². Dividing by ‖ψ‖ gives 1. Dividing by ‖ψ‖² gives ‖ψ‖²/‖ψ‖⁴ = 1/‖ψ‖², which is 1/10 here. Dividing by the size of one entry gives ‖ψ‖²/|α|².</p>
+            </details>
+          </section>
+
+          <section class="qs-station" data-qs-station="mirror" data-qs-accent="blue" aria-labelledby="qs-mirror-title" hidden>
+            <h4 id="qs-mirror-title">Conjugate Mirror (Bra Builder)</h4>
+            <p>The complex conjugate z* reflects z across the real axis. The bra ⟨ψ| is built by conjugating every entry of the ket and writing them as a row. Try any z here and compare z² with z*z.</p>
+            <div data-qs-plot-slot></div>
+            <fieldset disabled>
+              <legend class="qs-sr-only">Conjugate Mirror controls</legend>
+              <div class="qs-complex" role="group" aria-label="z"><label>Real part of z <input class="qs-answer" type="text" name="z-re" value="2" autocomplete="off" spellcheck="false"></label><label>Imaginary part of z <input class="qs-answer" type="text" name="z-im" value="-1" autocomplete="off" spellcheck="false"></label></div>
+              <p class="qs-readout" data-qs-read="state" aria-live="polite">z = 2 − i.</p>
+              <div class="qs-missions">
+                <details class="qs-mission" data-qs-mission="mirror-bra">
+                  <summary>Build a bra<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>|ψ⟩ = ((2 − i)/3, 2i/3)ᵀ. Enter the bra ⟨ψ| = (α*, β*).</p>
+                  <div class="qs-complex" role="group" aria-label="α*"><label>Real part of α* <input class="qs-answer" type="text" name="bra-a-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of α* <input class="qs-answer" type="text" name="bra-a-im" autocomplete="off" spellcheck="false"></label></div>
+                  <div class="qs-complex" role="group" aria-label="β*"><label>Real part of β* <input class="qs-answer" type="text" name="bra-b-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of β* <input class="qs-answer" type="text" name="bra-b-im" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="mirror-square">
+                  <summary>z² or z*z?<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>For z = 1 + i, enter z² and z*z.</p>
+                  <div class="qs-complex" role="group" aria-label="z²"><label>Real part of z² <input class="qs-answer" type="text" name="sq-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of z² <input class="qs-answer" type="text" name="sq-im" autocomplete="off" spellcheck="false"></label></div>
+                  <div class="qs-fields"><label>z*z <input class="qs-answer" type="text" name="abs-ans" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="mirror-negative">
+                  <summary>A square that goes negative<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Set z in the mirror so that |z|² = 4 while z² = −4.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="mirror-real">
+                  <summary>When the two agree<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Set a nonzero z in the mirror with z² = z*z.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="qs-math">
+              <summary>Show the math</summary>
+              <p>For z = a + bi, z* = a − bi. Then z*z = a² + b² = |z|², which is never negative, while z² = a² − b² + 2abi. For example, (4i)² = −16 but |4i|² = (−4i)(4i) = 16. For |ψ⟩ = (α, β)ᵀ, the bra is ⟨ψ| = (α*, β*), and ⟨ψ|ψ⟩ = α*α + β*β = ‖ψ‖².</p>
+            </details>
+          </section>
+
+          <section class="qs-station" data-qs-station="ledger" data-qs-accent="orange" aria-labelledby="qs-ledger-title" hidden>
+            <h4 id="qs-ledger-title">Squared Norm Ledger</h4>
+            <p>Expand ⟨ψ|ψ⟩ for |ψ⟩ = (1 + 2i)|0⟩ + (2 − i)|1⟩ line by line. Each line multiplies a coefficient product by a basis inner product. Enter each product, mark the lines that vanish, and total what is left.</p>
+            <div data-qs-plot-slot></div>
+            <fieldset disabled>
+              <legend class="qs-sr-only">Squared Norm Ledger controls</legend>
+              <div class="qs-ledger">
+                <div class="qs-ledger-row" role="group" aria-label="Line 1, alpha star alpha times the inner product of 0 with 0">
+                  <p class="qs-step">Line 1 · α*α ⟨0|0⟩</p>
+                  <div class="qs-complex" role="group" aria-label="α*α"><label>Real part of α*α <input class="qs-answer" type="text" name="aa-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of α*α <input class="qs-answer" type="text" name="aa-im" autocomplete="off" spellcheck="false"></label></div>
+                  <label class="qs-check-row"><input type="checkbox" name="aa-zero"> ⟨0|0⟩ = 0, so this line vanishes</label>
+                </div>
+                <div class="qs-ledger-row" role="group" aria-label="Line 2, alpha star beta times the inner product of 0 with 1">
+                  <p class="qs-step">Line 2 · α*β ⟨0|1⟩</p>
+                  <div class="qs-complex" role="group" aria-label="α*β"><label>Real part of α*β <input class="qs-answer" type="text" name="ab-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of α*β <input class="qs-answer" type="text" name="ab-im" autocomplete="off" spellcheck="false"></label></div>
+                  <label class="qs-check-row"><input type="checkbox" name="ab-zero"> ⟨0|1⟩ = 0, so this line vanishes</label>
+                </div>
+                <div class="qs-ledger-row" role="group" aria-label="Line 3, beta star alpha times the inner product of 1 with 0">
+                  <p class="qs-step">Line 3 · β*α ⟨1|0⟩</p>
+                  <div class="qs-complex" role="group" aria-label="β*α"><label>Real part of β*α <input class="qs-answer" type="text" name="ba-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of β*α <input class="qs-answer" type="text" name="ba-im" autocomplete="off" spellcheck="false"></label></div>
+                  <label class="qs-check-row"><input type="checkbox" name="ba-zero"> ⟨1|0⟩ = 0, so this line vanishes</label>
+                </div>
+                <div class="qs-ledger-row" role="group" aria-label="Line 4, beta star beta times the inner product of 1 with 1">
+                  <p class="qs-step">Line 4 · β*β ⟨1|1⟩</p>
+                  <div class="qs-complex" role="group" aria-label="β*β"><label>Real part of β*β <input class="qs-answer" type="text" name="bb-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of β*β <input class="qs-answer" type="text" name="bb-im" autocomplete="off" spellcheck="false"></label></div>
+                  <label class="qs-check-row"><input type="checkbox" name="bb-zero"> ⟨1|1⟩ = 0, so this line vanishes</label>
+                </div>
+              </div>
+              <div class="qs-fields"><label>Total · ‖ψ‖² <input class="qs-answer" type="text" name="total" autocomplete="off" spellcheck="false"></label></div>
+              <p class="qs-readout" data-qs-read="state" aria-live="polite">|ψ⟩ = (1 + 2i)|0⟩ + (2 − i)|1⟩.</p>
+              <div class="qs-missions">
+                <details class="qs-mission" data-qs-mission="ledger-diag">
+                  <summary>The surviving lines<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Enter α*α and β*β in lines 1 and 4, and the total ‖ψ‖².</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="ledger-cross">
+                  <summary>The cross terms<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Enter α*β and β*α in lines 2 and 3. They are not zero by themselves.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="ledger-vanish">
+                  <summary>Strike the vanishing lines<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Mark exactly the lines whose basis inner product is 0.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="ledger-trap">
+                  <summary>A new ledger, one trap<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Find ‖ψ‖² for |ψ⟩ = (2 + 3i)|0⟩ + (−1 + i)|1⟩.</p>
+                  <div class="qs-fields"><label>‖ψ‖² <input class="qs-answer" type="text" name="trap-ans" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="qs-math">
+              <summary>Show the math</summary>
+              <p>⟨ψ|ψ⟩ = α*α⟨0|0⟩ + α*β⟨0|1⟩ + β*α⟨1|0⟩ + β*β⟨1|1⟩. In an orthonormal basis, ⟨0|0⟩ = ⟨1|1⟩ = 1 and ⟨0|1⟩ = ⟨1|0⟩ = 0, so ‖ψ‖² = |α|² + |β|². The cross products α*β and β*α are conjugates of each other. They vanish here because of the basis, not because they are zero.</p>
+            </details>
+          </section>
+
+          <section class="qs-station" data-qs-station="overlap" data-qs-accent="green" aria-labelledby="qs-overlap-title" hidden>
+            <h4 id="qs-overlap-title">State Overlap Lab</h4>
+            <p>Build two states φ and ψ and compare them with the inner product ⟨φ|ψ⟩ = φ₁*ψ₁ + φ₂*ψ₂. Compute one overlap by hand to unlock the calculator in the readout.</p>
+            <div data-qs-plot-slot></div>
+            <fieldset disabled>
+              <legend class="qs-sr-only">State Overlap Lab controls</legend>
+              <div class="qs-complex" role="group" aria-label="φ₁"><label>Real part of φ₁ <input class="qs-answer" type="text" name="f0-re" value="1/√3" autocomplete="off" spellcheck="false"></label><label>Imaginary part of φ₁ <input class="qs-answer" type="text" name="f0-im" value="1/√3" autocomplete="off" spellcheck="false"></label></div>
+              <div class="qs-complex" role="group" aria-label="φ₂"><label>Real part of φ₂ <input class="qs-answer" type="text" name="f1-re" value="1/√3" autocomplete="off" spellcheck="false"></label><label>Imaginary part of φ₂ <input class="qs-answer" type="text" name="f1-im" value="0" autocomplete="off" spellcheck="false"></label></div>
+              <div class="qs-complex" role="group" aria-label="ψ₁"><label>Real part of ψ₁ <input class="qs-answer" type="text" name="p0-re" value="0" autocomplete="off" spellcheck="false"></label><label>Imaginary part of ψ₁ <input class="qs-answer" type="text" name="p0-im" value="1/√2" autocomplete="off" spellcheck="false"></label></div>
+              <div class="qs-complex" role="group" aria-label="ψ₂"><label>Real part of ψ₂ <input class="qs-answer" type="text" name="p1-re" value="1/√2" autocomplete="off" spellcheck="false"></label><label>Imaginary part of ψ₂ <input class="qs-answer" type="text" name="p1-im" value="0" autocomplete="off" spellcheck="false"></label></div>
+              <div class="qs-button-row"><button type="button" data-qs-action="swap">Swap φ and ψ</button></div>
+              <p class="qs-readout" data-qs-read="state" aria-live="polite">‖φ‖² = 1 · ‖ψ‖² = 1.</p>
+              <div class="qs-missions">
+                <details class="qs-mission" data-qs-mission="overlap-compute">
+                  <summary>Compute an overlap<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>φ = ((1 + i)/√3, 1/√3)ᵀ and ψ = (i/√2, 1/√2)ᵀ, the starting states. Enter ⟨φ|ψ⟩.</p>
+                  <div class="qs-complex" role="group" aria-label="⟨φ|ψ⟩"><label>Real part of ⟨φ&#124;ψ⟩ <input class="qs-answer" type="text" name="ov-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of ⟨φ&#124;ψ⟩ <input class="qs-answer" type="text" name="ov-im" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="overlap-swap">
+                  <summary>Swap the order<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>For the same two states, enter ⟨ψ|φ⟩.</p>
+                  <div class="qs-complex" role="group" aria-label="⟨ψ|φ⟩"><label>Real part of ⟨ψ&#124;φ⟩ <input class="qs-answer" type="text" name="sw-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of ⟨ψ&#124;φ⟩ <input class="qs-answer" type="text" name="sw-im" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="overlap-build">
+                  <summary>Build an orthogonal partner<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Keep φ = ((1 + i)/√3, 1/√3)ᵀ. Build a normalized ψ with ⟨φ|ψ⟩ = 0.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="overlap-trap">
+                  <summary>The hidden orthogonality<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>φ = (1, 1 + i)ᵀ/√3 and ψ = (1 − i, −1)ᵀ/√3. Enter ⟨φ|ψ⟩.</p>
+                  <div class="qs-complex" role="group" aria-label="⟨φ|ψ⟩"><label>Real part of ⟨φ&#124;ψ⟩ <input class="qs-answer" type="text" name="tr-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of ⟨φ&#124;ψ⟩ <input class="qs-answer" type="text" name="tr-im" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="qs-math">
+              <summary>Show the math</summary>
+              <p>⟨φ|ψ⟩ = φ₁*ψ₁ + φ₂*ψ₂: the bra φ is conjugated. Swapping the order conjugates the result, ⟨ψ|φ⟩ = ⟨φ|ψ⟩*, and ⟨ψ|ψ⟩ = ‖ψ‖² is real. Two states are orthogonal when ⟨φ|ψ⟩ = 0, which needs both the real and the imaginary part to vanish.</p>
+            </details>
+          </section>
+
+          <section class="qs-station" data-qs-station="switch" data-qs-accent="yellow" aria-labelledby="qs-switch-title" hidden>
+            <h4 id="qs-switch-title">Basis Switch</h4>
+            <p>Lessons 8 and 9 introduced |+⟩ = (|0⟩ + |1⟩)/√2 and |−⟩ = (|0⟩ − |1⟩)/√2. The coefficients of ψ in that basis are inner products: c₊ = ⟨+|ψ⟩ and c₋ = ⟨−|ψ⟩. Enter them and check that c₊|+⟩ + c₋|−⟩ rebuilds ψ.</p>
+            <div data-qs-plot-slot></div>
+            <fieldset disabled>
+              <legend class="qs-sr-only">Basis Switch controls</legend>
+              <div class="qs-fields">
+                <label>State ψ <select name="case"><option value="s1" selected>ψ = (1/√2, i/√2)ᵀ</option><option value="s2">ψ = ((1 + i)/2, (1 − i)/2)ᵀ</option><option value="s4">ψ = ((2 + i)/3, 2/3)ᵀ</option></select></label>
+              </div>
+              <div class="qs-complex" role="group" aria-label="c₊"><label>Real part of c₊ <input class="qs-answer" type="text" name="cp-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of c₊ <input class="qs-answer" type="text" name="cp-im" autocomplete="off" spellcheck="false"></label></div>
+              <div class="qs-complex" role="group" aria-label="c₋"><label>Real part of c₋ <input class="qs-answer" type="text" name="cm-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of c₋ <input class="qs-answer" type="text" name="cm-im" autocomplete="off" spellcheck="false"></label></div>
+              <p class="qs-readout" data-qs-read="state" aria-live="polite">|ψ⟩ = (1/√2, i/√2)ᵀ in the z basis (|0⟩, |1⟩).</p>
+              <div class="qs-missions">
+                <details class="qs-mission" data-qs-mission="switch-plus">
+                  <summary>Switch (1/√2, i/√2)ᵀ<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Choose this ψ and enter c₊ and c₋.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="switch-second">
+                  <summary>Switch ((1 + i)/2, (1 − i)/2)ᵀ<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Choose this ψ and enter c₊ and c₋.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="switch-back">
+                  <summary>Switch back to |0⟩ and |1⟩<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>|ψ⟩ = (i/√2)|+⟩ + (1/√2)|−⟩. Enter α and β in the z basis.</p>
+                  <div class="qs-complex" role="group" aria-label="α"><label>Real part of α <input class="qs-answer" type="text" name="rv-a-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of α <input class="qs-answer" type="text" name="rv-a-im" autocomplete="off" spellcheck="false"></label></div>
+                  <div class="qs-complex" role="group" aria-label="β"><label>Real part of β <input class="qs-answer" type="text" name="rv-b-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of β <input class="qs-answer" type="text" name="rv-b-im" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="switch-weights">
+                  <summary>Squared magnitudes in the new basis<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>For ψ = ((2 + i)/3, 2/3)ᵀ, enter |c₊|² and |c₋|².</p>
+                  <div class="qs-fields"><label>&#124;c₊&#124;² <input class="qs-answer" type="text" name="pp-ans" autocomplete="off" spellcheck="false"></label><label>&#124;c₋&#124;² <input class="qs-answer" type="text" name="mm-ans" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="qs-math">
+              <summary>Show the math</summary>
+              <p>⟨+| = (1, 1)/√2 and ⟨−| = (1, −1)/√2 have real entries, so conjugating them changes nothing: c₊ = (α + β)/√2 and c₋ = (α − β)/√2. Going back, α = (c₊ + c₋)/√2 and β = (c₊ − c₋)/√2. Because both bases are orthonormal, |c₊|² + |c₋|² = |α|² + |β|².</p>
+            </details>
+          </section>
+
+          <section class="qs-station" data-qs-station="designer" data-qs-accent="violet" aria-labelledby="qs-designer-title" hidden>
+            <h4 id="qs-designer-title">State Designer</h4>
+            <p>Here you work the problem the other way round. Each card sets targets for |α|², |β|² and the angle of β, and you design the state. Many answers work. The checker tests the state you actually build. Angles are measured as in Lesson 6, from the positive real axis.</p>
+            <div data-qs-plot-slot></div>
+            <fieldset disabled>
+              <legend class="qs-sr-only">State Designer controls</legend>
+              <div class="qs-complex" role="group" aria-label="α"><label>Real part of α <input class="qs-answer" type="text" name="a-re" value="1/√2" autocomplete="off" spellcheck="false"></label><label>Imaginary part of α <input class="qs-answer" type="text" name="a-im" value="0" autocomplete="off" spellcheck="false"></label></div>
+              <div class="qs-complex" role="group" aria-label="β"><label>Real part of β <input class="qs-answer" type="text" name="b-re" value="1/√2" autocomplete="off" spellcheck="false"></label><label>Imaginary part of β <input class="qs-answer" type="text" name="b-im" value="0" autocomplete="off" spellcheck="false"></label></div>
+              <p class="qs-readout" data-qs-read="state" aria-live="polite">|α|² = 0.5 · |β|² = 0.5.</p>
+              <div class="qs-missions">
+                <details class="qs-mission" data-qs-mission="designer-quarter">
+                  <summary>One quarter, straight up<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Design a state with |α|² = 1/4, |β|² = 3/4 and β at +90°.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="designer-third">
+                  <summary>A nonreal α, a backward β<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Design a state with |α|² = 2/3, α not real, and β at 180°.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="designer-half">
+                  <summary>Equal weights, two angles<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Design a state with |α|² = |β|² = 1/2, α at 90° and β at −45°.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="designer-tenth">
+                  <summary>A small β in the second quadrant<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Design a state with |β|² = 1/10, β at 135°, and α a negative real number.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <p class="lesson-note">These cards use angles only as a way to describe complex numbers. Lesson 12 asks what the angle between α and β can change.</p>
+            <details class="qs-math">
+              <summary>Show the math</summary>
+              <p>A target |β|² fixes |β| = √(|β|²), and an angle θ fixes β = |β|(cos θ + i sin θ). Normalization then fixes |α|² = 1 − |β|², and any angle for α works unless a card restricts it. That freedom is why many designs pass.</p>
+            </details>
+          </section>
+
+          <section class="qs-station" data-qs-station="detective" data-qs-accent="red" aria-labelledby="qs-detective-title" hidden>
+            <h4 id="qs-detective-title">Error Detective</h4>
+            <p>Each case file holds a worked solution with exactly one planted mistake. Find the first line that goes wrong, and name the mistake. The diagram shows the situation each solution claims to describe.</p>
+            <div data-qs-plot-slot></div>
+            <fieldset disabled>
+              <legend class="qs-sr-only">Error Detective controls</legend>
+              <p class="qs-readout" data-qs-read="state">Open a case file.</p>
+              <div class="qs-missions">
+                <details class="qs-mission" data-qs-mission="detective-conj">
+                  <summary>Case 1 · The identical strangers<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Find ⟨φ|ψ⟩ for φ = (1/√2, i/√2)ᵀ and ψ = (i/√2, 1/√2)ᵀ.</p>
+                  <ol class="qs-worked"><li>Both states are normalized: 1/2 + 1/2 = 1.</li><li>The bra is ⟨φ| = (1/√2, i/√2).</li><li>⟨φ|ψ⟩ = (1/√2)(i/√2) + (i/√2)(1/√2) = i/2 + i/2 = i.</li><li>So |⟨φ|ψ⟩| = 1, the largest an overlap of normalized states can be.</li></ol>
+                  <div class="qs-fields"><label>First wrong line <select name="conj-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="conj-kind" required><option value="">Choose</option><option value="conj">Forgot to conjugate the bra</option><option value="square">Divided by the squared norm</option><option value="zsq">Used z² instead of |z|²</option><option value="zero">Tried to normalize the zero vector</option><option value="order">Swapped the basis order</option></select></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="detective-square">
+                  <summary>Case 2 · The shrinking state<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Normalize (1 + i, 1 − 2i)ᵀ.</p>
+                  <ol class="qs-worked"><li>|1 + i|² = 2 and |1 − 2i|² = 5.</li><li>‖ψ‖² = 2 + 5 = 7.</li><li>Divide both entries by 7: ((1 + i)/7, (1 − 2i)/7)ᵀ.</li><li>This pair is the normalized state.</li></ol>
+                  <div class="qs-fields"><label>First wrong line <select name="square-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="square-kind" required><option value="">Choose</option><option value="conj">Forgot to conjugate the bra</option><option value="square">Divided by the squared norm</option><option value="zsq">Used z² instead of |z|²</option><option value="zero">Tried to normalize the zero vector</option><option value="order">Swapped the basis order</option></select></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="detective-zsq">
+                  <summary>Case 3 · The negative length<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Find ‖ψ‖² for (1 + 2i, 4i)ᵀ.</p>
+                  <ol class="qs-worked"><li>|1 + 2i|² = 1² + 2² = 5.</li><li>The β term is (4i)² = −16.</li><li>‖ψ‖² = 5 − 16 = −11.</li><li>A negative squared norm means no such state exists.</li></ol>
+                  <div class="qs-fields"><label>First wrong line <select name="zsq-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="zsq-kind" required><option value="">Choose</option><option value="conj">Forgot to conjugate the bra</option><option value="square">Divided by the squared norm</option><option value="zsq">Used z² instead of |z|²</option><option value="zero">Tried to normalize the zero vector</option><option value="order">Swapped the basis order</option></select></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="detective-zero">
+                  <summary>Case 4 · Something from nothing<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Normalize (0, 0)ᵀ.</p>
+                  <ol class="qs-worked"><li>‖ψ‖² = |0|² + |0|² = 0.</li><li>So ‖ψ‖ = 0.</li><li>The two entries are equal, so the normalized state has equal entries: (1/√2, 1/√2)ᵀ.</li><li>Check: 1/2 + 1/2 = 1.</li></ol>
+                  <div class="qs-fields"><label>First wrong line <select name="zero-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="zero-kind" required><option value="">Choose</option><option value="conj">Forgot to conjugate the bra</option><option value="square">Divided by the squared norm</option><option value="zsq">Used z² instead of |z|²</option><option value="zero">Tried to normalize the zero vector</option><option value="order">Swapped the basis order</option></select></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="detective-order">
+                  <summary>Case 5 · The upside-down column<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>|ψ⟩ = ((1 + i)/2)|1⟩ + (i/√2)|0⟩ in ℬ = (|0⟩, |1⟩). Write the bra ⟨ψ|.</p>
+                  <ol class="qs-worked"><li>|(1 + i)/2|² + |i/√2|² = 1/2 + 1/2 = 1, so ψ is normalized.</li><li>The column is ((1 + i)/2, i/√2)ᵀ.</li><li>Conjugating each entry gives ⟨ψ| = ((1 − i)/2, −i/√2).</li><li>So α* = (1 − i)/2.</li></ol>
+                  <div class="qs-fields"><label>First wrong line <select name="order-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="order-kind" required><option value="">Choose</option><option value="conj">Forgot to conjugate the bra</option><option value="square">Divided by the squared norm</option><option value="zsq">Used z² instead of |z|²</option><option value="zero">Tried to normalize the zero vector</option><option value="order">Swapped the basis order</option></select></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="qs-math">
+              <summary>Show the math</summary>
+              <p>Watch for five classic slips. A bra conjugates every entry. Normalizing divides by the norm ‖ψ‖, not by ‖ψ‖². A squared norm adds |z|² = z*z, never z². The zero pair has norm 0 and can’t be normalized. A column lists coefficients in the order of the basis, not the order the terms are written.</p>
+            </details>
+          </section>
+
+          <section class="qs-station" data-qs-station="systems" data-qs-accent="blue" aria-labelledby="qs-systems-title" hidden>
+            <h4 id="qs-systems-title">Same Math, Different Systems</h4>
+            <p class="lesson-kicker">Optional preview</p>
+            <p>This is a preview of labels only. The same two-amplitude state can describe the polarization of a photon, the spin of an electron, or two energy levels of an atom. Only the names on |0⟩ and |1⟩ change. What each system does when you measure it comes in Lessons 13 and 16.</p>
+            <div data-qs-plot-slot></div>
+            <fieldset disabled>
+              <legend class="qs-sr-only">Same Math, Different Systems controls</legend>
+              <div class="qs-fields">
+                <label>System and labels <select name="system"><option value="photon" selected>Photon polarization · |0⟩ = |H⟩, |1⟩ = |V⟩</option><option value="spin">Electron spin along z · |0⟩ = |↑⟩, |1⟩ = |↓⟩</option><option value="atom">Atomic levels · |0⟩ = |g⟩, |1⟩ = |e⟩</option><option value="photonv">Photon, other convention · |0⟩ = |V⟩, |1⟩ = |H⟩</option></select></label>
+              </div>
+              <div class="qs-complex" role="group" aria-label="the coefficient of |0⟩"><label>Real part of the coefficient of &#124;0⟩ <input class="qs-answer" type="text" name="top-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of the coefficient of &#124;0⟩ <input class="qs-answer" type="text" name="top-im" autocomplete="off" spellcheck="false"></label></div>
+              <div class="qs-complex" role="group" aria-label="the coefficient of |1⟩"><label>Real part of the coefficient of &#124;1⟩ <input class="qs-answer" type="text" name="bot-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of the coefficient of &#124;1⟩ <input class="qs-answer" type="text" name="bot-im" autocomplete="off" spellcheck="false"></label></div>
+              <p class="qs-readout" data-qs-read="state" aria-live="polite">Labels: photon polarization.</p>
+              <div class="qs-missions">
+                <details class="qs-mission" data-qs-mission="systems-atom">
+                  <summary>From photon to atom<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>A photon is in ((1 + i)/2)|H⟩ + (1/√2)|V⟩. Choose the atomic levels and enter the column of the atom state with the same amplitudes.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="systems-spin">
+                  <summary>Read a spin state<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>An electron is in (i/√3)|↓⟩ + √(2/3)|↑⟩. Choose electron spin and enter its column.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="systems-same">
+                  <summary>What stays the same?<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Tick everything that is identical for the photon, spin and atom versions of one state.</p>
+                  <div class="qs-fields">
+                    <label class="qs-check-row"><input type="checkbox" name="same-col"> The column of amplitudes</label>
+                    <label class="qs-check-row"><input type="checkbox" name="same-norm"> The squared norm ‖ψ‖²</label>
+                    <label class="qs-check-row"><input type="checkbox" name="same-label"> The label on |1⟩</label>
+                    <label class="qs-check-row"><input type="checkbox" name="same-meaning"> What |1⟩ means physically</label>
+                  </div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="systems-convention">
+                  <summary>Another textbook’s convention<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Another book uses |0⟩ = |V⟩ and |1⟩ = |H⟩. Choose that convention and enter the column for ((1 + i)/2)|H⟩ + (1/√2)|V⟩.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="qs-math">
+              <summary>Show the math</summary>
+              <p>A two-level state is α|0⟩ + β|1⟩ with |α|² + |β|² = 1. Normalization, the bra, inner products and norms use only α and β, so they work the same way in every system. Choosing which physical state is called |0⟩ is a convention, and changing it reorders the column.</p>
+            </details>
+          </section>
+
+          <section class="qs-station" data-qs-station="three" data-qs-accent="orange" aria-labelledby="qs-three-title" hidden>
+            <h4 id="qs-three-title">Three-Level States</h4>
+            <p>Add a third basis ket |2⟩. A state now has three complex amplitudes, |ψ⟩ = α|0⟩ + β|1⟩ + γ|2⟩, and ‖ψ‖² = |α|² + |β|² + |γ|². Load a state, then choose your own divisor d and divide every entry by it.</p>
+            <div data-qs-plot-slot></div>
+            <fieldset disabled>
+              <legend class="qs-sr-only">Three-Level States controls</legend>
+              <div class="qs-complex" role="group" aria-label="α"><label>Real part of α <input class="qs-answer" type="text" name="a-re" value="1" autocomplete="off" spellcheck="false"></label><label>Imaginary part of α <input class="qs-answer" type="text" name="a-im" value="0" autocomplete="off" spellcheck="false"></label></div>
+              <div class="qs-complex" role="group" aria-label="β"><label>Real part of β <input class="qs-answer" type="text" name="b-re" value="0" autocomplete="off" spellcheck="false"></label><label>Imaginary part of β <input class="qs-answer" type="text" name="b-im" value="1" autocomplete="off" spellcheck="false"></label></div>
+              <div class="qs-complex" role="group" aria-label="γ"><label>Real part of γ <input class="qs-answer" type="text" name="g-re" value="1" autocomplete="off" spellcheck="false"></label><label>Imaginary part of γ <input class="qs-answer" type="text" name="g-im" value="1" autocomplete="off" spellcheck="false"></label></div>
+              <div class="qs-button-row"><button class="qs-primary" type="button" data-qs-action="load">Load this state</button><button type="button" data-qs-action="drop">Set γ to 0</button></div>
+              <div class="qs-fields"><label>Divisor d <input class="qs-answer" type="text" name="d" autocomplete="off" spellcheck="false"></label></div>
+              <div class="qs-button-row"><button class="qs-primary" type="button" data-qs-action="divide">Divide every entry by d</button></div>
+              <p class="qs-readout" data-qs-read="state" aria-live="polite">Enter α, β and γ, then load the state.</p>
+              <div class="qs-missions">
+                <details class="qs-mission" data-qs-mission="three-norm">
+                  <summary>Three-term squared norm<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Find ‖ψ‖² for (1, i, 1 + i)ᵀ.</p>
+                  <div class="qs-fields"><label>‖ψ‖² <input class="qs-answer" type="text" name="norm-ans" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="three-divide">
+                  <summary>Choose the divisor<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Load (1, i, 1 + i)ᵀ and divide by the d that normalizes it.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="three-drop">
+                  <summary>Drop a level, renormalize<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Load (1/2, i/2, (1 + i)/2)ᵀ, set γ to 0, and divide by the d that normalizes what is left.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="three-orth">
+                  <summary>Orthogonal in three dimensions<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Load a normalized state that is orthogonal to (1, 1, 1)ᵀ/√3 and has at least one nonreal entry.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="qs-math">
+              <summary>Show the math</summary>
+              <p>‖ψ‖² = |α|² + |β|² + |γ|², and dividing every entry by the positive number ‖ψ‖ normalizes the state. The bra is (α*, β*, γ*), and ⟨φ|ψ⟩ = φ₁*ψ₁ + φ₂*ψ₂ + φ₃*ψ₃. Nothing new is needed: each sum just gains a term.</p>
+            </details>
+          </section>
+
+          <section class="qs-station" data-qs-station="bars" data-qs-accent="green" aria-labelledby="qs-bars-title" hidden>
+            <h4 id="qs-bars-title">Born Bars Preview</h4>
+            <p class="lesson-kicker">Optional preview</p>
+            <p>This is a preview of the bar chart only. For a normalized state, draw |α|² and |β|² as two bars. They are nonnegative and add to 1. Lesson 13 states the Born rule and explains what these bars predict about measurements.</p>
+            <div data-qs-plot-slot></div>
+            <fieldset disabled>
+              <legend class="qs-sr-only">Born Bars Preview controls</legend>
+              <div class="qs-complex" role="group" aria-label="α"><label>Real part of α <input class="qs-answer" type="text" name="a-re" value="1/√2" autocomplete="off" spellcheck="false"></label><label>Imaginary part of α <input class="qs-answer" type="text" name="a-im" value="0" autocomplete="off" spellcheck="false"></label></div>
+              <div class="qs-complex" role="group" aria-label="β"><label>Real part of β <input class="qs-answer" type="text" name="b-re" value="0" autocomplete="off" spellcheck="false"></label><label>Imaginary part of β <input class="qs-answer" type="text" name="b-im" value="1/√2" autocomplete="off" spellcheck="false"></label></div>
+              <p class="qs-readout" data-qs-read="state" aria-live="polite">Normalized.</p>
+              <div class="qs-missions">
+                <details class="qs-mission" data-qs-mission="bars-read">
+                  <summary>Predict the bars<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>For ((1 + i)/√3, i/√3)ᵀ, enter both bar heights.</p>
+                  <div class="qs-fields"><label>Bar for &#124;0⟩ <input class="qs-answer" type="text" name="r0-ans" autocomplete="off" spellcheck="false"></label><label>Bar for &#124;1⟩ <input class="qs-answer" type="text" name="r1-ans" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="bars-raw">
+                  <summary>Normalize before reading<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Someone hands you (2 − i, 2i)ᵀ. Enter the bar heights of the normalized state.</p>
+                  <div class="qs-fields"><label>Bar for &#124;0⟩ <input class="qs-answer" type="text" name="w0-ans" autocomplete="off" spellcheck="false"></label><label>Bar for &#124;1⟩ <input class="qs-answer" type="text" name="w1-ans" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="bars-valid">
+                  <summary>Which bars are possible?<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Only one pair of bar heights can come from a normalized two-level state. Which one?</p>
+                  <div class="qs-fields"><label>Bar heights <select name="valid-pick" required><option value="">Choose</option><option value="a">0.5 and 0.6</option><option value="b">0.25 and 0.75</option><option value="c">−0.2 and 1.2</option><option value="d">0.3 and 0.3</option></select></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="qs-math">
+              <summary>Show the math</summary>
+              <p>Each bar is a squared magnitude, so it is never negative. For a normalized state, |α|² + |β|² = 1, so the bars add to 1. For an unnormalized pair, divide each squared magnitude by ‖ψ‖² first. The bars show only magnitudes, so different states can share the same bars.</p>
+            </details>
+          </section>
+
+          <section class="qs-station" data-qs-station="bloch" data-qs-accent="violet" aria-labelledby="qs-bloch-title" hidden>
+            <h4 id="qs-bloch-title">Bloch Sphere Preview (3D)</h4>
+            <p class="lesson-kicker">Optional preview</p>
+            <p>Every normalized two-level state can be drawn as a point on a sphere. This preview only places and reads points. The angle θ from the top satisfies |α| = cos(θ/2), so |0⟩ sits at the top and |1⟩ at the bottom. For these preview states the longitude φ comes from a table: β/α = 1 gives φ = 0° (+x), i gives 90° (+y), −1 gives 180° (−x), and −i gives 270° (−y).</p>
+            <p class="lesson-note">Lesson 12 explains what the longitude means, and Lesson 16 connects this sphere to spin measurements. Neither is used here.</p>
+            <div data-qs-plot-slot></div>
+            <fieldset disabled>
+              <legend class="qs-sr-only">Bloch Sphere Preview controls</legend>
+              <div class="qs-fields">
+                <label>Turn the view <output data-qs-for="yaw" data-qs-unit="°">30°</output><input type="range" name="yaw" min="0" max="355" step="5" value="30"></label>
+                <label>Tilt the view <output data-qs-for="tilt" data-qs-unit="°">20°</output><input type="range" name="tilt" min="-60" max="60" step="5" value="20"></label>
+              </div>
+              <div class="qs-fields">
+                <label>Marker angle from the top, θ <output data-qs-for="polar" data-qs-unit="°">0°</output><input type="range" name="polar" min="0" max="180" step="15" value="0"></label>
+                <label>Marker longitude, φ <output data-qs-for="azimuth" data-qs-unit="°">0°</output><input type="range" name="azimuth" min="0" max="345" step="15" value="0"></label>
+                <label>State to pin <select name="target"><option value="zero" selected>|0⟩</option><option value="one">|1⟩</option><option value="plus">|+⟩ = (|0⟩ + |1⟩)/√2</option><option value="minus">|−⟩ = (|0⟩ − |1⟩)/√2</option><option value="plusi">(|0⟩ + i|1⟩)/√2</option><option value="minusi">(|0⟩ − i|1⟩)/√2</option></select></label>
+              </div>
+              <div class="qs-button-row"><button class="qs-primary" type="button" data-qs-action="pin">Pin this state at the marker</button><button type="button" data-qs-action="clear">Clear pins</button></div>
+              <p class="qs-readout" data-qs-read="state" aria-live="polite">Marker at θ = 0°, φ = 0°.</p>
+              <ul class="qs-log" data-qs-log="pins" aria-label="Pinned states"></ul>
+              <div class="qs-missions">
+                <details class="qs-mission" data-qs-mission="bloch-axis">
+                  <summary>Poles and equator<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Pin |0⟩, |1⟩, |+⟩ and |−⟩ at their points.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="bloch-y">
+                  <summary>The other pair on the equator<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Pin (|0⟩ + i|1⟩)/√2 and (|0⟩ − i|1⟩)/√2 at their points.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="bloch-read">
+                  <summary>Read a point<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>While this mission is open, a red point marked ? sits 60° from the top on the +x meridian. Which state is it?</p>
+                  <div class="qs-fields"><label>State <select name="read-pick" required><option value="">Choose</option><option value="a">(√3/2, 1/2)ᵀ</option><option value="b">(1/2, √3/2)ᵀ</option><option value="c">(1/√2, 1/√2)ᵀ</option></select></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="bloch-opposite">
+                  <summary>Opposite points<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Choose the state at the point opposite (1, i)ᵀ/√2, then compute the inner product of (1, i)ᵀ/√2 with it.</p>
+                  <div class="qs-fields"><label>Opposite state <select name="opp-pick" required><option value="">Choose</option><option value="a">(1, −i)ᵀ/√2</option><option value="b">(1, −1)ᵀ/√2</option><option value="c">(0, 1)ᵀ</option></select></label></div>
+                  <div class="qs-complex" role="group" aria-label="the inner product"><label>Real part of the inner product <input class="qs-answer" type="text" name="opp-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of the inner product <input class="qs-answer" type="text" name="opp-im" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="qs-math">
+              <summary>Show the math</summary>
+              <p>A point at angle θ from the top and longitude φ has coordinates (sin θ cos φ, sin θ sin φ, cos θ). The latitude comes from magnitudes alone: |α| = cos(θ/2) and |β| = sin(θ/2), so |α|² + |β|² = 1 for every point. Opposite points, such as |0⟩ and |1⟩ or |+⟩ and |−⟩, are orthogonal states.</p>
             </details>
           </section>
         </div>
