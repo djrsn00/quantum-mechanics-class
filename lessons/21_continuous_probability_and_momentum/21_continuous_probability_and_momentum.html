@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Measure position and momentum on fresh quantum preparations, explore the Fourier relationship between their densities, and forecast detections at the Quantum Weather Station.">
+  <title>Continuous Probability and Momentum | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+  <script type="module" src="./scripts/lesson.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)"
+                  stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none"
+                   stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8"
+                stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none"
+                   stroke="url(#logo-spectrum)" stroke-width="1.6"
+                   transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none"
+                stroke="#edffef" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static" viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 464 83"/>
+            <path class="track-violet" d="M218 54C265 80 333 97 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M218 46v16m-8-8h16"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button"
+              aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and-coordinates/8_bases_and-coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html" aria-current="page"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="../22_the_one_dimensional_schrodinger_equation/22_the_one_dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main momentum-lesson" aria-labelledby="mp-title">
+    <header class="mp-intro mp-stack">
+      <p class="mp-kicker">Lesson 21</p>
+      <h2 id="mp-title">Continuous Probability and Momentum</h2>
+      <p class="mp-lead"><strong>Two sources produce exactly the same position histogram. Can a momentum detector tell which source was used?</strong></p>
+      <p>Raise the Gaussian’s central momentum from 0 to 1 ℏ/nm. Compare the position and momentum curves. Then leave the central momentum fixed, halve the packet width from 1 to 0.5 nm, and compare the two standard deviations.</p>
+    </header>
+
+    <section class="mp-panel" aria-labelledby="mp-lab-title">
+      <h3 id="mp-lab-title">Position and Momentum Lab</h3>
+      <p>Both views describe the same preparation at a fixed time. Use the view selector to choose which observable a new detection will measure. Each detection uses a fresh preparation.</p>
+      <p class="mp-note" id="mp-static-note">The plot and readouts show the opening Gaussian. Interactive controls become available when the lesson script loads.</p>
+
+      <div class="mp-lab-grid">
+        <div class="mp-stack">
+          <fieldset class="mp-card" id="mp-preparation-controls" disabled>
+            <legend>Prepare the source</legend>
+            <div class="mp-field">
+              <label for="mp-preset">Preparation</label>
+              <select id="mp-preset">
+                <option value="gaussian" selected>Single Gaussian</option>
+                <option value="coherent">Two coherent packets</option>
+              </select>
+            </div>
+
+            <div class="mp-field">
+              <div class="mp-label-row"><label for="mp-sigma" id="mp-sigma-label">Position width σ</label><span id="mp-sigma-value">1.00 nm</span></div>
+              <input id="mp-sigma" type="range" min="0.5" max="1.5" step="0.05" value="1" aria-valuetext="1.00 nanometers">
+            </div>
+            <div class="mp-field">
+              <div class="mp-label-row"><label for="mp-carrier" id="mp-carrier-label">Central momentum p₀</label><span id="mp-carrier-value">0.00 ℏ/nm</span></div>
+              <input id="mp-carrier" type="range" min="-3" max="3" step="0.25" value="0" aria-valuetext="0.00 h-bar per nanometer">
+            </div>
+
+            <div class="mp-stack" id="mp-coherent-controls" hidden>
+              <div class="mp-field">
+                <div class="mp-label-row"><label for="mp-separation">Packet separation d</label><span id="mp-separation-value">2.0 nm</span></div>
+                <input id="mp-separation" type="range" min="1" max="4" step="0.1" value="2" aria-valuetext="2.0 nanometers">
+              </div>
+              <div class="mp-field">
+                <div class="mp-label-row"><label for="mp-phase">Relative phase θ</label><span id="mp-phase-value">0°</span></div>
+                <input id="mp-phase" type="range" min="0" max="360" step="1" value="0" aria-valuetext="0 degrees" aria-describedby="mp-phase-help">
+                <p class="mp-note" id="mp-phase-help">The packets are centered at −d/2 and +d/2. Compare 0° and 180° at p₀ in Momentum Space.</p>
+                <div class="mp-actions" role="group" aria-label="Relative phase shortcuts">
+                  <button type="button" data-mp-phase="0">0°</button>
+                  <button type="button" data-mp-phase="90">90°</button>
+                  <button type="button" data-mp-phase="180">180°</button>
+                </div>
+              </div>
+            </div>
+            <p class="mp-note">Changing the preparation starts fresh position and momentum ensembles.</p>
+          </fieldset>
+
+          <fieldset class="mp-card" id="mp-detector-controls" disabled>
+            <legend>Choose a view and detector gate</legend>
+            <div class="mp-field">
+              <label for="mp-view">Representation</label>
+              <select id="mp-view">
+                <option value="position" selected>Position Space</option>
+                <option value="momentum">Momentum Space</option>
+              </select>
+            </div>
+            <div class="mp-field">
+              <div class="mp-label-row"><label for="mp-lower">Lower gate edge</label><span id="mp-lower-value">−1.00 nm</span></div>
+              <input id="mp-lower" type="range" min="-6" max="6" step="0.05" value="-1" aria-valuetext="minus 1.00 nanometers" aria-describedby="mp-gate-help">
+            </div>
+            <div class="mp-field">
+              <div class="mp-label-row"><label for="mp-upper">Upper gate edge</label><span id="mp-upper-value">1.00 nm</span></div>
+              <input id="mp-upper" type="range" min="-6" max="6" step="0.05" value="1" aria-valuetext="1.00 nanometers" aria-describedby="mp-gate-help">
+            </div>
+            <p class="mp-note" id="mp-gate-help">Each view remembers its own gate. The edges can meet. Moving them reclassifies existing detections.</p>
+          </fieldset>
+        </div>
+
+        <div class="mp-stack">
+          <figure class="mp-card">
+            <figcaption id="mp-plot-title">Position probability density · nm⁻¹</figcaption>
+            <ul class="mp-legend">
+              <li><span class="mp-key mp-key-density" aria-hidden="true"></span> Predicted density</li>
+              <li><span class="mp-key mp-key-gate" aria-hidden="true"></span> Detector area</li>
+              <li><span class="mp-key mp-key-samples" aria-hidden="true"></span> Sample histogram</li>
+            </ul>
+            <svg class="mp-plot" id="mp-density-plot" viewBox="0 0 640 228" role="img"
+                 aria-labelledby="mp-plot-title" aria-describedby="mp-plot-description" focusable="false">
+              <desc id="mp-plot-description">Opening Gaussian position density centered at zero. The area from minus one to plus one nanometers is shaded. There are no samples.</desc>
+              <path class="mp-grid" d="M62 20H602 M62 58.75H602 M62 97.5H602 M62 136.25H602 M152 20V175 M242 20V175 M332 20V175 M422 20V175 M512 20V175 M602 20V175"/>
+              <path class="mp-axis" d="M62 20V175H602"/>
+              <g class="mp-ticks" text-anchor="end">
+                <text id="mp-y4" x="55" y="25">0.5</text><text id="mp-y3" x="55" y="64">0.375</text>
+                <text id="mp-y2" x="55" y="103">0.25</text><text id="mp-y1" x="55" y="141">0.125</text>
+                <text x="55" y="180">0</text>
+              </g>
+              <g class="mp-ticks" text-anchor="middle">
+                <text x="62" y="198">−6</text><text x="152" y="198">−4</text><text x="242" y="198">−2</text>
+                <text x="332" y="198">0</text><text x="422" y="198">+2</text><text x="512" y="198">+4</text><text x="602" y="198">+6</text>
+                <text id="mp-x-axis" x="332" y="220">Position x (nm)</text>
+              </g>
+              <path class="mp-gate-area" id="mp-gate-area" d="M287 99.99 L298.25 81.65 L309.5 65.86 L320.75 55.13 L332 51.33 L343.25 55.13 L354.5 65.86 L365.75 81.65 L377 99.99 V175 H287 Z"/>
+              <g class="mp-histogram" id="mp-histogram" aria-hidden="true"></g>
+              <path class="mp-density-line" id="mp-density-line" d="M62 175 L84.5 175 L107 175 L129.5 175 L152 174.96 L174.5 174.73 L197 173.63 L219.5 169.57 L242 158.26 L264.5 134.85 L287 99.99 L298.25 81.65 L309.5 65.86 L320.75 55.13 L332 51.33 L343.25 55.13 L354.5 65.86 L365.75 81.65 L377 99.99 L399.5 134.85 L422 158.26 L444.5 169.57 L467 173.63 L489.5 174.73 L512 174.96 L534.5 175 L557 175 L579.5 175 L602 175"/>
+              <line class="mp-gate-line" id="mp-gate-left" x1="287" y1="20" x2="287" y2="175"/>
+              <line class="mp-gate-line" id="mp-gate-right" x1="377" y1="20" x2="377" y2="175"/>
+            </svg>
+            <p class="mp-note" id="mp-plot-summary">Single Gaussian in Position Space. Gate [−1.00, 1.00] nm. Visible range [−6, 6] nm.</p>
+          </figure>
+
+          <section class="mp-card" aria-labelledby="mp-readouts-title">
+            <h4 id="mp-readouts-title">Full-line predictions</h4>
+            <dl class="mp-readouts">
+              <div><dt>Mean position ⟨X⟩</dt><dd id="mp-mean-x">0.000 nm</dd></div>
+              <div><dt>Mean momentum ⟨P⟩</dt><dd id="mp-mean-p">0.000 ℏ/nm</dd></div>
+              <div><dt>Position width Δx</dt><dd id="mp-width-x">1.000 nm</dd></div>
+              <div><dt>Momentum width Δp</dt><dd id="mp-width-p">0.500 ℏ/nm</dd></div>
+              <div><dt>Uncertainty product ΔxΔp</dt><dd id="mp-product">0.500 ℏ</dd></div>
+              <div><dt id="mp-reference-label">Density at x = 0</dt><dd id="mp-reference-density">0.39894 nm⁻¹</dd></div>
+              <div><dt>Theoretical gate probability</dt><dd id="mp-theory">68.27%</dd></div>
+              <div><dt>Probability within plot</dt><dd id="mp-visible">&gt;99.99999%</dd></div>
+            </dl>
+            <p class="mp-note">The plots crop the tails at ±6 in the active units. The probability and uncertainty calculations use the full-line state.</p>
+          </section>
+        </div>
+      </div>
+
+      <section class="mp-card" aria-labelledby="mp-detections-title">
+        <h4 id="mp-detections-title">Simulated detections</h4>
+        <p id="mp-ensemble-label">Position ensemble</p>
+        <fieldset class="mp-control-group" id="mp-detection-controls" disabled>
+          <legend>Measure the active observable</legend>
+          <div class="mp-field">
+            <label for="mp-batch-size">Batch size</label>
+            <select id="mp-batch-size">
+              <option value="100">100</option>
+              <option value="500" selected>500</option>
+              <option value="1000">1,000</option>
+            </select>
+          </div>
+          <div class="mp-actions">
+            <button type="button" class="mp-primary" id="mp-detect-one">Run one detection</button>
+            <button type="button" id="mp-detect-batch">Run batch</button>
+            <button type="button" id="mp-clear">Clear detections</button>
+            <button type="button" id="mp-new-run">New run</button>
+          </div>
+        </fieldset>
+        <dl class="mp-readouts">
+          <div><dt>Detections</dt><dd id="mp-total">0</dd></div>
+          <div><dt>Hits inside gate</dt><dd id="mp-hits">0</dd></div>
+          <div><dt>Observed hit fraction</dt><dd id="mp-observed">—</dd></div>
+          <div><dt>Detections outside plot</dt><dd id="mp-outside">0</dd></div>
+          <div><dt>Latest detection</dt><dd id="mp-latest">—</dd></div>
+        </dl>
+        <p class="mp-note">Position and momentum runs use separate pseudorandom draws. Each histogram bar is its count divided by the total detections, including those outside the plot, and by the bin width of 0.25 in the active units.</p>
+        <p class="mp-note">Clear detections clears the active ensemble. New run clears both ensembles and keeps the preparation and gates. Reset lab restores the opening Gaussian, both opening gates, Position Space, and batch size 500.</p>
+        <div class="mp-actions">
+          <button type="button" id="mp-reset" disabled>Reset lab</button>
+          <button type="button" id="mp-open-station" disabled aria-controls="mp-weather-station" aria-expanded="false">Enter Quantum Weather Station</button>
+        </div>
+        <p class="mp-feedback" id="mp-lab-status" role="status" aria-atomic="true"></p>
+      </section>
+
+      <section class="mp-card mp-station" id="mp-weather-station" aria-labelledby="mp-station-title" hidden>
+        <div class="mp-stack">
+          <h4 id="mp-station-title" tabindex="-1">Quantum Weather Station</h4>
+          <p>From a research outpost on a moon’s night side, inspect the density forecast, commit a predicted gate percentage, launch observations, and compare the report with your forecast.</p>
+        </div>
+
+        <figure class="mp-weather-figure">
+          <figcaption id="mp-weather-view">Position fog banks</figcaption>
+          <svg class="mp-weather-plot" id="mp-weather-plot" data-view="position" viewBox="0 0 640 244" role="img"
+               aria-labelledby="mp-weather-view" aria-describedby="mp-weather-description" focusable="false">
+            <desc id="mp-weather-description">The position cross-section shows a fog bank centered at zero. Its height encodes density. Dashed lines mark the detector gate from minus one to plus one nanometers.</desc>
+            <defs>
+              <linearGradient id="mp-weather-sky" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+                <stop offset="0" stop-color="#090d16"/>
+                <stop offset="1" stop-color="#0d201a"/>
+              </linearGradient>
+              <linearGradient id="mp-fog-fill" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+                <stop offset="0" stop-color="#63f59b" stop-opacity="0.56"/>
+                <stop offset="1" stop-color="#63f59b" stop-opacity="0.04"/>
+              </linearGradient>
+              <linearGradient id="mp-wind-fill" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+                <stop offset="0" stop-color="#c19bff" stop-opacity="0.65"/>
+                <stop offset="1" stop-color="#65b7ff" stop-opacity="0.05"/>
+              </linearGradient>
+            </defs>
+            <rect width="640" height="244" fill="url(#mp-weather-sky)"/>
+            <g class="mp-weather-scenery" aria-hidden="true">
+              <circle cx="503" cy="51" r="24" fill="#c9d3bd" opacity="0.64"/>
+              <circle cx="112" cy="27" r="1.5"/><circle cx="237" cy="46" r="1.2"/>
+              <circle cx="412" cy="23" r="1.5"/><circle cx="568" cy="37" r="1.3"/>
+              <path d="M0 142 71 107 105 119 188 95 266 139 340 125 398 137 467 107 532 126 585 101 640 131V190H0Z" fill="#101e22"/>
+              <path d="M0 164 92 154 130 159 216 136 290 165 365 149 429 158 483 139 572 153 640 143V190H0Z" fill="#112b24"/>
+            </g>
+            <path class="mp-weather-guides" d="M62 36H602 M62 103H602 M62 170H602 M152 36V186 M242 36V186 M332 36V186 M422 36V186 M512 36V186"/>
+            <rect class="mp-weather-gate" id="mp-weather-gate" x="287" y="36" width="90" height="150"/>
+            <path class="mp-weather-fill" id="mp-weather-fill" d="M62 170 L197 169 L242 155.53 L287 105.15 L309.5 75.66 L332 63.08 L354.5 75.66 L377 105.15 L422 155.53 L467 169 L602 170 Z"/>
+            <path class="mp-weather-crest" id="mp-weather-crest" d="M62 170 L197 169 L242 155.53 L287 105.15 L309.5 75.66 L332 63.08 L354.5 75.66 L377 105.15 L422 155.53 L467 169 L602 170"/>
+            <line class="mp-gate-line" id="mp-weather-left" x1="287" y1="36" x2="287" y2="186"/>
+            <line class="mp-gate-line" id="mp-weather-right" x1="377" y1="36" x2="377" y2="186"/>
+            <path class="mp-axis" d="M62 186H602 M62 182V191 M152 182V191 M242 182V191 M332 181V192 M422 182V191 M512 182V191 M602 182V191"/>
+            <g class="mp-weather-marks" id="mp-weather-marks" aria-hidden="true"></g>
+            <g class="mp-ticks" text-anchor="middle">
+              <text x="62" y="210">−6</text><text x="152" y="210">−4</text><text x="242" y="210">−2</text>
+              <text x="332" y="210">0</text><text x="422" y="210">+2</text><text x="512" y="210">+4</text><text x="602" y="210">+6</text>
+              <text id="mp-weather-axis" x="332" y="233">Position x (nm)</text>
+            </g>
+          </svg>
+          <ul class="mp-legend">
+            <li><span class="mp-key mp-key-density" aria-hidden="true"></span> Density crest height</li>
+            <li><span class="mp-key mp-key-gate" aria-hidden="true"></span> Gate edges</li>
+            <li><span class="mp-key mp-key-marks" aria-hidden="true"></span> Recent detections</li>
+          </ul>
+          <p class="mp-note" id="mp-weather-scale">Profile height spans 0 to 0.5 nm⁻¹. The background landscape shows the outpost.</p>
+          <p class="mp-note" id="mp-weather-summary">Position Space. Detector gate [−1.00, 1.00] nm.</p>
+        </figure>
+
+        <fieldset class="mp-control-group" id="mp-mission-controls" disabled>
+          <legend>Station assignments</legend>
+          <p class="mp-note" id="mp-station-preview">Inspect your current preparation with the lab controls above, or start a scored assignment.</p>
+          <div class="mp-stack" id="mp-mission-panel" hidden>
+            <h5 id="mp-mission-name">Original momentum gate</h5>
+            <p id="mp-mission-brief">A Gaussian source narrows from 1 to 0.5 nm at central momentum 0 ℏ/nm. Estimate the fraction the original momentum gate will catch.</p>
+            <p class="mp-mission-config" id="mp-mission-config">Momentum Space · Gaussian · σ = 0.50 nm · p₀ = 0.00 ℏ/nm · gate [−0.50, 0.50] ℏ/nm</p>
+            <p class="mp-note" id="mp-forecast-help">Forecast a percentage from 0 to 100. A forecast within 5 percentage points of the theoretical gate probability succeeds. The assignment fixes the preparation, view, and gate. The exact gate probability is revealed by the report after launch.</p>
+            <div class="mp-field">
+              <label for="mp-forecast">Your forecast (%)</label>
+              <input id="mp-forecast" type="number" min="0" max="100" step="0.1" inputmode="decimal" aria-describedby="mp-forecast-help">
+            </div>
+            <p class="mp-note" id="mp-committed" hidden></p>
+            <div class="mp-actions">
+              <button type="button" class="mp-primary" id="mp-commit">Commit forecast</button>
+              <button type="button" id="mp-launch" disabled>Launch 200 observations</button>
+            </div>
+          </div>
+          <div class="mp-actions">
+            <button type="button" class="mp-primary" id="mp-start-mission">Start first mission</button>
+            <button type="button" id="mp-retry-mission" disabled>Retry mission</button>
+            <button type="button" id="mp-new-mission" disabled>New mission</button>
+            <button type="button" id="mp-reset-station">Reset station</button>
+            <button type="button" id="mp-return">Return to lab</button>
+          </div>
+          <p class="mp-note">Retry keeps the assignment and clears its forecast and observations. Reset station restarts the first assignment. Return to lab restores the exploration setup and samples from before the assignment.</p>
+        </fieldset>
+
+        <section class="mp-card" id="mp-report" aria-labelledby="mp-report-title" hidden>
+          <h5 id="mp-report-title">Station report</h5>
+          <dl class="mp-readouts">
+            <div><dt>Committed forecast</dt><dd id="mp-report-forecast">—</dd></div>
+            <div><dt>Theoretical gate probability</dt><dd id="mp-report-theory">—</dd></div>
+            <div><dt>Observed hit fraction</dt><dd id="mp-report-observed">—</dd></div>
+            <div><dt>Batch observations</dt><dd id="mp-report-count">—</dd></div>
+            <div><dt>Forecast error</dt><dd id="mp-report-error">—</dd></div>
+          </dl>
+          <p id="mp-report-verdict"></p>
+          <p class="mp-note">Forecasts are scored against the integrated gate probability. The observed fraction can differ because 200 detections are a finite sample.</p>
+        </section>
+        <p class="mp-feedback" id="mp-station-status" role="status" aria-atomic="true"></p>
+      </section>
+    </section>
+
+    <section class="mp-panel" aria-labelledby="mp-representations-title">
+      <h3 id="mp-representations-title">A probability in either representation</h3>
+      <p>The same prepared state |ψ⟩ has position amplitudes ψ(x) = ⟨x|ψ⟩ and momentum amplitudes φ(p) = ⟨p|ψ⟩. A narrow position bin has probability approximately |ψ(x)|² Δx, where Δx here is the bin width and the density varies little across it. Sum over bins and take the limit to get an integral. The momentum calculation uses the same reasoning.</p>
+      <div class="mp-equation">
+        <p>P(a ≤ X ≤ b) = ∫<sub>a</sub><sup>b</sup> |ψ(x)|² dx</p>
+        <p>P(c ≤ P ≤ d) = ∫<sub>c</sub><sup>d</sup> |φ(p)|² dp</p>
+        <p>∫<sub>−∞</sub><sup>∞</sup> |ψ(x)|² dx = ∫<sub>−∞</sub><sup>∞</sup> |φ(p)|² dp = 1</p>
+      </div>
+      <p>Here X and P denote the random outcomes of position and momentum measurements. The integration variables x and p specify coordinates. An exact point has probability zero for these continuous distributions. Position density has units nm⁻¹, and momentum density has units (ℏ/nm)⁻¹.</p>
+      <p>Each momentum p corresponds to a spatial phase pattern exp(ipx/ℏ). The Fourier transform computes the amplitude of that pattern in ψ. With ℏ the reduced Planck constant, px/ℏ is dimensionless. In the lab’s numerical units, x is entered in nm and p in ℏ/nm, so their numerical product gives that ratio.</p>
+      <div class="mp-equation">
+        <p>φ(p) = (2πℏ)<sup>−1/2</sup> ∫<sub>−∞</sub><sup>∞</sup> ψ(x) exp(−ipx/ℏ) dx</p>
+        <p>ψ(x) = (2πℏ)<sup>−1/2</sup> ∫<sub>−∞</sub><sup>∞</sup> φ(p) exp(+ipx/ℏ) dp</p>
+      </div>
+      <p>These transforms preserve the norm. Switching views changes which representation you inspect. Run a detection to simulate a measurement on a new preparation.</p>
+    </section>
+
+    <section class="mp-panel" aria-labelledby="mp-gaussian-title">
+      <h3 id="mp-gaussian-title">Shift a peak or change its spread</h3>
+      <p>For a Gaussian centered at x = 0, let σ be its position standard deviation and p₀ its central momentum. The factor exp(ip₀x/ℏ) has magnitude one, so changing p₀ keeps the entire position density fixed.</p>
+      <p class="mp-equation">ψ(x) = (2πσ²)<sup>−1/4</sup> exp[−x²/(4σ²)] exp(ip₀x/ℏ)</p>
+      <p>In the Fourier integral, exp(ip₀x/ℏ) exp(−ipx/ℏ) = exp[−i(p−p₀)x/ℏ]. Write q = p−p₀. The Gaussian integral of exp[−x²/(4σ²)] exp(−iqx/ℏ) is 2σ√π exp[−σ²q²/ℏ²]. Thus the momentum amplitude is proportional to exp[−σ²(p−p₀)²/ℏ²]. Its squared magnitude is the normalized density</p>
+      <div class="mp-equation">
+        <p>|φ(p)|² = exp[−(p−p₀)²/(2σ<sub>p</sub>²)]/(√(2π)σ<sub>p</sub>)</p>
+        <p>σ<sub>p</sub> = ℏ/(2σ), &nbsp; ⟨P⟩ = p₀</p>
+      </div>
+      <p>Now use Δx for the standard deviation of X. By definition, Δx = √⟨(X−⟨X⟩)²⟩ and Δp = √⟨(P−⟨P⟩)²⟩. The uncertainty bound from the earlier lesson is ΔxΔp ≥ |⟨[X,P]⟩|/2. The position and momentum operators obey [X,P] = iℏ, so the lower bound is ℏ/2. For this unchirped Gaussian, Δx = σ and Δp = ℏ/(2σ), which attain that bound. These widths describe the spread of outcomes across fresh preparations. Detector resolution and the uncertainty of a fitted mean describe different quantities.</p>
+      <div class="mp-card">
+        <h4>Worked example · one standard deviation in either view</h4>
+        <p>At σ = 1 nm and p₀ = 0, the momentum width is 0.5 ℏ/nm. The position gate [−1,+1] nm and the momentum gate [−0.5,+0.5] ℏ/nm each cover one standard deviation on either side of their center. Each therefore contains about <strong>68.27%</strong>.</p>
+        <p>Halving σ to 0.5 nm doubles Δp to 1 ℏ/nm. Changing only p₀ translates the momentum curve and keeps both widths fixed. This answers the opening question. Even when two sources have identical position densities, a momentum detector can see a difference in their spatial phases.</p>
+      </div>
+    </section>
+
+    <section class="mp-panel" aria-labelledby="mp-coherent-title">
+      <h3 id="mp-coherent-title">Two packets give a momentum interference pattern</h3>
+      <p>Let g<sub>L</sub> and g<sub>R</sub> be real Gaussian amplitudes of individual width σ centered at −d/2 and +d/2. Put phase θ on the right packet and apply the same carrier phase exp(ip₀x/ℏ) to the entire state.</p>
+      <div class="mp-equation">
+        <p>ψ(x) = exp(ip₀x/ℏ)[g<sub>L</sub>(x) + exp(iθ)g<sub>R</sub>(x)]/√D</p>
+        <p>s = ∫<sub>−∞</sub><sup>∞</sup> g<sub>L</sub>g<sub>R</sub> dx = exp[−d²/(8σ²)]</p>
+        <p>D = 1 + 1 + 2s cos θ = 2(1+s cos θ)</p>
+      </div>
+      <p>The first two normalization terms are the individual packet norms. The cross term integrates to 2s cos θ because the packets overlap. The common carrier cancels from the position density.</p>
+      <p>Let G(q) be the normalized momentum amplitude for a single unshifted Gaussian, with q = p−p₀. Translating a packet by x₀ gives a Fourier phase exp(−iqx₀/ℏ) in this carrier-shifted transform. The left and right packet translations therefore give opposite signs in the exponent.</p>
+      <div class="mp-equation">
+        <p>φ(p) = G(q)[exp(+iqd/(2ℏ)) + exp(iθ) exp(−iqd/(2ℏ))]/√D</p>
+        <p>|φ(p)|² = |G(q)|² [1 + cos(θ−qd/ℏ)]/(1+s cos θ)</p>
+      </div>
+      <p>In Momentum Space, compare 0°, 90°, and 180°. The 0° pattern has constructive interference at p₀. At 180° the two contributions cancel there, giving a node. A finite gate around the node can still collect probability. Intermediate phases can make the density asymmetric, so the actual mean may differ from the carrier p₀.</p>
+      <details class="mp-card">
+        <summary>Calculate the combined widths</summary>
+        <div class="mp-stack mp-detail">
+          <p>Define Z = 1+s cos θ, κ = d/ℏ, and t = ℏ/(2σ), the momentum width of one component. The position density is even, so ⟨X⟩ = 0. Its second moment includes the two offsets and the overlap term.</p>
+          <div class="mp-equation">
+            <p>Δx² = σ² + d²/(4Z)</p>
+            <p>⟨q⟩ = sκt² sin θ/Z, &nbsp; ⟨P⟩ = p₀ + ⟨q⟩</p>
+            <p>⟨q²⟩ = t² − sκ²t⁴ cos θ/Z</p>
+            <p>Δp² = ⟨q²⟩ − ⟨q⟩²</p>
+          </div>
+          <p>The momentum terms follow by differentiating the Fourier integral of the Gaussian density |G(q)|², whose cosine average at κ is exp(−κ²t²/2) = s. The lab computes the variance about the actual mean. Gaussian gate integrals use the normal cumulative distribution. Integrating the oscillatory momentum density uses numerical quadrature on the chosen interval, independent of the displayed graph.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="mp-panel" aria-labelledby="mp-quiz-title">
+      <h3 id="mp-quiz-title">Check your understanding</h3>
+      <form id="mp-quiz">
+        <fieldset class="mp-card" id="mp-quiz-controls" disabled>
+          <legend>Compare two sources</legend>
+          <p id="mp-quiz-prompt">Two sources have identical position probabilities in every bin. Must they also have identical momentum probabilities?</p>
+          <div class="mp-stack" role="group" aria-labelledby="mp-quiz-prompt">
+            <label class="mp-choice"><input type="radio" name="mp-quiz-answer" value="same" required> Yes. The position probabilities determine the momentum probabilities.</label>
+            <label class="mp-choice"><input type="radio" name="mp-quiz-answer" value="phase"> No. The sources could have different spatial phases.</label>
+          </div>
+          <div class="mp-actions">
+            <button type="submit" class="mp-primary">Check answer</button>
+            <button type="button" id="mp-quiz-retry" hidden>Retry question</button>
+          </div>
+          <p class="mp-feedback" id="mp-quiz-feedback" role="status" aria-atomic="true"></p>
+        </fieldset>
+      </form>
+      <p>This lab compared two representations at a fixed time. In Lesson 22, the one-dimensional Schrödinger equation will determine how the wavefunction evolves.</p>
+    </section>
+
+    <nav class="mp-navigation" aria-label="Lesson navigation">
+      <a rel="prev" href="../20_wavefunctions/20_wavefunctions.html">
+        <span class="mp-note">← Previous</span>
+        <span>Wavefunctions</span>
+      </a>
+      <a rel="next" href="../22_the_one_dimensional_schrodinger_equation/22_the_one_dimensional_schrodinger_equation.html">
+        <span class="mp-note">Next →</span>
+        <span>The One-Dimensional Schrödinger Equation</span>
+      </a>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

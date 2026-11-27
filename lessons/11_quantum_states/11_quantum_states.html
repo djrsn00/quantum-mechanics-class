@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Build a pure quantum state in a two-level basis, normalize its complex amplitudes, and compare amplitude with probability.">
+  <title>Quantum States | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css?v=11-states-arcade">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+  <script type="module" src="./scripts/lesson.js?v=11-states-arcade"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)"
+                  stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none"
+                   stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8"
+                stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none"
+                   stroke="url(#logo-spectrum)" stroke-width="1.6"
+                   transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none"
+                stroke="#edffef" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static"
+             viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse"
+                  x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 464 83"/>
+            <path class="track-violet" d="M218 54C265 80 333 97 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M218 46v16m-8-8h16"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button"
+              aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and-coordinates/8_bases_and-coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="./11_quantum_states.html" aria-current="page"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="../22_the_one_dimensional_schrodinger_equation/22_the_one_dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main quantum-states-lesson" aria-labelledby="state-title">
+    <header class="lesson-intro">
+      <p class="lesson-kicker">Lesson 11 · Pure states and amplitudes</p>
+      <h2 id="state-title">Quantum States</h2>
+      <p class="lesson-lead">A state builder contains the numbers 3 and 4i. How can you turn them into the amplitudes of a normalized quantum state while preserving their relative sizes and complex phases?</p>
+      <p>A quantum state is a mathematical description of a preparation that we use to predict measurement outcomes. A pure state can be represented by a vector of norm 1. In this lesson the vector has two complex amplitudes, one for each member of a chosen basis.</p>
+      <p><a id="qs-arcade-link" href="#states-arcade">Open the optional Quantum States Arcade</a></p>
+    </header>
+
+    <section class="state-lab" id="state-lab" aria-labelledby="state-lab-title">
+      <div class="state-dye" aria-hidden="true"></div>
+
+      <header class="state-instrument">
+        <h3 id="state-lab-title">Quantum State Lab</h3>
+        <p>Choose a divisor for the opening pair, then normalize. Compare how much each arrow shrinks and whether either one turns.</p>
+        <p id="state-static-note" class="lesson-note">The plots show the opening candidate. The lesson script enables the controls. You can open the worked solution below the lab.</p>
+      </header>
+
+      <div class="state-layout">
+        <div class="state-editor">
+          <fieldset class="state-instrument state-controls" id="state-controls"
+                    aria-describedby="state-editor-note" disabled>
+            <legend>State builder</legend>
+
+            <div class="state-input-grid">
+              <label class="state-alpha" for="state-alpha-real">Real part of α
+                <input id="state-alpha-real" type="number" min="-4" max="4" step="any" value="3" required>
+              </label>
+              <label class="state-alpha" for="state-alpha-imag">Imaginary part of α
+                <input id="state-alpha-imag" type="number" min="-4" max="4" step="any" value="0" required>
+              </label>
+              <label class="state-beta" for="state-beta-real">Real part of β
+                <input id="state-beta-real" type="number" min="-4" max="4" step="any" value="0" required>
+              </label>
+              <label class="state-beta" for="state-beta-imag">Imaginary part of β
+                <input id="state-beta-imag" type="number" min="-4" max="4" step="any" value="4" required>
+              </label>
+            </div>
+
+            <p id="state-editor-note" class="lesson-note">Enter each part from −4 to 4. The imaginary input is the real number multiplying i.</p>
+
+            <div class="state-actions">
+              <button class="state-primary" id="state-normalize" type="button">Normalize</button>
+              <button id="state-reset" type="button">Reset</button>
+            </div>
+
+            <div class="state-presets" role="group" aria-labelledby="state-presets-title">
+              <h4 id="state-presets-title">Presets</h4>
+              <div class="state-actions">
+                <button type="button" data-state-preset="ket-zero" aria-pressed="false">Basis |0⟩</button>
+                <button type="button" data-state-preset="ket-one" aria-pressed="false">Basis |1⟩</button>
+                <button type="button" data-state-preset="opening" aria-pressed="true">Opening (3, 4i)</button>
+                <button type="button" data-state-preset="real" aria-pressed="false">Real β (3/5, 4/5)</button>
+                <button type="button" data-state-preset="imaginary" aria-pressed="false">Imaginary β (3/5, 4i/5)</button>
+                <button type="button" data-state-preset="zero-pair" aria-pressed="false">Zero pair (0, 0)</button>
+              </div>
+            </div>
+          </fieldset>
+
+          <form id="state-opening-prediction">
+            <fieldset class="state-instrument state-controls" id="state-prediction-controls" disabled>
+              <legend>Predict the opening divisor</legend>
+              <p>For the pair (3, 4i), the squared norm is 25 and the norm is 5. Which number should divide both entries?</p>
+              <div class="state-choice-grid">
+                <label class="state-choice">
+                  <input type="radio" name="state-divisor" value="5" required> Divide by 5
+                </label>
+                <label class="state-choice">
+                  <input type="radio" name="state-divisor" value="25"> Divide by 25
+                </label>
+              </div>
+              <div class="state-actions">
+                <button class="state-primary" type="submit">Check and normalize</button>
+              </div>
+              <p id="state-prediction-feedback" class="state-feedback" role="status" aria-atomic="true"></p>
+            </fieldset>
+          </form>
+        </div>
+
+        <section class="state-instrument state-readout" aria-labelledby="state-readout-title">
+          <h4 id="state-readout-title">State readout</h4>
+          <p id="state-status" class="state-status" data-status="candidate">Unnormalized candidate</p>
+
+          <div class="state-representations">
+            <p class="state-equation" aria-label="Ket expansion in the chosen basis">
+              |ψ⟩ = <span class="state-alpha" id="state-ket-alpha">3</span>|0⟩
+              <span id="state-ket-sign">+</span> <span class="state-beta" id="state-ket-beta">4i</span>|1⟩
+            </p>
+            <div class="state-column-equation">
+              <span>[|ψ⟩]<sub>ℬ</sub> =</span>
+              <div class="state-column" role="group" aria-label="Coefficient column, alpha first and beta second">
+                <span id="state-column-alpha" class="state-alpha">3</span>
+                <span id="state-column-beta" class="state-beta">4i</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="lesson-note">ψ names the ket. α multiplies |0⟩, β multiplies |1⟩, and i² = −1. The basis order is ℬ = (|0⟩, |1⟩), so α sits above β in the column.</p>
+
+          <dl class="state-readings">
+            <div>
+              <dt class="state-alpha">α contribution · |α|²</dt>
+              <dd id="state-alpha-squared">9</dd>
+            </div>
+            <div>
+              <dt class="state-beta">β contribution · |β|²</dt>
+              <dd id="state-beta-squared">16</dd>
+            </div>
+            <div>
+              <dt>Squared norm · |α|² + |β|²</dt>
+              <dd id="state-norm-squared">25</dd>
+            </div>
+            <div>
+              <dt>Norm · √(|α|² + |β|²)</dt>
+              <dd id="state-norm">5</dd>
+            </div>
+          </dl>
+          <p id="state-norm-work" class="state-equation">‖ψ‖² = 3² + 0² + 0² + 4² = 25. ‖ψ‖ = √25 = 5.</p>
+          <p id="state-interpretation" class="lesson-note">The squared magnitudes contribute to the squared norm. Normalize before reading them as probabilities.</p>
+
+          <section class="state-result" id="state-comparison" aria-labelledby="state-comparison-title" hidden>
+            <h4 id="state-comparison-title">Normalization comparison</h4>
+            <p id="state-comparison-note"></p>
+          </section>
+
+          <section class="state-result" id="state-probabilities" aria-labelledby="state-probabilities-title" hidden>
+            <h4 id="state-probabilities-title">Born-rule preview</h4>
+            <p class="lesson-note">Probabilities for a measurement in the ordered basis (|0⟩, |1⟩).</p>
+            <dl class="state-readings">
+              <div>
+                <dt class="state-alpha">Outcome 0 · |α|²</dt>
+                <dd id="state-prob-zero">—</dd>
+              </div>
+              <div>
+                <dt class="state-beta">Outcome 1 · |β|²</dt>
+                <dd id="state-prob-one">—</dd>
+              </div>
+            </dl>
+          </section>
+
+          <p id="state-announcement" class="state-feedback" role="status" aria-atomic="true"></p>
+        </section>
+      </div>
+
+      <div class="state-plot-grid">
+        <figure class="state-instrument state-figure state-alpha">
+          <figcaption>α · coefficient of |0⟩</figcaption>
+          <svg class="state-plane" id="state-alpha-plane" viewBox="0 0 360 320" role="img"
+               aria-labelledby="state-alpha-plane-title state-alpha-plane-desc"
+               data-origin-x="180" data-origin-y="156" data-unit="28">
+            <title id="state-alpha-plane-title">Complex plane for alpha</title>
+            <desc id="state-alpha-plane-desc">Alpha is 3 plus 0i. Its arrow goes from the origin to 3 on the real axis. The endpoint is a circle.</desc>
+            <path class="state-plane-grid"
+                  d="M68 44V268 M96 44V268 M124 44V268 M152 44V268 M208 44V268 M236 44V268 M264 44V268 M292 44V268
+                     M68 44H292 M68 72H292 M68 100H292 M68 128H292 M68 184H292 M68 212H292 M68 240H292 M68 268H292"/>
+            <path class="state-plane-axis" d="M56 156H308m-7-5 7 5-7 5M180 280V30m-5 7 5-7 5 7"/>
+            <g class="state-plane-ticks">
+              <text x="315" y="161">Re</text>
+              <text x="188" y="24">Im</text>
+              <text y="178" text-anchor="middle">
+                <tspan x="68">−4</tspan><tspan x="124">−2</tspan><tspan x="180">0</tspan>
+                <tspan x="236">2</tspan><tspan x="292">4</tspan>
+              </text>
+              <text text-anchor="end">
+                <tspan x="169" y="49">4</tspan><tspan x="169" y="105">2</tspan>
+                <tspan x="169" y="217">−2</tspan><tspan x="169" y="273">−4</tspan>
+              </text>
+            </g>
+            <g id="state-alpha-before" class="state-plane-before" hidden></g>
+            <g id="state-alpha-current" class="state-plane-current">
+              <line x1="180" y1="156" x2="264" y2="156"/>
+              <polygon points="264,156 251,150 251,162"/>
+              <circle cx="264" cy="156" r="5"/>
+            </g>
+          </svg>
+          <p class="state-plot-value" id="state-alpha-plot-value">α = 3 · magnitude 3 · phase 0°</p>
+        </figure>
+
+        <figure class="state-instrument state-figure state-beta">
+          <figcaption>β · coefficient of |1⟩</figcaption>
+          <svg class="state-plane" id="state-beta-plane" viewBox="0 0 360 320" role="img"
+               aria-labelledby="state-beta-plane-title state-beta-plane-desc"
+               data-origin-x="180" data-origin-y="156" data-unit="28">
+            <title id="state-beta-plane-title">Complex plane for beta</title>
+            <desc id="state-beta-plane-desc">Beta is 0 plus 4i. Its arrow goes from the origin to 4 on the imaginary axis. The endpoint is a diamond.</desc>
+            <path class="state-plane-grid"
+                  d="M68 44V268 M96 44V268 M124 44V268 M152 44V268 M208 44V268 M236 44V268 M264 44V268 M292 44V268
+                     M68 44H292 M68 72H292 M68 100H292 M68 128H292 M68 184H292 M68 212H292 M68 240H292 M68 268H292"/>
+            <path class="state-plane-axis" d="M56 156H308m-7-5 7 5-7 5M180 280V30m-5 7 5-7 5 7"/>
+            <g class="state-plane-ticks">
+              <text x="315" y="161">Re</text>
+              <text x="188" y="24">Im</text>
+              <text y="178" text-anchor="middle">
+                <tspan x="68">−4</tspan><tspan x="124">−2</tspan><tspan x="180">0</tspan>
+                <tspan x="236">2</tspan><tspan x="292">4</tspan>
+              </text>
+              <text text-anchor="end">
+                <tspan x="169" y="49">4</tspan><tspan x="169" y="105">2</tspan>
+                <tspan x="169" y="217">−2</tspan><tspan x="169" y="273">−4</tspan>
+              </text>
+            </g>
+            <g id="state-beta-before" class="state-plane-before" hidden></g>
+            <g id="state-beta-current" class="state-plane-current">
+              <line x1="180" y1="156" x2="180" y2="44"/>
+              <polygon points="180,44 174,57 186,57"/>
+              <polygon points="180,37 187,44 180,51 173,44"/>
+            </g>
+          </svg>
+          <p class="state-plot-value" id="state-beta-plot-value">β = 4i · magnitude 4 · phase +90°</p>
+        </figure>
+      </div>
+
+      <p class="state-instrument lesson-note">Both plots use the same fixed scale and show complex coefficients. The circle marks α and the diamond marks β. After normalization, a dashed trace shows the previous arrow and the solid arrow shows the current value.</p>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="state-basis-title">
+      <h3 id="state-basis-title">What the two amplitudes describe</h3>
+      <p>A <strong>ket</strong> is the notation we use for a state vector. In an ideal two-level system, the two basis kets |0⟩ and |1⟩ span the space, so a coefficient of each is enough to describe any vector in it. The labels 0 and 1 are names for the basis states.</p>
+      <p class="state-equation">|ψ⟩ = <span class="state-alpha">α|0⟩</span> + <span class="state-beta">β|1⟩</span></p>
+      <p>As in Lesson 8, the expansion and the ordered coefficient column describe the same vector. The basis is <strong>orthonormal</strong>. Each basis ket has norm 1, and their inner product is zero. The two lab arrows show α and β in their own complex planes. Their directions encode complex phases.</p>
+
+      <details>
+        <summary>Use the inner product to find the norm</summary>
+        <div class="state-disclosure">
+          <p>For a coefficient z = a + bi with real parts a and b, its complex conjugate z* is a − bi. Multiplying the two gives the squared magnitude.</p>
+          <p class="state-equation">|z|² = z*z = (a − bi)(a + bi) = a² + b²</p>
+          <p>The bra ⟨ψ| is the conjugate transpose of the ket |ψ⟩. In the chosen basis it is the row (α*, β*). Expanding the inner product of the bra and ket gives four terms.</p>
+          <p class="state-equation">
+            ⟨ψ|ψ⟩ = α*α⟨0|0⟩ + α*β⟨0|1⟩ + β*α⟨1|0⟩ + β*β⟨1|1⟩
+          </p>
+          <p>The cross terms vanish because ⟨0|1⟩ and ⟨1|0⟩ are zero. Each basis ket’s inner product with itself is 1.</p>
+          <p class="state-equation">‖ψ‖² = ⟨ψ|ψ⟩ = α*α + β*β = |α|² + |β|²</p>
+          <p>The squared norm adds the two squared magnitudes. The norm ‖ψ‖ is the nonnegative square root of that sum. For a normalized representative, both the norm and the squared norm are 1.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="state-worked-title">
+      <h3 id="state-worked-title">Normalize without turning the arrows</h3>
+      <p>Start with the opening candidate (3, 4i)ᵀ. Both arrows need to shrink by the same positive factor. That preserves their relative sizes and the angles of both nonzero coefficients. The superscript T indicates a column written as a pair.</p>
+
+      <details>
+        <summary>Work through the opening solution</summary>
+        <div class="state-disclosure">
+          <ol class="state-list">
+            <li><strong>Find the squared norm.</strong> The lengths are 3 and 4, so |3|² + |4i|² = 9 + 16 = 25.</li>
+            <li><strong>Take the square root.</strong> The norm is √25 = 5.</li>
+            <li><strong>Divide both coefficients by 5.</strong> The normalized column is (3/5, 4i/5)ᵀ.</li>
+            <li><strong>Check the result.</strong> The new squared norm is 9/25 + 16/25 = 1.</li>
+          </ol>
+          <p>Dividing both coefficients by 25 would give a squared norm of 25/25² = 1/25. Scaling a vector by 1/5 scales its norm by 1/5 and its squared norm by 1/25.</p>
+          <p>The zero pair has norm 0. Every finite scaling of it still gives zero, so it cannot be normalized. An individual zero coefficient is allowed when the other coefficient gives the vector norm 1, as in |0⟩ or |1⟩. A zero coefficient has no defined phase.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="state-born-title">
+      <h3 id="state-born-title">A preview of the Born rule</h3>
+      <p>For a normalized state measured in this chosen basis, the Born rule gives the probabilities by squaring the magnitudes of the two amplitudes. The normalized opening example gives 9/25 for outcome 0 and 16/25 for outcome 1. Lesson 13 will develop this rule.</p>
+      <p>In the lab, switch between <strong>Real β</strong> and <strong>Imaginary β</strong>. The α arrow stays at 3/5. The β arrow turns by 90° from the positive real axis to the positive imaginary axis and keeps its magnitude 4/5. The probabilities in this basis stay the same. Lesson 12 asks what that change in relative phase can affect.</p>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="state-challenge-title">
+      <h3 id="state-challenge-title">Check your understanding</h3>
+      <form id="state-challenge">
+        <fieldset class="state-controls state-instrument" id="state-challenge-controls" disabled>
+          <legend>Quantum States challenge</legend>
+
+          <div class="state-question" data-state-question="normalize" role="radiogroup"
+               aria-labelledby="state-question-normalize">
+            <h4 id="state-question-normalize" tabindex="-1">1 of 2 · The pair is (1/2, i/2)ᵀ. Which statement is correct?</h4>
+            <label class="state-choice">
+              <input type="radio" name="state-answer-normalize" value="already"> It already has norm 1.
+            </label>
+            <label class="state-choice">
+              <input type="radio" name="state-answer-normalize" value="scale"> Its squared norm is 1/2. The normalized pair is (1/√2, i/√2)ᵀ.
+            </label>
+            <label class="state-choice">
+              <input type="radio" name="state-answer-normalize" value="double"> Multiply both entries by 2 to normalize it.
+            </label>
+          </div>
+
+          <div class="state-question" data-state-question="interpret" role="radiogroup"
+               aria-labelledby="state-question-interpret" hidden>
+            <h4 id="state-question-interpret" tabindex="-1">2 of 2 · For (3/5, 4i/5)ᵀ, what is the probability of outcome 1 in the chosen basis?</h4>
+            <label class="state-choice">
+              <input type="radio" name="state-answer-interpret" value="amplitude"> 4i/5
+            </label>
+            <label class="state-choice">
+              <input type="radio" name="state-answer-interpret" value="length"> 4/5
+            </label>
+            <label class="state-choice">
+              <input type="radio" name="state-answer-interpret" value="squared"> 16/25
+            </label>
+          </div>
+
+          <div class="state-actions">
+            <button class="state-primary" type="submit">Check answer</button>
+            <button id="state-challenge-next" type="button" hidden>Next question</button>
+            <button id="state-challenge-restart" type="button" hidden>Try the challenge again</button>
+          </div>
+          <p id="state-challenge-feedback" class="state-feedback" role="status" aria-atomic="true"></p>
+        </fieldset>
+      </form>
+    </section>
+
+    <details class="lesson-panel qs-arcade" id="states-arcade">
+      <summary><strong>Quantum States Arcade</strong><span>Optional practice</span></summary>
+      <div class="qs-body">
+        <p>Pick a station, try its controls, and open a mission when you’re ready. Each mission has two hints. Progress lasts while this page is open.</p>
+        <p class="lesson-note" id="qs-tolerance">Answer boxes accept whole numbers, decimals, fractions such as −2/3, and square roots such as 1/√2 or √3/2. Each complex number has one box for its real part and one for its imaginary part. Answers that end as decimals, such as 0.25 or −1.5, are checked exactly. Answers such as 1/3 or 1/√2 can be typed exactly, or as decimals within 0.002 of the exact value, separately for each real and imaginary part. Squared norms and squared magnitudes computed from a state you build count when they are within 0.005 of the target, and angles count within 1°.</p>
+        <div class="qs-toolbar">
+          <label for="qs-station">Station
+            <select id="qs-station" aria-controls="qs-panels" disabled>
+              <optgroup label="Building states">
+                <option value="forge">1 · Normalization Forge</option>
+                <option value="missing">2 · Missing Amplitude</option>
+                <option value="translator">3 · Ket ↔ Column ↔ Arrows Translator</option>
+                <option value="polar">4 · Polar Dial</option>
+                <option value="inspector">5 · Valid State Inspector</option>
+                <option value="scaling">6 · Scaling Trap</option>
+              </optgroup>
+            </select>
+          </label>
+          <p id="qs-progress" role="status">0 of 64 missions completed this session.</p>
+          <button id="qs-reset" type="button" disabled>Reset this station</button>
+          <label class="qs-reduced" for="qs-reduced"><input id="qs-reduced" type="checkbox" disabled> Reduced effects</label>
+        </div>
+        <p class="lesson-note" id="qs-status" role="status"></p>
+        <p><a href="#state-lab-title">Return to the Quantum State Lab</a></p>
+        <noscript><p class="lesson-note">JavaScript runs the arcade diagrams, controls, and mission checks.</p></noscript>
+
+        <div id="qs-panels">
+          <section class="qs-station" data-qs-station="forge" data-qs-accent="blue" aria-labelledby="qs-forge-title">
+            <h4 id="qs-forge-title">Normalization Forge</h4>
+            <p>Every entry here is complex. Pass three gates in order: the squared norm, the norm, and then the normalized pair. The forge draws your pair on top of the original so you can see both arrows shrink by the same factor.</p>
+            <div data-qs-plot-slot></div>
+            <fieldset disabled>
+              <legend class="qs-sr-only">Normalization Forge controls</legend>
+              <div class="qs-fields">
+                <label>Pair to forge <select name="pair"><option value="p1" selected>(1 + i, 2 − i)ᵀ</option><option value="p2">(2i, 1 + i)ᵀ</option><option value="p3">(1 − 2i, 2 + 2i)ᵀ</option><option value="p4">(−3 + i, 1 + 3i)ᵀ</option></select></label>
+                <label>Gate 1 · ‖ψ‖² <input class="qs-answer" type="text" name="n2" autocomplete="off" spellcheck="false"></label>
+                <label>Gate 2 · ‖ψ‖ <input class="qs-answer" type="text" name="n" autocomplete="off" spellcheck="false"></label>
+              </div>
+              <p class="qs-step">Gate 3 · the normalized pair</p>
+              <div class="qs-complex" role="group" aria-label="α"><label>Real part of α <input class="qs-answer" type="text" name="a-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of α <input class="qs-answer" type="text" name="a-im" autocomplete="off" spellcheck="false"></label></div>
+              <div class="qs-complex" role="group" aria-label="β"><label>Real part of β <input class="qs-answer" type="text" name="b-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of β <input class="qs-answer" type="text" name="b-im" autocomplete="off" spellcheck="false"></label></div>
+              <div class="qs-button-row"><button class="qs-primary" type="button" data-qs-action="gates">Test the gates</button></div>
+              <p class="qs-readout" data-qs-read="state" aria-live="polite">Pair (1 + i, 2 − i)ᵀ.</p>
+              <div class="qs-missions">
+                <details class="qs-mission" data-qs-mission="forge-p1">
+                  <summary>Forge (1 + i, 2 − i)ᵀ<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Choose this pair and pass all three gates.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="forge-p2">
+                  <summary>Forge (2i, 1 + i)ᵀ<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Choose this pair and pass all three gates. One entry is purely imaginary.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="forge-p3">
+                  <summary>Forge (1 − 2i, 2 + 2i)ᵀ<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Choose this pair and pass all three gates. The norm is not a whole number.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="forge-p4">
+                  <summary>Forge (−3 + i, 1 + 3i)ᵀ<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Choose this pair and pass all three gates. Keep every sign.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="qs-math">
+              <summary>Show the math</summary>
+              <p>For z = a + bi, |z|² = a² + b². The squared norm is ‖ψ‖² = |α|² + |β|², and the norm ‖ψ‖ is its nonnegative square root. Dividing both entries by the positive number ‖ψ‖ shrinks both arrows by the same factor without turning either one, and the new squared norm is ‖ψ‖²/‖ψ‖² = 1.</p>
+            </details>
+          </section>
+
+          <section class="qs-station" data-qs-station="missing" data-qs-accent="orange" aria-labelledby="qs-missing-title" hidden>
+            <h4 id="qs-missing-title">Missing Amplitude</h4>
+            <p>α is given. Normalization requires |α|² + |β|² = 1, which fixes the size of β. Find that size, then test β values of your own. Record the ones you want to compare.</p>
+            <div data-qs-plot-slot></div>
+            <fieldset disabled>
+              <legend class="qs-sr-only">Missing Amplitude controls</legend>
+              <div class="qs-fields">
+                <label>Given α <select name="alpha"><option value="m1" selected>α = (1 + i)/2</option><option value="m2">α = (1 + 2i)/3</option><option value="m4">α = −0.28 + 0.96i</option></select></label>
+              </div>
+              <div class="qs-complex" role="group" aria-label="β"><label>Real part of β <input class="qs-answer" type="text" name="b-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of β <input class="qs-answer" type="text" name="b-im" autocomplete="off" spellcheck="false"></label></div>
+              <div class="qs-button-row"><button class="qs-primary" type="button" data-qs-action="record">Record β</button><button type="button" data-qs-action="clear">Clear records</button></div>
+              <p class="qs-readout" data-qs-read="state" aria-live="polite">α = (1 + i)/2.</p>
+              <ol class="qs-log" data-qs-log="records" aria-label="Recorded β values"></ol>
+              <div class="qs-missions">
+                <details class="qs-mission" data-qs-mission="missing-half">
+                  <summary>Find |β| for α = (1 + i)/2<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>How large must β be?</p>
+                  <div class="qs-fields"><label>Magnitude &#124;β&#124; <input class="qs-answer" type="text" name="half-ans" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="missing-third">
+                  <summary>Find |β| for α = (1 + 2i)/3<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>How large must β be?</p>
+                  <div class="qs-fields"><label>Magnitude &#124;β&#124; <input class="qs-answer" type="text" name="third-ans" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="missing-many">
+                  <summary>Two different β, both valid<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>With α = (1 + 2i)/3, record two different β values that each normalize the state.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="missing-none">
+                  <summary>When β has nowhere to go<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Take α = −0.28 + 0.96i. Find |β| and explain what is left to choose.</p>
+                  <div class="qs-fields"><label>Magnitude &#124;β&#124; <input class="qs-answer" type="text" name="none-ans" autocomplete="off" spellcheck="false"></label><label>Reason <select name="none-why" required><option value="">Choose</option><option value="undefined">β = 0 has no defined phase, so nothing is left to choose</option><option value="any">β can be any number with phase 0°</option><option value="negative">|β|² = 1 − |α|² is negative here</option></select></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <p class="lesson-note">Normalization fixes the size of β only. Lesson 12 asks whether states that differ only in the angle of β behave differently.</p>
+            <details class="qs-math">
+              <summary>Show the math</summary>
+              <p>From |α|² + |β|² = 1, |β| = √(1 − |α|²). Any β = |β|(cos θ + i sin θ) has that size, so every point on a circle of radius |β| normalizes the state. If |α| = 1, the circle shrinks to the point 0, and β = 0 has no defined phase.</p>
+            </details>
+          </section>
+
+          <section class="qs-station" data-qs-station="translator" data-qs-accent="green" aria-labelledby="qs-translator-title" hidden>
+            <h4 id="qs-translator-title">Ket ↔ Column ↔ Arrows Translator</h4>
+            <p>One state has three descriptions: the ket expansion, the ordered column, and two complex-plane arrows. As in Lesson 8, the column depends on the order of the basis.</p>
+            <div data-qs-plot-slot></div>
+            <fieldset disabled>
+              <legend class="qs-sr-only">Translator controls</legend>
+              <div class="qs-fields">
+                <label>Basis order <select name="order"><option value="std" selected>ℬ = (|0⟩, |1⟩)</option><option value="rev">ℬ′ = (|1⟩, |0⟩)</option></select></label>
+              </div>
+              <div class="qs-complex" role="group" aria-label="the top entry"><label>Real part of the top entry <input class="qs-answer" type="text" name="top-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of the top entry <input class="qs-answer" type="text" name="top-im" autocomplete="off" spellcheck="false"></label></div>
+              <div class="qs-complex" role="group" aria-label="the bottom entry"><label>Real part of the bottom entry <input class="qs-answer" type="text" name="bot-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of the bottom entry <input class="qs-answer" type="text" name="bot-im" autocomplete="off" spellcheck="false"></label></div>
+              <p class="qs-readout" data-qs-read="state" aria-live="polite">Basis order ℬ = (|0⟩, |1⟩).</p>
+              <div class="qs-missions">
+                <details class="qs-mission" data-qs-mission="translator-column">
+                  <summary>Ket to column<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>|ψ⟩ = (2i/3)|1⟩ + ((1 + 2i)/3)|0⟩. Enter its column in ℬ = (|0⟩, |1⟩).</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="translator-reverse">
+                  <summary>Same ket, reversed basis<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Enter the column of the same |ψ⟩ in ℬ′ = (|1⟩, |0⟩).</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="translator-arrows">
+                  <summary>Arrows to ket<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>While this mission is open, the diagram shows a mystery state. Read α and β from the arrow tips.</p>
+                  <div class="qs-complex" role="group" aria-label="α"><label>Real part of α <input class="qs-answer" type="text" name="ar-a-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of α <input class="qs-answer" type="text" name="ar-a-im" autocomplete="off" spellcheck="false"></label></div>
+                  <div class="qs-complex" role="group" aria-label="β"><label>Real part of β <input class="qs-answer" type="text" name="ar-b-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of β <input class="qs-answer" type="text" name="ar-b-im" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="translator-match">
+                  <summary>Column to arrows<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Which diagram shows the column ((1 − i)/2, (−1 − i)/2)ᵀ in ℬ? Choosing a diagram previews it while this mission is open.</p>
+                  <div class="qs-fields"><label>Diagram <select name="match-pick" required><option value="">Choose</option><option value="a">Diagram A</option><option value="b">Diagram B</option><option value="c">Diagram C</option><option value="d">Diagram D</option></select></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="qs-math">
+              <summary>Show the math</summary>
+              <p>The ket α|0⟩ + β|1⟩ and the column (α, β)ᵀ in ℬ = (|0⟩, |1⟩) describe the same vector. The order of the written terms doesn’t matter, but the order of the basis does: in ℬ′ = (|1⟩, |0⟩) the same state has column (β, α)ᵀ. Each entry is drawn as an arrow from 0 to (real part, imaginary part).</p>
+            </details>
+          </section>
+
+          <section class="qs-station" data-qs-station="polar" data-qs-accent="yellow" aria-labelledby="qs-polar-title" hidden>
+            <h4 id="qs-polar-title">Polar Dial</h4>
+            <p>Lesson 6 wrote a complex number as a + bi or as a length r and angle θ. Here one amplitude is written both ways. The dashed arrow comes from r and θ, the solid arrow from a and b. They overlap when the two forms agree.</p>
+            <div data-qs-plot-slot></div>
+            <fieldset disabled>
+              <legend class="qs-sr-only">Polar Dial controls</legend>
+              <div class="qs-fields">
+                <label>Length r <input class="qs-answer" type="text" name="r" value="1" autocomplete="off" spellcheck="false"></label>
+                <label>Angle θ in degrees <input class="qs-answer" type="text" name="theta" value="0" autocomplete="off" spellcheck="false"></label>
+                <label>Real part a <input class="qs-answer" type="text" name="re" autocomplete="off" spellcheck="false"></label>
+                <label>Imaginary part b <input class="qs-answer" type="text" name="im" autocomplete="off" spellcheck="false"></label>
+              </div>
+              <p class="qs-readout" data-qs-read="state" aria-live="polite">Polar arrow: r = 1 at θ = 0°.</p>
+              <div class="qs-missions">
+                <details class="qs-mission" data-qs-mission="polar-rect">
+                  <summary>Polar to a + bi<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Set r = 1/2 and θ = 120°. Enter a and b for the same amplitude.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="polar-polar">
+                  <summary>a + bi to polar<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Set a = −1/2 and b = −1/2. Enter r and θ.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="polar-axis">
+                  <summary>A point on an axis<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Set a = 0 and b = −0.3. Enter r and θ.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="polar-negative">
+                  <summary>Same direction, negative angle<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>An amplitude has r = 1 and θ = 300°. Name the same direction with an angle from −180° to 0°.</p>
+                  <div class="qs-fields"><label>Angle in degrees <input class="qs-answer" type="text" name="neg-ans" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="qs-math">
+              <summary>Show the math</summary>
+              <p>a = r cos θ, b = r sin θ, r = √(a² + b²) = |z|. The angle is measured from the positive real axis, and θ and θ ± 360° name the same direction. Check the quadrant: tan θ = b/a can’t tell (1, 1) from (−1, −1). Zero has length 0 and no angle.</p>
+            </details>
+          </section>
+
+          <section class="qs-station" data-qs-station="inspector" data-qs-accent="red" aria-labelledby="qs-inspector-title" hidden>
+            <h4 id="qs-inspector-title">Valid State Inspector</h4>
+            <p>Every candidate pair is already normalized, normalizable, or impossible. Sort the case files, then build and file your own candidates.</p>
+            <div data-qs-plot-slot></div>
+            <fieldset disabled>
+              <legend class="qs-sr-only">Valid State Inspector controls</legend>
+              <div class="qs-complex" role="group" aria-label="α"><label>Real part of α <input class="qs-answer" type="text" name="al-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of α <input class="qs-answer" type="text" name="al-im" autocomplete="off" spellcheck="false"></label></div>
+              <div class="qs-complex" role="group" aria-label="β"><label>Real part of β <input class="qs-answer" type="text" name="be-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of β <input class="qs-answer" type="text" name="be-im" autocomplete="off" spellcheck="false"></label></div>
+              <div class="qs-button-row"><button class="qs-primary" type="button" data-qs-action="file">File this candidate</button></div>
+              <p class="qs-readout" data-qs-read="state" aria-live="polite">Enter a candidate pair.</p>
+              <ul class="qs-log" data-qs-log="bins" aria-label="Filed candidates"></ul>
+              <div class="qs-missions">
+                <details class="qs-mission" data-qs-mission="inspector-first">
+                  <summary>Case file 1<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Classify each pair.</p>
+                  <div class="qs-fields"><label>1 · (1/√2, −i/√2)ᵀ <select name="a1" required><option value="">Choose</option><option value="normalized">Already normalized</option><option value="normalizable">Normalizable</option><option value="impossible">Impossible (zero pair)</option></select></label><label>2 · (1 + i, 1 − i)ᵀ <select name="a2" required><option value="">Choose</option><option value="normalized">Already normalized</option><option value="normalizable">Normalizable</option><option value="impossible">Impossible (zero pair)</option></select></label><label>3 · (i, 0)ᵀ <select name="a3" required><option value="">Choose</option><option value="normalized">Already normalized</option><option value="normalizable">Normalizable</option><option value="impossible">Impossible (zero pair)</option></select></label><label>4 · (0, 0)ᵀ <select name="a4" required><option value="">Choose</option><option value="normalized">Already normalized</option><option value="normalizable">Normalizable</option><option value="impossible">Impossible (zero pair)</option></select></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="inspector-traps">
+                  <summary>Case file 2 · Traps<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Classify each pair. Some of them look like something they aren’t.</p>
+                  <div class="qs-fields"><label>1 · ((1 + i)/2, (1 + i)/2)ᵀ <select name="b1" required><option value="">Choose</option><option value="normalized">Already normalized</option><option value="normalizable">Normalizable</option><option value="impossible">Impossible (zero pair)</option></select></label><label>2 · (1/2, 1/2)ᵀ <select name="b2" required><option value="">Choose</option><option value="normalized">Already normalized</option><option value="normalizable">Normalizable</option><option value="impossible">Impossible (zero pair)</option></select></label><label>3 · (0.28, 0.96i)ᵀ <select name="b3" required><option value="">Choose</option><option value="normalized">Already normalized</option><option value="normalizable">Normalizable</option><option value="impossible">Impossible (zero pair)</option></select></label><label>4 · (0.001, 0)ᵀ <select name="b4" required><option value="">Choose</option><option value="normalized">Already normalized</option><option value="normalizable">Normalizable</option><option value="impossible">Impossible (zero pair)</option></select></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="inspector-third">
+                  <summary>Case file 3<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Classify each pair.</p>
+                  <div class="qs-fields"><label>1 · (i/√3, √(2/3))ᵀ <select name="c1" required><option value="">Choose</option><option value="normalized">Already normalized</option><option value="normalizable">Normalizable</option><option value="impossible">Impossible (zero pair)</option></select></label><label>2 · (1, −1)ᵀ <select name="c2" required><option value="">Choose</option><option value="normalized">Already normalized</option><option value="normalizable">Normalizable</option><option value="impossible">Impossible (zero pair)</option></select></label><label>3 · (2i/√5, −1/√5)ᵀ <select name="c3" required><option value="">Choose</option><option value="normalized">Already normalized</option><option value="normalizable">Normalizable</option><option value="impossible">Impossible (zero pair)</option></select></label><label>4 · (1/3, 2i/3)ᵀ <select name="c4" required><option value="">Choose</option><option value="normalized">Already normalized</option><option value="normalizable">Normalizable</option><option value="impossible">Impossible (zero pair)</option></select></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="inspector-build">
+                  <summary>Fill every bin<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>Build and file one candidate for each bin. Give the normalized and normalizable candidates at least one entry with a nonzero imaginary part.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="qs-math">
+              <summary>Show the math</summary>
+              <p>Compute ‖ψ‖² = |α|² + |β|². If it is 1, the pair is already normalized. If it is positive but not 1, dividing by ‖ψ‖ normalizes it. If it is 0, both entries are 0, and no scaling can give norm 1. A single zero entry is fine.</p>
+            </details>
+          </section>
+
+          <section class="qs-station" data-qs-station="scaling" data-qs-accent="violet" aria-labelledby="qs-scaling-title" hidden>
+            <h4 id="qs-scaling-title">Scaling Trap</h4>
+            <p>Start from (2 + i, 1 − 2i)ᵀ, where ‖ψ‖² = 10. Choose an operation, predict the new squared norm, then apply it. Each step acts on the current state.</p>
+            <div data-qs-plot-slot></div>
+            <fieldset disabled>
+              <legend class="qs-sr-only">Scaling Trap controls</legend>
+              <div class="qs-fields">
+                <label>Operation <select name="op"><option value="norm" selected>Divide by ‖ψ‖</option><option value="square">Divide by ‖ψ‖²</option><option value="alpha">Divide by |α|</option><option value="k">Multiply by k</option></select></label>
+                <label>Factor k (for multiply) <input class="qs-answer" type="text" name="k" value="2" autocomplete="off" spellcheck="false"></label>
+                <label>Predicted new ‖ψ‖² <input class="qs-answer" type="text" name="predict" autocomplete="off" spellcheck="false"></label>
+              </div>
+              <div class="qs-button-row"><button class="qs-primary" type="button" data-qs-action="apply">Apply</button><button type="button" data-qs-action="restart">Restart from (2 + i, 1 − 2i)ᵀ</button></div>
+              <p class="qs-readout" data-qs-read="state" aria-live="polite">Current |ψ⟩ = (2 + i, 1 − 2i)ᵀ · ‖ψ‖² = 10.</p>
+              <ol class="qs-log" data-qs-log="records" aria-label="Applied operations"></ol>
+              <div class="qs-missions">
+                <details class="qs-mission" data-qs-mission="scaling-square">
+                  <summary>Fall into the squared-norm trap<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>From the starting state, predict ‖ψ‖² after dividing by ‖ψ‖², then apply it.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="scaling-alpha">
+                  <summary>Divide by one entry’s size<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>From the starting state, predict ‖ψ‖² after dividing by |α|, then apply it.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="scaling-k">
+                  <summary>Recover the factor<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>A normalized state was multiplied by an unknown k &gt; 0. It now has ‖ψ‖² = 9/4. Find k.</p>
+                  <div class="qs-fields"><label>k <input class="qs-answer" type="text" name="k-ans" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+                <details class="qs-mission" data-qs-mission="scaling-undo">
+                  <summary>Climb out of the trap<span data-qs-done hidden>✓ Complete</span></summary>
+                  <p>After dividing the starting state by ‖ψ‖², multiply by one positive k that restores ‖ψ‖² = 1. Predict 1, then apply.</p>
+                  <button class="qs-primary" type="button" data-qs-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="qs-math">
+              <summary>Show the math</summary>
+              <p>For any number c, ‖cψ‖ = |c| ‖ψ‖, so ‖cψ‖² = |c|² ‖ψ‖². Dividing by ‖ψ‖ gives 1. Dividing by ‖ψ‖² gives ‖ψ‖²/‖ψ‖⁴ = 1/‖ψ‖², which is 1/10 here. Dividing by the size of one entry gives ‖ψ‖²/|α|².</p>
+            </details>
+          </section>
+        </div>
+
+        <template id="qs-figure-template">
+          <figure class="qs-figure">
+            <figcaption id="qs-title">Station diagram</figcaption>
+            <div class="qs-viewport" id="qs-viewport" data-renderer="svg">
+              <canvas class="qs-canvas" id="qs-canvas" aria-hidden="true" hidden></canvas>
+              <svg class="qs-diagram" id="qs-diagram" viewBox="0 0 560 300" role="img" aria-labelledby="qs-title" aria-describedby="qs-desc">
+                <desc id="qs-desc"></desc>
+                <g data-qs-geometry></g>
+                <g data-qs-labels></g>
+              </svg>
+            </div>
+            <p class="lesson-note" id="qs-render-status"></p>
+          </figure>
+        </template>
+        <template id="qs-mission-template">
+          <div class="qs-mission-tools">
+            <button type="button" data-qs-hint>Show first hint</button>
+            <ol data-qs-hint-list aria-live="polite" hidden></ol>
+            <p class="qs-feedback" data-qs-feedback role="status"></p>
+            <details data-qs-work hidden><summary>Worked steps</summary><p data-qs-work-text></p></details>
+          </div>
+        </template>
+      </div>
+    </details>
+
+    <nav class="lesson-next" aria-label="Continue the course">
+      <a href="../../index.html">Course homepage</a>
+      <a class="state-primary" href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html">
+        Next lesson: Superposition and Relative Phase <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

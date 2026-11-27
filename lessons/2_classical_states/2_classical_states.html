@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <title>Classical States | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css?v=classical-lab-1">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+  <script src="./scripts/lesson.js?v=classical-lab-1" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)" stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none" stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8" stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none" stroke="url(#logo-spectrum)" stroke-width="1.6" transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none" stroke="#edffef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static" viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 464 83"/>
+            <path class="track-violet" d="M218 54C265 80 333 97 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M218 46v16m-8-8h16"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button" aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="./2_classical_states.html" aria-current="page"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and-coordinates/8_bases_and-coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="../22_the_one_dimensional_schrodinger_equation/22_the_one_dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main states-lesson" aria-labelledby="states-title">
+    <header class="lesson-intro">
+      <p class="lesson-kicker">Lesson 02 · Cart lab</p>
+      <h2 id="states-title">Classical States</h2>
+      <p class="lesson-lead">Can two systems look the same right now and still do different things next?</p>
+    </header>
+
+    <section class="lesson-panel" aria-labelledby="states-puzzle-title">
+      <h3 id="states-puzzle-title">Two snapshots at the same instant</h3>
+      <p>These identical carts are on separate, identical tracks. Each snapshot shows its cart at the origin, 0 metres.</p>
+      <div class="states-snapshots">
+        <figure class="states-snapshot">
+          <figcaption>Cart A at 0 m</figcaption>
+          <div class="states-snapshot-track" aria-hidden="true"><span class="states-token states-token-a">A</span></div>
+        </figure>
+        <figure class="states-snapshot">
+          <figcaption>Cart B at 0 m</figcaption>
+          <div class="states-snapshot-track" aria-hidden="true"><span class="states-token states-token-b">B</span></div>
+        </figure>
+      </div>
+      <p><strong>Make a prediction.</strong> Must the carts share a position one second later? What positions would you guess for A and B? <a href="#states-cart">Test your idea in the cart lab</a> with the velocities hidden first.</p>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="states-switch-title">
+      <h3 id="states-switch-title">What information makes a state?</h3>
+      <p>The <strong>system</strong> is the thing we choose to describe. Its <strong>state</strong> gives the changing information needed to make predictions under a particular model. The model tells us which quantities are fixed and what rule to apply. The <strong>evolution rule</strong> tells you how the state changes with time or after an action.</p>
+      <p>Consider a switch with two possible settings, off and on. The rule is fixed: one toggle flips the current setting. To predict the result of one toggle, you only need one bit: 0 for off or 1 for on.</p>
+      <div class="lesson-station">
+        <div class="states-switch-display" id="states-switch-display" data-state="off">
+          <span class="states-switch-lamp" aria-hidden="true"></span>
+          <strong id="states-switch-state">OFF · 0</strong>
+        </div>
+        <fieldset id="states-switch-controls" disabled>
+          <legend>Try one toggle</legend>
+          <div class="states-fields">
+            <label>Set the current state
+              <select id="states-switch-setting"><option value="off" selected>Off · 0</option><option value="on">On · 1</option></select>
+            </label>
+            <label>Predict the next state
+              <select id="states-switch-guess"><option value="" selected>Choose an answer</option><option value="off">Off · 0</option><option value="on">On · 1</option></select>
+            </label>
+          </div>
+          <button class="lesson-button" id="states-toggle-switch" type="button">Toggle once</button>
+        </fieldset>
+        <p class="lesson-note" id="states-switch-feedback" role="status">Start with off, then decide what one toggle will do.</p>
+      </div>
+      <p>A cart needs a different description. Its position can vary continuously, and a picture of that position gives you no direct reading of how fast it is moving or in which direction.</p>
+    </section>
+
+    <section class="lesson-panel" id="states-cart" aria-labelledby="states-cart-title">
+      <h3 id="states-cart-title">Cart lab</h3>
+      <p>Each cart has constant mass and moves along a straight track. The net force along the track is zero, so each cart keeps its signed velocity. The tracks are independent. Right is positive, left is negative, and zero velocity means the cart stays put.</p>
+
+      <div class="states-console">
+        <div class="lesson-station">
+          <fieldset id="states-cart-controls" disabled>
+            <legend>Set up and predict</legend>
+            <div class="states-fields">
+              <label>Track setup
+                <select id="states-cart-mode"><option value="comparison" selected>Compare carts A and B</option><option value="single">Use cart A only</option></select>
+              </label>
+              <label>Initial position (m)
+                <select id="states-position">
+                  <option value="-3">−3</option><option value="-2">−2</option><option value="-1">−1</option>
+                  <option value="0" selected>0</option><option value="1">+1</option><option value="2">+2</option><option value="3">+3</option>
+                </select>
+              </label>
+            </div>
+            <button class="lesson-button" id="states-load-comparison" type="button">Load comparison preset</button>
+            <label class="states-check">
+              <input type="checkbox" id="states-show-velocity" autocomplete="off">
+              <span>Show velocity and its setting</span>
+            </label>
+            <div class="states-fields" id="states-velocity-setting" hidden>
+              <label>Cart A initial velocity (m/s)
+                <select id="states-velocity">
+                  <option value="-2">−2 · left</option><option value="-1">−1 · left</option><option value="0">0 · still</option>
+                  <option value="1">+1 · right</option><option value="2" selected>+2 · right</option>
+                </select>
+              </label>
+              <p class="lesson-note" id="states-comparison-rule">In comparison mode, B shares A’s starting position and has the opposite signed velocity.</p>
+            </div>
+            <p class="lesson-note">Showing or hiding velocity leaves the carts and the clock exactly as they are. Editing an initial value, changing the track setup, or loading the preset starts a new trial and clears the old predictions and results.</p>
+            <div class="states-prediction">
+              <h4>Where will the carts be after the next step?</h4>
+              <p class="lesson-note" id="states-prediction-hint">Enter a signed position in metres, such as −3 or 2. Guesses are optional. Advance one second to check any guess you entered.</p>
+              <div class="states-fields">
+                <label>Cart A guess (m)
+                  <input type="text" id="states-prediction-a" autocomplete="off" spellcheck="false" aria-describedby="states-prediction-hint">
+                </label>
+                <label id="states-prediction-b-field">Cart B guess (m)
+                  <input type="text" id="states-prediction-b" autocomplete="off" spellcheck="false" aria-describedby="states-prediction-hint">
+                </label>
+              </div>
+            </div>
+            <div class="states-actions">
+              <button class="lesson-button lesson-primary" id="states-advance-cart" type="button">Advance 1 s</button>
+              <button class="lesson-button" id="states-reset-cart" type="button">Reset trial</button>
+            </div>
+            <p class="lesson-note">Reset returns to 0 s with your current initial settings and clears the guesses. The clock stops at 3 s so every allowed run fits on the diagram. The ends of the scale are display limits.</p>
+          </fieldset>
+        </div>
+
+        <section class="lesson-station" aria-labelledby="states-track-title">
+          <div class="states-readout-heading">
+            <h4 id="states-track-title">Track readout</h4>
+            <p class="states-clock">Elapsed <strong id="states-time">0 s</strong> / 3 s</p>
+          </div>
+          <div data-states-scene-slot="cart">
+            <figure class="states-track-figure" id="states-scene">
+              <div class="states-viewport">
+                <canvas id="states-webgl" aria-hidden="true" hidden></canvas>
+                <canvas id="states-flat" aria-hidden="true" hidden></canvas>
+                <div class="states-static-view" id="states-static-view" aria-hidden="true">
+                  <div class="states-snapshot-track"><span class="states-token states-token-a">A</span></div>
+                  <div class="states-snapshot-track"><span class="states-token states-token-b">B</span></div>
+                  <div class="states-scale"><span>−10</span><span>−5</span><span>0</span><span>+5</span><span>+10</span></div>
+                </div>
+              </div>
+              <figcaption>
+                <p id="states-scene-caption">Position in metres. The tracks share a 0 m origin and positive is to the right.</p>
+                <p id="states-render-status" class="lesson-note" role="status"></p>
+                <label class="states-check"><input id="states-reduce-effects" type="checkbox" disabled data-states-enable> Reduce lab effects</label>
+              </figcaption>
+            </figure>
+          </div>
+          <table class="states-table">
+            <caption>Numerical simulation readouts</caption>
+            <thead><tr><th scope="col">Cart</th><th scope="col">Initial (m)</th><th scope="col">Now (m)</th><th scope="col">Velocity (m/s)</th></tr></thead>
+            <tbody>
+              <tr><th class="states-label-a" scope="row">A</th><td id="states-a-initial">0</td><td id="states-a-position">0</td><td id="states-a-velocity">Hidden</td></tr>
+              <tr id="states-readout-b"><th class="states-label-b" scope="row">B</th><td id="states-b-initial">0</td><td id="states-b-position">0</td><td id="states-b-velocity">Hidden</td></tr>
+            </tbody>
+          </table>
+          <p class="lesson-note" id="states-cart-status" role="status">The lab is shown at its starting snapshot. The controls become available when the Lesson 2 script loads.</p>
+          <aside class="states-reaction">
+            <strong>Lab assistant</strong>
+            <p id="states-cart-feedback" role="status">The snapshots tie at zero. Let the clock settle the prediction.</p>
+          </aside>
+        </section>
+      </div>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="states-observation-title">
+      <h3 id="states-observation-title">A snapshot is one observation</h3>
+      <p>An <strong>observation</strong> is a piece of information you record. In this lab, the initial position is one observation. Several different velocities fit that same snapshot, so it leaves the future position uncertain to you, even though the model has a definite future for each complete state.</p>
+      <p>Keep velocity hidden, advance one second, and compare the starting position with the new position. Which additional observation lets you infer the velocity?</p>
+      <details>
+        <summary>Check your reasoning</summary>
+        <div class="lesson-prose">
+          <p>Take another position reading of the same cart at a known later time. Subtract the first position from the second, then divide by the elapsed time. In this constant velocity model, that gives the signed velocity. A negative result means leftward motion.</p>
+          <p>For example, a cart at 0 m at 0 s and −2 m at 1 s has velocity −2 m/s. Both readings and the time between them matter.</p>
+        </div>
+      </details>
+    </section>
+
+    <details class="lesson-panel">
+      <summary>Show the math for constant velocity</summary>
+      <div class="lesson-prose">
+        <p>The initial state for this model is the pair (<var>x</var><sub>0</sub>, <var>v</var><sub>0</sub>). The evolution rule comes from the constant velocity assumption. At a time <var>t</var> greater than zero, velocity equals signed displacement divided by the time between readings, Δ<var>t</var>. When the first reading is at the start, Δ<var>t</var> = <var>t</var>.</p>
+        <div class="states-equations">
+          <p><var>v</var><sub>0</sub> = Δ<var>x</var> / Δ<var>t</var></p>
+          <p>Δ<var>x</var> = <var>v</var><sub>0</sub><var>t</var></p>
+          <p><var>x</var>(<var>t</var>) = <var>x</var><sub>0</sub> + <var>v</var><sub>0</sub><var>t</var></p>
+        </div>
+        <p>Multiplying by <var>t</var> gives the displacement. Adding that signed displacement to the initial position gives the final position. The final equation also gives the correct starting point at 0 s.</p>
+        <dl class="states-symbols">
+          <dt><var>x</var><sub>0</sub></dt><dd>Initial position measured from the origin, in metres (m).</dd>
+          <dt><var>v</var><sub>0</sub></dt><dd>Initial signed velocity, in metres per second (m/s). It stays constant in this model.</dd>
+          <dt><var>t</var></dt><dd>Time since the start of the trial, in seconds (s).</dd>
+          <dt>Δ<var>x</var> and <var>x</var>(<var>t</var>)</dt><dd>Displacement from the starting point and position measured from the origin, respectively. Both are in metres.</dd>
+        </dl>
+        <h4>Reproduce this run</h4>
+        <p>Select cart A only. Set the starting position to +1 m, show velocity, and set it to −2 m/s. Advance twice. The displacement after 2 s is (−2 m/s) × (2 s) = −4 m. The final position is +1 m + (−4 m) = −3 m.</p>
+        <p>Initial values describe where a trial starts. The rule describes how it changes. If we added friction, the same initial position and velocity could produce a different later position.</p>
+      </div>
+    </details>
+
+    <section class="lesson-panel" id="states-challenge" aria-labelledby="states-challenge-title">
+      <h3 id="states-challenge-title">Lab checkout</h3>
+      <p class="lesson-kicker" id="states-challenge-progress">Question 1 of 3</p>
+      <fieldset id="states-challenge-controls" disabled>
+        <legend class="states-sr-only">Challenge answers</legend>
+        <div data-states-question="1">
+          <h4 tabindex="-1">Which initial information is sufficient to predict one cart’s position under the stated track model?</h4>
+          <div class="states-answers">
+            <button class="lesson-button" type="button" data-states-answer="position">Initial position alone</button>
+            <button class="lesson-button" type="button" data-states-answer="pair">Initial position and signed velocity</button>
+            <button class="lesson-button" type="button" data-states-answer="speed">Initial position and speed without direction</button>
+          </div>
+        </div>
+        <div data-states-question="2" hidden>
+          <h4 tabindex="-1">You observe a cart at 0 m and its velocity is hidden. What additional observation lets you infer its signed velocity?</h4>
+          <div class="states-answers">
+            <button class="lesson-button" type="button" data-states-answer="same-time">Another view at the same instant</button>
+            <button class="lesson-button" type="button" data-states-answer="clock">The elapsed time alone</button>
+            <button class="lesson-button" type="button" data-states-answer="timed-position">Its position after a known, nonzero time interval</button>
+          </div>
+        </div>
+        <div data-states-question="3" hidden>
+          <h4 tabindex="-1">A cart starts at +2 m with a velocity of −1 m/s. Where is it after 3 s?</h4>
+          <div class="states-answers">
+            <button class="lesson-button" type="button" data-states-answer="minus-one">−1 m</button>
+            <button class="lesson-button" type="button" data-states-answer="minus-three">−3 m</button>
+            <button class="lesson-button" type="button" data-states-answer="plus-five">+5 m</button>
+          </div>
+        </div>
+      </fieldset>
+      <p class="lesson-note" id="states-challenge-feedback" role="status">Choose an answer when the Lesson 2 script is active. You can retry after reading the feedback.</p>
+      <button class="lesson-button" id="states-next-question" type="button" hidden>Next question</button>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="states-bridge-title">
+      <h3 id="states-bridge-title">What would a quantum state tell us?</h3>
+      <p>Under their stated rules, the switch and cart are deterministic. Specifying the state fixes the prediction for a given time or action. Classical models can also include randomness, such as a cart disturbed by random kicks.</p>
+      <p>Hiding velocity illustrates missing information in this classical model. The exercise leaves open how to explain quantum probabilities. As you move into waves and interference, keep asking what information a quantum state supplies and how it connects to what a measurement can show.</p>
+    </section>
+
+    <details class="lesson-panel states-lab" id="states-lab">
+      <summary>Classical States Lab · Six optional stations</summary>
+      <p>Choose a station to test another way of describing motion. Each station keeps its own settings and observations while you work elsewhere.</p>
+      <fieldset id="states-station-picker" disabled data-states-enable>
+        <legend class="states-sr-only">Choose a station</legend>
+        <div class="states-actions">
+          <button class="lesson-button" type="button" data-states-station="garage" aria-controls="states-garage" aria-pressed="true">Mystery Cart Garage</button>
+          <button class="lesson-button" type="button" data-states-station="rules" aria-controls="states-rules" aria-pressed="false">Rule-Changing Track</button>
+          <button class="lesson-button" type="button" data-states-station="phase" aria-controls="states-phase" aria-pressed="false">Phase-Space Playground</button>
+          <button class="lesson-button" type="button" data-states-station="pendulum" aria-controls="states-pendulum" aria-pressed="false">Pendulum State Lab</button>
+          <button class="lesson-button" type="button" data-states-station="detective" aria-controls="states-detective" aria-pressed="false">Hidden-State Detective</button>
+          <button class="lesson-button" type="button" data-states-station="ensemble" aria-controls="states-ensemble" aria-pressed="false">Classical Uncertainty Machine</button>
+        </div>
+      </fieldset>
+
+      <section class="lesson-station states-experiment" id="states-garage" data-states-panel="garage" aria-labelledby="garage-title">
+        <h3 id="garage-title" tabindex="-1">Mystery Cart Garage</h3>
+        <p>Pick a cart and guess its signed velocity. Take a second position reading at 2 s to gather evidence before revealing the fleet’s velocities.</p>
+        <div data-states-scene-slot="garage"></div>
+        <fieldset disabled data-states-enable>
+          <legend>Take observations</legend>
+          <div class="states-actions">
+            <button class="lesson-button lesson-primary" type="button" id="garage-observe">Observe at 2 s</button>
+            <button class="lesson-button" type="button" id="garage-reveal" disabled>Reveal velocities</button>
+            <button class="lesson-button" type="button" id="garage-reset">Return to 0 s and clear guesses</button>
+          </div>
+        </fieldset>
+        <table class="states-table">
+          <caption>Independent carts · Exact readings</caption>
+          <thead><tr><th scope="col">Cart</th><th scope="col">0 s (m)</th><th scope="col">2 s (m)</th><th scope="col">Velocity (m/s)</th></tr></thead>
+          <tbody>
+            <tr data-garage-cart="A"><th scope="row">A</th><td>0</td><td>—</td><td>Hidden</td></tr>
+            <tr data-garage-cart="B"><th scope="row">B</th><td>0</td><td>—</td><td>Hidden</td></tr>
+            <tr data-garage-cart="C"><th scope="row">C</th><td>−2</td><td>—</td><td>Hidden</td></tr>
+            <tr data-garage-cart="D"><th scope="row">D</th><td>+1</td><td>—</td><td>Hidden</td></tr>
+          </tbody>
+        </table>
+        <p id="garage-status" class="lesson-note" role="status"></p>
+        <details>
+          <summary>Math and missions</summary>
+          <p>For each cart, the signed velocity is (second position − first position) ÷ 2 s. Revealing the velocities changes what you know about the fleet.</p>
+          <fieldset disabled data-states-enable>
+            <legend>Infer one velocity</legend>
+            <div class="states-fields">
+              <label>Cart <select id="garage-which"><option>A</option><option>B</option><option>C</option><option>D</option></select></label>
+              <label>Signed velocity (m/s) <input id="garage-velocity" type="text" autocomplete="off"></label>
+            </div>
+            <button class="lesson-button" type="button" id="garage-check-velocity">Check velocity</button>
+            <p id="garage-velocity-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-states-enable>
+            <legend>Compare pairs</legend>
+            <div class="states-fields">
+              <label>First cart <select id="garage-pair-first"><option>A</option><option>B</option><option>C</option><option>D</option></select></label>
+              <label>Second cart <select id="garage-pair-second"><option>A</option><option selected>B</option><option>C</option><option>D</option></select></label>
+            </div>
+            <div class="states-actions">
+              <button class="lesson-button" type="button" id="garage-check-apart">Check same start, move apart</button>
+              <button class="lesson-button" type="button" id="garage-check-parallel">Check same velocity, different positions</button>
+            </div>
+            <p id="garage-pair-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+
+      <section class="lesson-station states-experiment" id="states-rules" data-states-panel="rules" aria-labelledby="rules-title" hidden>
+        <h3 id="rules-title" tabindex="-1">Rule-Changing Track</h3>
+        <p>Step to 2 s and then 3 s. The accelerated and friction carts stop together at first. Compare what follows.</p>
+        <fieldset disabled data-states-enable>
+          <legend>Shared start and rule settings</legend>
+          <div class="states-fields">
+            <label>Initial position (m) <input id="rules-x" type="number" min="-3" max="3" step="0.5" value="0"></label>
+            <label>Initial velocity (m/s) <input id="rules-v" type="number" min="-3" max="3" step="0.5" value="2"></label>
+            <label>Signed acceleration (m/s²) <input id="rules-a" type="number" min="-3" max="3" step="0.25" value="-1"></label>
+            <label>Friction slowing rate (m/s²) <input id="rules-f" type="number" min="0" max="3" step="0.25" value="1"></label>
+          </div>
+          <div class="states-actions">
+            <button class="lesson-button lesson-primary" type="button" id="rules-step">Advance 1 s</button>
+            <button class="lesson-button" type="button" id="rules-reset">Return to 0 s</button>
+            <span>Time <strong id="rules-time">0 s</strong> / 4 s</span>
+          </div>
+          <p class="lesson-note">Changing a setting returns the comparison clock to zero.</p>
+        </fieldset>
+        <div data-states-scene-slot="rules"></div>
+        <table class="states-table">
+          <caption>Position and signed velocity at the same time</caption>
+          <thead><tr><th scope="col">Cart and rule</th><th scope="col">Position (m)</th><th scope="col">Velocity (m/s)</th></tr></thead>
+          <tbody>
+            <tr data-rules-row="coast"><th scope="row">A · Zero net force</th><td>0</td><td>+2</td></tr>
+            <tr data-rules-row="accel"><th scope="row">B · Constant acceleration</th><td>0</td><td>+2</td></tr>
+            <tr data-rules-row="friction"><th scope="row">C · Friction</th><td>0</td><td>+2</td></tr>
+          </tbody>
+        </table>
+        <details>
+          <summary>Math and missions</summary>
+          <p>For zero net force, x = x₀ + v₀t and v = v₀. For constant acceleration a, x = x₀ + v₀t + ½at² and v = v₀ + at. Negative accelerations point left.</p>
+          <p>For friction with slowing rate f &gt; 0, let u = min(t, |v₀|/f). Then x = x₀ + v₀u − ½ sign(v₀)fu² and v = sign(v₀) max(|v₀| − ft, 0). This level-track model leaves the cart at rest after it stops. With f = 0 it coasts.</p>
+          <fieldset disabled data-states-enable>
+            <legend>Stop momentarily or match a position</legend>
+            <p>Use the settings above for cart B. The target is x₀ + v₀T − ½T², where T is your chosen time in seconds. Change a and see if you can match it.</p>
+            <label class="states-stack">Check time T (s) <select id="rules-target-time"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></label>
+            <p id="rules-target-label">Target at 2 s · +2 m</p>
+            <div class="states-actions">
+              <button class="lesson-button" type="button" id="rules-check-stop">Check zero velocity at T</button>
+              <button class="lesson-button" type="button" id="rules-check-target">Check target position at T</button>
+            </div>
+            <p id="rules-mission-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-states-enable>
+            <legend>Identify a concealed rule</legend>
+            <p>This separate case starts at 0 m and +2 m/s. The candidates are coasting, constant acceleration at −1 m/s², and friction with f = 1 m/s². Observe through 3 s to distinguish the rules.</p>
+            <button class="lesson-button" type="button" id="rules-case-new">New case and clear observations</button>
+            <button class="lesson-button" type="button" id="rules-case-observe">Take next 1 s reading</button>
+            <table class="states-table">
+              <caption>Case observations</caption>
+              <thead><tr><th scope="col">Time (s)</th><th scope="col">Position (m)</th><th scope="col">Velocity (m/s)</th></tr></thead>
+              <tbody id="rules-case-observations"><tr><th scope="row">0</th><td>0</td><td>+2</td></tr></tbody>
+            </table>
+            <label class="states-stack">Which rule fits?
+              <select id="rules-case-guess">
+                <option value="">Choose a rule</option><option value="coast">Zero net force</option>
+                <option value="accel">Constant acceleration</option><option value="friction">Friction</option>
+              </select>
+            </label>
+            <button class="lesson-button" type="button" id="rules-case-check">Check rule</button>
+            <p id="rules-case-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+
+      <section class="lesson-station states-experiment" id="states-phase" data-states-panel="phase" aria-labelledby="phase-title" hidden>
+        <h3 id="phase-title" tabindex="-1">Phase-Space Playground</h3>
+        <p>Advance a cart with nonzero velocity and zero acceleration. Its state point moves horizontally. The vertical graph axis represents signed velocity, while the track itself runs left to right.</p>
+        <fieldset disabled data-states-enable>
+          <legend>Choose an initial state and evolution rule</legend>
+          <div class="states-fields">
+            <label>Initial position x₀ (m) <input id="phase-x" type="number" min="-3" max="3" step="0.5" value="1"></label>
+            <label>Initial velocity v₀ (m/s) <input id="phase-v" type="number" min="-3" max="3" step="0.5" value="-2"></label>
+            <label>Acceleration a (m/s²) <input id="phase-a" type="number" min="-2" max="2" step="0.5" value="0"></label>
+          </div>
+          <div class="states-actions">
+            <button class="lesson-button lesson-primary" type="button" id="phase-step">Advance 1 s</button>
+            <button class="lesson-button" type="button" id="phase-reset">Return to 0 s</button>
+            <button class="lesson-button" type="button" id="phase-pin">Save current state for comparison</button>
+          </div>
+          <p class="lesson-note">Changing settings restarts the clock. A saved state stays available until you replace it.</p>
+        </fieldset>
+        <div data-states-scene-slot="phase"></div>
+        <table class="states-table">
+          <caption>Horizontal graph axis x (m) · Vertical axis v (m/s)</caption>
+          <thead><tr><th scope="col">State</th><th scope="col">Time (s)</th><th scope="col">x (m)</th><th scope="col">v (m/s)</th></tr></thead>
+          <tbody>
+            <tr data-phase-row="current"><th scope="row">Current</th><td>0</td><td>+1</td><td>−2</td></tr>
+            <tr data-phase-row="reference"><th scope="row">Saved</th><td>—</td><td>—</td><td>—</td></tr>
+          </tbody>
+        </table>
+        <details>
+          <summary>Math and missions</summary>
+          <p>The track and the state point use the same x = x₀ + v₀t + ½at². The state plot pairs it with v = v₀ + at. With zero velocity and acceleration the point stays put.</p>
+          <fieldset disabled data-states-enable>
+            <legend>Compare saved and current states</legend>
+            <div class="states-actions">
+              <button class="lesson-button" type="button" id="phase-check-opposite">Check same position, opposite velocities</button>
+              <button class="lesson-button" type="button" id="phase-check-equal">Check same velocity, different positions</button>
+            </div>
+            <p id="phase-pair-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-states-enable>
+            <legend>Match a moving cart to a state point</legend>
+            <p>A separate cart is at +1 m at 0 s and −1 m at 1 s. Its velocity is constant. Which labeled point represents it at 1 s?</p>
+            <label class="states-stack">State point
+              <select id="phase-match-guess">
+                <option value="">Choose a labeled point</option><option value="P">P · (−1 m, +2 m/s)</option>
+                <option value="Q">Q · (+1 m, −2 m/s)</option><option value="R">R · (−1 m, −2 m/s)</option>
+              </select>
+            </label>
+            <div class="states-actions">
+              <button class="lesson-button" type="button" id="phase-match-view" aria-pressed="false">Show matching choices on graph</button>
+              <button class="lesson-button" type="button" id="phase-match-check">Check point</button>
+            </div>
+            <p id="phase-match-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+
+      <section class="lesson-station states-experiment" id="states-pendulum" data-states-panel="pendulum" aria-labelledby="pendulum-title" hidden>
+        <h3 id="pendulum-title" tabindex="-1">Pendulum State Lab</h3>
+        <p>Two bobs start at the same angle with independently chosen angular velocities. Zero is straight down. Positive angles turn from down toward the right. Both rods are 1 m long and g = 9.81 m/s².</p>
+        <fieldset disabled data-states-enable>
+          <legend>Release conditions</legend>
+          <div class="states-fields">
+            <label>Shared starting angle (°) <input id="pendulum-angle" type="number" min="-60" max="60" step="1" value="20"></label>
+            <label>Bob A angular velocity (°/s) <input id="pendulum-a" type="number" min="-90" max="90" step="1" value="30"></label>
+            <label>Bob B angular velocity (°/s) <input id="pendulum-b" type="number" min="-90" max="90" step="1" value="-30"></label>
+          </div>
+          <div class="states-actions">
+            <button class="lesson-button lesson-primary" type="button" id="pendulum-step">Advance ¼ s</button>
+            <button class="lesson-button" type="button" id="pendulum-reset">Return both bobs to release conditions</button>
+            <span>Time <strong id="pendulum-time">0 s</strong> / 4 s</span>
+          </div>
+          <p class="lesson-note">Changing a release condition starts a new run. Readings are shown to two decimal places where needed.</p>
+        </fieldset>
+        <div data-states-scene-slot="pendulum"></div>
+        <table class="states-table">
+          <caption>Current state of each bob</caption>
+          <thead><tr><th scope="col">Bob</th><th scope="col">Angle (°)</th><th scope="col">Angular velocity (°/s)</th><th scope="col">Angular acceleration (°/s²)</th></tr></thead>
+          <tbody>
+            <tr data-pendulum-bob="A"><th scope="row">A</th><td>+20</td><td>+30</td><td>−192.24</td></tr>
+            <tr data-pendulum-bob="B"><th scope="row">B</th><td>+20</td><td>−30</td><td>−192.24</td></tr>
+          </tbody>
+        </table>
+        <details>
+          <summary>Math and missions</summary>
+          <p>For an undamped point bob on a rigid massless rod, θ″ = −(g/L) sin θ. The simulation integrates angle and angular velocity in radians. Zero angular velocity at release can still accompany nonzero angular acceleration.</p>
+          <fieldset disabled data-states-enable>
+            <legend>Release and crossing missions</legend>
+            <div class="states-actions">
+              <button class="lesson-button" type="button" id="pendulum-opposite-check">Check opposite initial directions</button>
+              <button class="lesson-button" type="button" id="pendulum-cross-check">Check whether A crossed vertical</button>
+            </div>
+            <p id="pendulum-run-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-states-enable>
+            <legend>Predict A’s initial direction</legend>
+            <p>Predict which direction A will start moving just after release. Lock in and check the prediction to see how starting velocity and acceleration matter.</p>
+            <label class="states-stack">Predicted direction
+              <select id="pendulum-guess">
+                <option value="">Choose a direction</option><option value="positive">Toward larger angles</option>
+                <option value="negative">Toward smaller angles</option><option value="rest">Remains at rest</option>
+              </select>
+            </label>
+            <button class="lesson-button" type="button" id="pendulum-guess-check">Check initial direction</button>
+            <p id="pendulum-guess-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+
+      <section class="lesson-station states-experiment" id="states-detective" data-states-panel="detective" aria-labelledby="detective-title" hidden>
+        <h3 id="detective-title" tabindex="-1">Hidden-State Detective</h3>
+        <p>Each new case independently picks an integer starting position from −3 to +3 m and an integer velocity from −2 to +2 m/s, uniformly within each range. The cart keeps that velocity throughout the case.</p>
+        <fieldset disabled data-states-enable>
+          <legend>Gather timed evidence for the current case</legend>
+          <div class="states-actions">
+            <button class="lesson-button lesson-primary" type="button" id="detective-first">Observe at 1 s</button>
+            <button class="lesson-button" type="button" id="detective-repeat">Clear observations and keep this case</button>
+            <button class="lesson-button" type="button" id="detective-new">New secret and clear observations</button>
+          </div>
+          <div class="states-fields">
+            <label>Interval after 1 s
+              <select id="detective-interval"><option value="1">1 s</option><option value="2" selected>2 s</option><option value="3">3 s</option></select>
+            </label>
+            <button class="lesson-button" type="button" id="detective-second" disabled>Take later reading</button>
+          </div>
+        </fieldset>
+        <div data-states-scene-slot="detective"></div>
+        <table class="states-table">
+          <caption>Exact readings from the same secret cart</caption>
+          <thead><tr><th scope="col">Reading</th><th scope="col">Time (s)</th><th scope="col">Position (m)</th></tr></thead>
+          <tbody id="detective-observations"><tr><td colspan="3">Take a reading to start.</td></tr></tbody>
+        </table>
+        <p id="detective-status" class="lesson-note" role="status"></p>
+        <details>
+          <summary>Math and missions</summary>
+          <p>Use v = (x₂ − x₁)/(t₂ − t₁) and x₀ = x₁ − vt₁. All indicated positions and times are exact integers.</p>
+          <fieldset disabled data-states-enable>
+            <legend>Infer the initial state</legend>
+            <div class="states-fields">
+              <label>Initial position (m) <input id="detective-guess-x" type="text" autocomplete="off"></label>
+              <label>Signed velocity (m/s) <input id="detective-guess-v" type="text" autocomplete="off"></label>
+            </div>
+            <button class="lesson-button" type="button" id="detective-check-state">Check inference</button>
+            <p id="detective-state-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-states-enable>
+            <legend>Predict the position at 5 s</legend>
+            <label class="states-stack">Your prediction (m) <input id="detective-guess-future" type="text" autocomplete="off"></label>
+            <div class="states-actions">
+              <button class="lesson-button" type="button" id="detective-commit">Lock in prediction</button>
+              <button class="lesson-button" type="button" id="detective-reveal" disabled>Reveal state and 5 s result</button>
+            </div>
+            <p id="detective-future-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-states-enable>
+            <legend>Compare two time separations</legend>
+            <p>Take later readings with two different intervals in this case. Enter the signed velocity you infer from each.</p>
+            <div class="states-fields">
+              <label>Shorter interval (m/s) <input id="detective-short" type="text" autocomplete="off"></label>
+              <label>Longer interval (m/s) <input id="detective-long" type="text" autocomplete="off"></label>
+            </div>
+            <button class="lesson-button" type="button" id="detective-compare">Check the two inferences</button>
+            <p id="detective-compare-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+
+      <section class="lesson-station states-experiment" id="states-ensemble" data-states-panel="ensemble" aria-labelledby="ensemble-title" hidden>
+        <h3 id="ensemble-title" tabindex="-1">Classical Uncertainty Machine</h3>
+        <p>Every position in the initial position interval can be paired with every velocity in the velocity interval. The drawing uses a representative grid taking the endpoints and midpoint of each range. The bounds cover the full set, with no probability weights. The highlighted cart uses both midpoints.</p>
+        <fieldset disabled data-states-enable>
+          <legend>Choose independent initial ranges</legend>
+          <div class="states-fields">
+            <label>Minimum position (m) <input id="ensemble-x-min" type="number" min="-4" max="4" step="0.5" value="-1"></label>
+            <label>Maximum position (m) <input id="ensemble-x-max" type="number" min="-4" max="4" step="0.5" value="1"></label>
+            <label>Minimum velocity (m/s) <input id="ensemble-v-min" type="number" min="-4" max="4" step="0.5" value="-2"></label>
+            <label>Maximum velocity (m/s) <input id="ensemble-v-max" type="number" min="-4" max="4" step="0.5" value="1"></label>
+            <label>Preview time <output id="ensemble-time-label" for="ensemble-time">2 s</output>
+              <input id="ensemble-time" type="range" min="0" max="4" step="0.5" value="2">
+            </label>
+          </div>
+          <p id="ensemble-input-feedback" class="lesson-note" role="status"></p>
+        </fieldset>
+        <div data-states-scene-slot="ensemble"></div>
+        <table class="states-table">
+          <caption>Exact bounds in metres</caption>
+          <thead><tr><th scope="col">Range</th><th scope="col">Minimum</th><th scope="col">Maximum</th><th scope="col">Width</th></tr></thead>
+          <tbody>
+            <tr data-ensemble-row="initial"><th scope="row">At 0 s</th><td>−1</td><td>+1</td><td>2</td></tr>
+            <tr data-ensemble-row="current"><th scope="row">At 2 s</th><td>−5</td><td>+3</td><td>8</td></tr>
+          </tbody>
+        </table>
+        <p id="ensemble-individual">Highlighted cart · x₀ = 0 m, v₀ = −0.5 m/s, x(2 s) = −1 m.</p>
+        <details>
+          <summary>Math and missions</summary>
+          <p>For t ≥ 0, the exact bounds are [x_min + v_min t, x_max + v_max t]. Each cart follows a definite x(t) = x₀ + v₀t. The ensemble describes the allowed initial states. Width at time t is initial position width plus t times velocity width.</p>
+          <fieldset disabled data-states-enable>
+            <legend>Guarantee a landing inside a target</legend>
+            <p>Choose a positive check time. Narrow the allowed range so the full position interval fits inside [−1, +1] m, including its endpoints.</p>
+            <label class="states-stack">Target time (s) <select id="ensemble-target-time"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></label>
+            <button class="lesson-button" type="button" id="ensemble-check-target">Check the guarantee</button>
+            <p id="ensemble-target-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-states-enable>
+            <legend>Compare two spreads at the preview time</legend>
+            <p>Which scenario has the wider position interval at the current preview time? The interval endpoints count as possible positions.</p>
+            <table class="states-table">
+              <caption>Comparison settings</caption>
+              <thead><tr><th scope="col">Scenario</th><th scope="col">Initial x (m)</th><th scope="col">Initial v (m/s)</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">P · Precise position</th><td>[0, 0]</td><td>[−1, +1]</td></tr>
+                <tr><th scope="row">S · Spread positions</th><td>[−2, +2]</td><td>[0, 0]</td></tr>
+              </tbody>
+            </table>
+            <label class="states-stack">Wider interval
+              <select id="ensemble-compare-guess">
+                <option value="">Choose a result</option><option value="precise">P · Precise position</option>
+                <option value="spread">S · Spread positions</option><option value="equal">Equal widths</option>
+              </select>
+            </label>
+            <button class="lesson-button" type="button" id="ensemble-check-compare">Check and compare intervals</button>
+            <p id="ensemble-compare-feedback" class="lesson-note" role="status"></p>
+            <table class="states-table" id="ensemble-compare-table" hidden>
+              <caption id="ensemble-compare-caption">Intervals at the preview time</caption>
+              <thead><tr><th scope="col">Scenario</th><th scope="col">Position interval (m)</th><th scope="col">Width (m)</th></tr></thead>
+              <tbody>
+                <tr data-ensemble-compare="precise"><th scope="row">P</th><td>—</td><td>—</td></tr>
+                <tr data-ensemble-compare="spread"><th scope="row">S</th><td>—</td><td>—</td></tr>
+              </tbody>
+            </table>
+          </fieldset>
+          <fieldset disabled data-states-enable>
+            <legend>Predict the position width</legend>
+            <p>Use your current ranges to forecast a time beyond the preview. Enter the expected width in metres. A single possible position has zero width.</p>
+            <label class="states-stack">Forecast time (s) <select id="ensemble-width-time"><option>5</option><option>6</option></select></label>
+            <label class="states-stack">Predicted width (m) <input id="ensemble-width-guess" type="text" autocomplete="off"></label>
+            <button class="lesson-button" type="button" id="ensemble-check-width">Check width</button>
+            <p id="ensemble-width-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+    </details>
+
+    <nav class="lesson-next" aria-label="Continue the course">
+      <a href="../../index.html">Course homepage</a>
+      <a class="lesson-button lesson-primary" href="../3_waves_and_interference/3_waves_and_interference.html">
+        Next lesson: Waves and Interference <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

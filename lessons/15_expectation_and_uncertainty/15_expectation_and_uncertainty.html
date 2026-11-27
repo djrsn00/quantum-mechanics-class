@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Compare individual quantum readings, their expected average, and their spread in the Expectation and Uncertainty Lab.">
+  <title>Expectation and Uncertainty | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+  <script type="module" src="./scripts/lesson.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)"
+                  stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none"
+                   stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8"
+                stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none"
+                   stroke="url(#logo-spectrum)" stroke-width="1.6"
+                   transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none"
+                stroke="#edffef" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static" viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 464 83"/>
+            <path class="track-violet" d="M218 54C265 80 333 97 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M218 46v16m-8-8h16"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button"
+              aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and-coordinates/8_bases_and-coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="./15_expectation_and_uncertainty.html" aria-current="page"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="../22_the_one_dimensional_schrodinger_equation/22_the_one_dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main expectation-lesson" aria-labelledby="expect-title">
+    <header class="lesson-intro">
+      <p class="lesson-kicker">Lesson 15 · Mean and spread</p>
+      <h2 id="expect-title">Expectation and Uncertainty</h2>
+      <p class="lesson-lead">This instrument displays only +1 or −1. How can quantum mechanics predict an expectation value of −0.28, and what does its uncertainty of 0.96 describe?</p>
+      <p>Start with the complex preparation from Lesson 14 and select Z. Picture the two possible readings on a number line, with more weight at −1 than at +1. Make a prediction about what one measurement can report, then collect a batch.</p>
+    </header>
+
+    <section class="lesson-panel expect-lab" aria-labelledby="expect-lab-title">
+      <div class="expect-stack">
+        <h3 id="expect-lab-title">Expectation and Uncertainty Lab</h3>
+        <p class="lesson-note" id="expect-static-note">The starting Z distribution is shown as a worked example. The lesson script enables the prediction, live setup controls, and simulated trials.</p>
+      </div>
+
+      <div class="expect-layout">
+        <div class="expect-stack">
+          <fieldset class="expect-instrument" id="expect-setup-controls" disabled>
+            <legend>Choose the setup</legend>
+            <label class="expect-select-label" for="expect-state">Prepared state |ψ⟩
+              <select id="expect-state">
+                <option value="complex" selected>Opening · (3|0⟩ + 4i|1⟩)/5</option>
+                <option value="zero">Basis state |0⟩</option>
+                <option value="one">Basis state |1⟩</option>
+                <option value="plus-x">X eigenstate |+x⟩</option>
+                <option value="plus-y">Y eigenstate |+y⟩</option>
+                <option value="phase-quarter">Equatorial state · phase π/4</option>
+              </select>
+            </label>
+
+            <fieldset class="expect-question">
+              <legend>Observable A</legend>
+              <div class="expect-observable-choices">
+                <label class="expect-choice"><input type="radio" name="expect-observable" value="x"> X</label>
+                <label class="expect-choice"><input type="radio" name="expect-observable" value="y"> Y</label>
+                <label class="expect-choice"><input type="radio" name="expect-observable" value="z" checked> Z</label>
+              </div>
+            </fieldset>
+
+            <p class="expect-equation" id="expect-ket">|ψ⟩ = (3|0⟩ + 4i|1⟩)/5</p>
+            <p class="lesson-note">The observables are dimensionless. Every trial uses a fresh copy of the prepared state. A change to either setting starts a fresh sample.</p>
+          </fieldset>
+
+          <form id="expect-prediction">
+            <fieldset class="expect-instrument" id="expect-prediction-controls" disabled>
+              <legend>Predict a single reading</legend>
+              <p id="expect-prediction-question">In the opening Z setup, can a single reading be −0.28?</p>
+              <div class="expect-stack" role="radiogroup" aria-labelledby="expect-prediction-question">
+                <label class="expect-choice">
+                  <input type="radio" name="expect-guess" value="yes" required>
+                  Yes. It is one of the readings the instrument can report.
+                </label>
+                <label class="expect-choice">
+                  <input type="radio" name="expect-guess" value="no">
+                  No. This instrument reports either +1 or −1 on each trial.
+                </label>
+              </div>
+              <div class="expect-actions">
+                <button class="expect-primary" type="submit" aria-controls="expect-theory expect-run-controls">
+                  Check prediction and reveal
+                </button>
+              </div>
+              <p class="expect-feedback" id="expect-prediction-feedback" role="status" aria-atomic="true"></p>
+            </fieldset>
+          </form>
+
+          <fieldset class="expect-instrument" id="expect-run-controls" disabled>
+            <legend>Collect simulated readings</legend>
+            <p class="lesson-note" id="expect-run-lock">Check the opening prediction to enable simulated trials.</p>
+            <div class="expect-actions">
+              <button class="expect-primary" type="button" data-expect-trials="1">Measure one</button>
+              <button type="button" data-expect-trials="10">Run 10</button>
+              <button type="button" data-expect-trials="100">Run 100</button>
+              <button id="expect-clear" type="button">Clear sample</button>
+            </div>
+            <p class="lesson-note">New trials add to the current sample. Clear sample keeps the preparation and observable.</p>
+          </fieldset>
+        </div>
+
+        <div class="expect-stack">
+          <p class="expect-instrument lesson-note" id="expect-theory-lock" hidden>Check the opening prediction to reveal the model distribution and its statistics.</p>
+
+          <section class="expect-instrument" id="expect-theory" aria-labelledby="expect-theory-title">
+            <h4 id="expect-theory-title">Model distribution · <span class="expect-observable" id="expect-symbol">Z</span></h4>
+            <figure class="expect-figure" aria-labelledby="expect-plot-caption">
+              <svg class="expect-plot" id="expect-plot" viewBox="0 0 600 222"
+                   role="img" aria-labelledby="expect-svg-title expect-svg-desc"
+                   data-origin="300" data-unit="150" data-bar-base="126" data-bar-height="76">
+                <title id="expect-svg-title">Probability weights and statistics on a fixed number line</title>
+                <desc id="expect-svg-desc">Outcome minus one has probability 0.64. Outcome plus one has probability 0.36. The mean is minus 0.28. The standard deviation is 0.96. The dashed span from minus 1.24 to 0.68 illustrates one standard deviation on each side of the mean.</desc>
+                <rect class="expect-weight-guide" x="138" y="50" width="24" height="76" rx="3"/>
+                <rect class="expect-weight-guide" x="438" y="50" width="24" height="76" rx="3"/>
+                <rect class="expect-minus-fill" id="expect-minus-bar" x="138" y="77.36" width="24" height="48.64" rx="3"/>
+                <rect class="expect-plus-fill" id="expect-plus-bar" x="438" y="98.64" width="24" height="27.36" rx="3"/>
+
+                <text class="expect-svg-label expect-minus-fill" id="expect-minus-svg-text" x="150" y="35" text-anchor="middle">64%</text>
+                <text class="expect-svg-label expect-plus-fill" id="expect-plus-svg-text" x="450" y="35" text-anchor="middle">36%</text>
+                <text class="expect-svg-label" x="300" y="35" text-anchor="middle">Probability weights</text>
+
+                <path class="expect-axis" d="M75 126H525 M75 121V131 M150 120V132 M300 120V132 M450 120V132 M525 121V131"/>
+                <circle class="expect-minus-fill" cx="150" cy="126" r="5.5"/>
+                <circle class="expect-plus-fill" cx="450" cy="126" r="5.5"/>
+                <g class="expect-svg-label" text-anchor="middle">
+                  <text x="75" y="155">−1.5</text>
+                  <text x="150" y="155">−1</text>
+                  <text x="300" y="155">0</text>
+                  <text x="450" y="155">+1</text>
+                  <text x="525" y="155">+1.5</text>
+                </g>
+
+                <g id="expect-mean-marker" class="expect-mean-mark" transform="translate(258 0)">
+                  <path d="M0 97V118"/>
+                  <polygon points="0,119 7,126 0,133 -7,126"/>
+                </g>
+
+                <g class="expect-spread-mark">
+                  <line id="expect-spread-line" x1="114" y1="179" x2="402" y2="179"/>
+                  <line id="expect-spread-start" x1="114" y1="173" x2="114" y2="185"/>
+                  <line id="expect-spread-end" x1="402" y1="173" x2="402" y2="185"/>
+                  <circle id="expect-spread-point" cx="258" cy="179" r="4" hidden/>
+                </g>
+                <text class="expect-svg-label expect-spread-fill" x="300" y="208" text-anchor="middle">Mean ± one standard deviation</text>
+              </svg>
+
+              <figcaption id="expect-plot-caption">
+                Filled columns show the two Born probabilities on the same 0–100% scale. Circles mark the possible readings, the diamond marks the mean, and the dashed span illustrates the spread on the fixed horizontal scale.
+              </figcaption>
+            </figure>
+
+            <dl class="expect-stat-grid">
+              <div>
+                <dt class="expect-mean-color">Mean ⟨A⟩</dt>
+                <dd id="expect-mean">−0.28</dd>
+              </div>
+              <div>
+                <dt>Second moment ⟨A²⟩</dt>
+                <dd id="expect-second">1</dd>
+              </div>
+              <div>
+                <dt>Variance (ΔA)²</dt>
+                <dd id="expect-variance">0.9216</dd>
+              </div>
+              <div>
+                <dt class="expect-spread-color">Standard deviation ΔA</dt>
+                <dd id="expect-spread">0.96</dd>
+              </div>
+            </dl>
+
+            <dl class="expect-calculations">
+              <div>
+                <dt>Probability-weighted readings</dt>
+                <dd id="expect-mean-work">(+1)(9/25) + (−1)(16/25) = −7/25 = −0.28</dd>
+              </div>
+              <div>
+                <dt>Probability-weighted squared readings</dt>
+                <dd id="expect-second-work">(+1)²(9/25) + (−1)²(16/25) = 1</dd>
+              </div>
+              <div>
+                <dt>Variance and its square root</dt>
+                <dd id="expect-spread-work">1 − (−7/25)² = 576/625. √(576/625) = 24/25 = 0.96.</dd>
+              </div>
+            </dl>
+            <p class="lesson-note" id="expect-interval">The illustrated span is −1.24 to 0.68. The possible readings are still −1 and +1.</p>
+          </section>
+
+          <section class="expect-instrument" aria-labelledby="expect-sample-title">
+            <h4 id="expect-sample-title">Theory and simulated sample</h4>
+            <p class="lesson-note" id="expect-sample-setting">Sample for the opening preparation · Z</p>
+            <div class="expect-table-wrap">
+              <table class="expect-table">
+                <caption>Outcome probabilities, counts, and observed frequencies</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Reading</th>
+                    <th scope="col">Model</th>
+                    <th scope="col">Count</th>
+                    <th scope="col">Observed</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row" class="expect-minus-color">−1</th>
+                    <td id="expect-minus-probability">16/25 · 64%</td>
+                    <td id="expect-minus-count">0</td>
+                    <td id="expect-minus-frequency">—</td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="expect-plus-color">+1</th>
+                    <td id="expect-plus-probability">9/25 · 36%</td>
+                    <td id="expect-plus-count">0</td>
+                    <td id="expect-plus-frequency">—</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <dl class="expect-stat-grid expect-sample-stats">
+              <div><dt>Total trials N</dt><dd id="expect-total">0</dd></div>
+              <div><dt>Last reading</dt><dd id="expect-last">—</dd></div>
+              <div><dt>Sample mean ā</dt><dd id="expect-sample-mean">—</dd></div>
+            </dl>
+            <p class="lesson-note" id="expect-sample-work">After the first trial, divide the difference of the two counts by the total number of trials.</p>
+          </section>
+        </div>
+      </div>
+
+      <section class="expect-instrument" aria-labelledby="expect-bound-title">
+        <h4 id="expect-bound-title">Compare X and Y for the selected preparation</h4>
+        <p class="lesson-note">The selected preparation controls this comparison. X and Y each refer to their own set of freshly prepared systems.</p>
+        <dl class="expect-stat-grid">
+          <div><dt>Spread ΔX</dt><dd id="expect-delta-x">1</dd></div>
+          <div><dt>Spread ΔY</dt><dd id="expect-delta-y">0.28</dd></div>
+          <div><dt class="expect-spread-color">Product ΔX · ΔY</dt><dd id="expect-bound-product">0.28</dd></div>
+          <div><dt class="expect-mean-color">Lower bound |⟨Z⟩|</dt><dd id="expect-bound-limit">0.28</dd></div>
+        </dl>
+        <p class="expect-equation" id="expect-bound-comparison">ΔX · ΔY = |⟨Z⟩| · equality</p>
+      </section>
+
+      <p class="expect-feedback" id="expect-announcement" role="status" aria-atomic="true"></p>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="expect-balance-title">
+      <h3 id="expect-balance-title">Find the balance point</h3>
+      <p>Imagine placing weights of 0.64 at −1 and 0.36 at +1. The balance point lies to the left of zero. The Born rule supplies the weights for the opening preparation |ψ⟩ = (3|0⟩ + 4i|1⟩)/5. In Z, |0⟩ corresponds to +1 and |1⟩ corresponds to −1, so their probabilities are 9/25 and 16/25.</p>
+      <p class="expect-equation">⟨Z⟩ = (+1)(9/25) + (−1)(16/25) = −7/25 = −0.28</p>
+      <p>The <strong>expectation value</strong> is the mean of the distribution. The number −0.28 answers what the readings average to over many freshly prepared systems. A single reading still lands on one of the two circles.</p>
+
+      <details>
+        <summary>Connect the weighted average to the operator</summary>
+        <div class="expect-disclosure">
+          <p>Let <var>A</var> be the observable, <var>a</var> one of its eigenvalues, and <var>P</var>(<var>a</var>) the Born probability of that reading. The sum adds one term for each possible eigenvalue. The ket |ψ⟩ represents the normalized preparation, and ⟨ψ| is its conjugate transpose.</p>
+          <p class="expect-equation">⟨A⟩ = Σ<sub>a</sub> aP(a) = ⟨ψ|A|ψ⟩</p>
+          <p>In this complete nondegenerate orthonormal eigenbasis, write A = Σ<sub>a</sub> a|a⟩⟨a|. Each |a⟩ is the normalized eigenket associated with reading <var>a</var>. Insert that expression between the preparation bra and ket. Each term becomes a⟨ψ|a⟩⟨a|ψ⟩ = a|⟨a|ψ⟩|². The squared overlap is the Born probability from Lesson 13.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="expect-spread-title">
+      <h3 id="expect-spread-title">Measure the spread around the mean</h3>
+      <p>In the opening distribution, +1 is 1.28 above the mean and −1 is 0.72 below it. The probability-weighted signed deviations cancel. Squaring the deviations lets both distances contribute positively to the spread.</p>
+      <p class="expect-equation">(9/25)(1.28) + (16/25)(−0.72) = 0</p>
+      <p>The <strong>variance</strong> is the probability-weighted average of the squared deviations. Its square root is the <strong>standard deviation</strong>, written ΔA. It describes the spread of repeated readings in the chosen preparation.</p>
+      <p class="expect-equation">(ΔZ)² = (9/25)(1.28)² + (16/25)(−0.72)² = 576/625<br>ΔZ = √(576/625) = 24/25 = 0.96</p>
+      <p>The dashed span marks mean ± one standard deviation. In this example it runs from −1.24 to 0.68, so the possible reading +1 lies outside it. The span illustrates a distance scale for the distribution.</p>
+
+      <details>
+        <summary>Derive the second-moment formula</summary>
+        <div class="expect-disclosure">
+          <p>Write μ = ⟨A⟩ for the mean. The identity operator <var>I</var> leaves each ket unchanged. Subtracting μ<var>I</var> from <var>A</var> shifts each eigenvalue to its deviation <var>a</var> − μ.</p>
+          <p class="expect-equation">(ΔA)² = Σ<sub>a</sub> P(a)(a − μ)² = ⟨(A − μI)²⟩ = ⟨A²⟩ − μ²</p>
+          <p>Expanding the square gives ⟨A²⟩ − 2μ⟨A⟩ + μ²⟨I⟩. Normalization makes ⟨I⟩ = 1, leaving ⟨A²⟩ − μ². Here ⟨A²⟩ averages the squares of the readings. μ² squares the average reading.</p>
+          <p>Every Pauli observable has A² = I, so ⟨A²⟩ = 1. For the opening Z setup, the shortcut gives 1 − (−7/25)² = 1 − 49/625 = 576/625.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="expect-compare-title">
+      <h3 id="expect-compare-title">Keep the preparation and change the observable</h3>
+      <p>Choose |0⟩ and measure Z. Every simulated reading is +1. The mean is +1 and the spread is zero. Keep |0⟩ selected and switch to X. Both readings now have probability 1/2, the mean is zero, and the spread is one.</p>
+      <p>Quantum uncertainty here describes the distribution for a particular observable and state. Even with an ideal instrument and a known pure preparation, the spread can be positive.</p>
+      <p>The sample mean uses the observed counts. If <var>n</var><sub>+</sub> and <var>n</var><sub>−</sub> count the two outcomes and <var>N</var> is their total, then ā = (<var>n</var><sub>+</sub> − <var>n</var><sub>−</sub>)/<var>N</var> when <var>N</var> is positive. A fair X sample with five of each sign has mean zero. If the next reading is +1, the mean moves to 1/11, farther from the theoretical zero. Larger samples generally improve estimates across repeated experiments. The preparation’s intrinsic ΔA stays fixed.</p>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="expect-robertson-title">
+      <h3 id="expect-robertson-title">Compare the spreads of two observables</h3>
+      <p>The Robertson relation gives a lower bound on the product of two spreads. Prepare two groups of systems in the same state. Measure <var>A</var> on one group and <var>B</var> on the other. Each spread describes its own distribution.</p>
+      <p class="expect-equation">ΔA · ΔB ≥ ½|⟨[A, B]⟩|<br>[A, B] = AB − BA</p>
+      <p>The bracket [A, B] is the <strong>commutator</strong>. It subtracts the two products formed in opposite orders. For X and Y, [X, Y] = 2iZ, where i² = −1. The factor ½ and the magnitude of 2i give the lower bound |⟨Z⟩|.</p>
+
+      <details>
+        <summary>Check equality, a zero bound, and a strict inequality</summary>
+        <div class="expect-disclosure">
+          <div class="expect-table-wrap">
+            <table class="expect-table">
+              <caption>Predicted spreads and bounds for X and Y</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Preparation</th>
+                  <th scope="col">ΔX</th>
+                  <th scope="col">ΔY</th>
+                  <th scope="col">Product</th>
+                  <th scope="col">Bound</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">|0⟩</th><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+                <tr><th scope="row">|+x⟩</th><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+                <tr><th scope="row">Equatorial · phase π/4</th><td>1/√2</td><td>1/√2</td><td>1/2</td><td>0</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>For |0⟩, ⟨Z⟩ = 1 and both X and Y have equal outcome weights. For |+x⟩ = (|0⟩ + |1⟩)/√2, X is definite and ⟨Z⟩ = 0. The operators still satisfy [X, Y] = 2iZ. Its expectation can vanish in a particular state.</p>
+          <p>For (|0⟩ + e<sup>iπ/4</sup>|1⟩)/√2, the X and Y means both equal 1/√2, so both variances are 1/2. The Z outcomes are equally likely, so the bound is zero while the product is 1/2. A zero lower bound alone leaves each spread undetermined.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="expect-challenge-title">
+      <h3 id="expect-challenge-title">Check your understanding</h3>
+      <form id="expect-challenge">
+        <fieldset class="expect-instrument" id="expect-challenge-controls" disabled>
+          <legend>Mean and spread challenge</legend>
+
+          <div class="expect-question" data-expect-question="state">
+            <h4 tabindex="-1">1 of 2 · Find a preparation with ΔZ = 0 and ΔX = 1</h4>
+            <p>Choose a preparation in the lab and check it here. You may leave either observable selected. The check uses the theoretical spreads for both.</p>
+            <p><a href="#expect-state">Go to the preparation selector</a></p>
+          </div>
+
+          <div class="expect-question" data-expect-question="bound" role="radiogroup"
+               aria-labelledby="expect-bound-question" hidden>
+            <h4 id="expect-bound-question" tabindex="-1">2 of 2 · What can a zero X,Y lower bound tell you about the spreads?</h4>
+            <label class="expect-choice">
+              <input type="radio" name="expect-bound-answer" value="both-zero">
+              Both spreads must be zero.
+            </label>
+            <label class="expect-choice">
+              <input type="radio" name="expect-bound-answer" value="undetermined">
+              The bound alone leaves the spreads undetermined. Both can be positive.
+            </label>
+            <label class="expect-choice">
+              <input type="radio" name="expect-bound-answer" value="commute">
+              X and Y must commute in this preparation.
+            </label>
+          </div>
+
+          <div class="expect-actions">
+            <button class="expect-primary" id="expect-challenge-check" type="submit">Check my preparation</button>
+            <button id="expect-challenge-next" type="button" hidden>Next question</button>
+            <button id="expect-challenge-restart" type="button" hidden>Try the challenge again</button>
+          </div>
+          <p class="expect-feedback" id="expect-challenge-feedback" role="status" aria-atomic="true"></p>
+        </fieldset>
+      </form>
+    </section>
+
+    <nav class="lesson-next" aria-label="Lesson navigation">
+      <a href="../14_observables_and_operators/14_observables_and_operators.html">
+        <span aria-hidden="true">←</span> Previous: Observables and Operators
+      </a>
+      <a class="expect-primary" href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html">
+        Next: Spin and Stern–Gerlach <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

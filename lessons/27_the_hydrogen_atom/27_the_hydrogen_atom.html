@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Explore hydrogen orbitals, sample electron–proton distances, find nodes, and investigate spectral lines aboard the Quantum Explorer.">
+  <title>The Hydrogen Atom | Quantum Mechanics Class</title>
+  <!-- <link rel="stylesheet" href="./styles/main.css"> -->
+  <script src="./scripts/app.js" defer></script>
+  <!-- <script src="./scripts/lessons-menu.js" defer></script> -->
+  <link rel="stylesheet" href="./styles/main.css?v=8af9b7ab21d6">
+  <script src="./scripts/lessons-menu.js?v=bba78f5ea395" defer></script>
+  <script type="module" src="./scripts/lesson.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)" stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none" stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8" stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none" stroke="url(#logo-spectrum)" stroke-width="1.6" transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none" stroke="#edffef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static" viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 464 83"/>
+            <path class="track-violet" d="M218 54C265 80 353 96 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M218 46v16m-8-8h16"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button" aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and_coordinates/8_bases_and_coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="../22_the_one-dimensional_schrodinger_equation/22_the_one-dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="./27_the_hydrogen_atom.html" aria-current="page"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main hydrogen-lesson" aria-labelledby="ha-title">
+    <header class="ha-intro ha-stack">
+      <p class="ha-kicker">Lesson 27</p>
+      <h2 id="ha-title">The Hydrogen Atom</h2>
+      <p class="ha-lead"><strong>In hydrogen’s ground state, the density is highest at the proton. Why does a histogram of measured distances peak one Bohr radius away?</strong></p>
+      <p>Move the point probe and the shell scanner. Predict which curve a batch of independent distance measurements will follow.</p>
+    </header>
+
+    <section class="ha-panel" aria-labelledby="ha-lab-title">
+      <header class="ha-stack">
+        <h3 id="ha-lab-title" tabindex="-1">Hydrogen lab</h3>
+        <p class="ha-note" id="ha-static-note">The diagrams and figures show the opening preparations. Controls enable after the lesson initializes.</p>
+        <nav class="ha-actions ha-stations" aria-label="Hydrogen lab stations">
+          <a href="#ha-navigator">State Navigator</a>
+          <a href="#ha-flythrough">Orbital Flythrough</a>
+          <a href="#ha-scanner">Radial Scanner</a>
+          <a href="#ha-photon">Photon Bay</a>
+          <a href="#ha-measurements">Measurement Observatory</a>
+          <a href="#ha-missions">Missions</a>
+        </nav>
+        <div class="ha-actions">
+          <button id="ha-enter" class="ha-primary" type="button" aria-controls="ha-explorer" aria-expanded="false" disabled>Board the Quantum Explorer</button>
+        </div>
+      </header>
+
+      <section id="ha-explorer" class="ha-card ha-explorer" aria-labelledby="ha-explorer-title" hidden>
+        <h4 id="ha-explorer-title" tabindex="-1">The Hydrogen Atom Explorer</h4>
+        <p>Observe the prepared state from the research vessel <strong>Quantum Explorer</strong>. The vessel, proton marker, and photon effects use independent visual scales. The atom’s cloud represents a probability distribution.</p>
+        <fieldset id="ha-camera-controls" class="ha-card" disabled>
+          <legend>Observation deck</legend>
+          <div class="ha-actions">
+            <button type="button" id="ha-inside" aria-pressed="false">Enter the Atom</button>
+            <button type="button" id="ha-camera-reset">Reset camera</button>
+            <label class="ha-check"><input type="checkbox" id="ha-effects"> Reduced effects</label>
+            <button type="button" id="ha-return">Return to core lab</button>
+          </div>
+          <div class="ha-fields">
+            <label>Camera azimuth <strong id="ha-orbit-value">0°</strong>
+              <input type="range" id="ha-orbit" min="-180" max="180" step="1" value="0">
+            </label>
+            <label>Camera elevation <strong id="ha-tilt-value">20°</strong>
+              <input type="range" id="ha-tilt" min="-75" max="75" step="1" value="20">
+            </label>
+          </div>
+        </fieldset>
+        <div class="ha-viewport" id="ha-viewport" hidden><canvas id="ha-world" aria-hidden="true"></canvas></div>
+        <div class="ha-bridge">
+          <p id="ha-vessel-state">Prepared 1s, m = 0.</p>
+          <p id="ha-vessel-detector">Detector idle · 0 trials</p>
+          <p id="ha-vessel-photon">No photon demonstration yet.</p>
+        </div>
+        <p class="ha-note" id="ha-renderer">The orbital instruments below give calibrated views of the same preparation.</p>
+      </section>
+
+      <section id="ha-navigator" class="ha-card" aria-labelledby="ha-navigator-title">
+        <h4 id="ha-navigator-title">Quantum State Navigator</h4>
+        <fieldset id="ha-state-controls" disabled>
+          <legend>Prepare a spatial eigenstate</legend>
+          <div class="ha-fields">
+            <label>Principal level n
+              <select id="ha-n"><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option></select>
+            </label>
+            <label>Orbital index ℓ
+              <select id="ha-l"><option value="0" selected>0 · s</option></select>
+            </label>
+            <label>Projection m
+              <select id="ha-m"><option value="0" selected>0</option></select>
+            </label>
+            <label>Comparison state
+              <select id="ha-compare">
+                <option value="none" selected>No comparison</option>
+                <option value="2,0,0">2s, m = 0</option><option value="2,1,0">2p, m = 0</option>
+              </select>
+            </label>
+          </div>
+          <div class="ha-actions">
+            <button type="button" id="ha-restore">Restore 1s</button>
+          </div>
+          <p class="ha-note">Changing n, ℓ, or m immediately prepares a fresh ensemble. Selecting a comparison preserves the measured sample.</p>
+        </fieldset>
+        <dl class="ha-readouts">
+          <div><dt>Prepared state</dt><dd id="ha-ket">|1,0,0⟩ · 1s, m = 0</dd></div>
+          <div><dt>Angular basis</dt><dd>Complex definite-m, Condon–Shortley convention</dd></div>
+          <div><dt>Energy relative to ionization</dt><dd id="ha-energy">−13.5983 eV</dd></div>
+          <div><dt>L² and L<sub>z</sub></dt><dd id="ha-angular">0 ℏ² and 0 ℏ</dd></div>
+          <div><dt>Positive-radius nodes</dt><dd id="ha-radial-nodes">None</dd></div>
+          <div><dt>Angular zeros</dt><dd id="ha-angular-nodes">None. The angular factor is constant.</dd></div>
+          <div id="ha-mean-card"><dt>Mean radius ⟨r⟩</dt><dd id="ha-mean">1.500 a<sub>H</sub></dd></div>
+        </dl>
+      </section>
+
+      <section id="ha-flythrough" class="ha-card" aria-labelledby="ha-fly-title">
+        <h4 id="ha-fly-title">Orbital Flythrough</h4>
+        <fieldset id="ha-view-controls" disabled>
+          <legend>Display instruments</legend>
+          <div class="ha-fields">
+            <label>Vessel view
+              <select id="ha-view">
+                <option value="cloud" selected>Density cloud</option>
+                <option value="cutaway">Cutaway and slice plane</option>
+                <option value="surface">Constant-density contour</option>
+              </select>
+            </label>
+            <label>Color by
+              <select id="ha-palette"><option value="density" selected>Spatial density</option><option value="phase">Wavefunction phase</option></select>
+            </label>
+            <label>View radius
+              <select id="ha-extent">
+                <option value="8" selected>8 aH</option><option value="16">16 aH</option><option value="32">32 aH</option>
+              </select>
+            </label>
+            <label>Contour density in aH⁻³
+              <select id="ha-contour">
+                <option value="0.00001">0.00001</option><option value="0.0001" selected>0.0001</option>
+                <option value="0.001">0.001</option><option value="0.01">0.01</option>
+              </select>
+            </label>
+            <label>Opacity <strong id="ha-opacity-value">65%</strong>
+              <input type="range" id="ha-opacity" min="10" max="100" step="1" value="65">
+            </label>
+            <label>Slice z / aH <strong id="ha-slice-value">0.00</strong>
+              <input type="range" id="ha-slice-z" min="-8" max="8" step="0.05" value="0">
+            </label>
+          </div>
+          <div class="ha-actions">
+            <label class="ha-check"><input type="checkbox" id="ha-nodes" checked> Mark nodes</label>
+            <label class="ha-check"><input type="checkbox" id="ha-show-detections" checked> Show measured positions</label>
+          </div>
+        </fieldset>
+        <div class="ha-slice-grid">
+          <figure class="ha-chart-card">
+            <figcaption id="ha-slice-label-a">Prepared · 1s, m = 0</figcaption>
+            <svg class="ha-slice ha-static-slice" id="ha-static-slice" viewBox="0 0 280 280" role="img" aria-label="Central 1s density slice. Brightness is greatest at the proton marker and fades equally in all directions.">
+              <defs>
+                <radialGradient id="ha-ground-gradient">
+                  <stop offset="0%" stop-color="#d8fff0"/>
+                  <stop offset="12.5%" stop-color="#438989"/>
+                  <stop offset="25%" stop-color="#153d4d"/>
+                  <stop offset="50%" stop-color="#0a1926"/>
+                  <stop offset="100%" stop-color="#080f1e"/>
+                </radialGradient>
+              </defs>
+              <rect width="280" height="280" fill="#080f1e"/>
+              <circle cx="140" cy="140" r="140" fill="url(#ha-ground-gradient)"/>
+              <path d="M0 140H280 M140 0V280" fill="none" stroke="#7a9a9e" stroke-opacity="0.55"/>
+              <circle cx="140" cy="140" r="3" fill="#ffe16a"/>
+            </svg>
+            <canvas class="ha-slice" id="ha-slice-a" width="280" height="280" role="img" aria-labelledby="ha-slice-label-a" aria-describedby="ha-slice-probe-a" hidden></canvas>
+            <p class="ha-note" id="ha-slice-probe-a">At the center of the z = 0 slice, |ψ|² = 0.318310 aH⁻³ and phase is 0°.</p>
+          </figure>
+          <figure class="ha-chart-card" id="ha-slice-compare" hidden>
+            <figcaption id="ha-slice-label-b">Comparison</figcaption>
+            <canvas class="ha-slice" id="ha-slice-b" width="280" height="280" role="img" aria-labelledby="ha-slice-label-b" aria-describedby="ha-slice-probe-b"></canvas>
+            <p class="ha-note" id="ha-slice-probe-b"></p>
+          </figure>
+        </div>
+        <p id="ha-slice-legend" class="ha-note">Both slices use the same spatial extent and density scale. The central marker identifies the proton in the z = 0 plane.</p>
+        <p class="ha-note">The mathematical cloud extends beyond the view. Rendered cloud points illustrate a distribution. Detector points record separate simulated measurements.</p>
+      </section>
+
+      <section id="ha-scanner" class="ha-card" aria-labelledby="ha-scanner-title">
+        <h4 id="ha-scanner-title">Radial Scanner</h4>
+        <fieldset id="ha-probe-controls" disabled>
+          <legend>Point probe and spherical shell</legend>
+          <div class="ha-fields">
+            <label>Point radius r / aH <strong id="ha-probe-r-value">0.00</strong>
+              <input type="range" id="ha-probe-r" min="0" max="8" step="0.05" value="0">
+            </label>
+            <label>Polar angle θ from +z <strong id="ha-theta-value">0°</strong>
+              <input type="range" id="ha-theta" min="0" max="180" step="1" value="0">
+            </label>
+            <label>Azimuth φ about z <strong id="ha-phi-value">0°</strong>
+              <input type="range" id="ha-phi" min="0" max="359" step="1" value="0">
+            </label>
+            <label>Shell inner radius / aH <strong id="ha-shell-min-value">0.00</strong>
+              <input type="range" id="ha-shell-min" min="0" max="8" step="0.05" value="0">
+            </label>
+            <label>Shell outer radius / aH <strong id="ha-shell-max-value">1.00</strong>
+              <input type="range" id="ha-shell-max" min="0" max="8" step="0.05" value="1">
+            </label>
+          </div>
+          <div class="ha-actions">
+            <button id="ha-probe-axial" type="button">Probe along +z</button>
+            <button id="ha-probe-equatorial" type="button">Probe along +x</button>
+          </div>
+        </fieldset>
+        <dl class="ha-readouts">
+          <div><dt>Probe direction</dt><dd id="ha-probe-direction">θ = 0°, φ = 0°</dd></div>
+          <div><dt>Point density |ψ|²</dt><dd id="ha-point-density">0.318310 aH⁻³</dd></div>
+          <div><dt>Radial density at probe r</dt><dd id="ha-radial-density">0.000000 aH⁻¹</dd></div>
+          <div><dt>Shell thickness</dt><dd id="ha-shell-width">1.00 aH</dd></div>
+          <div><dt>Shell probability</dt><dd id="ha-shell-probability">32.33%</dd></div>
+          <div id="ha-peak-card"><dt>Global radial peak</dt><dd id="ha-peak">1.000 aH</dd></div>
+          <div id="ha-local-card"><dt>Local radial maxima</dt><dd id="ha-local-peaks">1.000 aH</dd></div>
+        </dl>
+
+        <form id="ha-opening">
+          <fieldset id="ha-opening-controls" class="ha-card" disabled>
+            <legend>Predict before measuring 1s</legend>
+            <div class="ha-actions">
+              <label for="ha-opening-answer">Which curve should the distance histogram follow?</label>
+              <select id="ha-opening-answer" required>
+                <option value="">Choose a curve</option>
+                <option value="point">Point density</option><option value="radial">Radial density</option>
+              </select>
+              <button type="submit">Check prediction</button>
+            </div>
+            <p class="ha-feedback" id="ha-opening-feedback" role="status" aria-atomic="true"></p>
+          </fieldset>
+        </form>
+
+        <figure class="ha-chart-card" aria-labelledby="ha-radial-title">
+          <figcaption id="ha-radial-title">Point density, shell density, and observed distances</figcaption>
+          <svg id="ha-radial-plot" class="ha-plot" viewBox="0 0 700 303" role="img" aria-labelledby="ha-radial-title" aria-describedby="ha-radial-desc">
+            <desc id="ha-radial-desc">For 1s, point density decreases from its maximum at the origin while radial density starts at zero and peaks at one hydrogen Bohr radius. The first one-radius interval is shaded.</desc>
+            <path class="ha-grid-line" d="M68 36H630 M68 77H630 M68 151H630 M68 201H630 M208.5 36V251 M349 36V251 M489.5 36V251"/>
+            <path class="ha-axis" d="M68 36V118H630 M68 151V251H630"/>
+            <path id="ha-shell-shade" class="ha-shade" d="M68 251L85.6 225.73L103.1 189.69L120.7 167.33L138.25 160.78V251Z"/>
+            <g id="ha-histogram" class="ha-histogram"></g>
+            <g id="ha-theory-bins" class="ha-theory-bins"></g>
+            <path id="ha-shell-lines" class="ha-shell-line" d="M68 151V251 M138.25 151V251"/>
+            <path id="ha-compare-path" class="ha-comparison" d="" hidden/>
+            <path id="ha-point-path" class="ha-point" d="M68 36.43L85.6 68.53L103.1 87.99L120.7 99.8L138.3 106.96L155.8 111.3L173.4 113.94L190.9 115.54L208.5 116.51L243.6 117.45L278.8 117.8L349 117.97L630 118"/>
+            <path id="ha-radial-path" class="ha-radial" d="M68 251L85.6 225.73L103.1 189.69L120.7 167.33L138.3 160.78L155.8 165.49L173.4 176.32L190.9 189.35L208.5 202.16L226.1 213.51L243.6 222.93L261.2 230.4L278.8 236.13L296.3 240.41L313.9 243.55L331.4 245.81L349 247.42L366.6 248.55L384.1 249.33L419.3 250.24L454.4 250.66L524.6 250.94L630 251"/>
+            <path id="ha-probe-line" class="ha-probe-line" d="M68 36V251"/>
+            <g id="ha-node-marks" class="ha-node-marks"></g>
+            <g class="ha-ticks">
+              <text x="70" y="23">Point density × aH³</text>
+              <text x="70" y="140">Radial density × aH</text>
+              <g text-anchor="end">
+                <text id="ha-point-top" x="61" y="41">0.32</text><text x="61" y="123">0</text>
+                <text id="ha-radial-top" x="61" y="156">0.60</text><text x="61" y="256">0</text>
+              </g>
+              <g text-anchor="middle">
+                <text x="68" y="273">0</text><text id="ha-tick1" x="208.5" y="273">2</text>
+                <text id="ha-tick2" x="349" y="273">4</text><text id="ha-tick3" x="489.5" y="273">6</text>
+                <text id="ha-tick4" x="630" y="273">8</text><text x="349" y="294">Distance r / aH</text>
+              </g>
+            </g>
+          </svg>
+          <ul class="ha-legend">
+            <li class="ha-key-point">Point density along probe direction</li>
+            <li class="ha-key-radial">Radial density</li>
+            <li class="ha-key-compare" id="ha-compare-key" hidden>Comparison radial density</li>
+            <li class="ha-key-shell">Shell interval</li>
+            <li class="ha-key-sample">Observed distances</li>
+            <li class="ha-key-theory">Predicted bin averages</li>
+          </ul>
+        </figure>
+      </section>
+
+      <section id="ha-measurements" class="ha-card" aria-labelledby="ha-measure-title">
+        <h4 id="ha-measure-title">Measurement Observatory</h4>
+        <p>Each trial prepares an independent atom in the selected state and records one relative position. The scanner’s histogram divides each bin count by total trials times bin width, including off-view trials in the total.</p>
+        <fieldset id="ha-measure-controls" disabled>
+          <legend>Send independent preparations to the detectors</legend>
+          <div class="ha-actions">
+            <button id="ha-one" type="button">Measure once</button>
+            <button id="ha-batch" class="ha-primary" type="button">Measure 100</button>
+            <button id="ha-clear" type="button" disabled>Clear detections</button>
+            <label class="ha-check"><input type="checkbox" id="ha-theory" checked> Theory overlay</label>
+          </div>
+        </fieldset>
+        <dl class="ha-readouts">
+          <div><dt>Total trials</dt><dd id="ha-count">0</dd></div>
+          <div><dt>Latest relative position (x, y, z)</dt><dd id="ha-last">—</dd></div>
+          <div><dt>Latest distance</dt><dd id="ha-last-r">—</dd></div>
+          <div><dt>Detections in selected shell</dt><dd id="ha-in-shell">0</dd></div>
+          <div><dt>Observed shell fraction</dt><dd id="ha-shell-frequency">—</dd></div>
+          <div><dt>Visible / off-view detections</dt><dd id="ha-off-count">0 / 0</dd></div>
+          <div><dt>Model probability beyond view</dt><dd id="ha-off-probability">0.00163%</dd></div>
+        </dl>
+        <p class="ha-note" id="ha-sampler-note">Position samples use the full radial distribution. The display shows the interval from 0 to 8 aH.</p>
+        <details class="ha-card">
+          <summary>Numerical histogram and predicted bin probabilities</summary>
+          <div class="ha-table-wrap">
+            <table>
+              <caption>Opening bins and subsequent position measurements</caption>
+              <thead><tr><th scope="col">Radius interval / aH</th><th scope="col">Probability</th><th scope="col">Observed count</th></tr></thead>
+              <tbody id="ha-bin-rows">
+                <tr><th scope="row">0 to 1</th><td>32.33%</td><td>0</td></tr>
+                <tr><th scope="row">1 to 8</th><td>67.67%</td><td>0</td></tr>
+                <tr><th scope="row">Beyond 8</th><td>0.00163%</td><td>0</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+
+      <section id="ha-photon" class="ha-card" aria-labelledby="ha-photon-title">
+        <h4 id="ha-photon-title">Photon Interaction Bay</h4>
+        <p>Choose a candidate independently of the prepared sample. An energy difference determines a candidate photon. A demonstrated event must also pass the electric-dipole check for some compatible polarization.</p>
+        <fieldset id="ha-photon-controls" disabled>
+          <legend>Inspect a candidate transition</legend>
+          <div class="ha-fields">
+            <label>Initial state
+              <select id="ha-initial">
+                <option value="1,0,0">1s, m = 0</option><option value="2,0,0">2s, m = 0</option>
+                <option value="2,1,0" selected>2p, m = 0</option>
+              </select>
+            </label>
+            <label>Final state
+              <select id="ha-final">
+                <option value="1,0,0" selected>1s, m = 0</option><option value="2,0,0">2s, m = 0</option>
+                <option value="2,1,0">2p, m = 0</option>
+              </select>
+            </label>
+            <label>Model view
+              <select id="ha-photon-mode">
+                <option value="gap">Energy gap</option><option value="dipole" selected>Electric-dipole rules</option>
+              </select>
+            </label>
+          </div>
+          <div class="ha-actions">
+            <button id="ha-demo" type="button">Demonstrate emission</button>
+            <button id="ha-spectrum-clear" type="button" disabled>Clear spectrum</button>
+          </div>
+        </fieldset>
+        <div class="ha-grid">
+          <figure class="ha-chart-card" aria-labelledby="ha-level-title">
+            <figcaption id="ha-level-title">Bound levels and ionization limit</figcaption>
+            <svg class="ha-plot" viewBox="0 0 360 211" role="img" aria-labelledby="ha-level-title" aria-describedby="ha-level-desc">
+              <desc id="ha-level-desc">The n = 2 level is at minus 3.3996 electronvolts and falls to n = 1 at minus 13.5983 electronvolts.</desc>
+              <path class="ha-axis" d="M35 21V181"/>
+              <path class="ha-level-limit" d="M35 21H303"/>
+              <path class="ha-level-line" d="M35 37.2H303 M35 57.4H303 M35 166.7H303"/>
+              <g class="ha-ticks">
+                <text x="46" y="17">0 eV · ionization</text>
+                <text x="46" y="34">3 · −1.5109 eV</text>
+                <text x="46" y="54">2 · −3.3996 eV</text>
+                <text x="46" y="163">1 · −13.5983 eV</text>
+              </g>
+              <circle class="ha-initial-mark" id="ha-level-initial" cx="234" cy="57.4" r="5"/>
+              <path class="ha-transition-line" id="ha-level-arrow" d="M234 57.4L270 166.7 M264 159L270 166.7L270 157"/>
+              <rect class="ha-final-mark" id="ha-level-final" x="265" y="161.7" width="10" height="10"/>
+            </svg>
+            <ul class="ha-legend"><li class="ha-key-initial">Circle · initial</li><li class="ha-key-final">Square · final</li></ul>
+          </figure>
+          <div class="ha-stack">
+            <dl class="ha-readouts">
+              <div><dt>Signed gap ΔE</dt><dd id="ha-gap">−10.1987 eV</dd></div>
+              <div><dt>Event direction</dt><dd id="ha-photon-kind">Emission</dd></div>
+              <div><dt>Candidate photon energy</dt><dd id="ha-photon-energy">10.1987 eV</dd></div>
+              <div><dt>Candidate frequency</dt><dd id="ha-frequency">2.4661 × 10¹⁵ Hz</dd></div>
+              <div><dt>Vacuum wavelength</dt><dd id="ha-wavelength">121.57 nm · UV</dd></div>
+            </dl>
+            <p class="ha-equation" id="ha-dipole">Δℓ = −1 and Δm = 0. Allowed for some compatible polarization.</p>
+            <p id="ha-photon-note" class="ha-note">A demonstration illustrates a selected event. This model gives no timing, rate, or intensity prediction.</p>
+            <p id="ha-photon-status" class="ha-feedback" role="status" aria-atomic="true"></p>
+          </div>
+        </div>
+
+        <figure class="ha-chart-card" aria-labelledby="ha-spectrum-title">
+          <figcaption id="ha-spectrum-title">Demonstrated emission lines</figcaption>
+          <svg class="ha-plot" viewBox="0 0 660 103" role="img" aria-labelledby="ha-spectrum-title" aria-describedby="ha-spectrum-desc">
+            <desc id="ha-spectrum-desc">No demonstrated lines.</desc>
+            <path class="ha-axis" d="M48 65H612"/>
+            <path class="ha-level-limit" d="M330 18V65"/>
+            <g id="ha-lines" class="ha-lines"></g>
+            <g class="ha-ticks">
+              <text x="80" y="17">UV · symbolic color</text><text x="410" y="17">Visible wavelengths</text>
+              <text x="48" y="87" text-anchor="middle">100</text>
+              <text x="236" y="87" text-anchor="middle">300</text>
+              <text x="424" y="87" text-anchor="middle">500</text>
+              <text x="612" y="87" text-anchor="middle">700 nm</text>
+            </g>
+          </svg>
+          <ul id="ha-spectrum-list" class="ha-spectrum-list"><li>No emissions demonstrated yet.</li></ul>
+        </figure>
+      </section>
+
+      <p id="ha-lab-status" class="ha-feedback" role="status" aria-atomic="true"></p>
+
+      <section id="ha-missions" class="ha-card" aria-labelledby="ha-mission-title">
+        <h4 id="ha-mission-title">Explorer missions</h4>
+        <fieldset id="ha-mission-controls" disabled>
+          <legend>Choose an investigation</legend>
+          <div class="ha-actions">
+            <label for="ha-mission">Mission</label>
+            <select id="ha-mission">
+              <option value="free" selected>Free exploration</option>
+              <option value="first">First Contact</option>
+              <option value="shell">The Shell Scanner</option>
+              <option value="node">Node Hunter</option>
+              <option value="build">Build an Orbital</option>
+              <option value="map">The Measurement Map</option>
+              <option value="spectral">Spectral Detective</option>
+              <option value="forbid">The Forbidden Jump</option>
+              <option value="inside">Inside the Lobes</option>
+              <option value="same">Same Energy, Different Shape</option>
+            </select>
+            <button id="ha-mission-load" type="button">Load mission</button>
+            <button id="ha-mission-retry" type="button" disabled>Retry</button>
+            <button id="ha-mission-exit" type="button" disabled>Return to free exploration</button>
+          </div>
+          <p id="ha-mission-goal">Free exploration is active.</p>
+          <p class="ha-note" id="ha-mission-hint"></p>
+
+          <div class="ha-stack" data-ha-mission="first" hidden>
+            <div class="ha-actions">
+              <button type="button" id="ha-first-axial">Record +z probe at 1 aH</button>
+              <button type="button" id="ha-first-equatorial">Record +x probe at 1 aH</button>
+            </div>
+            <p id="ha-first-record" class="ha-note"></p>
+            <label>What accounts for the readings?
+              <select id="ha-first-answer">
+                <option value="">Choose an explanation</option>
+                <option value="symmetric">1s point density depends only on radius</option>
+                <option value="axis">The atom has the same density only on these two axes</option>
+                <option value="constant">The density is constant at all radii</option>
+              </select>
+            </label>
+            <button id="ha-first-check" type="button">Check symmetry</button>
+          </div>
+
+          <div class="ha-stack" data-ha-mission="shell" hidden>
+            <div class="ha-fields">
+              <label>Point-density maximum / aH <input id="ha-shell-point-answer" type="number" min="0" max="8" step="any"></label>
+              <label>Radial-density maximum / aH <input id="ha-shell-peak-answer" type="number" min="0" max="8" step="any"></label>
+              <label>Mean distance / aH <input id="ha-shell-mean-answer" type="number" min="0" max="8" step="any"></label>
+            </div>
+            <button id="ha-shell-check" type="button">Check all three distances</button>
+          </div>
+
+          <div class="ha-stack" data-ha-mission="node" hidden>
+            <label>2s radial node / aH <input id="ha-node-r" type="number" min="0" max="8" step="any"></label>
+            <label>2p, m = 0 angular zero
+              <select id="ha-node-plane">
+                <option value="">Choose a geometry</option><option value="equator">Equatorial plane</option>
+                <option value="axis">Entire z-axis</option><option value="sphere">A spherical shell</option>
+              </select>
+            </label>
+            <button id="ha-node-check" type="button">Check nodes and probe both sides</button>
+            <p id="ha-node-result" class="ha-note"></p>
+          </div>
+
+          <div class="ha-stack" data-ha-mission="build" hidden>
+            <label>Why is (n, ℓ, m) = (2, 2, 0) invalid?
+              <select id="ha-build-answer">
+                <option value="">Choose a rule</option><option value="l">ℓ must be less than n</option>
+                <option value="m">m cannot be zero</option><option value="n">n must exceed two</option>
+              </select>
+            </label>
+            <button id="ha-build-check" type="button">Check prepared state and rule</button>
+          </div>
+
+          <div class="ha-stack" data-ha-mission="map" hidden>
+            <label>Predict percent of 1s detections inside r ≤ 1 aH
+              <input id="ha-map-answer" type="number" min="0" max="100" step="any">
+            </label>
+            <button id="ha-map-check" type="button">Commit prediction and measure 100</button>
+          </div>
+
+          <div class="ha-stack" data-ha-mission="spectral" hidden>
+            <p>Mystery line · emission, <strong id="ha-spectral-clue">656.47 nm</strong>. Both levels are among n = 1, 2, 3.</p>
+            <div class="ha-fields">
+              <label>Initial n <input id="ha-spectral-i" type="number" min="1" max="3" step="1"></label>
+              <label>Final n <input id="ha-spectral-f" type="number" min="1" max="3" step="1"></label>
+            </div>
+            <button id="ha-spectral-check" type="button">Check the level pair</button>
+          </div>
+
+          <div class="ha-stack" data-ha-mission="forbid" hidden>
+            <div class="ha-actions">
+              <button id="ha-forbid-s" type="button">Inspect 1s → 2s</button>
+              <button id="ha-forbid-p" type="button">Inspect 1s → 2p, m = 0</button>
+            </div>
+            <p id="ha-forbid-record" class="ha-note"></p>
+            <label>Which candidate passes the single-photon dipole check?
+              <select id="ha-forbid-answer">
+                <option value="">Choose an answer</option><option value="p">Only 1s → 2p, m = 0</option>
+                <option value="s">Only 1s → 2s</option><option value="both">Both because their gaps match</option>
+              </select>
+            </label>
+            <button id="ha-forbid-check" type="button">Check the allowed channel</button>
+          </div>
+
+          <div class="ha-stack" data-ha-mission="inside" hidden>
+            <button id="ha-inside-record" type="button">Record the current slice’s center probe</button>
+            <p id="ha-inside-log" class="ha-note">Record a slice below, on, and above the equatorial node.</p>
+            <label>How are the amplitude signs in the two lobes related?
+              <select id="ha-inside-answer">
+                <option value="">Choose a relation</option><option value="opposite">Opposite signs</option>
+                <option value="same">The same sign</option><option value="zero">Both have zero amplitude</option>
+              </select>
+            </label>
+            <button id="ha-inside-check" type="button">Check the nodal crossing</button>
+          </div>
+
+          <div class="ha-stack" data-ha-mission="same" hidden>
+            <label>What distinguishes 2s from 2p, m = 0?
+              <select id="ha-same-answer">
+                <option value="">Choose an observable</option>
+                <option value="shape">Radial and angular measurements can distinguish them</option>
+                <option value="energy">Energy alone distinguishes them</option>
+                <option value="none">Both states have the same spatial distribution</option>
+              </select>
+            </label>
+            <button id="ha-same-check" type="button">Check energy and shape</button>
+          </div>
+        </fieldset>
+        <p class="ha-feedback" id="ha-mission-feedback" role="status" aria-atomic="true"></p>
+      </section>
+    </section>
+
+    <section class="ha-panel" aria-labelledby="ha-math-title">
+      <h3 id="ha-math-title">Show Me Why</h3>
+      <div class="ha-symbols" aria-label="Equation symbols">
+        <details class="ha-card" data-ha-symbol="radial"><summary>Rₙℓ · Radial function</summary><p>The distance-dependent amplitude. It obeys ∫₀∞ |Rₙℓ|²r²dr = 1. The scanner shows its squared magnitude times r².</p></details>
+        <details class="ha-card" data-ha-symbol="angular"><summary>Yℓᵐ · Angular function</summary><p>The direction-dependent amplitude, with ∫ |Yℓᵐ|²dΩ = 1. It controls the lobes and angular zeros in the slices.</p></details>
+        <details class="ha-card" data-ha-symbol="n"><summary>n · Principal level</summary><p>Positive integer labeling the energy Eₙ = −E<sub>H</sub>/n² and setting the range of ℓ. The lab supports n = 1, 2, 3.</p></details>
+        <details class="ha-card" data-ha-symbol="l"><summary>ℓ · Orbital index</summary><p>Integer from 0 to n−1. It fixes L² = ℏ²ℓ(ℓ+1) and the spectroscopic letter s, p, or d in this lab.</p></details>
+        <details class="ha-card" data-ha-symbol="m"><summary>m · Projection index</summary><p>Integer from −ℓ to +ℓ. It fixes L<sub>z</sub> = ℏm and gives the e<sup>imφ</sup> azimuthal phase factor.</p></details>
+        <details class="ha-card" data-ha-symbol="density"><summary>|ψ|² · Spatial density</summary><p>Squared magnitude of the spatial amplitude in aH⁻³. Multiply by an infinitesimal volume to obtain probability.</p></details>
+        <details class="ha-card" data-ha-symbol="scale"><summary>a<sub>H</sub> · Hydrogen length scale</summary><p>a<sub>H</sub> = 4πε₀ℏ²/(μe²) uses the electron–proton reduced mass. The probe, shell, and plot use this length as their unit.</p></details>
+        <details class="ha-card" data-ha-symbol="energy"><summary>Eₙ · Bound energy</summary><p>The energy relative to ionization, in electronvolts. The bay subtracts the two selected levels.</p></details>
+      </div>
+
+      <details class="ha-card">
+        <summary>1. Separate center-of-mass motion and find the Coulomb bound states</summary>
+        <div class="ha-stack ha-detail">
+          <p>With no external field, center-of-mass motion is free. For the relative coordinate, the reduced mass is μ = mₑmₚ/(mₑ+mₚ). The potential depends only on the electron–proton distance r, so spherical coordinates separate the radial and angular equations.</p>
+          <p class="ha-equation">V(r) = −e²/(4πε₀r)<br>Ĥ = −(ℏ²/2μ)∇² + V(r)<br>a<sub>H</sub> = 4πε₀ℏ²/(μe²) = (mₑ/μ)a₀</p>
+          <p>The symbol a₀ denotes the fixed-nucleus Bohr radius. This lab consistently uses a<sub>H</sub>. Write ψₙℓₘ = Rₙℓ(r)Yℓᵐ(θ,φ). Here θ measures from +z and φ measures around z. The angular eigenvalue ℏ²ℓ(ℓ+1) of L² supplies the radial centrifugal term. With χ = rR, the radial equation is</p>
+          <p class="ha-equation">−(ℏ²/2μ) χ″ + [ℏ²ℓ(ℓ+1)/(2μr²) − e²/(4πε₀r)]χ = Eχ</p>
+          <p>Regularity at the origin selects R ∼ r<sup>ℓ</sup>. A negative energy gives a decaying exponential at large r. Factoring out both behaviors leaves an associated Laguerre equation. A normalizable bound solution terminates at polynomial degree n−ℓ−1, giving the allowed n values and energies.</p>
+          <p class="ha-equation">u = 2r/(na<sub>H</sub>)<br>Rₙℓ = (2/(na<sub>H</sub>))<sup>3/2</sup> √[(n−ℓ−1)!/(2n(n+ℓ)!)] e<sup>−u/2</sup> u<sup>ℓ</sup> L<sub>n−ℓ−1</sub><sup>2ℓ+1</sup>(u)<br>Eₙ = −μe⁴/[2(4πε₀)²ℏ²n²] ≈ −13.6 eV/n²</p>
+          <p>Zero energy is the ionization limit. This nonrelativistic spatial model omits spin-dependent structure, relativistic corrections, fine structure, and hyperfine structure.</p>
+        </div>
+      </details>
+
+      <details class="ha-card">
+        <summary>2. Connect quantum numbers, degeneracy, and nodes</summary>
+        <div class="ha-stack ha-detail">
+          <p>For each n ≥ 1, choose ℓ = 0 through n−1, then any integer m from −ℓ to +ℓ. This gives 1 + 4 + 9 = 14 spatial eigenstates through n = 3. The same angular functions appeared in <a href="../26_angular_momentum/26_angular_momentum.html">Angular Momentum</a>, with L² = ℏ²ℓ(ℓ+1) and L<sub>z</sub> = ℏm. The radial function supplies the distance dependence.</p>
+          <p>There are n−ℓ−1 positive-radius radial nodes. In 2s the radial factor is proportional to (2−r/a<sub>H</sub>)e<sup>−r/(2aH)</sup>, so its node is at 2a<sub>H</sub>. For 2p, m = 0 the angular factor is proportional to cos θ, giving an equatorial nodal plane. For 2p, m = ±1 the angular factor is proportional to sin θ e<sup>±iφ</sup>, up to a constant phase. The density vanishes on the z-axis and is independent of azimuth.</p>
+          <p>Opposite m values have the same density and opposite phase winding. Real pₓ and pᵧ angular functions are linear combinations of m = ±1. In the lab’s definite-m basis, phase at a point includes the sign of R. It is undefined wherever ψ vanishes.</p>
+          <p>The ideal Coulomb energy depends on n alone. The 2s and 2p states therefore share an energy, with different angular momentum and different position distributions.</p>
+        </div>
+      </details>
+
+      <details class="ha-card" open>
+        <summary>3. Work the opening experiment from the volume element</summary>
+        <div class="ha-stack ha-detail">
+          <p class="ha-equation">dP = |ψ|² r² sin θ dr dθ dφ<br>Pᵣ(r) = r² |Rₙℓ(r)|², because ∫ |Yℓᵐ|²dΩ = 1<br>P(a ≤ r ≤ b) = ∫<sub>a</sub><sup>b</sup> Pᵣ(r) dr</p>
+          <p>The point probe reports density per unit volume. The radial scanner collects all directions in each spherical shell and reports probability per unit radius. The r² factor accounts for the growing area of a shell. A tiny volume around the origin can have high density and still contain little probability.</p>
+          <p class="ha-equation">1s: |ψ₁₀₀|² = e<sup>−2x</sup>/(πa<sub>H</sub>³)<br>Pᵣ(r) = 4x²e<sup>−2x</sup>/a<sub>H</sub>, with x = r/a<sub>H</sub></p>
+          <p>The point density is maximal at r = 0. The derivative of radial density with respect to x is (8/a<sub>H</sub>) x(1−x)e<sup>−2x</sup>. It changes from positive to negative at x = 1, so a narrow-bin distance histogram tends to peak near a<sub>H</sub>. The cumulative probability at x = 1 is 1−5e<sup>−2</sup> ≈ 32.33%. That is about 32 detections in a batch of 100 on average, with finite-sample variation.</p>
+          <p>The mean is ⟨r⟩ = (a<sub>H</sub>/2)[3n²−ℓ(ℓ+1)], or 1.5a<sub>H</sub> for 1s. This integral averages across the whole distribution. Local radial peaks can occur on either side of a node, and none is required to equal the mean.</p>
+        </div>
+      </details>
+
+      <details class="ha-card">
+        <summary>4. Check a photon gap and an electric-dipole channel</summary>
+        <div class="ha-stack ha-detail">
+          <p class="ha-equation">ΔE = E<sub>f</sub>−E<sub>i</sub><br>E<sub>γ</sub> = |ΔE| = hν = hc/λ for a nonzero gap</p>
+          <p>Positive ΔE requires absorption. Negative ΔE permits an emission energy. A zero gap supplies no finite-wavelength line in this model. To check a single-photon electric-dipole channel, the operator is proportional to a component of r. Its angular part has rank one and odd parity, giving Δℓ = ±1 and Δm = 0, ±1. Polarization relative to the z axis determines which Δm channels can contribute.</p>
+          <p>For 2p, m = 0 → 1s, |ΔE| is about 10.20 eV and the vacuum wavelength is about 121.57 nm in the ultraviolet. The 2s → 1s gap agrees, but Δℓ = 0 fails this single-photon electric-dipole rule. Other processes, such as two-photon decay, lie outside this check.</p>
+        </div>
+      </details>
+
+      <p><strong>Revisit the opening.</strong> The volume factor is why the spatial density can peak at the proton while distances cluster around a shell farther away.</p>
+      <p>In Lesson 28, the one-electron spatial states become building blocks for a different question. How do we write a joint state when the particles are identical?</p>
+    </section>
+
+    <nav class="ha-navigation" aria-label="Lesson navigation">
+      <a rel="prev" href="../26_angular_momentum/26_angular_momentum.html"><span class="ha-note">← Previous</span> Angular Momentum</a>
+      <a rel="next" href="../28_identical_particles/28_identical_particles.html"><span class="ha-note">Next →</span> Identical Particles</a>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

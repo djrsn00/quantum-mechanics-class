@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Evolve a quantum packet in one dimension, compare free motion with scattering, and test your predictions in the Quantum Escape chamber.">
+  <title>The One-Dimensional Schrödinger Equation | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+  <script type="module" src="./scripts/lesson.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)"
+                  stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none"
+                   stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8"
+                stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none"
+                   stroke="url(#logo-spectrum)" stroke-width="1.6"
+                   transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none"
+                stroke="#edffef" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static" viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 464 83"/>
+            <path class="track-violet" d="M218 54C265 80 333 97 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M218 46v16m-8-8h16"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button"
+              aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and-coordinates/8_bases_and-coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="./22_the_one-dimensional_schrodinger_equation.html" aria-current="page"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main schrodinger-lesson" aria-labelledby="sc-title">
+    <header class="sc-intro sc-stack">
+      <p class="sc-kicker">Lesson 22</p>
+      <h2 id="sc-title">The One-Dimensional Schrödinger Equation</h2>
+      <p class="sc-lead"><strong>A wave packet is heading toward a barrier taller than its central kinetic energy. What do you expect a detector on the far side to record?</strong></p>
+      <p>Make a prediction, launch the opening packet, and pause around <var>t</var> = 16 <var>T</var>₀. Compare the current left and right probabilities. Then switch the potential to Free and launch the same preparation.</p>
+    </header>
+
+    <section class="sc-panel" aria-labelledby="sc-equation-title">
+      <h3 id="sc-equation-title">What determines the next instant?</h3>
+      <p class="sc-equation">iℏ ∂Ψ(x,t)/∂t = −(ℏ²/2m) ∂²Ψ(x,t)/∂x² + V(x,t)Ψ(x,t)</p>
+      <p>Position <var>x</var> and time <var>t</var> label the complex amplitude Ψ. The imaginary unit <var>i</var> obeys <var>i</var>² = −1, and ℏ is the reduced Planck constant. The mass <var>m</var> sets the strength of the kinetic term. The potential energy <var>V</var> is fixed for each run in the lab.</p>
+      <div class="sc-term-grid">
+        <details class="sc-card" id="sc-term-time">
+          <summary>Time derivative ∂Ψ/∂t</summary>
+          <p>This is the instantaneous rate of change of the amplitude at a position. Divide the right side by iℏ to read the rate directly.</p>
+        </details>
+        <details class="sc-card" id="sc-term-kinetic">
+          <summary>Kinetic term −(ℏ²/2m)∂²Ψ/∂x²</summary>
+          <p>Lesson 21’s momentum operator is p̂ = −iℏ∂/∂x. Applying it twice and dividing by 2m gives the kinetic term. The curvature here is the second derivative of the complex amplitude. Two packets can have the same density and opposite momenta because their spatial phases differ.</p>
+        </details>
+        <details class="sc-card" id="sc-term-mass">
+          <summary>Mass m</summary>
+          <p>For fixed momentum, a larger mass reduces the free packet’s velocity p₀/m. It also decreases the coefficient ℏ²/(2m) multiplying the curvature.</p>
+        </details>
+        <details class="sc-card" id="sc-term-potential">
+          <summary>Potential term VΨ</summary>
+          <p>The obstacle controls set the potential energy at each grid point. Adding this term to the kinetic operator gives the Hamiltonian H, so the equation reads iℏ∂Ψ/∂t = HΨ.</p>
+        </details>
+        <details class="sc-card" id="sc-term-initial">
+          <summary>Initial packet Ψ(x,0)</summary>
+          <p>The center x₀ sets the launch position, σ sets its initial density width, and p₀ sets the spatial phase gradient p₀/ℏ. These controls prepare the state at t = 0.</p>
+        </details>
+        <details class="sc-card" id="sc-term-density">
+          <summary>Position density |Ψ|²</summary>
+          <p>Square the real and imaginary parts and add them. The probability of a position in a detector interval is the integral of this density across the interval.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="sc-panel" aria-labelledby="sc-lab-title">
+      <h3 id="sc-lab-title">Wavefunction Evolution Lab</h3>
+      <p class="sc-note" id="sc-static-note">The plots show the opening packet and barrier at t = 0. The controls become available when the lesson script loads.</p>
+
+      <form id="sc-opening-form">
+        <fieldset class="sc-card" id="sc-opening-controls" disabled>
+          <legend>Predict before launch</legend>
+          <p id="sc-opening-prompt">The barrier height is 3 <var>E</var>₀ and the central kinetic energy is 2 <var>E</var>₀. Can the far-side probability rise above its launch value?</p>
+          <div class="sc-choice-group" role="group" aria-labelledby="sc-opening-prompt">
+            <label><input type="radio" name="sc-opening-answer" value="zero" required> No. The central kinetic energy is below the barrier.</label>
+            <label><input type="radio" name="sc-opening-answer" value="transmit"> Yes. Some probability can reach the far-side region.</label>
+          </div>
+          <div class="sc-actions"><button type="submit">Check prediction</button></div>
+          <p class="sc-feedback" id="sc-opening-feedback" role="status" aria-atomic="true"></p>
+        </fieldset>
+      </form>
+
+      <div class="sc-lab-grid">
+        <div class="sc-stack">
+          <fieldset class="sc-card sc-source" id="sc-source-controls" disabled>
+            <legend>Initial packet Ψ(x,0)</legend>
+            <p class="sc-note" id="sc-source-help">Center, width, and momentum set the launch state. A change pauses and prepares a fresh state at t = 0.</p>
+            <label for="sc-center">Center x₀ (L₀)</label>
+            <input id="sc-center" type="number" min="-24" max="24" step="0.5" value="-15" aria-describedby="sc-source-help">
+            <label for="sc-sigma">Position width σ (L₀)</label>
+            <input id="sc-sigma" type="number" min="1.5" max="4" step="0.1" value="3" aria-describedby="sc-source-help">
+            <label for="sc-momentum">Central momentum p₀ (ℏ/L₀)</label>
+            <input id="sc-momentum" type="number" min="-2.5" max="2.5" step="0.1" value="2" aria-describedby="sc-source-help">
+            <label for="sc-mass">Particle mass m (m₀)</label>
+            <input id="sc-mass" type="number" min="0.75" max="2" step="0.05" value="1" aria-describedby="sc-mass-help">
+            <p class="sc-note" id="sc-mass-help">Mass sets the coefficient of the kinetic term.</p>
+          </fieldset>
+
+          <fieldset class="sc-card sc-potential" id="sc-potential-controls" disabled>
+            <legend>Potential term VΨ</legend>
+            <label for="sc-preset">Potential profile</label>
+            <select id="sc-preset">
+              <option value="free">Free</option>
+              <option value="barrier" selected>Single barrier</option>
+              <option value="double">Double barrier</option>
+              <option value="well">Finite well</option>
+            </select>
+            <div class="sc-stack" id="sc-height-field">
+              <label for="sc-height" id="sc-height-label">Barrier height (E₀)</label>
+              <input id="sc-height" type="number" min="0.2" max="5" step="0.1" value="3">
+            </div>
+            <label for="sc-width" id="sc-width-label">Barrier width (L₀)</label>
+            <input id="sc-width" type="number" min="0.8" max="6" step="0.2" value="1">
+            <label for="sc-location" id="sc-location-label">Barrier center (L₀)</label>
+            <input id="sc-location" type="number" min="-10" max="10" step="0.5" value="0">
+            <div class="sc-stack" id="sc-gap-field" hidden>
+              <label for="sc-gap">Clear gap between barriers (L₀)</label>
+              <input id="sc-gap" type="number" min="2" max="10" step="0.2" value="5">
+            </div>
+            <p class="sc-note" id="sc-potential-note">A change rebuilds the fixed potential at t = 0. Select Free to keep the packet settings and remove the obstacle.</p>
+          </fieldset>
+        </div>
+
+        <div class="sc-stack">
+          <fieldset class="sc-card" id="sc-run-controls" disabled>
+            <legend>Evolution controls</legend>
+            <div class="sc-actions">
+              <button class="sc-primary" type="button" id="sc-play">Launch / Play</button>
+              <button type="button" id="sc-pause" disabled>Pause</button>
+              <button type="button" id="sc-step">Step +0.10 T₀</button>
+              <button type="button" id="sc-restart">Restart this preparation</button>
+              <button type="button" id="sc-reset">Restore opening setup</button>
+            </div>
+            <p class="sc-note" id="sc-run-note">Paused at launch. Each Step advances ten solver steps. Playback can pause at the end of an assignment.</p>
+            <div class="sc-display-controls" role="group" aria-label="Amplitude plots">
+              <label><input type="checkbox" id="sc-show-real"> Show Re Ψ</label>
+              <label><input type="checkbox" id="sc-show-imag"> Show Im Ψ</label>
+            </div>
+          </fieldset>
+
+          <figure class="sc-card">
+            <figcaption id="sc-potential-title">Physical potential V · E₀</figcaption>
+            <svg class="sc-plot" id="sc-potential-plot" viewBox="0 0 640 168" role="img"
+                 aria-labelledby="sc-potential-title" aria-describedby="sc-potential-description" focusable="false">
+              <desc id="sc-potential-description">A barrier of height 3 energy units from minus 0.5 to plus 0.5 length units. The marked edge bands indicate numerical absorption.</desc>
+              <rect class="sc-absorber" x="62" y="25" width="67.5" height="100"/>
+              <rect class="sc-absorber" x="534.5" y="25" width="67.5" height="100"/>
+              <path class="sc-grid" d="M62 25H602 M62 125H602 M152 25V125 M242 25V125 M332 25V125 M422 25V125 M512 25V125"/>
+              <path class="sc-axis" d="M62 25V125H602 M62 75H602"/>
+              <g class="sc-ticks" text-anchor="end"><text x="55" y="30">+5</text><text x="55" y="80">0</text><text x="55" y="130">−5</text></g>
+              <g class="sc-ticks" text-anchor="middle">
+                <text x="62" y="145">−60</text><text x="152" y="145">−40</text><text x="242" y="145">−20</text>
+                <text x="332" y="145">0</text><text x="422" y="145">+20</text><text x="512" y="145">+40</text><text x="602" y="145">+60</text>
+                <text x="332" y="164">Position x (L₀)</text>
+              </g>
+              <path class="sc-potential-line" id="sc-potential-line" d="M62 75 H329.75 V45 H334.25 V75 H602"/>
+            </svg>
+            <ul class="sc-legend">
+              <li><span class="sc-key sc-key-potential" aria-hidden="true"></span> Discrete physical potential</li>
+              <li><span class="sc-key sc-key-absorber" aria-hidden="true"></span> Numerical absorption bands</li>
+            </ul>
+          </figure>
+
+          <figure class="sc-card">
+            <figcaption id="sc-density-title">Current position density |Ψ|² · L₀⁻¹</figcaption>
+            <svg class="sc-plot" id="sc-density-plot" viewBox="0 0 640 193" role="img"
+                 aria-labelledby="sc-density-title" aria-describedby="sc-density-description" focusable="false">
+              <desc id="sc-density-description">At launch the density is a Gaussian centered at minus 15 length units. Dashed lines mark the left and right boundaries of the barrier region.</desc>
+              <rect class="sc-absorber" x="62" y="25" width="67.5" height="128"/>
+              <rect class="sc-absorber" x="534.5" y="25" width="67.5" height="128"/>
+              <path class="sc-grid" d="M62 25H602 M62 89H602 M152 25V153 M242 25V153 M332 25V153 M422 25V153 M512 25V153"/>
+              <path class="sc-axis" d="M62 25V153H602"/>
+              <g class="sc-ticks" text-anchor="end">
+                <text id="sc-density-max" x="55" y="30">0.20</text><text id="sc-density-mid" x="55" y="94">0.10</text><text x="55" y="158">0</text>
+              </g>
+              <g class="sc-ticks" text-anchor="middle">
+                <text x="62" y="172">−60</text><text x="152" y="172">−40</text><text x="242" y="172">−20</text>
+                <text x="332" y="172">0</text><text x="422" y="172">+20</text><text x="512" y="172">+40</text><text x="602" y="172">+60</text>
+                <text x="332" y="189">Position x (L₀)</text>
+              </g>
+              <path class="sc-density-line" id="sc-density-line" d="M62 153 L125 153 L152 153 L188 153 L206 152.99 L215 152.90 L224 152.05 L233 147.41 L237.5 141.48 L242 131.78 L246.5 118.01 L251 101.38 L255.5 84.85 L260 72.49 L264.5 67.89 L269 72.49 L273.5 84.85 L278 101.38 L282.5 118.01 L287 131.78 L291.5 141.48 L296 147.41 L300.5 150.57 L305 152.05 L314 152.90 L323 152.99 L332 153 L368 153 L422 153 L602 153"/>
+              <line class="sc-boundary" id="sc-left-boundary" x1="329.75" y1="25" x2="329.75" y2="153"/>
+              <line class="sc-boundary" id="sc-right-boundary" x1="334.25" y1="25" x2="334.25" y2="153"/>
+              <line class="sc-cavity-boundary" id="sc-cavity-left" x1="332" y1="25" x2="332" y2="153" hidden/>
+              <line class="sc-cavity-boundary" id="sc-cavity-right" x1="332" y1="25" x2="332" y2="153" hidden/>
+            </svg>
+            <p class="sc-note" id="sc-plot-summary">The packet is centered at −15 L₀. The barrier region spans [−0.50, 0.50) L₀. Outside the central ±45 L₀, the absorbing layers gradually remove outgoing amplitude.</p>
+          </figure>
+
+          <figure class="sc-card" id="sc-amplitude-panel" hidden>
+            <figcaption id="sc-amplitude-title">Signed wavefunction components · L₀⁻¹ᐟ²</figcaption>
+            <ul class="sc-legend">
+              <li><span class="sc-key sc-key-real" aria-hidden="true"></span> Real · solid</li>
+              <li><span class="sc-key sc-key-imag" aria-hidden="true"></span> Imaginary · dashed</li>
+            </ul>
+            <svg class="sc-plot" id="sc-amplitude-plot" viewBox="0 0 640 166" role="img"
+                 aria-labelledby="sc-amplitude-title" aria-describedby="sc-amplitude-description" focusable="false">
+              <desc id="sc-amplitude-description">Signed components of the same complex state on the position axis.</desc>
+              <path class="sc-grid" d="M62 20H602 M62 132H602 M152 20V132 M242 20V132 M332 20V132 M422 20V132 M512 20V132"/>
+              <path class="sc-axis" d="M62 20V132H602 M62 76H602"/>
+              <g class="sc-ticks" text-anchor="end">
+                <text id="sc-amp-max" x="55" y="25">+0.50</text><text x="55" y="81">0</text><text id="sc-amp-min" x="55" y="137">−0.50</text>
+              </g>
+              <g class="sc-ticks" text-anchor="middle">
+                <text x="62" y="150">−60</text><text x="152" y="150">−40</text><text x="242" y="150">−20</text>
+                <text x="332" y="150">0</text><text x="422" y="150">+20</text><text x="512" y="150">+40</text><text x="602" y="150">+60</text>
+                <text x="332" y="164">Position x (L₀)</text>
+              </g>
+              <path class="sc-real-line" id="sc-real-line"/>
+              <path class="sc-imag-line" id="sc-imag-line"/>
+            </svg>
+          </figure>
+        </div>
+      </div>
+
+      <section class="sc-card" aria-labelledby="sc-state-title">
+        <h4 id="sc-state-title">Current state and region probabilities</h4>
+        <dl class="sc-readouts">
+          <div><dt>Time</dt><dd id="sc-time">0.00 T₀</dd></div>
+          <div><dt>Surviving norm</dt><dd id="sc-norm">100.000000%</dd></div>
+          <div><dt>Absorbed by edge layers</dt><dd id="sc-absorbed">0.000000%</dd></div>
+          <div><dt>Norm balance residual</dt><dd id="sc-drift">0.000000 pp</dd></div>
+          <div><dt>Initial central energy K₀</dt><dd id="sc-central-energy">2.0000 E₀</dd></div>
+          <div><dt>Initial mean kinetic energy</dt><dd id="sc-mean-energy">2.0139 E₀</dd></div>
+          <div><dt>Left of marked region</dt><dd id="sc-left-probability">99.999927%</dd></div>
+          <div><dt>Inside marked region</dt><dd id="sc-inside-probability">0.000060%</dd></div>
+          <div><dt>Right of marked region</dt><dd id="sc-right-probability">0.000013%</dd></div>
+          <div id="sc-cavity-readout" hidden><dt>In double-barrier cavity</dt><dd id="sc-cavity-probability">—</dd></div>
+        </dl>
+        <p class="sc-note">The left, inside, and right values sum to the surviving norm. The cavity is part of the inside region. The residual is surviving plus absorbed probability minus the initial norm, in percentage points. Treat left and right as scattering estimates only after the outgoing components separate and check the absorbed fraction and initial tails.</p>
+      </section>
+
+      <section class="sc-card" aria-labelledby="sc-sampling-title">
+        <h4 id="sc-sampling-title">Position measurements at one snapshot</h4>
+        <p>Each simulated click draws from an identically prepared run evolved to the captured time. Sampling pauses playback. The draws are conditioned on the packet remaining in the domain, so the density for these draws is |Ψ|² divided by the surviving norm. Advancing time or changing the preparation clears these samples.</p>
+        <fieldset class="sc-control-group" id="sc-sampling-controls" disabled>
+          <legend>Sample the current state</legend>
+          <div class="sc-actions">
+            <button class="sc-primary" type="button" id="sc-measure">Measure one position</button>
+            <button type="button" id="sc-measure-batch">Measure 200 positions</button>
+            <button type="button" id="sc-clear-samples">Clear measurements</button>
+          </div>
+        </fieldset>
+        <p class="sc-note" id="sc-sample-note">At t = 0, the full opening packet survives. The histogram shows counts in bins of width 2 L₀.</p>
+        <dl class="sc-readouts">
+          <div><dt>Sample time</dt><dd id="sc-sample-time">—</dd></div>
+          <div><dt>Draws</dt><dd id="sc-sample-count">0</dd></div>
+          <div><dt>Latest position</dt><dd id="sc-sample-latest">—</dd></div>
+          <div><dt>Observed right-side fraction</dt><dd id="sc-sample-right">—</dd></div>
+        </dl>
+        <figure class="sc-stack">
+          <figcaption id="sc-histogram-title">Conditional measurements · counts per bin</figcaption>
+          <svg class="sc-plot" id="sc-histogram-plot" viewBox="0 0 640 151" role="img"
+               aria-labelledby="sc-histogram-title" aria-describedby="sc-histogram-description" focusable="false">
+            <desc id="sc-histogram-description">No position measurements yet.</desc>
+            <path class="sc-grid" d="M62 20H602 M152 20V105 M242 20V105 M332 20V105 M422 20V105 M512 20V105"/>
+            <path class="sc-axis" d="M62 20V105H602"/>
+            <g class="sc-ticks" text-anchor="end"><text id="sc-histogram-max" x="55" y="25">1</text><text x="55" y="110">0</text></g>
+            <g class="sc-ticks" text-anchor="middle">
+              <text x="62" y="125">−60</text><text x="152" y="125">−40</text><text x="242" y="125">−20</text>
+              <text x="332" y="125">0</text><text x="422" y="125">+20</text><text x="512" y="125">+40</text><text x="602" y="125">+60</text>
+              <text x="332" y="146">Position x (L₀)</text>
+            </g>
+            <g class="sc-sample-bars" id="sc-sample-bars" aria-hidden="true"></g>
+          </svg>
+        </figure>
+        <p class="sc-feedback" id="sc-lab-status" role="status" aria-atomic="true"></p>
+      </section>
+
+      <div class="sc-actions">
+        <button type="button" id="sc-enter" aria-controls="sc-chamber" aria-expanded="false" disabled>Enter Quantum Escape</button>
+      </div>
+
+      <section class="sc-card sc-chamber" id="sc-chamber" aria-labelledby="sc-chamber-title" hidden>
+        <h4 id="sc-chamber-title" tabindex="-1">Quantum Escape</h4>
+        <p>Operate the containment chamber with the lab controls above. In free exploration, shape an obstacle and watch the wave. Load an assignment for a fixed setup and observation time.</p>
+
+        <figure class="sc-stack">
+          <figcaption id="sc-chamber-caption">Containment chamber · side view</figcaption>
+          <svg class="sc-plot sc-chamber-plot" id="sc-chamber-plot" viewBox="0 0 640 205" role="img"
+               aria-labelledby="sc-chamber-caption" aria-describedby="sc-chamber-description" focusable="false">
+            <desc id="sc-chamber-description">The chamber is calibrated along position. The central barrier follows the physical potential. The wave profile shows density, and the lower rail marks position detections.</desc>
+            <rect class="sc-chamber-frame" x="38" y="24" width="588" height="143" rx="8"/>
+            <rect class="sc-absorber" x="62" y="30" width="67.5" height="125"/>
+            <rect class="sc-absorber" x="534.5" y="30" width="67.5" height="125"/>
+            <path class="sc-chamber-grid" d="M62 48H602 M62 75H602 M62 105H602 M62 135H602 M152 30V155 M242 30V155 M332 30V155 M422 30V155 M512 30V155"/>
+            <g class="sc-chamber-equipment" id="sc-chamber-equipment">
+              <rect x="329.75" y="88.5" width="4.5" height="16.5"/>
+            </g>
+            <path class="sc-chamber-wave" id="sc-chamber-wave" d="M62 135 L206 135 L224 134 L242 121 L253 94 L264.5 80 L276 94 L287 121 L305 134 L332 135 L602 135"/>
+            <path class="sc-axis" d="M62 155H602 M62 151V160 M152 151V160 M242 151V160 M332 150V161 M422 151V160 M512 151V160 M602 151V160"/>
+            <g class="sc-chamber-marks" id="sc-chamber-marks" aria-hidden="true"></g>
+            <g class="sc-ticks" text-anchor="middle">
+              <text x="62" y="179">−60</text><text x="152" y="179">−40</text><text x="242" y="179">−20</text>
+              <text x="332" y="179">0</text><text x="422" y="179">+20</text><text x="512" y="179">+40</text><text x="602" y="179">+60</text>
+              <text x="332" y="199">Position x (L₀)</text>
+            </g>
+          </svg>
+          <ul class="sc-legend">
+            <li><span class="sc-key sc-key-potential" aria-hidden="true"></span> Potential equipment</li>
+            <li><span class="sc-key sc-key-wave" aria-hidden="true"></span> Probability density</li>
+            <li><span class="sc-key sc-key-detection" aria-hidden="true"></span> Measured positions</li>
+          </ul>
+          <p class="sc-note" id="sc-chamber-summary">The equipment and wave share the same position axis as the lab. Equipment height represents potential, and the cyan trace represents density on its own scale.</p>
+        </figure>
+
+        <fieldset class="sc-control-group" id="sc-mission-controls" disabled>
+          <legend>Chamber assignments</legend>
+          <label for="sc-mission-select">Choose an assignment</label>
+          <select id="sc-mission-select">
+            <option value="escape">The Great Escape</option>
+            <option value="pinball">Quantum Pinball</option>
+            <option value="trap">Trap the Wave</option>
+            <option value="forecast">Prediction Challenge</option>
+          </select>
+          <div class="sc-actions">
+            <button type="button" class="sc-primary" id="sc-load-mission">Load assignment</button>
+            <button type="button" id="sc-replay" disabled>Replay assignment</button>
+            <button type="button" id="sc-evaluate" disabled>Check objective</button>
+            <button type="button" id="sc-return">Return to free exploration</button>
+          </div>
+          <p id="sc-mission-goal">Free exploration is active. Load an assignment to set its preparation and observation time.</p>
+          <p class="sc-note" id="sc-mission-hint"></p>
+          <div class="sc-stack" id="sc-mission-forecast-pane" hidden>
+            <label for="sc-forecast">Forecast the conditional right-side detection probability (%)</label>
+            <p class="sc-note" id="sc-forecast-help">Enter 0 to 100 before launching. The forecast succeeds within 5 percentage points of the theoretical probability for a surviving draw at the observation time.</p>
+            <div class="sc-actions">
+              <input type="number" id="sc-forecast" min="0" max="100" step="0.1" inputmode="decimal" aria-describedby="sc-forecast-help">
+              <button type="button" class="sc-primary" id="sc-commit">Commit forecast</button>
+            </div>
+          </div>
+          <p class="sc-note" id="sc-mission-state">Assignments pause at their observation time. Use the lab’s Launch or Step controls to get there.</p>
+        </fieldset>
+
+        <section class="sc-card" id="sc-report" aria-labelledby="sc-report-title" hidden>
+          <h5 id="sc-report-title">Prediction report</h5>
+          <dl class="sc-readouts">
+            <div><dt>Forecast</dt><dd id="sc-report-forecast">—</dd></div>
+            <div><dt>Theory, conditional on survival</dt><dd id="sc-report-theory">—</dd></div>
+            <div><dt>Observed right-side fraction</dt><dd id="sc-report-observed">—</dd></div>
+            <div><dt>Sample count</dt><dd id="sc-report-count">—</dd></div>
+            <div><dt>Absolute forecast error</dt><dd id="sc-report-error">—</dd></div>
+          </dl>
+          <p class="sc-note">Forecast scoring uses the theoretical probability. A finite sample of detections fluctuates around that value.</p>
+        </section>
+        <p class="sc-feedback" id="sc-mission-status" role="status" aria-atomic="true"></p>
+      </section>
+    </section>
+
+    <section class="sc-panel" aria-labelledby="sc-evolution-title">
+      <h3 id="sc-evolution-title">What evolves, and what is measured?</h3>
+      <p>The lab starts with a localized Gaussian. Its envelope fixes the initial density, and its phase sets the central momentum <var>p</var>₀.</p>
+      <p class="sc-equation">Ψ(x,0) = (2πσ²)<sup>−1/4</sup> exp[−(x−x₀)²/(4σ²)] exp[ip₀(x−x₀)/ℏ]</p>
+      <p>The Schrödinger equation evolves these amplitudes deterministically. A position measurement at a specified time is random. The chance for an interval [a,b] is ∫<sub>a</sub><sup>b</sup>|Ψ(x,t)|² dx before conditioning on numerical survival. The evolving density describes the distribution across repeated preparations, while a single measurement gives one position.</p>
+
+      <div class="sc-card">
+        <h4>Worked example · free translation and spreading</h4>
+        <p>With V = 0, the center moves as x₀ + p₀t/m. Each momentum component has its own velocity, so the density width grows as σ(t) = σ√[1 + (ℏt/(2mσ²))²].</p>
+        <p>Select Free with the opening packet. At t = 5 T₀, the ideal free center moves from −15 to −5 L₀ because p₀/m = 2 L₀/T₀. The width grows from 3 to 3√[1 + (5/18)²] L₀ ≈ 3.11 L₀. Watch the peak move and the profile widen.</p>
+      </div>
+
+      <h4>Incident, reflected, and transmitted components</h4>
+      <p>The approaching packet is incident. After encountering the barrier, an outgoing component on the entrance side is reflected and one moving away on the far side is transmitted. During overlap, the two region totals also include whatever part of the incident packet is still approaching and interference can change the local density.</p>
+      <p>For the opening preset, m = 1 m₀, p₀ = 2 ℏ/L₀, and σ = 3 L₀. The central kinetic energy is K₀ = p₀²/(2m) = 4/2 E₀ = 2 E₀. The initial momentum width is Δp = ℏ/(2σ) = (1/6)ℏ/L₀. Since ⟨p²⟩ = p₀² + Δp², the mean initial kinetic energy is [4 + (1/6)²]/2 E₀ ≈ 2.0139 E₀.</p>
+      <p>A finite packet contains a range of energies. A sub-barrier component decays inside the forbidden region, yet it can have a nonzero transmitted amplitude after a finite-width barrier. That is tunneling. The packet can also have an above-barrier tail. For this narrow opening momentum distribution, the continuum threshold is |p| = √6 ℏ/L₀, about 2.7 momentum standard deviations above p₀ on the positive side. The above-barrier weight is small. Comparing the separated far-side mass with that weight and with the launch tail gives more information than comparing V with K₀ alone.</p>
+    </section>
+
+    <section class="sc-panel" aria-labelledby="sc-stationary-title">
+      <h3 id="sc-stationary-title">Why are some states stationary?</h3>
+      <p>For time-independent V, try Ψ(x,t) = ψ(x)T(t), where T(t) is the time factor. Substitute and divide by ψT where the product is nonzero.</p>
+      <div class="sc-equation">
+        <p>iℏ (dT/dt)/T = [−(ℏ²/2m) d²ψ/dx² + Vψ]/ψ = E</p>
+        <p>−(ℏ²/2m) d²ψ/dx² + Vψ = Eψ</p>
+        <p>T(t) = exp(−iEt/ℏ), up to a constant</p>
+      </div>
+      <p>The left side depends only on time and the right side only on position, so both equal the same separation constant E. With the physical boundary conditions, E is an energy eigenvalue. One eigenstate keeps the same density because its time factor is a phase of magnitude one. A superposition of different energies can develop a changing density as the relative phases evolve.</p>
+      <p>At an ideal infinite wall the wavefunction must vanish. In Lesson 23 you’ll use physical walls to determine the allowed energies of a well. Here the finite computational domain uses absorbing edge layers and zero endpoint values so outgoing packets can leave the useful part of the grid.</p>
+
+      <details class="sc-card">
+        <summary>Numerical units, grid, and probability accounting</summary>
+        <div class="sc-stack sc-detail">
+          <p>Reference length L₀ and mass m₀ define units of momentum ℏ/L₀, energy E₀ = ℏ²/(m₀L₀²), and time T₀ = m₀L₀²/ℏ. In these units the numerical equation uses ℏ = 1 and the mass control sets m/m₀.</p>
+          <p>The grid runs from −60 to +60 L₀ with Δx = 0.10 L₀ and zero endpoint amplitudes. For κ = ℏ²/(2mΔx²), the centered second derivative gives a Hamiltonian with diagonal 2κ + Vⱼ and neighboring entries −κ.</p>
+          <p class="sc-equation">(I + iΔtH/2ℏ) Ψⁿ⁺¹ = (I − iΔtH/2ℏ) Ψⁿ</p>
+          <p>Each Crank–Nicolson step solves the complex tridiagonal system at fixed Δt = 0.01 T₀. The initial state is normalized by Σ|Ψⱼ|²Δx. After each solve, a smooth numerical mask multiplies the amplitude by exp[−3Δt((|x|−45)/15)⁴] where |x| &gt; 45 in scaled units. The readout adds the measured loss from each mask application. The state keeps its surviving norm as it evolves.</p>
+          <p>The grid resolves the packet and the permitted obstacles at finite precision. Region values sum grid-point masses, so sharp edges are represented to the grid spacing. Inspect scattering before the outgoing packets enter the absorbing bands for the clearest comparison.</p>
+        </div>
+      </details>
+    </section>
+
+    <nav class="sc-navigation" aria-label="Lesson navigation">
+      <a rel="prev" href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html">
+        <span class="sc-note">← Previous</span>
+        <span>Continuous Probability and Momentum</span>
+      </a>
+      <a rel="next" href="../23_the_infinite_square_well/23_the_infinite_square_well.html">
+        <span class="sc-note">Next →</span>
+        <span>The Infinite Square Well</span>
+      </a>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

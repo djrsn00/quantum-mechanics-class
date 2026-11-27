@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Explore how the amplitudes and relative phase of two traveling waves determine their sum.">
+  <title>Waves and Interference | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css?v=waves-lab-1">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+  <script src="./scripts/lesson.js?v=waves-lab-1" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)" stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none" stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8" stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none" stroke="url(#logo-spectrum)" stroke-width="1.6" transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none" stroke="#edffef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static" viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 464 83"/>
+            <path class="track-violet" d="M218 54C265 80 333 97 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M218 46v16m-8-8h16"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button" aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="./3_waves_and_interference.html" aria-current="page"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and-coordinates/8_bases_and-coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="../22_the_one_dimensional_schrodinger_equation/22_the_one_dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main waves-lesson" aria-labelledby="waves-title">
+    <header class="lesson-intro">
+      <p class="lesson-kicker">Lesson 03 · String lab</p>
+      <h2 id="waves-title">Waves and Interference</h2>
+      <p class="lesson-lead">If two waves each have an amplitude of 1 cm, can their sum have an amplitude of 2 cm, 1 cm, or zero?</p>
+      <p>Make a prediction, then change how the waves line up. For each test, compare what happens at one point with what happens across the whole string.</p>
+    </header>
+
+    <section class="lesson-panel" aria-labelledby="waves-one-title">
+      <h3 id="waves-one-title">Meet one wave</h3>
+      <p>Start with the <a href="#waves-plot-1">Wave 1 snapshot</a> in the lab. At 0 s, the crests at 0 m and 4 m are 4 m apart. The dashed horizontal line is the string’s equilibrium position. The dot at 2 m marks a point on the string, shown at a trough in this snapshot.</p>
+      <dl class="waves-terms">
+        <div><dt>Amplitude</dt><dd>The maximum distance from equilibrium. Wave 1 starts with an amplitude of 1 cm.</dd></div>
+        <div><dt>Wavelength</dt><dd>The distance between adjacent crests at the same instant. Both waves have a wavelength of 4 m.</dd></div>
+        <div><dt>Frequency</dt><dd>Cycles per second at a fixed position. At 0.5 Hz, the point at the probe takes 2 s to complete a cycle.</dd></div>
+        <div><dt>Phase</dt><dd>Where a wave is in its cycle. A full cycle is 360°. Relative phase describes how far apart the two waves are in their cycles at the same position and time.</dd></div>
+      </dl>
+      <p>Keep the probe fixed and step the clock. The crest pattern travels to the right. The dot moves up and down at the same horizontal position. That sideways motion relative to the direction of travel is what makes the wave <strong>transverse</strong>.</p>
+    </section>
+
+    <section class="lesson-panel" id="waves-lab" aria-labelledby="waves-lab-title"
+             data-wavelength="4" data-frequency="0.5" data-time-step="0.25" data-x-min="0" data-x-max="8">
+      <h3 id="waves-lab-title">Interference lab</h3>
+      <p>Two sinusoidal waves travel to the right on an ideal string in its linear regime. Here that means their displacements add point by point. Both waves have a wavelength of 4 m and a frequency of 0.5 Hz. Their period is 2 s, their speed is 2 m/s, and their relative phase stays fixed as they travel.</p>
+      <div class="waves-console">
+        <div class="lesson-station">
+          <fieldset id="waves-controls" disabled>
+            <legend>Set up and predict</legend>
+            <div class="waves-sliders">
+              <div class="waves-slider">
+                <label for="waves-a1">Wave 1 amplitude</label>
+                <output id="waves-a1-value" for="waves-a1">1.0 cm</output>
+                <input type="range" id="waves-a1" min="0" max="1" step="0.1" value="1" aria-valuetext="1.0 centimetres">
+              </div>
+              <div class="waves-slider">
+                <label for="waves-a2">Wave 2 amplitude</label>
+                <output id="waves-a2-value" for="waves-a2">1.0 cm</output>
+                <input type="range" id="waves-a2" min="0" max="1" step="0.1" value="1" aria-valuetext="1.0 centimetres">
+              </div>
+              <div class="waves-slider">
+                <label for="waves-phase">Wave 2 relative phase</label>
+                <output id="waves-phase-value" for="waves-phase">0°</output>
+                <input type="range" id="waves-phase" min="0" max="360" step="5" value="0" aria-valuetext="0 degrees">
+              </div>
+              <div class="waves-slider">
+                <label for="waves-probe">Probe position</label>
+                <output id="waves-probe-value" for="waves-probe">2.00 m</output>
+                <input type="range" id="waves-probe" min="0" max="8" step="0.25" value="2" aria-valuetext="2.00 metres">
+              </div>
+            </div>
+
+            <div class="waves-preset-group" role="group" aria-labelledby="waves-presets-title">
+              <h4 id="waves-presets-title">Presets</h4>
+              <div class="waves-actions">
+                <button class="lesson-button" type="button" data-waves-preset="aligned">Equal · 0°</button>
+                <button class="lesson-button" type="button" data-waves-preset="partial">Equal · 120°</button>
+                <button class="lesson-button" type="button" data-waves-preset="cancel">Equal · 180°</button>
+                <button class="lesson-button" type="button" data-waves-preset="unequal">1 and 0.5 cm · 180°</button>
+              </div>
+              <p class="lesson-note">Presets set the wave amplitudes and phase. They leave the clock and probe where they are.</p>
+            </div>
+
+            <div class="waves-prediction">
+              <label for="waves-guess">What amplitude will the sum have?</label>
+              <select id="waves-guess" aria-describedby="waves-prediction-hint">
+                <option value="" selected>Choose a prediction</option>
+                <option value="2">2 cm</option>
+                <option value="1">1 cm</option>
+                <option value="0.5">0.5 cm</option>
+                <option value="0">0 cm</option>
+                <option value="other">Another value</option>
+                <option value="skip">Show me the sum first</option>
+              </select>
+              <div class="waves-actions">
+                <button class="lesson-button lesson-primary" id="waves-reveal-sum" type="button" aria-controls="waves-plot-1 waves-plot-sum waves-sum-readouts">Reveal sum</button>
+                <button class="lesson-button" id="waves-hide-sum" type="button" hidden>Hide sum and predict again</button>
+              </div>
+              <p class="lesson-note" id="waves-prediction-hint">Predict the amplitude of the entire sum wave. The dot shows its displacement at only one position.</p>
+            </div>
+
+            <div class="waves-actions" role="group" aria-label="Time controls">
+              <button class="lesson-button" id="waves-play" type="button">Play</button>
+              <button class="lesson-button" id="waves-step" type="button">Step +0.25 s</button>
+              <button class="lesson-button" id="waves-reset" type="button">Reset lab</button>
+            </div>
+            <p class="lesson-note">Step advances one increment and leaves the lab paused. Reset restores both waves to 1 cm, phase to 0°, probe to 2 m, and time to 0 s. It also hides the sum.</p>
+          </fieldset>
+          <p class="lesson-note" id="waves-lab-status" role="status">Paused at the starting snapshot. Controls become available when the Lesson 3 script loads.</p>
+          <p class="waves-reaction" id="waves-prediction-feedback" role="status"><strong>Lab assistant:</strong> Pick one of the equal-wave presets and make a guess before you reveal the sum.</p>
+        </div>
+
+        <section class="lesson-station" aria-labelledby="waves-readout-title">
+          <div class="waves-readout-heading">
+            <h4 id="waves-readout-title">String readout</h4>
+            <p class="waves-clock">Time <var>t</var>: <span id="waves-time">0.00 s</span></p>
+          </div>
+          <p class="lesson-note">The plots share a position scale of 0–8 m and a displacement scale of −2 to +2 cm. Vertical displacement is exaggerated. The dashed horizontal line marks equilibrium, and the vertical marker fixes the probe’s position. The waves travel right.</p>
+          <div class="waves-actions" aria-label="String plot key">
+            <span class="wave-key wave-key-a">Wave 1 · solid</span>
+            <span class="wave-key wave-key-b">Wave 2 · dashed</span>
+            <span class="wave-key wave-key-sum" id="waves-plot-sum" hidden>Sum · bold</span>
+          </div>
+          <div id="waves-plot-1" class="wave-scene-slot" data-wave-scene="main" tabindex="-1">
+            <figure class="wave-scene" id="waves-scene">
+              <div class="wave-viewport">
+                <canvas id="waves-gl" aria-hidden="true" hidden></canvas>
+                <canvas id="waves-flat" aria-hidden="true" hidden></canvas>
+                <p id="waves-static-note">At 0 s, Wave 1 has crests at 0 and 4 m. Its fixed probe at 2 m marks a trough.</p>
+              </div>
+              <figcaption>
+                <div>
+                  <p id="waves-scene-caption">A full wavelength spans the two adjacent crests.</p>
+                  <p id="waves-render-status" class="lesson-note" role="status"></p>
+                </div>
+                <label class="wave-check"><input id="waves-economy" type="checkbox" disabled data-wave-enable> Reduced effects</label>
+              </figcaption>
+            </figure>
+          </div>
+          <p class="waves-sum-placeholder" id="waves-sum-placeholder">Make a prediction, then reveal the sum to see its plot and readouts.</p>
+          <div class="waves-probe-readout">
+            <h4>Instantaneous displacements at <span id="waves-probe-location">2.00 m</span></h4>
+            <dl class="waves-probe-values">
+              <div><dt>Wave 1</dt><dd id="waves-y1">−1.00 cm</dd></div>
+              <div><dt>Wave 2</dt><dd id="waves-y2">−1.00 cm</dd></div>
+            </dl>
+            <div class="waves-sum-readouts" id="waves-sum-readouts" hidden>
+              <p>Sum at the probe: <strong id="waves-probe-equation">—</strong></p>
+              <p>Amplitude of the entire sum wave: <strong id="waves-result-amplitude">—</strong></p>
+              <p class="lesson-note">Probe readings are rounded to 0.01 cm. The ≈ sign indicates when the rounded terms differ from the rounded sum.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="waves-evidence-title">
+      <h3 id="waves-evidence-title">What does the sum tell you?</h3>
+      <p>Look at the two component plots at the same horizontal position. If both displacements point upward, they reinforce there. If one points upward and the other downward, their signed values subtract. Apply that same addition along the whole string to get the sum plot.</p>
+      <p>With equal waves half a cycle apart, every crest matches a trough of the same size. The sum is flat at every position and stays flat as time advances. With unequal waves half a cycle apart, the larger wave has some displacement left over after each subtraction.</p>
+      <p>Find a place where the sum crosses equilibrium while the sum wave still has crests. A zero at that single probe position is an instantaneous reading. Complete cancellation requires zero displacement throughout the wave.</p>
+    </section>
+
+    <details class="lesson-panel">
+      <summary>Open the math and check the opening puzzle</summary>
+      <div class="lesson-prose">
+        <p>Add the two signed string displacements at the same position and time. Then find the maximum distance of the resulting wave from equilibrium to get its amplitude.</p>
+        <div class="waves-equations">
+          <p><var>y</var>(<var>x</var>, <var>t</var>) = <var>y</var><sub>1</sub>(<var>x</var>, <var>t</var>) + <var>y</var><sub>2</sub>(<var>x</var>, <var>t</var>)</p>
+          <p><var>R</var> = √(<var>A</var><sub>1</sub><sup>2</sup> + <var>A</var><sub>2</sub><sup>2</sup> + 2<var>A</var><sub>1</sub><var>A</var><sub>2</sub> cos(Δ<var>φ</var>))</p>
+        </div>
+        <dl class="waves-symbols">
+          <dt><var>x</var>, <var>t</var></dt><dd>Position along the string in metres and elapsed time in seconds.</dd>
+          <dt><var>y</var><sub>1</sub>, <var>y</var><sub>2</sub>, <var>y</var></dt><dd>Signed instantaneous displacements of Wave 1, Wave 2, and their sum, in centimetres.</dd>
+          <dt><var>A</var><sub>1</sub>, <var>A</var><sub>2</sub>, <var>R</var></dt><dd>Nonnegative amplitudes of Wave 1, Wave 2, and their sum, in centimetres.</dd>
+          <dt>Δ<var>φ</var> (delta phi)</dt><dd>Wave 2’s phase relative to Wave 1. The control uses degrees. The simulation converts the angle to radians for its trigonometry.</dd>
+        </dl>
+        <p>In this model both waves share the same moving phase pattern. Wave 2 adds a fixed angle to that pattern. Expanding its cosine separates the sum into a cosine part with coefficient <var>A</var><sub>1</sub> + <var>A</var><sub>2</sub> cos(Δ<var>φ</var>) and a sine part with coefficient −<var>A</var><sub>2</sub> sin(Δ<var>φ</var>). The amplitude is the square root of the sum of those coefficients squared, which gives the formula above.</p>
+        <p>For two waves with amplitude 1 cm, the squared amplitude is <strong>[2 + 2 cos(Δ<var>φ</var>)] cm²</strong>. Try the three equal-wave presets and compare them with these results.</p>
+        <table class="waves-math-table">
+          <caption>Two waves, each with amplitude 1 cm</caption>
+          <thead><tr><th scope="col">Relative phase</th><th scope="col">Cosine</th><th scope="col">Sum amplitude</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">0°</th><td>1</td><td>2 cm</td></tr>
+            <tr><th scope="row">120°</th><td>−½</td><td>1 cm</td></tr>
+            <tr><th scope="row">180°</th><td>−1</td><td>0 cm</td></tr>
+          </tbody>
+        </table>
+        <p>For amplitudes of 1 and 0.5 cm at 180°, the difference leaves a 0.5 cm wave. For two aligned 1 cm waves at 0 s, the probe at 1 m reads 0 cm while the whole wave has amplitude 2 cm.</p>
+      </div>
+    </details>
+
+    <section class="lesson-panel" id="waves-challenge" aria-labelledby="waves-challenge-title">
+      <h3 id="waves-challenge-title">Lab checkout</h3>
+      <p class="lesson-kicker" id="waves-challenge-progress">Question 1 of 3</p>
+      <fieldset id="waves-challenge-controls" disabled>
+        <legend class="waves-sr-only">Challenge answers</legend>
+        <div data-waves-question="1">
+          <h4 tabindex="-1">The sum reads 0 cm at one probe position. What would show complete cancellation in this model?</h4>
+          <div class="waves-answers">
+            <button class="lesson-button" type="button" data-waves-answer="probe">The probe reads zero once</button>
+            <button class="lesson-button" type="button" data-waves-answer="flat">The entire sum plot stays flat at equilibrium</button>
+            <button class="lesson-button" type="button" data-waves-answer="equal">Both component amplitudes match</button>
+          </div>
+        </div>
+        <div data-waves-question="2" hidden>
+          <h4 tabindex="-1">A 1 cm wave and a 0.5 cm wave are half a cycle apart. What amplitude remains?</h4>
+          <p class="lesson-note"><a href="#waves-lab">Try the unequal preset in the lab</a>, then return with your result.</p>
+          <div class="waves-answers">
+            <button class="lesson-button" type="button" data-waves-answer="zero">0 cm</button>
+            <button class="lesson-button" type="button" data-waves-answer="half">0.5 cm</button>
+            <button class="lesson-button" type="button" data-waves-answer="one-and-half">1.5 cm</button>
+          </div>
+        </div>
+        <div data-waves-question="3" hidden>
+          <h4 tabindex="-1">As a nonzero traveling wave moves right, what happens to the marked point on the ideal string?</h4>
+          <div class="waves-answers">
+            <button class="lesson-button" type="button" data-waves-answer="rides">It travels right with a crest</button>
+            <button class="lesson-button" type="button" data-waves-answer="transverse">It moves up and down at fixed horizontal position</button>
+            <button class="lesson-button" type="button" data-waves-answer="stays">It stays at equilibrium the whole time</button>
+          </div>
+        </div>
+      </fieldset>
+      <p class="lesson-note" id="waves-challenge-feedback" role="status">The challenge becomes interactive when the Lesson 3 script loads.</p>
+      <button class="lesson-button" id="waves-next-question" type="button" hidden>Next question</button>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="waves-bridge-title">
+      <h3 id="waves-bridge-title">From string displacement to probability</h3>
+      <p>The numbers you added here were physical displacements in centimetres. Later we’ll add quantum probability amplitudes and use them to determine probabilities. Their phases can affect the result of that addition, but they have a different physical meaning from a string’s displacement.</p>
+    </section>
+
+    <details class="lesson-panel wave-expansion" id="waves-stations">
+      <summary>Waves and Interference Lab · Seven optional stations</summary>
+      <fieldset id="wave-station-picker" disabled data-wave-enable>
+        <legend class="waves-sr-only">Choose a station</legend>
+        <div class="waves-actions">
+          <button class="lesson-button" type="button" data-wave-station="builder" aria-pressed="true" aria-controls="wave-builder">Wave Builder</button>
+          <button class="lesson-button" type="button" data-wave-station="pulse" aria-pressed="false" aria-controls="wave-pulse">Pulse Collision Lab</button>
+          <button class="lesson-button" type="button" data-wave-station="stand" aria-pressed="false" aria-controls="wave-stand">Standing Wave Studio</button>
+          <button class="lesson-button" type="button" data-wave-station="beat" aria-pressed="false" aria-controls="wave-beat">Beat Frequency Mixer</button>
+          <button class="lesson-button" type="button" data-wave-station="tank" aria-pressed="false" aria-controls="wave-tank">Ripple Tank</button>
+          <button class="lesson-button" type="button" data-wave-station="slit" aria-pressed="false" aria-controls="wave-slit">Double-Slit Pattern Explorer</button>
+          <button class="lesson-button" type="button" data-wave-station="wheel" aria-pressed="false" aria-controls="wave-wheel">Phase Wheel and Wave Matcher</button>
+        </div>
+      </fieldset>
+
+      <section class="lesson-station wave-experiment" id="wave-builder" data-wave-panel="builder" aria-labelledby="builder-title">
+        <h3 id="builder-title" tabindex="-1">Wave Builder</h3>
+        <p>Step once and watch the marked point at 2 m move vertically while the shape travels right. Adjust wavelength and frequency independently to explore different propagation speeds.</p>
+        <fieldset disabled data-wave-enable>
+          <legend>Set one traveling wave</legend>
+          <div class="wave-fields">
+            <label>Amplitude (cm) <input id="builder-a" type="number" min="0" max="2" step="0.1" value="0.5"></label>
+            <label>Wavelength (m) <select id="builder-lambda"><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option></select></label>
+            <label>Frequency (Hz) <input id="builder-f" type="number" min="0.25" max="1.5" step="0.25" value="0.5"></label>
+            <label>Starting phase (°) <input id="builder-phase" type="number" min="0" max="360" step="15" value="0"></label>
+          </div>
+          <div class="waves-actions">
+            <button class="lesson-button lesson-primary" type="button" id="builder-step">Step +0.25 s</button>
+            <button class="lesson-button" type="button" id="builder-rewind">Return to 0 s</button>
+          </div>
+        </fieldset>
+        <div class="wave-scene-slot" data-wave-scene="builder"></div>
+        <p class="wave-result" id="builder-reading">Time 0.00 s · Speed 2.00 m/s · Period 2.00 s · Point at 2.00 m reads −0.50 cm.</p>
+        <details>
+          <summary>Math and four missions</summary>
+          <p>y = A cos(2πx/λ − 2πft + φ₀). A is amplitude, λ is wavelength, f is frequency, and φ₀ is starting phase. The traveling pattern has speed v = fλ and period T = 1/f.</p>
+          <fieldset disabled data-wave-enable>
+            <legend>Amplitude and speed</legend>
+            <p>Save a nonzero amplitude of at most 1 cm, then double it while keeping the speed. For the second mission, reach 2 m/s with any supported pair.</p>
+            <div class="waves-actions">
+              <button class="lesson-button" type="button" id="builder-pin">Save amplitude and speed</button>
+              <button class="lesson-button" type="button" id="builder-double">Check doubled amplitude</button>
+              <button class="lesson-button" type="button" id="builder-speed">Check 2 m/s</button>
+            </div>
+            <p id="builder-baseline" class="lesson-note">Saved baseline · 0.50 cm at 2.00 m/s.</p>
+            <p id="builder-speed-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-wave-enable>
+            <legend>Predict the marked point’s motion</legend>
+            <label class="wave-stack">As the wave travels, the point…
+              <select id="builder-motion-guess"><option value="">Choose a prediction</option><option value="fixed">Keeps its x-coordinate and oscillates vertically</option><option value="crest">Travels right with the crest</option><option value="rest">Stays at equilibrium at all times</option></select>
+            </label>
+            <button class="lesson-button" type="button" id="builder-motion-check">Check and step</button>
+            <p id="builder-motion-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-wave-enable>
+            <legend>Find one wavelength</legend>
+            <p>Freeze a nonzero wave and choose adjacent crests or adjacent troughs.</p>
+            <button class="lesson-button" type="button" id="builder-mark">Freeze and label points</button>
+            <div class="wave-fields">
+              <label>First position <select id="builder-mark-a" disabled><option value="">Freeze a wave first</option></select></label>
+              <label>Second position <select id="builder-mark-b" disabled><option value="">Freeze a wave first</option></select></label>
+            </div>
+            <button class="lesson-button" type="button" id="builder-mark-check" disabled>Check separation</button>
+            <p id="builder-mark-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+
+      <section class="lesson-station wave-experiment" id="wave-pulse" data-wave-panel="pulse" aria-labelledby="pulse-title" hidden>
+        <h3 id="pulse-title" tabindex="-1">Pulse Collision Lab</h3>
+        <p>Compare two upward pulses at the same center. Then step past overlap and watch them separate. Right-moving P starts at 4 m. Left-moving Q starts at 16 m. Both travel at 2 m/s on an ideal infinite string.</p>
+        <fieldset disabled data-wave-enable>
+          <legend>Define both pulses</legend>
+          <div class="wave-fields">
+            <label>P signed height (cm) <input id="pulse-p" type="number" min="-1" max="1" step="0.25" value="1"></label>
+            <label>Q signed height (cm) <input id="pulse-q" type="number" min="-1" max="1" step="0.25" value="1"></label>
+            <label>P width (m) <input id="pulse-wp" type="number" min="0.25" max="1.5" step="0.25" value="1"></label>
+            <label>Q width (m) <input id="pulse-wq" type="number" min="0.25" max="1.5" step="0.25" value="1"></label>
+          </div>
+          <div class="waves-actions">
+            <button class="lesson-button" type="button" id="pulse-before">Return to 0 s</button>
+            <button class="lesson-button lesson-primary" type="button" id="pulse-overlap">Show maximum overlap at 3 s</button>
+            <button class="lesson-button" type="button" id="pulse-step">Step +0.5 s (to 6 s)</button>
+          </div>
+        </fieldset>
+        <div class="wave-scene-slot" data-wave-scene="pulse"></div>
+        <p class="wave-result" id="pulse-reading">Time 0.00 s · P center 4.00 m · Q center 16.00 m.</p>
+        <details>
+          <summary>Math and four missions</summary>
+          <p>Each contribution has the Gaussian shape h exp[−((x − c)/w)²], where h is signed peak height, c is its moving center, and w is the distance from the center where displacement falls to h/e. The ideal linear string adds the two displacements and lets each contribution retain its shape through the encounter.</p>
+          <fieldset disabled data-wave-enable>
+            <legend>Reinforce and cancel at overlap</legend>
+            <p>Test two upward pulses. Then test equal opposite peaks with matching widths. One zero at the center can occur with widths that differ.</p>
+            <div class="waves-actions">
+              <button class="lesson-button" type="button" id="pulse-check-up">Measure upward overlap</button>
+              <button class="lesson-button" type="button" id="pulse-check-zero">Check whole-profile cancellation</button>
+            </div>
+            <p id="pulse-overlap-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-wave-enable>
+            <legend>Predict what leaves the encounter</legend>
+            <div class="wave-fields">
+              <label>Directions <select id="pulse-guess-direction"><option value="">Choose</option><option value="keep">P right, Q left</option><option value="swap">P left, Q right</option><option value="stop">Both stop</option></select></label>
+              <label>Sign of each pulse <select id="pulse-guess-sign"><option value="">Choose</option><option value="keep">Each keeps its sign</option><option value="flip">Both flip sign</option><option value="vanish">Both disappear</option></select></label>
+              <label>Shapes <select id="pulse-guess-shape"><option value="">Choose</option><option value="keep">Each keeps its width and profile</option><option value="merge">Merge into one wider pulse</option><option value="spread">Both broaden</option></select></label>
+            </div>
+            <div class="waves-actions">
+              <button class="lesson-button" type="button" id="pulse-commit">Lock in prediction before crossing</button>
+              <button class="lesson-button" type="button" id="pulse-check-after">Check after 5.5 s or later</button>
+            </div>
+            <p id="pulse-after-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-wave-enable>
+            <legend>Predict an unequal opposite pair</legend>
+            <p>Choose unequal opposite peak heights. Predict the signed displacement at their common center.</p>
+            <label class="wave-stack">Center displacement (cm) <input id="pulse-unequal-guess" type="text" autocomplete="off"></label>
+            <button class="lesson-button" type="button" id="pulse-check-unequal">Check and show overlap</button>
+            <p id="pulse-unequal-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+
+      <section class="lesson-station wave-experiment" id="wave-stand" data-wave-panel="stand" aria-labelledby="stand-title" hidden>
+        <h3 id="stand-title" tabindex="-1">Standing Wave Studio</h3>
+        <p>Step a fixed-end string and compare its two oppositely traveling components with their sum. The ideal string speed is fixed at 2 m/s.</p>
+        <fieldset disabled data-wave-enable>
+          <legend>Choose length, mode, and probe</legend>
+          <div class="wave-fields">
+            <label>Length L (m) <select id="stand-l"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option></select></label>
+            <label>Mode n <select id="stand-n"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option></select></label>
+            <label>Probe position <select id="stand-probe"><option value="0">P0 · 0 m</option><option value="1" selected>P1 · 0.75 m</option><option value="2">P2 · 1.5 m</option><option value="3">P3 · 2.25 m</option><option value="4">P4 · 3 m</option></select></label>
+          </div>
+          <div class="waves-actions">
+            <button class="lesson-button" id="stand-play" type="button" aria-pressed="false">Play</button>
+            <button class="lesson-button lesson-primary" id="stand-step" type="button">Step one eighth of a period</button>
+            <button class="lesson-button" id="stand-rewind" type="button">Pause at 0 s</button>
+          </div>
+        </fieldset>
+        <div class="wave-scene-slot" data-wave-scene="stand"></div>
+        <p class="wave-result" id="stand-reading">Time 0.00 s · P1 at 0.75 m · Sum +2.00 cm.</p>
+        <p class="lesson-note" id="stand-wavelength">Wavelength 3.00 m · Frequency 0.67 Hz.</p>
+        <details>
+          <summary>Math and four missions</summary>
+          <p>The components are A sin(kx − ωt) and A sin(kx + ωt), with A = 1 cm. Their sum is 2A sin(kx) cos(ωt). Here k = nπ/L, λ = 2L/n, f = v/λ, and ω = 2πf. A node’s amplitude is always zero. An antinode can cross equilibrium and later reach an extreme.</p>
+          <fieldset disabled data-wave-enable>
+            <legend>Count antinodes and classify points</legend>
+            <button class="lesson-button" type="button" id="stand-check-mode">Check for exactly three antinodes</button>
+            <div class="wave-fields">
+              <label>Node <select id="stand-node"><option value="">Choose a point</option></select></label>
+              <label>Antinode <select id="stand-antinode"><option value="">Choose a point</option></select></label>
+            </div>
+            <button class="lesson-button" type="button" id="stand-check-pair">Check the pair</button>
+            <p id="stand-pair-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-wave-enable>
+            <legend>Predict a new wavelength</legend>
+            <p>Save the current length and mode. Change at least one, then predict the new wavelength. Answers are checked to the displayed hundredth of a metre.</p>
+            <div class="waves-actions">
+              <button class="lesson-button" type="button" id="stand-pin">Save current geometry</button>
+              <label class="wave-stack">New wavelength (m) <input id="stand-guess-lambda" type="text" autocomplete="off"></label>
+              <button class="lesson-button" type="button" id="stand-check-lambda">Check wavelength</button>
+            </div>
+            <p id="stand-baseline" class="lesson-note"></p>
+            <p id="stand-lambda-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-wave-enable>
+            <legend>Which zeros persist all cycle?</legend>
+            <button class="lesson-button" type="button" id="stand-zero-snapshot">Pause at a quarter period</button>
+            <p>In that snapshot, the sum is zero at every marked point. Choose all points that stay at zero for the full cycle.</p>
+            <div class="waves-actions" id="stand-zero-points"></div>
+            <button class="lesson-button" type="button" id="stand-check-zeros">Check selected points</button>
+            <p id="stand-zero-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+
+      <section class="lesson-station wave-experiment" id="wave-beat" data-wave-panel="beat" aria-labelledby="beat-title" hidden>
+        <h3 id="beat-title" tabindex="-1">Beat Frequency Mixer</h3>
+        <p>At one fixed probe, compare the rapid oscillations with the slower envelope. Try setting the components to 4 and 5 Hz. Both arrive with amplitude 1 cm and travel right at 2 m/s.</p>
+        <fieldset disabled data-wave-enable>
+          <legend>Mix two visual frequencies</legend>
+          <div class="wave-fields">
+            <label>Frequency 1 (Hz) <input id="beat-f1" type="number" min="3" max="7" step="0.25" value="4"></label>
+            <label>Frequency 2 (Hz) <input id="beat-f2" type="number" min="3" max="7" step="0.25" value="4.5"></label>
+            <label>Probe position (m) <input id="beat-probe" type="number" min="0" max="4" step="0.25" value="0"></label>
+            <label>Trace cursor <output id="beat-time-value" for="beat-time">0.00 s</output>
+              <input id="beat-time" type="range" min="0" max="8" step="0.05" value="0">
+            </label>
+          </div>
+        </fieldset>
+        <div class="wave-scene-slot" data-wave-scene="beat"></div>
+        <p class="wave-result" id="beat-reading">Beat rate 0.50 Hz · Spacing of envelope maxima 2.00 s.</p>
+        <p class="lesson-note" id="beat-sample">At 0.00 s: Wave 1 +1.00 cm · Wave 2 +1.00 cm · Sum +2.00 cm.</p>
+        <details>
+          <summary>Math and four missions</summary>
+          <p>Each component uses phase 2πfᵢ(x/v − t). At a fixed probe the envelope magnitude is 2|cos(π(f₂ − f₁)(x/v − t))| cm. The beat rate is |f₁ − f₂|. When that difference is zero, relative phase stays fixed and no beat period exists.</p>
+          <fieldset disabled data-wave-enable>
+            <legend>One beat per second, slower beats, and no beats</legend>
+            <div class="waves-actions">
+              <button class="lesson-button" type="button" id="beat-check-one">Check for one beat per second</button>
+              <button class="lesson-button" type="button" id="beat-pin">Save a distinct frequency pair</button>
+              <button class="lesson-button" type="button" id="beat-check-slow">Check slower nonzero beats</button>
+              <button class="lesson-button" type="button" id="beat-check-equal">Check equal frequencies</button>
+            </div>
+            <p class="lesson-note" id="beat-baseline">Saved pair · 4 and 4.5 Hz.</p>
+            <p class="lesson-note" id="beat-rate-feedback" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-wave-enable>
+            <legend>Predict the spacing change</legend>
+            <p>Lock in what happens to the time between maxima when the frequency difference grows. Then increase the difference and check.</p>
+            <label class="wave-stack">Spacing between maxima <select id="beat-guess"><option value="">Choose</option><option value="closer">Gets shorter</option><option value="farther">Gets longer</option><option value="same">Stays the same</option></select></label>
+            <div class="waves-actions">
+              <button class="lesson-button" type="button" id="beat-commit">Lock in prediction and current spacing</button>
+              <button class="lesson-button" type="button" id="beat-check-spacing">Compare new spacing</button>
+            </div>
+            <p id="beat-spacing-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+
+      <section class="lesson-station wave-experiment" id="wave-tank" data-wave-panel="tank" aria-labelledby="tank-title" hidden>
+        <h3 id="tank-title" tabindex="-1">Ripple Tank · Two-Source Interference</h3>
+        <p>At probe (0, 2) m, switch relative phase from 0° to 180°. The sources are at (−d/2, 0) and (+d/2, 0) m. Each arriving contribution has amplitude 0.50 cm, with no distance attenuation or reflection in this model.</p>
+        <fieldset disabled data-wave-enable>
+          <legend>Adjust the tank and probe</legend>
+          <div class="wave-fields">
+            <label>Source separation d (m) <input id="tank-d" type="number" min="1" max="6" step="0.5" value="3"></label>
+            <label>Wavelength λ (m) <input id="tank-lambda" type="number" min="1" max="4" step="0.25" value="2"></label>
+            <label>Relative source phase (°) <input id="tank-phase" type="number" min="0" max="360" step="15" value="0"></label>
+            <label>Probe x (m) <input id="tank-x" type="number" min="-4" max="4" step="0.25" value="0"></label>
+            <label>Probe y (m) <input id="tank-y" type="number" min="0" max="6" step="0.25" value="2"></label>
+            <label>Surface shows <select id="tank-view"><option value="instant">Instantaneous displacement</option><option value="amplitude">Local oscillation amplitude</option></select></label>
+          </div>
+          <div class="waves-actions">
+            <button class="lesson-button lesson-primary" type="button" id="tank-step">Step +0.25 s</button>
+            <button class="lesson-button" type="button" id="tank-rewind">Return to 0 s</button>
+          </div>
+        </fieldset>
+        <div class="wave-scene-slot" data-wave-scene="tank"></div>
+        <p class="lesson-note" id="tank-legend">Surface height shows signed displacement: below equilibrium is negative and above is positive. The distinct marker identifies the probe.</p>
+        <p class="wave-result" id="tank-reading">Time 0.00 s · Distances 2.50 and 2.50 m · Path difference 0.00 m · Local amplitude 1.00 cm.</p>
+        <p class="lesson-note" id="tank-sample">Source contributions 0.00 and 0.00 cm · Sum 0.00 cm.</p>
+        <details>
+          <summary>Math and four missions</summary>
+          <p>For source i, rᵢ is its distance to the probe and θᵢ = (2π/λ)rᵢ − 2πft + φᵢ, with f = 0.5 Hz. Each contribution is 0.50 cos θᵢ cm. With δ = (2π/λ)(r₂ − r₁) + φ₂ − φ₁, local amplitude is |cos(δ/2)| cm. Persistent cancellation requires matched arriving amplitudes and an odd multiple of π for δ.</p>
+          <fieldset disabled data-wave-enable>
+            <legend>Find reinforcement and near-cancellation</legend>
+            <p>Strong reinforcement requires at least 0.95 cm local amplitude. Near-cancellation allows at most 0.10 cm.</p>
+            <div class="waves-actions">
+              <button class="lesson-button" type="button" id="tank-check-bright">Check reinforcement</button>
+              <button class="lesson-button" type="button" id="tank-check-dark">Check cancellation</button>
+            </div>
+            <p id="tank-probe-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-wave-enable>
+            <legend>Compare separation and source phase</legend>
+            <p>Save the pattern, then change only separation. The comparison uses the slice from x = 0 to +4 m at y = 2 m. For the phase mission, set an equidistant probe and change source phase to 180°.</p>
+            <div class="waves-actions">
+              <button class="lesson-button" type="button" id="tank-pin">Save separation and pattern</button>
+              <button class="lesson-button" type="button" id="tank-check-spacing">Compare cancellation locations</button>
+              <button class="lesson-button" type="button" id="tank-check-phase">Compare 0° with current phase</button>
+            </div>
+            <p id="tank-baseline" class="lesson-note">Saved pattern · d = 3 m, λ = 2 m, phase = 0°.</p>
+            <p id="tank-compare-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+
+      <section class="lesson-station wave-experiment" id="wave-slit" data-wave-panel="slit" aria-labelledby="slit-title" hidden>
+        <h3 id="slit-title" tabindex="-1">Double-Slit Pattern Explorer</h3>
+        <p>A classical plane wave reaches two equal-phase point openings. Inspect the screen center, then move the probe away from it. The screen is 12 m from the openings, and the model assumes equal arriving amplitudes and omits the finite-aperture diffraction envelope.</p>
+        <fieldset disabled data-wave-enable>
+          <legend>Adjust geometry and screen probe</legend>
+          <div class="wave-fields">
+            <label>Wavelength (m) <input id="slit-lambda" type="number" min="0.5" max="1.5" step="0.25" value="0.75"></label>
+            <label>Slit separation (m) <input id="slit-d" type="number" min="3" max="6" step="0.5" value="4"></label>
+            <label>Screen height y (m) <input id="slit-y" type="number" min="-10" max="10" step="0.05" value="0"></label>
+          </div>
+        </fieldset>
+        <div class="wave-scene-slot" data-wave-scene="slit"></div>
+        <p class="wave-result" id="slit-reading">Screen y = 0.00 m · Equal paths · Normalized intensity 1.00.</p>
+        <p class="lesson-note" id="slit-spacing">Fringe measurement uses the center and nearest bright point on the positive side.</p>
+        <details>
+          <summary>Math and four missions</summary>
+          <p>The openings are at transverse coordinates −d/2 and +d/2. At screen coordinate y, r₁ and r₂ are their exact straight-line distances over the longitudinal distance D. Normalized time-averaged intensity is cos²[π(r₂ − r₁)/λ]. The estimate Δy ≈ λD/d applies near the axis at small angles. These classical intensities are a preview of interference ideas in quantum mechanics.</p>
+          <fieldset disabled data-wave-enable>
+            <legend>Spread bright fringes and find the center</legend>
+            <div class="waves-actions">
+              <button class="lesson-button" type="button" id="slit-pin">Save current fringe spacing</button>
+              <button class="lesson-button" type="button" id="slit-check-wide">Check wider spacing</button>
+              <button class="lesson-button" type="button" id="slit-check-center">Check central bright fringe</button>
+            </div>
+            <p class="lesson-note" id="slit-baseline">Saved pattern · λ = 0.75 m, separation = 4 m.</p>
+            <p class="lesson-note" id="slit-result" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-wave-enable>
+            <legend>Predict a wavelength change</legend>
+            <p>Commit a prediction and baseline. Increase wavelength at the same separation and compare both patterns on one screen scale.</p>
+            <label class="wave-stack">Bright fringe spacing <select id="slit-guess"><option value="">Choose</option><option value="wider">Increases</option><option value="narrower">Decreases</option><option value="same">Stays the same</option></select></label>
+            <div class="waves-actions">
+              <button class="lesson-button" type="button" id="slit-commit">Lock in prediction and baseline</button>
+              <button class="lesson-button" type="button" id="slit-check-wave">Compare both patterns</button>
+            </div>
+            <p id="slit-wave-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-wave-enable>
+            <legend>Classify a screen position</legend>
+            <p>Choose near-bright or near-dark using path difference in wavelengths. Bright allows intensity at least 0.95 and dark at most 0.05.</p>
+            <label class="wave-stack">Fringe at the probe <select id="slit-class"><option value="">Choose</option><option value="bright">Constructive · near bright</option><option value="dark">Destructive · near dark</option></select></label>
+            <button class="lesson-button" type="button" id="slit-check-class">Check fringe</button>
+            <p id="slit-class-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+
+      <section class="lesson-station wave-experiment" id="wave-wheel" data-wave-panel="wheel" aria-labelledby="wheel-title" hidden>
+        <h3 id="wheel-title" tabindex="-1">Phase Wheel and Wave Matcher</h3>
+        <p>Change relative phase to 120° and then 180°. Compare the string probe with the horizontal projections of the phasors. This station has its own trial with the original wavelength of 4 m and frequency of 0.5 Hz.</p>
+        <fieldset disabled data-wave-enable>
+          <legend>Set amplitudes, phase, and probe</legend>
+          <div class="wave-fields">
+            <label>Wave 1 amplitude (cm) <input id="wheel-a1" type="number" min="0" max="1" step="0.1" value="1"></label>
+            <label>Wave 2 amplitude (cm) <input id="wheel-a2" type="number" min="0" max="1" step="0.1" value="1"></label>
+            <label>Relative phase (°) <input id="wheel-phase" type="number" min="0" max="360" step="5" value="0"></label>
+            <label>Probe position (m) <input id="wheel-x" type="number" min="0" max="8" step="0.25" value="2"></label>
+          </div>
+          <div class="waves-actions">
+            <button class="lesson-button lesson-primary" type="button" id="wheel-step">Step +0.25 s</button>
+            <button class="lesson-button" type="button" id="wheel-rewind">Return to 0 s</button>
+          </div>
+        </fieldset>
+        <div class="wave-scene-slot" data-wave-scene="wheel"></div>
+        <p class="wave-result" id="wheel-reading">Time 0.00 s · Angles 180° and 180° · Relative phase 0° · Resultant 2.00 cm.</p>
+        <p class="lesson-note" id="wheel-projections">At x = 2.00 m: projections −1.00 and −1.00 cm · Sum −2.00 cm.</p>
+        <details>
+          <summary>Math and four missions</summary>
+          <p>A phasor has length Aᵢ and direction θᵢ. Its horizontal projection Aᵢ cos θᵢ gives the signed displacement. The vector sum has length R. A zero-length resultant has undefined phase.</p>
+          <fieldset disabled data-wave-enable>
+            <legend>Align, cancel, and match</legend>
+            <p>Align two equal nonzero waves, then put them half a cycle apart. For the target, use two 1 cm waves and match 1 cm to within 0.005 cm.</p>
+            <div class="waves-actions">
+              <button class="lesson-button" type="button" id="wheel-check-align">Check alignment</button>
+              <button class="lesson-button" type="button" id="wheel-check-zero">Check cancellation</button>
+              <button class="lesson-button" type="button" id="wheel-check-target">Check 1 cm target</button>
+            </div>
+            <p id="wheel-match-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-wave-enable>
+            <legend>Compare equal and unequal at 180°</legend>
+            <p>Save a nonzero equal pair at 180°. Then make the amplitudes unequal at the same phase and compare the residual.</p>
+            <div class="waves-actions">
+              <button class="lesson-button" type="button" id="wheel-pin">Save the equal pair</button>
+              <button class="lesson-button" type="button" id="wheel-check-residual">Compare residual</button>
+            </div>
+            <p id="wheel-baseline" class="lesson-note"></p>
+            <p id="wheel-residual-feedback" class="lesson-note" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+    </details>
+
+    <nav class="lesson-next" aria-label="Continue the course">
+      <a href="../../index.html">Course homepage</a>
+      <a class="lesson-button lesson-primary" href="../4_probability/4_probability.html">
+        Next lesson: Probability <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

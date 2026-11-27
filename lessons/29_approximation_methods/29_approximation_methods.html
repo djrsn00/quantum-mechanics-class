@@ -1,0 +1,638 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Compare perturbation theory, variational estimates, and WKB with numerical references in the Quantum Reality Repair Shop.">
+  <title>Approximation Methods | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css?v=e2e34dc8f2a4">
+  <!--<link rel="stylesheet" href="./styles/main.css">-->
+  <script src="./scripts/app.js" defer></script>
+  <!--<script src="./scripts/app.js" defer></script>-->
+  <script src="./scripts/lessons-menu.js?v=bba78f5ea395" defer></script>
+  <!--<script src="./scripts/lessons-menu.js" defer></script>-->
+  <script type="module" src="./scripts/lesson.js"></script>
+  <!--<script type="module" src="./scripts/lesson.js"></script>-->
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)" stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none" stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8" stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none" stroke="url(#logo-spectrum)" stroke-width="1.6" transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none" stroke="#edffef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static" viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C296 80 352 82 463 83"/>
+            <path class="track-violet" d="M218 54C295 80 353 96 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M218 46v16m-8-8h16"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button" aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and_coordinates/8_bases_and_coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="../22_the_one-dimensional_schrodinger_equation/22_the_one-dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="./29_approximation_methods.html" aria-current="page"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main approximation-lesson" aria-labelledby="am-title">
+    <header class="am-intro am-stack">
+      <p class="am-kicker">Lesson 29</p>
+      <h2 id="am-title">Approximation Methods</h2>
+      <p class="am-lead"><strong>The oscillator from Lesson 25 has acquired a quartic distortion. Its old ground-state energy was 0.5000. Can you estimate the new energy to within 1% before opening the numerical reference?</strong></p>
+      <p>Start at λ = 0.10. Commit a forecast, inspect first order, then reshape a Gaussian for the same oscillator. Open the numerical reference when you are ready to check the two estimates.</p>
+      <div class="am-actions">
+        <a class="am-link" href="#am-pert">Open repair ticket</a>
+        <button class="am-primary" id="am-enter" type="button" aria-controls="am-shop" aria-expanded="false" disabled>Enter the Potential</button>
+      </div>
+      <p class="am-note" id="am-static-note">The worked example and teaching manual are readable while the interactive lab is unavailable.</p>
+    </header>
+
+    <section class="am-panel am-shop" id="am-shop" aria-labelledby="am-shop-title" hidden>
+      <div class="am-stack">
+        <h3 id="am-shop-title" tabindex="-1">The Quantum Reality Repair Shop</h3>
+        <p>Use the same instruments to open a ticket, test an approximation, and file a report. In the landscape, horizontal position is scaled x and height represents potential energy. The workshop illustrates a one-dimensional model.</p>
+      </div>
+      <fieldset id="am-camera-controls" disabled>
+        <legend>Landscape camera</legend>
+        <div class="am-fields">
+          <label for="am-camera-position">Camera focus along x <span id="am-camera-position-value">0.0</span>
+            <input id="am-camera-position" type="range" min="-5" max="5" step="0.1" value="0">
+          </label>
+          <div class="am-actions">
+            <button id="am-side" type="button" aria-pressed="false">Side view</button>
+            <button id="am-camera-reset" type="button">Reset camera</button>
+            <label class="am-check"><input id="am-effects" type="checkbox"> Reduced effects</label>
+            <button id="am-return" type="button">Return to core lab</button>
+          </div>
+        </div>
+      </fieldset>
+      <p id="am-renderer" class="am-note">The 2D plots and instruments below share the workshop’s controls and calculations.</p>
+      <div id="am-viewport" class="am-world" hidden>
+        <canvas id="am-world" aria-hidden="true"></canvas>
+      </div>
+      <p id="am-scene-summary" class="am-note"></p>
+      <nav class="am-actions" aria-label="Workshop stations">
+        <button type="button" data-am-deck="pert" aria-controls="am-pert" aria-pressed="true" disabled>Perturbation</button>
+        <button type="button" data-am-deck="var" aria-controls="am-var" aria-pressed="false" disabled>Variational</button>
+        <button type="button" data-am-deck="wkb" aria-controls="am-wkb" aria-pressed="false" disabled>WKB scanner</button>
+        <button type="button" data-am-deck="table" aria-controls="am-table" aria-pressed="false" disabled>Comparison table</button>
+        <button type="button" data-am-deck="missions" aria-controls="am-missions" aria-pressed="false" disabled>Missions</button>
+      </nav>
+    </section>
+
+    <section id="am-lab" class="am-stack" aria-labelledby="am-lab-title">
+      <div class="am-stack am-core-heading">
+        <h3 id="am-lab-title">Core lab</h3>
+        <nav class="am-actions" aria-label="Core lab stations">
+          <a class="am-link" href="#am-pert">Perturbation</a>
+          <a class="am-link" href="#am-var">Variational</a>
+          <a class="am-link" href="#am-wkb">WKB scanner</a>
+          <a class="am-link" href="#am-table">Comparison table</a>
+          <a class="am-link" href="#am-missions">Missions</a>
+        </nav>
+      </div>
+
+      <div id="am-mission-dock" class="am-instrument am-actions" hidden>
+        <strong id="am-active-mission"></strong>
+        <button id="am-dock-return" type="button">Open mission console</button>
+      </div>
+
+      <section class="am-panel" id="am-pert" data-am-station="pert" aria-labelledby="am-pert-title">
+        <h4 id="am-pert-title" tabindex="-1">Perturbation Workbench</h4>
+        <p>Use length ℓ = √(ℏ/(mω)) and energy ℏω. Here x is physical position divided by ℓ. With dimensionless quartic strength λ ≥ 0, the time-independent Hamiltonian is</p>
+        <p class="am-equation">H = −½ d²/dx² + ½x² + λx⁴ = H₀ + λV, with V = x⁴.</p>
+        <p>This workbench follows the first three nondegenerate oscillator levels. The selected level reduces to Eₙ⁽⁰⁾ = n + ½ at λ = 0.</p>
+        <fieldset id="am-pert-controls" disabled>
+          <legend>Quartic oscillator</legend>
+          <div class="am-fields">
+            <label for="am-lambda">Quartic strength λ <span id="am-lambda-value">0.100</span>
+              <input id="am-lambda" type="range" min="0" max="0.35" step="0.005" value="0.1">
+            </label>
+            <label for="am-level">Level n
+              <select id="am-level">
+                <option value="0">0 · ground state</option>
+                <option value="1">1 · first excited state</option>
+                <option value="2">2 · second excited state</option>
+              </select>
+            </label>
+          </div>
+        </fieldset>
+
+        <figure class="am-instrument">
+          <figcaption>Oscillator potential and energy levels</figcaption>
+          <svg class="am-plot" id="am-pert-plot" viewBox="0 0 640 304" role="img" aria-labelledby="am-pert-plot-title am-pert-plot-desc">
+            <title id="am-pert-plot-title">The quartic oscillator</title>
+            <desc id="am-pert-plot-desc">At λ = 0.10 the modified potential rises more steeply than the original outside the center. The ground level of the original oscillator is 0.5000.</desc>
+            <g id="am-pert-ink">
+              <path class="am-gridlines" d="M72 12h536M72 72h536M72 132h536M72 192h536M206 12v240M340 12v240M474 12v240"/>
+              <path class="am-axis" d="M72 12v240h536"/>
+              <path class="am-curve am-original" d="M72 132L105.5 160.12 139 184.5 172.5 205.12 206 222 239.5 235.12 273 244.5 306.5 250.12 340 252 373.5 250.12 407 244.5 440.5 235.12 474 222 507.5 205.12 541 184.5 574.5 160.12 608 132"/>
+              <path class="am-curve am-modified" d="M72 36L105.5 103.85 139 154.12 172.5 190.48 206 216 239.5 233.23 273 244.12 306.5 250.10 340 252 373.5 250.10 407 244.12 440.5 233.23 474 216 507.5 190.48 541 154.12 574.5 103.85 608 36"/>
+              <path class="am-curve am-base" d="M72 222h536"/>
+              <text x="60" y="257" text-anchor="end">0</text>
+              <text x="60" y="197" text-anchor="end">1</text>
+              <text x="60" y="137" text-anchor="end">2</text>
+              <text x="60" y="77" text-anchor="end">3</text>
+              <text x="60" y="17" text-anchor="end">4</text>
+              <text x="72" y="273" text-anchor="middle">−2</text>
+              <text x="206" y="273" text-anchor="middle">−1</text>
+              <text x="340" y="273" text-anchor="middle">0</text>
+              <text x="474" y="273" text-anchor="middle">1</text>
+              <text x="608" y="273" text-anchor="middle">2</text>
+              <text x="340" y="295" text-anchor="middle">Scaled position x</text>
+              <text x="21" y="132" text-anchor="middle" transform="rotate(-90 21 132)">Energy / ℏω</text>
+            </g>
+          </svg>
+          <ul class="am-legend" aria-label="Plot legend">
+            <li class="am-key-original">Original potential</li>
+            <li class="am-key-modified">Modified potential</li>
+            <li class="am-key-base">Unperturbed level</li>
+            <li id="am-pert-key-est" class="am-key-est" hidden>First-order level</li>
+            <li id="am-pert-key-ref" class="am-key-ref" hidden>Numerical reference</li>
+          </ul>
+          <p id="am-pert-description" class="am-note">At x = ±2, the original potential is 2.0 and the modified potential is 3.6 in energy units ℏω. The unperturbed ground energy is 0.5000.</p>
+        </figure>
+
+        <form class="am-instrument" id="am-pert-forecast">
+          <fieldset id="am-pert-forecast-controls" disabled>
+            <legend>Your forecast</legend>
+            <div class="am-fields">
+              <label for="am-pert-direction">How does the selected level shift?
+                <select id="am-pert-direction" required>
+                  <option value="">Choose a direction</option>
+                  <option value="up">Higher energy</option>
+                  <option value="down">Lower energy</option>
+                  <option value="same">Unchanged</option>
+                </select>
+              </label>
+              <label for="am-pert-guess">Estimated new energy in ℏω (optional)
+                <input type="number" id="am-pert-guess" step="any" inputmode="decimal">
+              </label>
+            </div>
+            <button class="am-primary" type="submit">Commit forecast</button>
+          </fieldset>
+          <p class="am-note" id="am-pert-forecast-state">No forecast committed.</p>
+        </form>
+
+        <fieldset id="am-pert-actions" disabled>
+          <legend>Calculate and compare</legend>
+          <div class="am-actions">
+            <button id="am-pert-estimate" type="button" disabled>Reveal first-order estimate</button>
+            <button id="am-pert-reference" type="button" disabled>Reveal numerical reference</button>
+            <button id="am-pert-pin" type="button" disabled>Pin first-order run</button>
+            <button id="am-pert-reset" type="button">Restore oscillator setup</button>
+          </div>
+        </fieldset>
+
+        <div class="am-stack" data-am-answer="pert">
+          <p id="am-worked" class="am-equation">Opening example at n = 0 and λ = 0.10. The unperturbed Gaussian gives ⟨x⁴⟩ = 3/4. The coefficient is 0.75 and the shift is 0.10 × 0.75 = 0.075. First order gives 0.5000 + 0.075 = 0.5750 in units of ℏω.</p>
+          <dl class="am-readouts">
+            <div><dt>Unperturbed energy / ℏω</dt><dd id="am-e0">0.5000</dd></div>
+            <div><dt>First-order coefficient Eₙ⁽¹⁾ / ℏω</dt><dd id="am-e1">—</dd></div>
+            <div><dt>Actual first-order shift λEₙ⁽¹⁾ / ℏω</dt><dd id="am-shift">—</dd></div>
+            <div><dt>Corrected energy / ℏω</dt><dd id="am-pert-value">—</dd></div>
+            <div><dt>Numerical reference approximation / ℏω</dt><dd id="am-pert-ref">Hidden</dd></div>
+            <div><dt>Absolute error / ℏω</dt><dd id="am-pert-abs">—</dd></div>
+            <div><dt>Percentage error</dt><dd id="am-pert-percent">—</dd></div>
+          </dl>
+          <p id="am-pert-evidence" class="am-note">Reveal the numerical reference to inspect grid and domain convergence.</p>
+          <p id="am-ticket-status" class="am-feedback">Opening ticket tolerance is 1% of the reference ground energy.</p>
+          <figure class="am-instrument">
+            <figcaption>First-order error versus quartic strength</figcaption>
+            <button type="button" id="am-sweep" disabled>Compute error sweep</button>
+            <canvas class="am-plot" id="am-error-plot" width="660" height="350" aria-hidden="true" hidden></canvas>
+            <p id="am-sweep-state" class="am-note">The sweep uses independently computed reference energies for the selected level. Shown points must pass the numerical reliability checks.</p>
+            <div class="am-scroll" tabindex="0" role="region" aria-label="Sampled first-order errors" id="am-sweep-table" hidden>
+              <table>
+                <thead><tr><th scope="col">λ</th><th scope="col">Reference / ℏω</th><th scope="col">Abs. error / ℏω</th><th scope="col">Error %</th><th scope="col">Convergence evidence</th></tr></thead>
+                <tbody id="am-sweep-rows"></tbody>
+              </table>
+            </div>
+          </figure>
+        </div>
+      </section>
+
+      <section class="am-panel" id="am-var" data-am-station="var" aria-labelledby="am-var-title">
+        <h4 id="am-var-title" tabindex="-1">Variational Design Bay</h4>
+        <p>Use the same quartic Hamiltonian to estimate its ground energy. A real Gaussian on the full line has amplitude ψ<sub>b</sub>(x) = (b/π)<sup>1/4</sup> exp(−bx²/2) and position standard deviation 1/√(2b). Increasing b narrows the state.</p>
+        <p>Narrowing raises kinetic energy and reduces the potential-energy cost. A close energy estimate leaves open whether the trial state reproduces tails or other observables.</p>
+        <fieldset id="am-var-controls" disabled>
+          <legend>Trial state and shared Hamiltonian</legend>
+          <div class="am-fields">
+            <label for="am-var-lambda">Quartic strength λ <span id="am-var-lambda-value">0.100</span>
+              <input id="am-var-lambda" type="range" min="0" max="0.35" step="0.005" value="0.1">
+            </label>
+            <label for="am-blueprint">Blueprint
+              <select id="am-blueprint">
+                <option value="gaussian">Gaussian on the full line</option>
+                <option value="constant">Nonzero constant on the full line</option>
+              </select>
+            </label>
+            <label for="am-b">Gaussian parameter b <span id="am-b-value">1.00</span>
+              <input id="am-b" type="range" min="0.2" max="4" step="0.01" value="1">
+            </label>
+          </div>
+        </fieldset>
+
+        <form class="am-instrument" id="am-var-b-form" novalidate>
+          <fieldset id="am-var-b-controls" disabled>
+            <legend>Try an entered parameter</legend>
+            <label for="am-b-input">Proposed b · supported range 0.20 to 4.00
+              <input type="number" id="am-b-input" step="any" inputmode="decimal" value="1">
+            </label>
+            <button type="submit">Apply b</button>
+          </fieldset>
+          <p id="am-blueprint-state" class="am-note">The Gaussian has unit norm for b &gt; 0. The display crops the full-line state to a finite window.</p>
+        </form>
+
+        <form class="am-instrument" id="am-var-forecast">
+          <fieldset id="am-var-forecast-controls" disabled>
+            <legend>Your ground-energy forecast</legend>
+            <label for="am-var-guess">Energy in ℏω
+              <input type="number" id="am-var-guess" step="any" required inputmode="decimal">
+            </label>
+            <button type="submit">Commit forecast</button>
+          </fieldset>
+          <p class="am-note" id="am-var-forecast-state">No forecast committed.</p>
+        </form>
+
+        <fieldset id="am-var-actions" disabled>
+          <legend>Test and save</legend>
+          <div class="am-actions">
+            <button id="am-var-reference" type="button" disabled>Reveal numerical reference</button>
+            <button id="am-var-pin" type="button" disabled>Pin Gaussian run</button>
+            <button id="am-var-reset" type="button">Reset trial state</button>
+          </div>
+        </fieldset>
+
+        <div class="am-stack" data-am-answer="var">
+          <figure class="am-instrument">
+            <figcaption>Trial wavefunction and density</figcaption>
+            <canvas class="am-plot" id="am-var-plot" width="660" height="340" aria-hidden="true" hidden></canvas>
+            <ul class="am-legend" aria-label="Plot legend">
+              <li class="am-key-modified">Signed amplitude ψ<sub>b</sub></li>
+              <li class="am-key-est">Density |ψ<sub>b</sub>|²</li>
+            </ul>
+            <p id="am-var-description" class="am-note">The normalized Gaussian is positive. Its amplitude and density have their maxima at x = 0.</p>
+          </figure>
+          <dl class="am-readouts">
+            <div><dt>Position standard deviation / ℓ</dt><dd id="am-sigma">—</dd></div>
+            <div><dt>Kinetic contribution / ℏω</dt><dd id="am-kinetic">—</dd></div>
+            <div><dt>Quadratic contribution / ℏω</dt><dd id="am-quadratic">—</dd></div>
+            <div><dt>Quartic contribution / ℏω</dt><dd id="am-quartic">—</dd></div>
+            <div><dt>Current trial energy / ℏω</dt><dd id="am-var-value">—</dd></div>
+            <div><dt>Best energy at this λ / ℏω</dt><dd id="am-best">—</dd></div>
+            <div><dt>Numerical ground energy / ℏω</dt><dd id="am-var-ref">Hidden</dd></div>
+            <div><dt>Current absolute error / ℏω</dt><dd id="am-var-abs">—</dd></div>
+            <div><dt>Current percentage error</dt><dd id="am-var-percent">—</dd></div>
+          </dl>
+          <p id="am-var-evidence" class="am-note">The best-energy record is specific to the current λ. The numerical reference has its own discretization error.</p>
+        </div>
+      </section>
+
+      <section class="am-panel" id="am-wkb" data-am-station="wkb" aria-labelledby="am-wkb-title">
+        <h4 id="am-wkb-title" tabindex="-1">WKB Terrain Scanner</h4>
+        <p>The barrier U(x) = U<sub>b</sub> exp[−x²/(2w²)] has height U<sub>b</sub> = 2 in units of ℏω and width parameter w in units of ℓ. The leads approach U = 0. The scanner estimates transmission for 0 &lt; E &lt; U<sub>b</sub> at a specified incident energy.</p>
+        <fieldset id="am-wkb-controls" disabled>
+          <legend>Set the barrier and move the scanner</legend>
+          <div class="am-fields">
+            <label for="am-incident">Incident energy / ℏω <span id="am-incident-value">1.20</span>
+              <input id="am-incident" type="range" min="0.2" max="1.96" step="0.01" value="1.2">
+            </label>
+            <label for="am-barrier-width">Width w / ℓ <span id="am-barrier-width-value">1.00</span>
+              <input id="am-barrier-width" type="range" min="0.65" max="1.25" step="0.01" value="1">
+            </label>
+            <label for="am-scanner">Scanner position x <span id="am-scanner-value">0.00</span>
+              <input id="am-scanner" type="range" min="-5" max="5" step="0.01" value="0">
+            </label>
+          </div>
+          <div class="am-actions" id="am-markers" hidden>
+            <button id="am-mark-left" type="button">Mark left crossing</button>
+            <button id="am-mark-right" type="button">Mark right crossing</button>
+          </div>
+          <p id="am-marks" class="am-note" hidden>No crossings marked.</p>
+        </fieldset>
+
+        <figure class="am-instrument">
+          <figcaption>Gaussian barrier and scanner</figcaption>
+          <canvas class="am-plot" id="am-wkb-plot" width="660" height="350" aria-hidden="true" hidden></canvas>
+          <ul class="am-legend" aria-label="Plot legend">
+            <li class="am-key-modified">Potential U(x)</li>
+            <li class="am-key-base">Incident energy E</li>
+            <li class="am-key-marker">Scanner position</li>
+            <li class="am-key-turn" id="am-turn-key">Turning points</li>
+          </ul>
+          <p id="am-wkb-description" class="am-note">The center is highest and both distant leads approach zero potential.</p>
+        </figure>
+
+        <div class="am-stack" data-am-answer="turn">
+          <dl class="am-readouts">
+            <div><dt>Turning points x₋, x₊</dt><dd id="am-turns">—</dd></div>
+            <div><dt>Potential at scanner / ℏω</dt><dd id="am-local-u">—</dd></div>
+            <div><dt>Local region</dt><dd id="am-region">—</dd></div>
+            <div><dt>Local k or κ</dt><dd id="am-wave-number">—</dd></div>
+            <div><dt>Phase or decay integral</dt><dd id="am-local-integral">—</dd></div>
+            <div><dt>Local slow-variation guide</dt><dd id="am-local-guide">—</dd></div>
+          </dl>
+          <p class="am-note" id="am-local-note">The simple local amplitude fails near a turning point. Connection formulas relate the oscillating and decaying solutions across that region.</p>
+        </div>
+
+        <form class="am-instrument" id="am-wkb-forecast">
+          <fieldset id="am-wkb-forecast-controls" disabled>
+            <legend>Your transmission forecast</legend>
+            <label for="am-wkb-guess">Transmission probability (0 to 1)
+              <input type="number" id="am-wkb-guess" min="0" max="1" step="any" required inputmode="decimal">
+            </label>
+            <button type="submit">Commit forecast</button>
+          </fieldset>
+          <p class="am-note" id="am-wkb-forecast-state">No forecast committed.</p>
+        </form>
+
+        <fieldset id="am-wkb-actions" disabled>
+          <legend>Compare transmission</legend>
+          <div class="am-actions">
+            <button id="am-wkb-estimate" type="button" disabled>Reveal WKB estimate</button>
+            <button id="am-wkb-reference" type="button" disabled>Reveal numerical reference</button>
+            <button id="am-wkb-pin" type="button" disabled>Pin transmission run</button>
+            <button id="am-wkb-reset" type="button">Restore barrier setup</button>
+          </div>
+        </fieldset>
+
+        <div class="am-stack" data-am-answer="wkb">
+          <dl class="am-readouts">
+            <div><dt>Barrier action A</dt><dd id="am-action">—</dd></div>
+            <div><dt>Leading exponential T<sub>WKB</sub></dt><dd id="am-wkb-value">—</dd></div>
+            <div><dt>Stationary-scattering T<sub>ref</sub></dt><dd id="am-wkb-ref">Hidden</dd></div>
+            <div><dt>Reflection R<sub>ref</sub></dt><dd id="am-reflection">Hidden</dd></div>
+            <div><dt>Absolute transmission error</dt><dd id="am-wkb-abs">—</dd></div>
+            <div><dt>Percentage error</dt><dd id="am-wkb-percent">—</dd></div>
+          </dl>
+          <p class="am-note" id="am-wkb-regime">The leading exponential omits the prefactor. Its suppression is most informative for a smooth barrier with substantial action and separated turning regions.</p>
+          <p id="am-wkb-evidence" class="am-note">Reveal the independent scattering reference to inspect flux, step size, and lead truncation.</p>
+          <figure class="am-instrument" id="am-scattering-profile" hidden>
+            <figcaption>Numerical scattering density</figcaption>
+            <canvas class="am-plot" id="am-scattering-plot" width="660" height="330" aria-hidden="true" hidden></canvas>
+            <p id="am-scattering-description" class="am-note">Normalized to unit incident amplitude. The left lead contains incident and reflected waves. The right lead contains the transmitted outgoing wave.</p>
+          </figure>
+        </div>
+      </section>
+
+      <section class="am-panel" id="am-table" data-am-station="table" aria-labelledby="am-table-title">
+        <h4 id="am-table-title" tabindex="-1">Reality Comparison Table</h4>
+        <p>Pin runs from the workbenches. Each entry records its original parameters and forecast for this session. Compare oscillator methods at the same level and λ. Compare transmission runs as probabilities at their labeled barrier settings.</p>
+        <div id="am-table-content" class="am-stack" data-am-answer="table">
+          <fieldset id="am-table-controls" disabled>
+            <legend>Saved runs</legend>
+            <button id="am-clear-runs" type="button" disabled>Clear saved runs</button>
+          </fieldset>
+          <p id="am-empty-runs" class="am-note">No runs pinned yet.</p>
+          <div id="am-saved-energy" class="am-stack" aria-label="Bound-state energy groups"></div>
+          <div id="am-saved-transmission" class="am-stack" aria-label="Transmission runs"></div>
+          <section id="am-report" class="am-instrument" aria-labelledby="am-report-title" hidden>
+            <h5 id="am-report-title" tabindex="-1">Repair report</h5>
+            <dl id="am-report-fields" class="am-readouts"></dl>
+          </section>
+        </div>
+      </section>
+
+      <section class="am-panel" id="am-missions" data-am-station="missions" aria-labelledby="am-missions-title">
+        <h4 id="am-missions-title" tabindex="-1">Workshop missions</h4>
+        <p>Choose an optional ticket. Open its instrument, collect evidence as called for, and return to the mission console to submit your decision.</p>
+        <fieldset id="am-mission-controls" disabled>
+          <legend>Choose a ticket</legend>
+          <label for="am-mission">Mission
+            <select id="am-mission">
+              <option value="free">Free exploration</option>
+              <option value="gentle">The Gentle Distortion</option>
+              <option value="too-far">Push It Too Far</option>
+              <option value="better">Build a Better Guess</option>
+              <option value="blueprint">The Bad Blueprint</option>
+              <option value="turning">Scan the Turning Point</option>
+              <option value="three-tools">Three Tools, One Problem</option>
+              <option value="mystery">The Mystery Hamiltonian</option>
+              <option value="tolerance">The Tolerance Challenge</option>
+              <option value="report">Repair Report</option>
+            </select>
+          </label>
+          <div class="am-actions">
+            <button id="am-mission-start" type="button">Open mission</button>
+            <button id="am-mission-retry" type="button" disabled>Reset mission experiment</button>
+            <button id="am-mission-exit" type="button" disabled>End mission</button>
+          </div>
+        </fieldset>
+        <div id="am-mission-case" class="am-instrument" hidden>
+          <h5 id="am-mission-title" tabindex="-1">Active ticket</h5>
+          <p id="am-mission-objective"></p>
+          <div id="am-mission-links" class="am-actions">
+            <button id="am-mission-station" type="button">Go to instrument</button>
+            <button id="am-mission-alt" type="button" hidden>Open second instrument</button>
+          </div>
+          <form id="am-mission-form" class="am-stack">
+            <div id="am-mission-questions" class="am-stack"></div>
+            <button id="am-mission-submit" class="am-primary" type="submit">Submit decision</button>
+          </form>
+          <details id="am-mission-help">
+            <summary>Hint</summary>
+            <p id="am-mission-hint" class="am-detail"></p>
+          </details>
+          <p id="am-mission-feedback" class="am-feedback"></p>
+          <p id="am-mission-evidence" class="am-note"></p>
+        </div>
+      </section>
+    </section>
+
+    <details id="am-why" class="am-panel am-manual" data-am-answer="manual">
+      <summary>Show Me Why</summary>
+      <div class="am-stack am-detail">
+        <section class="am-stack" aria-labelledby="am-why-pert">
+          <h3 id="am-why-pert">Project onto the unperturbed state</h3>
+          <p>Start with a solvable Hamiltonian and add a static perturbation. Expand the energy and ket, then retain terms through first order in λ.</p>
+          <p class="am-equation">Eₙ = Eₙ⁽⁰⁾ + λEₙ⁽¹⁾ + …<br>|n⟩ = |n⁽⁰⁾⟩ + λ|n⁽¹⁾⟩ + …<br>(H₀ − Eₙ⁽⁰⁾)|n⁽¹⁾⟩ = (Eₙ⁽¹⁾ − V)|n⁽⁰⁾⟩</p>
+          <p>Multiply on the left by ⟨n⁽⁰⁾|. The left side vanishes by the unperturbed eigenvalue equation and Hermiticity. The normalized ket gives Eₙ⁽¹⁾ = ⟨n⁽⁰⁾|V|n⁽⁰⁾⟩. For this oscillator, ⟨n|x⁴|n⟩ = ¾(2n² + 2n + 1) in unperturbed oscillator states.</p>
+          <p>Projection onto an unperturbed state m ≠ n gives the mixing coefficient λ⟨m⁽⁰⁾|V|n⁽⁰⁾⟩/(Eₙ⁽⁰⁾ − Eₘ⁽⁰⁾). Small gaps can amplify mixing, and degenerate levels require treating the degenerate subspace together. The first-order estimate gains credibility from comparisons over a defined parameter range.</p>
+          <div class="am-symbols">
+            <details class="am-instrument" data-am-symbol="h0">
+              <summary>H₀</summary>
+              <p>The solvable starting oscillator, H₀ = −½ d²/dx² + ½x². Its energy labels are Eₙ⁽⁰⁾ = n + ½. <a href="#am-pert-plot">Inspect the original potential</a></p>
+            </details>
+            <details class="am-instrument" data-am-symbol="lambda">
+              <summary>λ</summary>
+              <p>The dimensionless coefficient multiplying V once in H = H₀ + λV. Changing λ changes the Hamiltonian for both oscillator workbenches. <a href="#am-lambda">Adjust the strength</a></p>
+            </details>
+            <details class="am-instrument" data-am-symbol="v">
+              <summary>V</summary>
+              <p>The perturbing operator acts by multiplication by x⁴. In the ground Gaussian, the position variance is ½ and ⟨x⁴⟩ = 3(½)². <a href="#am-pert-plot">Inspect the distortion</a></p>
+            </details>
+            <details class="am-instrument" data-am-symbol="e1">
+              <summary>Eₙ⁽¹⁾</summary>
+              <p>The coefficient of λ in the energy expansion equals the expectation of V in the normalized unperturbed state. The first-order change in the energy is λEₙ⁽¹⁾. <a href="#am-e1">Inspect the coefficient</a></p>
+            </details>
+          </div>
+        </section>
+
+        <section class="am-stack" aria-labelledby="am-why-var">
+          <h3 id="am-why-var">Build an upper estimate</h3>
+          <p>In an admissible normalized trial state ψ = Σcₙψₙ, the weights |cₙ|² sum to one. Its energy expectation is Σ|cₙ|²Eₙ ≥ E₀ because every Eₙ ≥ E₀. The upper bound applies to the true ground energy of the selected Hamiltonian. The computed reference has its own numerical error.</p>
+          <details class="am-instrument" data-am-symbol="quotient">
+            <summary>Rayleigh quotient</summary>
+            <div class="am-stack am-detail">
+              <p>E<sub>trial</sub> = ⟨ψ|H|ψ⟩/⟨ψ|ψ⟩. Use a square-integrable trial state with finite energy and the relevant boundary behavior. A nonzero constant on the full line has infinite norm even when a finite plot window makes it look harmless.</p>
+              <p class="am-equation">⟨K⟩ = b/4<br>⟨x²/2⟩ = 1/(4b)<br>λ⟨x⁴⟩ = 3λ/(4b²)<br>E<sub>trial</sub>(b) = b/4 + 1/(4b) + 3λ/(4b²)</p>
+              <p>At b = 1 the Gaussian equals the unperturbed ground state, so its expectation matches first order. At λ = 0.10, b = 1.20 gives about 0.560417 ℏω. At λ = 0, b = 1 gives the exact value 0.5000 ℏω. <a href="#am-b">Reshape the Gaussian</a></p>
+            </div>
+          </details>
+        </section>
+
+        <section class="am-stack" aria-labelledby="am-why-wkb">
+          <h3 id="am-why-wkb">Follow the local wave scale</h3>
+          <p>In the Gaussian barrier, U = E at x± = ±w√[2 ln(U<sub>b</sub>/E)]. The region between those points is forbidden, with allowed leads outside. As the wave number tends to zero near a crossing, the separate leading local amplitude formulas fail. Connection formulas bridge the turning regions.</p>
+          <div class="am-symbols">
+            <details class="am-instrument" data-am-symbol="k">
+              <summary>k</summary>
+              <p>In an allowed region, k(x) = √[2(E−U(x))]. The WKB phase follows ∫k dx and the usual local amplitude is proportional to 1/√k. The ratio |k′|/k² measures how quickly k changes on the wave scale. <a href="#am-scanner">Move the scanner</a></p>
+            </details>
+            <details class="am-instrument" data-am-symbol="kappa">
+              <summary>κ</summary>
+              <p>In the forbidden region, κ(x) = √[2(U(x)−E)]. The decaying branch has an envelope proportional to exp(−∫κ dx)/√κ away from crossings. Use |κ′|/κ² as a local guide. <a href="#am-scanner">Inspect the barrier interior</a></p>
+            </details>
+            <details class="am-instrument" data-am-symbol="action">
+              <summary>Barrier action A</summary>
+              <p>A = ∫<sub>x₋</sub><sup>x₊</sup> κ(x) dx. The leading estimate T<sub>WKB</sub> ≈ exp(−2A) squares the leading amplitude factor and omits a prefactor. Near the top, the turning points approach each other and this estimate can be poor. <a href="#am-wkb">Compare transmission</a></p>
+            </details>
+          </div>
+        </section>
+
+        <section class="am-stack" aria-labelledby="am-why-reference">
+          <h3 id="am-why-reference">Check how much the reference resolves</h3>
+          <p>The oscillator reference solves the full quartic Hamiltonian on a finite grid with zero boundary values. The diagonal is 1/h² + U(xᵢ) and the neighboring entries are −1/(2h²). Sturm counting and bisection locate the low eigenvalues. Grid refinement and domain enlargement probe different sources of numerical error.</p>
+          <p>The scattering reference integrates ψ″ = 2(U−E)ψ back from an outgoing plane wave in the right lead. Matching the left lead gives incident and reflected amplitudes A<sub>in</sub> and A<sub>refl</sub>. With equal lead wave numbers and unit transmitted amplitude, T = 1/|A<sub>in</sub>|² and R = |A<sub>refl</sub>/A<sub>in</sub>|². Flux should satisfy R + T ≈ 1. Step and lead checks add evidence beyond that flux test.</p>
+          <details class="am-instrument" data-am-symbol="error">
+            <summary>Absolute and percentage error</summary>
+            <p>Absolute comparison error is |Q<sub>est</sub>−Q<sub>ref</sub>| in the observable’s units. Percentage error is 100|Q<sub>est</sub>−Q<sub>ref</sub>|/|Q<sub>ref</sub>| when the reference is resolved away from zero. Observed refinement changes provide convergence evidence. A tolerance verdict is inconclusive when those changes can alter it. <a href="#am-table">Inspect a saved run</a></p>
+          </details>
+        </section>
+
+        <form class="am-instrument" id="am-check-form">
+          <fieldset id="am-check-controls" disabled>
+            <legend>Check your method choice</legend>
+            <label for="am-check">Which tool gives a ground-energy upper bound for an admissible trial state?
+              <select id="am-check" required>
+                <option value="">Choose a method</option>
+                <option value="pert">First-order perturbation theory</option>
+                <option value="var">Variational Rayleigh quotient</option>
+                <option value="wkb">WKB barrier transmission</option>
+              </select>
+            </label>
+            <div class="am-actions">
+              <button type="submit">Check answer</button>
+              <button id="am-check-reset" type="button">Retry</button>
+            </div>
+          </fieldset>
+          <p id="am-check-feedback" class="am-feedback"></p>
+        </form>
+      </div>
+    </details>
+
+    <section class="am-panel" aria-labelledby="am-finish-title">
+      <h3 id="am-finish-title">Final repair review</h3>
+      <p>Choose one of your repair reports. What observable did you need, which assumptions justified your method, and what numerical evidence supports your verdict at the stated tolerance?</p>
+      <a class="am-link" href="#am-table">Review saved reports</a>
+    </section>
+
+    <nav class="am-navigation" aria-label="Lesson navigation">
+      <a class="am-link" rel="prev" href="../28_identical_particles/28_identical_particles.html"><span class="am-note">← Previous</span> Identical Particles</a>
+      <a class="am-link am-primary" href="../../index.html">Return to learning path</a>
+    </nav>
+    <p class="am-visually-hidden" id="am-status" role="status" aria-atomic="true"></p>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

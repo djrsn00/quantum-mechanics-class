@@ -1,0 +1,1324 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Explore secant slopes, signed accumulation, and the moving edge that connects them through the Fundamental Theorem of Calculus.">
+  <title>Calculus Bridge | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css?v=10-calculus-arcade">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+  <script type="module" src="./scripts/lesson.js?v=10-calculus-arcade"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)"
+                  stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none"
+                   stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8"
+                stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none"
+                   stroke="url(#logo-spectrum)" stroke-width="1.6"
+                   transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none"
+                stroke="#edffef" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static"
+             viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse"
+                  x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 464 83"/>
+            <path class="track-violet" d="M218 54C265 80 333 97 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M218 46v16m-8-8h16"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button"
+              aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and-coordinates/8_bases_and-coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="./10_calculus_bridge.html" aria-current="page"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="../22_the_one_dimensional_schrodinger_equation/22_the_one_dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main calculus-lesson" aria-labelledby="calc-title">
+    <header class="lesson-intro">
+      <p class="lesson-kicker">Lesson 10 · Rates and accumulation</p>
+      <h2 id="calc-title">Calculus Bridge</h2>
+      <p class="lesson-lead">If the right edge of an area moves a little, what determines how quickly that area grows?</p>
+      <p>Try two experiments with the same curve. Measure how fast its height changes, then add up the signed area beneath it. The moving edge brings the two experiments together.</p>
+      <p><a id="cb-arcade-link" href="#calculus-arcade">Open the optional Calculus Arcade</a></p>
+    </header>
+
+    <section class="lesson-panel calc-lab" aria-labelledby="calc-lab-title">
+      <h3 id="calc-lab-title">Calculus Lab</h3>
+      <p id="calc-static-note" class="lesson-note">The graph shows a worked secant example. The lesson script enables the controls and live graph.</p>
+
+      <div class="calc-layout">
+        <div class="calc-console">
+          <fieldset class="calc-controls" id="calc-controls" disabled>
+            <legend>Set up the experiment</legend>
+            <div class="calc-control-grid">
+              <label for="calc-mode">Lab mode
+                <select id="calc-mode" aria-controls="calc-tangent-settings calc-area-settings">
+                  <option value="tangent" selected>Tangent</option>
+                  <option value="area">Accumulation</option>
+                </select>
+              </label>
+              <label class="calc-curve-color" for="calc-function">Function
+                <select id="calc-function">
+                  <option value="square" selected>f(x) = x²</option>
+                  <option value="linear">f(x) = x</option>
+                  <option value="absolute">f(x) = |x|</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="calc-control-group" id="calc-tangent-settings">
+              <div class="calc-control-grid">
+                <label class="calc-point-color" for="calc-x0">Base point x₀
+                  <input id="calc-x0" type="number" min="-2" max="2" step="0.1" value="2" required>
+                </label>
+                <label class="calc-secant-color" for="calc-h">Signed step h
+                  <select id="calc-h">
+                    <option value="-1">−1</option>
+                    <option value="-0.5">−0.5</option>
+                    <option value="-0.25">−0.25</option>
+                    <option value="-0.1">−0.1</option>
+                    <option value="-0.05">−0.05</option>
+                    <option value="-0.01">−0.01</option>
+                    <option value="0.01">+0.01</option>
+                    <option value="0.05">+0.05</option>
+                    <option value="0.1">+0.1</option>
+                    <option value="0.25">+0.25</option>
+                    <option value="0.5" selected>+0.5</option>
+                    <option value="1">+1</option>
+                  </select>
+                </label>
+              </div>
+              <p class="lesson-note">Keep x₀ fixed and try smaller steps of both signs. A negative step places Q to the left of P.</p>
+              <div class="calc-actions">
+                <button type="button" data-calc-preset="quadratic-tangent">Parabola at 2</button>
+                <button type="button" data-calc-preset="cusp">Absolute value at 0</button>
+              </div>
+            </div>
+
+            <div class="calc-control-group" id="calc-area-settings" hidden>
+              <div class="calc-control-grid">
+                <label class="calc-area-color" for="calc-a">Start bound a
+                  <input id="calc-a" type="number" min="-2" max="2" step="0.1" value="0" required>
+                </label>
+                <label class="calc-area-color" for="calc-b">End bound b
+                  <input id="calc-b" type="number" min="-2" max="2" step="0.1" value="2" required>
+                </label>
+                <label class="calc-rect-color" for="calc-n">Rectangles n
+                  <input id="calc-n" type="number" min="1" max="64" step="1" value="4" required>
+                </label>
+                <label class="calc-rect-color" for="calc-rule">Sample rule
+                  <select id="calc-rule">
+                    <option value="left" selected>Left endpoint</option>
+                    <option value="right">Right endpoint</option>
+                    <option value="midpoint">Midpoint</option>
+                  </select>
+                </label>
+                <label class="calc-point-color" for="calc-sample">Inspect rectangle k
+                  <input id="calc-sample" type="number" min="1" max="4" step="1" value="3" required>
+                </label>
+              </div>
+              <p class="lesson-note">Rectangles are numbered from a toward b. Left and right refer to positions on the x-axis, even when you reverse the bounds.</p>
+              <div class="calc-actions">
+                <button type="button" data-calc-preset="quadratic-area">Parabola from 0 to 2</button>
+                <button type="button" data-calc-preset="signed-cancel">Signed cancellation</button>
+                <button type="button" data-calc-preset="moving-edge">Moving edge at 2</button>
+              </div>
+              <label class="calc-choice calc-strip-color">
+                <input id="calc-show-strip" type="checkbox"
+                       aria-controls="calc-strip-settings calc-strip-readouts">
+                Compare a nearby end bound
+              </label>
+              <div class="calc-control-group" id="calc-strip-settings" hidden>
+                <label for="calc-shift">End-bound change δ
+                  <select id="calc-shift">
+                    <option value="-0.5">−0.5</option>
+                    <option value="-0.1">−0.1</option>
+                    <option value="-0.05">−0.05</option>
+                    <option value="-0.01">−0.01</option>
+                    <option value="0.01">+0.01</option>
+                    <option value="0.05">+0.05</option>
+                    <option value="0.1" selected>+0.1</option>
+                    <option value="0.5">+0.5</option>
+                  </select>
+                </label>
+                <p class="lesson-note">Keep a fixed. Adjust b to move the edge, then shrink δ to compare nearby bounds.</p>
+              </div>
+            </div>
+
+            <div class="calc-actions">
+              <button id="calc-reset" type="button">Reset lab</button>
+            </div>
+          </fieldset>
+
+          <form id="calc-slope-prediction">
+            <fieldset class="calc-controls" id="calc-slope-prediction-controls" disabled>
+              <legend>Predict the limiting slope</legend>
+              <label for="calc-slope-guess">What happens as h approaches zero from both sides?
+                <select id="calc-slope-guess" required>
+                  <option value="" selected>Choose a prediction</option>
+                  <option value="number">The slopes approach one number.</option>
+                  <option value="no-limit">The two sides approach different slopes.</option>
+                </select>
+              </label>
+              <label id="calc-slope-number-wrap" for="calc-slope-number" hidden>Predicted slope
+                <input id="calc-slope-number" type="number" step="any" inputmode="decimal" disabled>
+              </label>
+              <div class="calc-actions">
+                <button class="calc-primary" type="submit">Check prediction</button>
+                <button class="calc-tangent-color" id="calc-slope-reveal" type="button"
+                        aria-controls="calc-slope-exact" aria-expanded="false">Reveal tangent result</button>
+              </div>
+              <p id="calc-slope-feedback" class="calc-feedback" role="status"></p>
+            </fieldset>
+          </form>
+
+          <form id="calc-area-prediction" hidden>
+            <fieldset class="calc-controls" id="calc-area-prediction-controls" disabled>
+              <legend>Predict how the sum compares</legend>
+              <p class="lesson-note">On the rising parabola from 0 to 2, where do the left, right, and midpoint rectangles miss the curve?</p>
+              <label for="calc-area-guess">For the current settings, the finite sum will be
+                <select id="calc-area-guess" required>
+                  <option value="" selected>Choose a prediction</option>
+                  <option value="below">Below the exact integral</option>
+                  <option value="equal">Equal to the exact integral</option>
+                  <option value="above">Above the exact integral</option>
+                </select>
+              </label>
+              <div class="calc-actions">
+                <button class="calc-primary" type="submit">Check prediction</button>
+                <button class="calc-area-color" id="calc-area-reveal" type="button"
+                        aria-controls="calc-area-exact" aria-expanded="false">Reveal exact integral</button>
+              </div>
+              <p id="calc-area-feedback" class="calc-feedback" role="status"></p>
+            </fieldset>
+          </form>
+        </div>
+
+        <div class="calc-display">
+          <figure class="calc-figure" aria-labelledby="calc-graph-caption">
+            <div class="calc-viewport" id="calc-viewport" data-renderer="svg">
+              <canvas class="calc-canvas" id="calc-canvas" aria-hidden="true" hidden></canvas>
+              <svg class="calc-graph" id="calc-graph" viewBox="0 0 600 440" role="img"
+                   aria-labelledby="calc-graph-title calc-graph-desc"
+                   data-plot-left="54" data-plot-top="26" data-plot-width="504" data-plot-height="360"
+                   data-x-min="-3" data-x-max="3" data-square-y-min="-1" data-square-y-max="9"
+                   data-other-y-min="-3.5" data-other-y-max="3.5">
+                <title id="calc-graph-title">Calculus Lab graph</title>
+                <desc id="calc-graph-desc">The curve is f(x) = x squared. A secant passes through P at (2, 4) and Q at (2.5, 6.25). It rises 2.25 units for a run of 0.5 units, giving slope 4.5.</desc>
+
+                <defs>
+                  <clipPath id="calc-plot-clip">
+                    <rect x="54" y="26" width="504" height="360"/>
+                  </clipPath>
+                </defs>
+
+                <g id="calc-geometry">
+                  <g id="calc-grid-layer">
+                    <path class="calc-grid-line"
+                          d="M54 26V386 M138 26V386 M222 26V386 M390 26V386 M474 26V386 M558 26V386
+                             M54 62H558 M54 134H558 M54 206H558 M54 278H558"/>
+                  </g>
+                  <g clip-path="url(#calc-plot-clip)">
+                    <g id="calc-area-layer"></g>
+                    <g id="calc-rectangle-layer"></g>
+                    <g id="calc-strip-layer"></g>
+                    <g id="calc-curve-layer">
+                      <path class="calc-curve-line" d="M54 26 Q306 674 558 26"/>
+                    </g>
+                  </g>
+                  <g id="calc-axis-layer">
+                    <path class="calc-axis-line" d="M54 350H563 M306 386V21"/>
+                  </g>
+                  <g clip-path="url(#calc-plot-clip)">
+                    <g id="calc-guide-layer">
+                      <path class="calc-secant-line" d="M380.667 386 558 44"/>
+                      <path class="calc-rise-run-line" d="M474 206H516V125"/>
+                    </g>
+                    <g id="calc-point-layer">
+                      <circle class="calc-point-mark" cx="474" cy="206" r="5"/>
+                      <path class="calc-point-mark" d="M516 118 523 125 516 132 509 125Z"/>
+                    </g>
+                  </g>
+                </g>
+
+                <g id="calc-tick-labels" class="calc-axis-color">
+                  <text x="572" y="355">x</text>
+                  <text x="318" y="20">f(x)</text>
+                  <text y="376" text-anchor="middle">
+                    <tspan x="54">−3</tspan><tspan x="138">−2</tspan><tspan x="222">−1</tspan>
+                    <tspan x="306">0</tspan><tspan x="390">1</tspan><tspan x="474">2</tspan><tspan x="558">3</tspan>
+                  </text>
+                  <text text-anchor="end">
+                    <tspan x="294" y="67">8</tspan><tspan x="294" y="139">6</tspan>
+                    <tspan x="294" y="211">4</tspan><tspan x="294" y="283">2</tspan>
+                  </text>
+                </g>
+                <g id="calc-plot-labels">
+                  <text class="calc-point-color" x="465" y="225" text-anchor="end">P (2, 4)</text>
+                  <text class="calc-point-color" x="506" y="115" text-anchor="end">Q (2.5, 6.25)</text>
+                  <text class="calc-secant-color" x="479" y="230">h = 0.5</text>
+                  <text class="calc-secant-color" x="529" y="172">2.25</text>
+                </g>
+              </svg>
+            </div>
+
+            <figcaption id="calc-graph-caption">Read slopes from the axis values. The horizontal and vertical scales may differ, so the angle on the screen can be misleading.</figcaption>
+            <ul class="calc-legend" id="calc-tangent-legend" aria-label="Tangent graph legend">
+              <li><span class="calc-key calc-curve-color" aria-hidden="true"></span> Function f</li>
+              <li><span class="calc-key calc-secant-color" aria-hidden="true"></span> Secant through P and Q</li>
+              <li><span class="calc-key calc-key-dashed calc-tangent-color" aria-hidden="true"></span> Tangent on reveal</li>
+              <li><span class="calc-key calc-key-point calc-point-color" aria-hidden="true"></span> P (circle), Q (diamond)</li>
+            </ul>
+            <ul class="calc-legend" id="calc-area-legend" aria-label="Accumulation graph legend" hidden>
+              <li><span class="calc-key calc-curve-color" aria-hidden="true"></span> Function f</li>
+              <li><span class="calc-key calc-key-outline calc-rect-color" aria-hidden="true"></span> Rectangle approximation</li>
+              <li><span class="calc-key calc-key-fill calc-area-color" aria-hidden="true"></span> Region under the curve</li>
+              <li><span class="calc-key calc-key-point calc-point-color" aria-hidden="true"></span> Sample point xₖ*</li>
+              <li><span class="calc-key calc-key-dashed calc-strip-color" aria-hidden="true"></span> Moving-edge strip</li>
+            </ul>
+          </figure>
+
+          <section class="calc-readout-panel" id="calc-tangent-readouts" aria-labelledby="calc-tangent-title">
+            <h4 id="calc-tangent-title">Average rate between P and Q</h4>
+            <dl class="calc-readouts">
+              <div>
+                <dt class="calc-point-color">P at (x₀, f(x₀))</dt>
+                <dd id="calc-point-p">(2, 4)</dd>
+              </div>
+              <div>
+                <dt class="calc-point-color">Q at (x₀ + h, f(x₀ + h))</dt>
+                <dd id="calc-point-q">(2.5, 6.25)</dd>
+              </div>
+              <div>
+                <dt>Run h</dt>
+                <dd id="calc-run">0.5</dd>
+              </div>
+              <div>
+                <dt>Rise f(x₀ + h) − f(x₀)</dt>
+                <dd id="calc-rise">2.25</dd>
+              </div>
+              <div class="calc-wide">
+                <dt class="calc-secant-color">Secant slope · rise ÷ run</dt>
+                <dd id="calc-quotient">2.25 ÷ 0.5 = 4.5</dd>
+              </div>
+            </dl>
+            <div id="calc-slope-exact" class="calc-result" hidden>
+              <h4 class="calc-tangent-color">Instantaneous rate at x₀</h4>
+              <p id="calc-derivative">—</p>
+              <p id="calc-derivative-note" class="lesson-note"></p>
+            </div>
+          </section>
+
+          <section class="calc-readout-panel" id="calc-area-readouts" aria-labelledby="calc-area-title" hidden>
+            <h4 id="calc-area-title">Signed accumulation</h4>
+            <dl class="calc-readouts">
+              <div>
+                <dt>Signed width Δx = (b − a) ÷ n</dt>
+                <dd id="calc-width">0.5</dd>
+              </div>
+              <div>
+                <dt class="calc-point-color">Selected sample xₖ*</dt>
+                <dd id="calc-sample-x">1</dd>
+              </div>
+              <div>
+                <dt>Height f(xₖ*)</dt>
+                <dd id="calc-sample-height">1</dd>
+              </div>
+              <div>
+                <dt>Signed contribution f(xₖ*) × Δx</dt>
+                <dd id="calc-sample-term">1 × 0.5 = 0.5</dd>
+              </div>
+              <div class="calc-wide">
+                <dt class="calc-rect-color">Finite rectangle sum</dt>
+                <dd id="calc-rectangle-sum">1.75</dd>
+              </div>
+            </dl>
+            <p id="calc-area-note" class="lesson-note">Four left-endpoint rectangles on the interval from 0 to 2.</p>
+            <div id="calc-area-exact" class="calc-result" hidden>
+              <h4 class="calc-area-color">Exact integral and approximation error</h4>
+              <dl class="calc-readouts">
+                <div>
+                  <dt>Exact signed integral</dt>
+                  <dd id="calc-integral">8/3</dd>
+                </div>
+                <div>
+                  <dt>Signed error · sum − integral</dt>
+                  <dd id="calc-area-error">−11/12</dd>
+                </div>
+                <div class="calc-wide">
+                  <dt>Total geometric area</dt>
+                  <dd id="calc-geometric-area">8/3</dd>
+                </div>
+              </dl>
+            </div>
+            <div id="calc-strip-readouts" class="calc-result" hidden>
+              <h4 class="calc-strip-color">Moving edge</h4>
+              <dl class="calc-readouts">
+                <div>
+                  <dt>Original and shifted bounds</dt>
+                  <dd id="calc-strip-bounds">2 → 2.1</dd>
+                </div>
+                <div>
+                  <dt>Accumulation A(b)</dt>
+                  <dd id="calc-edge-total">8/3</dd>
+                </div>
+                <div>
+                  <dt>Change ΔA = A(b + δ) − A(b)</dt>
+                  <dd id="calc-strip-change">≈ 0.42033</dd>
+                </div>
+                <div>
+                  <dt>Average height ΔA ÷ δ</dt>
+                  <dd id="calc-strip-rate">≈ 4.20333</dd>
+                </div>
+                <div class="calc-wide">
+                  <dt>Height at the edge f(b) = A′(b)</dt>
+                  <dd id="calc-edge-rate">4</dd>
+                </div>
+              </dl>
+            </div>
+          </section>
+
+          <p class="calc-feedback" id="calc-status" role="status" aria-atomic="true"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="calc-slope-title">
+      <h3 id="calc-slope-title">How fast is the curve changing?</h3>
+      <p>Start on the parabola at x₀ = 2. Predict the slope a line would have if it matched the curve’s local direction there. Try h = +0.5 and h = −0.5. Then repeat with +0.1 and −0.1. The secants turn toward the same slope as Q approaches P.</p>
+      <p>A secant’s slope gives the average rate between two points. When the quotient approaches a single number as the second point approaches the first from either side, that number is the derivative. It gives the instantaneous rate at the base point. For position in meters plotted against time in seconds, the rate is in meters per second.</p>
+      <details>
+        <summary>Derive the slope at x₀ = 2</summary>
+        <div class="calc-disclosure">
+          <p class="calc-equation">[(2 + h)² − 4] / h = (4h + h²) / h = 4 + h, for h ≠ 0.</p>
+          <p>The four steps +0.5, −0.5, +0.1, and −0.1 give slopes 4.5, 3.5, 4.1, and 3.9. Because the difference from 4 equals <var>h</var>, taking a sufficiently small nonzero step makes the quotient as close to 4 as you want. The graph shows a few examples. The algebra establishes the limit for arbitrarily small steps.</p>
+          <p class="calc-equation">f′(x₀) = lim<sub>h → 0</sub> [f(x₀ + h) − f(x₀)] / h, when the limit exists.</p>
+          <p><var>x</var><sub>0</sub> is the fixed input and <var>h</var> is the signed run. The numerator is the signed rise. Cancellation is valid at every nonzero step here, so the quotient never needs to be evaluated at h = 0.</p>
+          <p>Try the absolute-value preset at 0. The quotients are −1 to the left and +1 to the right, however small the steps get. The slopes disagree, so there is no two-sided derivative at the corner.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="calc-integral-title">
+      <h3 id="calc-integral-title">How much has accumulated?</h3>
+      <p>Choose Accumulation and set the parabola from 0 to 2. Predict how a left sample, a right sample, and a midpoint sample will compare with the exact area. Switch between the three rules with four rectangles, then increase the count and compare the readings.</p>
+      <p>Each rectangle uses one sample height to approximate a whole slice. With velocity on the vertical axis and time on the horizontal axis, a velocity in meters per second times an interval in seconds approximates displacement in meters. Negative velocities can cancel positive contributions.</p>
+      <details>
+        <summary>Check the four-rectangle sums and the sign convention</summary>
+        <div class="calc-disclosure">
+          <p class="calc-equation">Δx = (b − a) / n<br>
+            Finite sum = Σ<sub>k=1</sub><sup>n</sup> f(x<sub>k</sub>*) Δx</p>
+          <p><var>a</var> starts the interval, <var>b</var> ends it, and <var>n</var> counts equal subintervals. The marked sample <var>x</var><sub>k</sub>* is an endpoint or the midpoint of subinterval <var>k</var>. Its height times the signed width gives that rectangle’s contribution.</p>
+          <ul class="calc-list">
+            <li><strong>Left samples give 1.75.</strong> On this increasing curve, each left height is the smallest in its slice.</li>
+            <li><strong>Right samples give 3.75.</strong> Each right height is the largest in its slice.</li>
+            <li><strong>Midpoints give 2.625.</strong> Here the upward curvature makes the slice’s average height larger than its midpoint height.</li>
+            <li><strong>The exact integral is 8/3.</strong> Refining the partition makes these sums approach the integral for continuous functions. A particular increase in <var>n</var> need not improve every approximation.</li>
+          </ul>
+          <p>Try signed cancellation with <var>f</var>(<var>x</var>) = <var>x</var> from −1 to 1. The two triangular regions contribute −1/2 and +1/2. Their net integral is 0, and their total geometric area is 1.</p>
+          <p>When a = b, every rectangle has width zero and the integral is zero. Reversing the bounds changes the sign of Δx and the exact integral. The left and right rules still sample the spatially left and right edges, so for the same subdivision their finite sums also change sign.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="calc-ftc-title">
+      <h3 id="calc-ftc-title">The height at the moving edge sets the rate</h3>
+      <p>Choose <strong>Moving edge at 2</strong>. Before changing δ, predict whether the average height across the strip will approach the height at b as the strip gets narrower. Try a small positive change, then a small negative one. The change in accumulation divided by the signed change in the bound measures the strip’s average height.</p>
+      <details>
+        <summary>Connect slopes and integrals through the Fundamental Theorem</summary>
+        <div class="calc-disclosure">
+          <p class="calc-equation">A(x) = ∫<sub>a</sub><sup>x</sup> f(t) dt</p>
+          <p>The starting bound <var>a</var> stays fixed. The running input <var>x</var> sets the end bound. Inside the integral, <var>t</var> is the integration variable that runs along the interval.</p>
+          <p class="calc-equation">A(x + δ) − A(x) = ∫<sub>x</sub><sup>x + δ</sup> f(t) dt</p>
+          <p>Dividing by nonzero δ gives the average height between the two bounds. The signs of the oriented integral and δ account for a step in either direction. By continuity, the heights throughout a sufficiently narrow strip are close to <var>f</var>(<var>x</var>), so their average approaches that height. Taking the limit gives <strong>A′(x) = f(x)</strong>.</p>
+          <p>If <var>F</var> is any antiderivative with <var>F</var>′ = <var>f</var> on the interval, then <var>A</var> and <var>F</var> have the same derivative. Their difference is constant, and A(a) = 0 fixes that constant.</p>
+          <p class="calc-equation">∫<sub>a</sub><sup>b</sup> f(x) dx = F(b) − F(a)</p>
+          <p>For <var>f</var>(<var>t</var>) = <var>t</var>², this gives A(x) = x³/3 from a = 0. At x = 2, <strong>A(2) = 8/3</strong> is the accumulated value, and <strong>A′(2) = 4</strong> is its instantaneous growth per unit advance of the edge. Explain which quantity you would use to estimate the effect of moving that edge by 0.01.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="calc-challenge-title">
+      <h3 id="calc-challenge-title">Check your understanding</h3>
+      <p>Choose one answer at a time. Try the relevant preset if you want to check your reasoning.</p>
+      <form id="calc-challenge">
+        <fieldset class="calc-controls" id="calc-challenge-controls" disabled>
+          <legend>Calculus challenge</legend>
+
+          <div class="calc-question" data-calc-question="slope" role="radiogroup" aria-labelledby="calc-question-slope">
+            <h4 id="calc-question-slope" tabindex="-1">1 of 3 · At x₀ = 2 on the parabola, the secant formula is 4 + h. What do the slopes approach?</h4>
+            <label class="calc-choice"><input type="radio" name="calc-answer-slope" value="right"> 4.5</label>
+            <label class="calc-choice"><input type="radio" name="calc-answer-slope" value="four"> 4</label>
+            <label class="calc-choice"><input type="radio" name="calc-answer-slope" value="left"> 3.5</label>
+          </div>
+
+          <div class="calc-question" data-calc-question="cancel" role="radiogroup" aria-labelledby="calc-question-cancel" hidden>
+            <h4 id="calc-question-cancel" tabindex="-1">2 of 3 · For f(x) = x from −1 to 1, what are the signed integral and total geometric area?</h4>
+            <label class="calc-choice"><input type="radio" name="calc-answer-cancel" value="both-zero"> Both are zero.</label>
+            <label class="calc-choice"><input type="radio" name="calc-answer-cancel" value="both-one"> Both equal 1.</label>
+            <label class="calc-choice"><input type="radio" name="calc-answer-cancel" value="zero-and-one"> The signed integral is zero. The geometric area is 1.</label>
+          </div>
+
+          <div class="calc-question" data-calc-question="edge" role="radiogroup" aria-labelledby="calc-question-edge" hidden>
+            <h4 id="calc-question-edge" tabindex="-1">3 of 3 · Starting at b = 2 on the parabola, about how much accumulation does a small move δ = +0.01 add?</h4>
+            <label class="calc-choice"><input type="radio" name="calc-answer-edge" value="total"> About 8/3.</label>
+            <label class="calc-choice"><input type="radio" name="calc-answer-edge" value="rate"> About 4.</label>
+            <label class="calc-choice"><input type="radio" name="calc-answer-edge" value="change"> About 0.04.</label>
+          </div>
+
+          <div class="calc-actions">
+            <button class="calc-primary" type="submit">Check answer</button>
+            <button id="calc-challenge-next" type="button" hidden>Next question</button>
+            <button id="calc-challenge-restart" type="button" hidden>Try the challenge again</button>
+          </div>
+          <p id="calc-challenge-feedback" class="calc-feedback" role="status"></p>
+        </fieldset>
+      </form>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="calc-quantum-title">
+      <h3 id="calc-quantum-title">Where calculus returns</h3>
+      <p>Derivatives will describe how quantities change with position or time. Integrating a probability density over a position interval will give the probability of a result in that interval. This lesson gives you the tools to distinguish a local rate, a density at a point, and an accumulated value over a range.</p>
+    </section>
+
+    <details class="lesson-panel cb-arcade" id="calculus-arcade">
+      <summary><strong>Calculus Arcade</strong><span>Optional practice</span></summary>
+      <div class="cb-body">
+        <p>Pick a station, try its controls, and open a mission when you’re ready. Each mission has two hints. Progress lasts while this page is open.</p>
+        <p class="lesson-note" id="cb-tolerance">Answer boxes accept whole numbers, decimals, fractions such as −1/4, square roots such as √2, and π, as in π/2. Answers that end as decimals, such as 6.25 or −3, are checked exactly. Answers such as 4/3 or √2 can be typed exactly, or as decimals within 0.002 of the exact value. In the FTC Shortcut, a rectangle sum counts as a confirmation when it is within 0.01 of the exact integral.</p>
+        <div class="cb-toolbar">
+          <label for="cb-station">Station
+            <select id="cb-station" aria-controls="cb-panels" disabled>
+              <optgroup label="Rates">
+                <option value="secant">1 · Secant Sniper</option>
+                <option value="match">2 · Slope Matcher</option>
+                <option value="corner">3 · Corner and Cusp Inspector</option>
+                <option value="forge">4 · Rule Forge</option>
+                <option value="chain">5 · Chain Reaction</option>
+                <option value="motion">6 · Motion Tracker</option>
+              </optgroup>
+              <optgroup label="Accumulation">
+                <option value="race">7 · Rectangle Race</option>
+                <option value="ledger">8 · Signed Area Ledger</option>
+                <option value="travel">9 · Displacement vs Distance</option>
+                <option value="grapher">10 · Accumulation Grapher</option>
+              </optgroup>
+              <optgroup label="Connecting the two">
+                <option value="ftc">11 · FTC Shortcut</option>
+                <option value="designer">12 · Antiderivative Designer</option>
+                <option value="detective">13 · Error Detective</option>
+              </optgroup>
+              <optgroup label="Extras">
+                <option value="wave">14 · Exponential and Wave Preview</option>
+                <option value="surface">15 · 3D Surface Walk</option>
+                <option value="quantum">16 · Quantum Calculus Preview</option>
+              </optgroup>
+            </select>
+          </label>
+          <p id="cb-progress" role="status">0 of 70 missions completed this session.</p>
+          <button id="cb-reset" type="button" disabled>Reset this station</button>
+          <label class="cb-reduced" for="cb-reduced"><input id="cb-reduced" type="checkbox" disabled> Reduced effects</label>
+        </div>
+        <p class="lesson-note" id="cb-status" role="status"></p>
+        <p><a href="#calc-lab-title">Return to the Calculus Lab</a></p>
+        <noscript><p class="lesson-note">JavaScript runs the arcade diagrams, controls, and mission checks.</p></noscript>
+
+        <div id="cb-panels">
+          <section class="cb-station" data-cb-station="secant" data-cb-accent="blue" aria-labelledby="cb-secant-title">
+            <h4 id="cb-secant-title">Secant Sniper</h4>
+            <p>Pick a curve and a base point x₀. Each shot fires a secant from P = (x₀, f(x₀)) to Q = (x₀ + h, f(x₀ + h)) and logs its slope. Shrink h from both sides to pin down the slope at P.</p>
+            <div data-cb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="cb-sr-only">Secant Sniper controls</legend>
+              <div class="cb-fields"><label>Curve f <select name="curve"><option value="cube" selected>f(x) = x³</option><option value="recip">f(x) = 1/x</option><option value="root">f(x) = √x</option></select></label><label>Base point x₀ <select name="x0"><option value="1" selected>1</option><option value="2">2</option><option value="4">4</option></select></label><label>Signed step h <select name="h"><option value="-1">−1</option><option value="-0.5">−0.5</option><option value="-0.1">−0.1</option><option value="-0.01">−0.01</option><option value="-0.001">−0.001</option><option value="0.001">+0.001</option><option value="0.01">+0.01</option><option value="0.1">+0.1</option><option value="0.5" selected>+0.5</option><option value="1">+1</option></select></label></div><div class="cb-button-row"><button class="calc-primary" type="button" data-cb-action="fire">Fire secant</button><button type="button" data-cb-action="clear">Clear the log</button></div><p class="cb-readout" data-cb-read="state" aria-live="polite">P (1, 1) · Q (1.5, 3.375) · rise 2.375 · run 0.5 · slope 4.75</p><ol class="cb-log" data-cb-log aria-label="Logged secant shots"></ol>
+              <div class="cb-missions">
+          <details class="cb-mission" data-cb-mission="secant-cube">
+            <summary>Pin down the cubic’s slope at 1<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>On f(x) = x³ at x₀ = 1, log at least one shot with a positive h and one with a negative h, each with |h| ≤ 0.1. Then enter the number both sides approach.</p>
+            <div class="cb-fields"><label>f′(1) <input class="cb-answer" type="text" name="cube-ans" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="secant-recip">
+            <summary>Slope of 1/x at 2<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>On f(x) = 1/x at x₀ = 2, log shots from both sides with |h| ≤ 0.1. Enter f′(2).</p>
+            <div class="cb-fields"><label>f′(2) <input class="cb-answer" type="text" name="recip-ans" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="secant-root">
+            <summary>Slope of √x at 4<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>On f(x) = √x at x₀ = 4, log shots from both sides with |h| ≤ 0.1. Enter f′(4).</p>
+            <div class="cb-fields"><label>f′(4) <input class="cb-answer" type="text" name="root-ans" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="secant-average">
+            <summary>Average the two sides<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>On f(x) = x³ at x₀ = 1, log the shots h = +0.1 and h = −0.1. Enter the average of their two slopes. Compare it with each one-sided slope.</p>
+            <div class="cb-fields"><label>Average slope <input class="cb-answer" type="text" name="average-ans" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+              </div>
+            </fieldset>
+            <details class="cb-math">
+              <summary>Show the math</summary>
+              <p>The secant slope is [f(x₀ + h) − f(x₀)] / h for h ≠ 0. For x³ at 1 it simplifies to 3 + 3h + h², so it approaches 3 from both sides. For 1/x it is −1 / (x₀(x₀ + h)), and for √x it is 1 / (√(x₀ + h) + √x₀). Averaging the slopes for +h and −h cancels the 3h term, which is why the average lands much closer to 3 than either one-sided slope.</p>
+            </details>
+          </section>
+          <section class="cb-station" data-cb-station="match" data-cb-accent="green" aria-labelledby="cb-match-title" hidden>
+            <h4 id="cb-match-title">Slope Matcher</h4>
+            <p>The left panel shows a given graph. Panels A to D are candidates. Read the given graph’s slope: flat stretches give zero, rising stretches give positive values, and the steepest stretch gives the largest size. Some cards run in reverse, so you pick f from a graph of f′.</p>
+            <div data-cb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="cb-sr-only">Slope Matcher controls</legend>
+              <p class="cb-readout" data-cb-read="state" aria-live="polite">Open a mission card to load its graphs.</p>
+              <div class="cb-missions">
+          <details class="cb-mission" data-cb-mission="match-line">
+            <summary>Derivative of a shifted parabola<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>The given graph is f(x) = (x − 1)² − 2. Which candidate is the graph of f′?</p>
+            <div class="cb-fields"><label>Graph of f′ <select name="line-pick" required><option value="">Choose</option><option value="A">Graph A</option><option value="B">Graph B</option><option value="C">Graph C</option><option value="D">Graph D</option></select></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="match-cubic">
+            <summary>Derivative of a two-hump cubic<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>The given graph is f(x) = x³ − 3x. Which candidate is the graph of f′?</p>
+            <div class="cb-fields"><label>Graph of f′ <select name="cubic-pick" required><option value="">Choose</option><option value="A">Graph A</option><option value="B">Graph B</option><option value="C">Graph C</option><option value="D">Graph D</option></select></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="match-reverse">
+            <summary>Work backward from f′<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Now the given graph is f′(x) = −2x. Which candidate could be f?</p>
+            <div class="cb-fields"><label>Graph of f <select name="reverse-pick" required><option value="">Choose</option><option value="A">Graph A</option><option value="B">Graph B</option><option value="C">Graph C</option><option value="D">Graph D</option></select></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="match-family">
+            <summary>Every f with the same slopes<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>The given graph is f′(x) = x² − 1. Select every candidate whose derivative is this graph.</p>
+            <div class="cb-fields" role="group" aria-label="Candidates whose derivative matches"><label class="cb-check-row"><input type="checkbox" name="family-A"> Graph A</label><label class="cb-check-row"><input type="checkbox" name="family-B"> Graph B</label><label class="cb-check-row"><input type="checkbox" name="family-C"> Graph C</label><label class="cb-check-row"><input type="checkbox" name="family-D"> Graph D</label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+              </div>
+            </fieldset>
+            <details class="cb-math">
+              <summary>Show the math</summary>
+              <p>f′(x) is the slope of f at x. Where f has a horizontal tangent, f′ crosses zero. Where f rises, f′ is positive, and where f falls, f′ is negative. Adding a constant to f shifts its graph up or down without changing any slope. That is why several functions share one derivative.</p>
+            </details>
+          </section>
+          <section class="cb-station" data-cb-station="corner" data-cb-accent="red" aria-labelledby="cb-corner-title" hidden>
+            <h4 id="cb-corner-title">Corner and Cusp Inspector</h4>
+            <p>Each card loads a function with a suspicious point. The inspector fires a left secant (h &lt; 0) and a right secant (h &gt; 0) of the same size. Compare the two one-sided slopes as |h| shrinks, then classify the point.</p>
+            <div data-cb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="cb-sr-only">Corner and Cusp Inspector controls</legend>
+              <div class="cb-fields"><label>Step size |h| <select name="size"><option value="1">1</option><option value="0.5" selected>0.5</option><option value="0.1">0.1</option><option value="0.01">0.01</option><option value="0.001">0.001</option></select></label></div><p class="cb-readout" data-cb-read="state" aria-live="polite">Open a mission card to load its function.</p>
+              <div class="cb-missions">
+          <details class="cb-mission" data-cb-mission="corner-kink">
+            <summary>A kinked ramp<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>f(x) = |x − 1| + x at x₀ = 1. Enter the limiting left and right slopes, then classify the point.</p>
+            <div class="cb-fields"><label>Left slope <input class="cb-answer" type="text" name="kink-left" autocomplete="off" spellcheck="false" required></label><label>Right slope <input class="cb-answer" type="text" name="kink-right" autocomplete="off" spellcheck="false" required></label><label>Classification <select name="kink-type" required><option value="">Choose</option><option value="smooth">Differentiable</option><option value="corner">Corner</option><option value="jump">Jump</option><option value="vertical">Vertical tangent</option></select></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="corner-join">
+            <summary>A smooth join<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>f(x) = x² for x &lt; 1 and 2x − 1 for x ≥ 1, at x₀ = 1. Enter both limiting slopes and classify the point.</p>
+            <div class="cb-fields"><label>Left slope <input class="cb-answer" type="text" name="join-left" autocomplete="off" spellcheck="false" required></label><label>Right slope <input class="cb-answer" type="text" name="join-right" autocomplete="off" spellcheck="false" required></label><label>Classification <select name="join-type" required><option value="">Choose</option><option value="smooth">Differentiable</option><option value="corner">Corner</option><option value="jump">Jump</option><option value="vertical">Vertical tangent</option></select></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="corner-jump">
+            <summary>A broken graph<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>f(x) = x for x &lt; 1 and x + 1 for x ≥ 1, at x₀ = 1. Watch the left slope as |h| shrinks and classify the point.</p>
+            <div class="cb-fields"><label>Classification <select name="jump-type" required><option value="">Choose</option><option value="smooth">Differentiable</option><option value="corner">Corner</option><option value="jump">Jump</option><option value="vertical">Vertical tangent</option></select></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="corner-root">
+            <summary>A cube root at 0<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>f(x) = ∛x at x₀ = 0. Watch both slopes as |h| shrinks and classify the point.</p>
+            <div class="cb-fields"><label>Classification <select name="root-type" required><option value="">Choose</option><option value="smooth">Differentiable</option><option value="corner">Corner</option><option value="jump">Jump</option><option value="vertical">Vertical tangent</option></select></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="corner-fold">
+            <summary>Looks sharp, but is it?<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>f(x) = x|x| at x₀ = 0. The formula contains an absolute value. Classify the point and enter f′(0) if it exists.</p>
+            <div class="cb-fields"><label>Classification <select name="fold-type" required><option value="">Choose</option><option value="smooth">Differentiable</option><option value="corner">Corner</option><option value="jump">Jump</option><option value="vertical">Vertical tangent</option></select></label><label>f′(0), if it exists <input class="cb-answer" type="text" name="fold-slope" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+              </div>
+            </fieldset>
+            <details class="cb-math">
+              <summary>Show the math</summary>
+              <p>A derivative exists when the left quotient [f(x₀ + h) − f(x₀)] / h for h &lt; 0 and the right quotient for h &gt; 0 approach the same finite number. A corner has two different finite limits. A jump breaks the graph, so one side’s quotient grows without bound. A vertical tangent sends both quotients toward +∞. For x|x|, the quotient is |h|, which approaches 0 from both sides, so f′(0) = 0 even though the formula contains |x|.</p>
+            </details>
+          </section>
+          <section class="cb-station" data-cb-station="forge" data-cb-accent="orange" aria-labelledby="cb-forge-title" hidden>
+            <h4 id="cb-forge-title">Rule Forge</h4>
+            <p>Build f(x) = a·xⁿ + b·xᵐ + k. Predict f′ with the power, constant-multiple and sum rules. Then test your prediction against a secant with h = 0.001 at a point x₀ you choose.</p>
+            <div data-cb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="cb-sr-only">Rule Forge controls</legend>
+              <div class="cb-matrix" role="group" aria-label="Your function f"><label>Coefficient a <input type="number" name="a" min="-9" max="9" step="0.5" value="1" required></label><label>Power n <select name="n"><option value="0">0</option><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></label><label>Coefficient b <input type="number" name="b" min="-9" max="9" step="0.5" value="0" required></label><label>Power m <select name="m"><option value="0">0</option><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></label><label>Constant k <input type="number" name="k" min="-9" max="9" step="0.5" value="0" required></label></div><div class="cb-matrix" role="group" aria-label="Your predicted derivative"><label>Predicted coefficient 1 <input class="cb-answer" type="text" name="p" autocomplete="off" spellcheck="false" value="0" required></label><label>Predicted power 1 <select name="pp"><option value="0">0</option><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label><label>Predicted coefficient 2 <input class="cb-answer" type="text" name="q" autocomplete="off" spellcheck="false" value="0" required></label><label>Predicted power 2 <select name="qp"><option value="0" selected>0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label></div><div class="cb-fields"><label>Test point x₀ <input type="number" name="x0" min="-2" max="2" step="0.25" value="1.5" required></label></div><div class="cb-button-row"><button class="calc-primary" type="button" data-cb-action="test">Test with secant</button></div><p class="cb-readout" data-cb-read="state" aria-live="polite">f(x) = x² · prediction f′(x) = 0</p><p class="cb-readout" data-cb-read="test">No secant test yet.</p>
+              <div class="cb-missions">
+          <details class="cb-mission" data-cb-mission="forge-power">
+            <summary>Power rule<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Build f(x) = x⁴. Predict f′ and run a secant test.</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="forge-multiple">
+            <summary>Constant multiple<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Build f(x) = 5x³. Predict f′ and run a secant test.</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="forge-sum">
+            <summary>Sum rule and a vanishing constant<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Build f(x) = 2x³ − 4x + 7. Predict f′ and run a secant test.</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="forge-free">
+            <summary>Forge your own<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Build any f with two nonzero terms of different positive powers. Predict f′ and run a secant test at some x₀ ≠ 0.</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+              </div>
+            </fieldset>
+            <details class="cb-math">
+              <summary>Show the math</summary>
+              <p>For a whole-number power, (x + h)ⁿ = xⁿ + n·xⁿ⁻¹·h + (terms with h² or higher). Subtract xⁿ and divide by h. Every remaining term except n·xⁿ⁻¹ still contains h, so the quotient approaches n·xⁿ⁻¹. A constant multiple scales every rise by the same factor, and a sum adds the rises term by term. A constant adds nothing to any rise, so its derivative is 0. The secant test with h = 0.001 should agree with the rule to about two or three decimal places.</p>
+            </details>
+          </section>
+          <section class="cb-station" data-cb-station="chain" data-cb-accent="yellow" aria-labelledby="cb-chain-title" hidden>
+            <h4 id="cb-chain-title">Chain Reaction</h4>
+            <p>Feed the outer function f a rescaled input: g(x) = f(kx + s). The inner part kx + s changes k times as fast as x, so g changes k times as fast as f does at the matching input u = kx₀ + s.</p>
+            <div data-cb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="cb-sr-only">Chain Reaction controls</legend>
+              <div class="cb-fields"><label>Outer function f <select name="outer"><option value="sq" selected>f(u) = u²</option><option value="cube">f(u) = u³</option></select></label><label>Inner multiplier k <output data-cb-for="k">1</output><input type="range" name="k" min="-3" max="3" step="0.5" value="1"></label><label>Inner shift s <input type="number" name="s" min="-3" max="3" step="0.5" value="0" required></label><label>Point x₀ <input type="number" name="x0" min="-2" max="2" step="0.5" value="1" required></label></div><p class="cb-readout" data-cb-read="state" aria-live="polite">g(x) = f(1x + 0) · u = 1 · f′(u) = 2 · g′(1) = 1 × 2 = 2</p>
+              <div class="cb-missions">
+          <details class="cb-mission" data-cb-mission="chain-double">
+            <summary>Twice as fast<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Let f(u) = u² and g(x) = f(2x). Enter g′(1).</p>
+            <div class="cb-fields"><label>g′(1) <input class="cb-answer" type="text" name="double-ans" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="chain-half">
+            <summary>Slow motion<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Set the controls so g(x) = f(kx) runs through f’s values half as fast as f does, with no shift.</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="chain-reverse">
+            <summary>Run it backward<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Let f(u) = u³ and g(x) = f(−x). Enter g′(1).</p>
+            <div class="cb-fields"><label>g′(1) <input class="cb-answer" type="text" name="reverse-ans" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="chain-combo">
+            <summary>Stretch and shift<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Let f(u) = u² and g(x) = f(3x + 1). Enter g′(1).</p>
+            <div class="cb-fields"><label>g′(1) <input class="cb-answer" type="text" name="combo-ans" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+              </div>
+            </fieldset>
+            <details class="cb-math">
+              <summary>Show the math</summary>
+              <p>g′(x) = k · f′(kx + s). The factor k is the rate of the inner function, and f′ is evaluated at the inner value u = kx + s, not at x. A shift s moves where f is sampled but adds no extra factor. A negative k runs the input backward, so the rate changes sign.</p>
+            </details>
+          </section>
+          <section class="cb-station" data-cb-station="motion" data-cb-accent="violet" aria-labelledby="cb-motion-title" hidden>
+            <h4 id="cb-motion-title">Motion Tracker</h4>
+            <p>A cart moves along a track with position s(t) = t³ − 6t² + 9t meters at time t seconds. Scrub the time. The tangent on the position graph has slope v(t), and the tangent on the velocity graph has slope a(t).</p>
+            <div data-cb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="cb-sr-only">Motion Tracker controls</legend>
+              <div class="cb-fields"><label>Time t (s) <output data-cb-for="t">0</output><input type="range" name="t" min="0" max="4" step="0.25" value="0"></label></div><div class="cb-button-row"><button class="calc-primary" type="button" data-cb-action="play">Play</button><button type="button" data-cb-action="pause">Pause</button></div><p class="cb-readout" data-cb-read="state" aria-live="polite">t = 0 s · s = 0 m</p>
+              <div class="cb-missions">
+          <details class="cb-mission" data-cb-mission="motion-velocity">
+            <summary>Read a velocity<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Enter the velocity at t = 2 s, in m/s.</p>
+            <div class="cb-fields"><label>v(2) <input class="cb-answer" type="text" name="velocity-ans" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="motion-rest">
+            <summary>Find the rest stops<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>The cart is momentarily at rest when v(t) = 0. Enter both times, in either order.</p>
+            <div class="cb-fields"><label>First time <input class="cb-answer" type="text" name="rest-one" autocomplete="off" spellcheck="false" required></label><label>Second time <input class="cb-answer" type="text" name="rest-two" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="motion-accel">
+            <summary>Read an acceleration<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Enter the acceleration at t = 3 s, in m/s².</p>
+            <div class="cb-fields"><label>a(3) <input class="cb-answer" type="text" name="accel-ans" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="motion-speed">
+            <summary>Speeding up or slowing down?<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>At t = 2.5 s, is the cart speeding up or slowing down?</p>
+            <div class="cb-fields"><label>At t = 2.5 s the cart is <select name="speed-pick" required><option value="">Choose</option><option value="up">Speeding up</option><option value="down">Slowing down</option><option value="steady">Moving at constant speed</option></select></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+              </div>
+            </fieldset>
+            <details class="cb-math">
+              <summary>Show the math</summary>
+              <p>v(t) = s′(t) = 3t² − 12t + 9 = 3(t − 1)(t − 3), and a(t) = v′(t) = 6t − 12. The cart stops at t = 1 and t = 3 and moves backward between them. Speed |v| grows when v and a have the same sign and shrinks when they have opposite signs.</p>
+            </details>
+          </section>
+          <section class="cb-station" data-cb-station="race" data-cb-accent="blue" aria-labelledby="cb-race-title" hidden>
+            <h4 id="cb-race-title">Rectangle Race</h4>
+            <p>Four sums race toward the exact integral: left endpoints, right endpoints, midpoints and trapezoids. Before you start the race, predict which sums run high or low and which one wins. The bars on the right show each sum’s error size.</p>
+            <div data-cb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="cb-sr-only">Rectangle Race controls</legend>
+              <div class="cb-fields"><label>Function and interval <select name="fn"><option value="fall" selected>4 − x² on [0, 2]</option><option value="cube">x³ on [0, 2]</option><option value="root">√x on [0, 4]</option><option value="line">2x + 1 on [0, 3]</option></select></label><label>Subintervals n <output data-cb-for="n">4</output><input type="range" name="n" min="1" max="32" step="1" value="4"></label><label>Draw the shapes for <select name="show"><option value="left" selected>Left endpoint</option><option value="right">Right endpoint</option><option value="mid">Midpoint</option><option value="trap">Trapezoid</option></select></label></div><div class="cb-button-row"><button class="calc-primary" type="button" data-cb-action="race">Run the race</button><button type="button" data-cb-action="stop">Stop</button></div><p class="cb-readout" data-cb-read="state" aria-live="polite">n = 4 · left 6.25 · right 4.25 · midpoint 5.375 · trapezoid 5.25 · exact 16/3</p>
+              <div class="cb-missions">
+          <details class="cb-mission" data-cb-mission="race-over">
+            <summary>Falling curve, left sum<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Use 4 − x² on [0, 2] with n = 4. Does the left sum land over or under the exact integral? Enter the left sum too.</p>
+            <div class="cb-fields"><label>The left sum is <select name="over-dir" required><option value="">Choose</option><option value="over">Over the exact value</option><option value="under">Under the exact value</option></select></label><label>Left sum <input class="cb-answer" type="text" name="over-val" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="race-exact">
+            <summary>A tie at the finish<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Use 2x + 1 on [0, 3]. Select every rule that gives the exact integral for every n.</p>
+            <div class="cb-fields" role="group" aria-label="Rules that are exact"><label class="cb-check-row"><input type="checkbox" name="exact-left"> Left</label><label class="cb-check-row"><input type="checkbox" name="exact-right"> Right</label><label class="cb-check-row"><input type="checkbox" name="exact-mid"> Midpoint</label><label class="cb-check-row"><input type="checkbox" name="exact-trap"> Trapezoid</label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="race-curve">
+            <summary>Curvature decides<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Use x³ on [0, 2], which curves upward there. Predict where the midpoint and trapezoid sums land.</p>
+            <div class="cb-fields"><label>Midpoint sum <select name="curve-mid" required><option value="">Choose</option><option value="below">Below the exact value</option><option value="above">Above the exact value</option></select></label><label>Trapezoid sum <select name="curve-trap" required><option value="">Choose</option><option value="below">Below the exact value</option><option value="above">Above the exact value</option></select></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="race-winner">
+            <summary>Call the winner<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Use √x on [0, 4] with n = 8. Which rule has the smallest error?</p>
+            <div class="cb-fields"><label>Winner <select name="win-pick" required><option value="">Choose</option><option value="left">Left endpoint</option><option value="right">Right endpoint</option><option value="mid">Midpoint</option><option value="trap">Trapezoid</option></select></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+              </div>
+            </fieldset>
+            <details class="cb-math">
+              <summary>Show the math</summary>
+              <p>With Δx = (b − a) / n, the left sum uses f(xₖ₋₁)Δx, the right sum f(xₖ)Δx, the midpoint sum f((xₖ₋₁ + xₖ)/2)Δx, and the trapezoid sum the average of the two endpoint heights times Δx. On a falling curve, left heights are the tallest in each slice, so the left sum runs high. Lines are integrated exactly by the midpoint and trapezoid rules. On an upward-curving graph, the midpoint sum runs low and the trapezoid sum runs high, with the midpoint error about half the size.</p>
+            </details>
+          </section>
+          <section class="cb-station" data-cb-station="ledger" data-cb-accent="green" aria-labelledby="cb-ledger-title" hidden>
+            <h4 id="cb-ledger-title">Signed Area Ledger</h4>
+            <p>Build f(x) = mx + c and choose the bounds a and b. The ledger records area above the axis as positive and area below as negative, and it flips both when the interval runs backward (a &gt; b).</p>
+            <div data-cb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="cb-sr-only">Signed Area Ledger controls</legend>
+              <div class="cb-fields"><label>Slope m <input type="number" name="m" min="-3" max="3" step="0.5" value="1" required></label><label>Intercept c <input type="number" name="c" min="-4" max="4" step="0.5" value="-1" required></label><label>Start bound a <input type="number" name="a" min="-4" max="4" step="0.5" value="0" required></label><label>End bound b <input type="number" name="b" min="-4" max="4" step="0.5" value="3" required></label></div><p class="cb-readout" data-cb-read="state" aria-live="polite">∫ from 0 to 3 of (x − 1) dx = 1.5 · area above 2 · area below 0.5 · total area 2.5</p>
+              <div class="cb-missions">
+          <details class="cb-mission" data-cb-mission="ledger-zero">
+            <summary>Zero net, real area<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Make the net integral 0 while the total area is at least 1. Use something other than f(x) = x on [−1, 1].</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="ledger-neg">
+            <summary>A debit of 6<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>With a &lt; b, make the net integral −6.</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="ledger-rev">
+            <summary>Backward credit<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>With a &gt; b, make the net integral +4.</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="ledger-split">
+            <summary>Net 6, total 10<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Make the net integral 6 and the total area 10.</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+              </div>
+            </fieldset>
+            <details class="cb-math">
+              <summary>Show the math</summary>
+              <p>∫ₐᵇ (mx + c) dx = m(b² − a²)/2 + c(b − a). The total area adds the sizes of the pieces above and below the axis, so it is never negative. Net and total agree only when f keeps one sign on the interval. Swapping the bounds multiplies the net integral by −1, because every Δx changes sign, but the total area stays the same.</p>
+            </details>
+          </section>
+          <section class="cb-station" data-cb-station="travel" data-cb-accent="orange" aria-labelledby="cb-travel-title" hidden>
+            <h4 id="cb-travel-title">Displacement vs Distance</h4>
+            <p>Each card gives a velocity v(t) in m/s. Drive the cart and watch two counters: displacement, the signed integral of v, and distance, the integral of |v| that an odometer would show.</p>
+            <div data-cb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="cb-sr-only">Displacement vs Distance controls</legend>
+              <div class="cb-fields"><label>Time t (s) <output data-cb-for="t">0</output><input type="range" name="t" min="0" max="4" step="0.25" value="0"></label></div><div class="cb-button-row"><button class="calc-primary" type="button" data-cb-action="drive">Drive</button><button type="button" data-cb-action="pause">Pause</button></div><p class="cb-readout" data-cb-read="state" aria-live="polite">Open a mission card to load its velocity.</p>
+              <div class="cb-missions">
+          <details class="cb-mission" data-cb-mission="travel-flip">
+            <summary>Out and back<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>v(t) = 2 − t on [0, 4]. Enter the displacement and the distance traveled.</p>
+            <div class="cb-fields"><label>Displacement (m) <input class="cb-answer" type="text" name="flip-disp" autocomplete="off" spellcheck="false" required></label><label>Distance (m) <input class="cb-answer" type="text" name="flip-dist" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="travel-wave">
+            <summary>Forward, back, forward<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>v(t) = (t − 1)(t − 3) on [0, 4]. Enter the displacement and the distance traveled.</p>
+            <div class="cb-fields"><label>Displacement (m) <input class="cb-answer" type="text" name="wave-disp" autocomplete="off" spellcheck="false" required></label><label>Distance (m) <input class="cb-answer" type="text" name="wave-dist" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="travel-steps">
+            <summary>Three legs<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>v = 3 on [0, 2), −1 on [2, 5) and 2 on [5, 6]. The cart starts at s(0) = −2 m. Enter the displacement, the distance and the final position.</p>
+            <div class="cb-fields"><label>Displacement (m) <input class="cb-answer" type="text" name="steps-disp" autocomplete="off" spellcheck="false" required></label><label>Distance (m) <input class="cb-answer" type="text" name="steps-dist" autocomplete="off" spellcheck="false" required></label><label>Final position s(6) (m) <input class="cb-answer" type="text" name="steps-final" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="travel-turn">
+            <summary>The turnaround<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>v(t) = 6 − 2t on [0, 5]. When does the cart turn around, and how far does it travel in total?</p>
+            <div class="cb-fields"><label>Turnaround time (s) <input class="cb-answer" type="text" name="turn-time" autocomplete="off" spellcheck="false" required></label><label>Distance (m) <input class="cb-answer" type="text" name="turn-dist" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+              </div>
+            </fieldset>
+            <details class="cb-math">
+              <summary>Show the math</summary>
+              <p>Displacement = ∫ v(t) dt counts backward motion as negative. Distance = ∫ |v(t)| dt counts every meter. To compute distance, split the interval where v changes sign and add the sizes of the pieces. Final position = starting position + displacement.</p>
+            </details>
+          </section>
+          <section class="cb-station" data-cb-station="grapher" data-cb-accent="yellow" aria-labelledby="cb-grapher-title" hidden>
+            <h4 id="cb-grapher-title">Accumulation Grapher</h4>
+            <p>The top panel shows f. Build A(x) = ∫ₐˣ f(t) dt by setting its value at x = 0, 1, 2, 3 and 4. A rises where f &gt; 0, falls where f &lt; 0, and peaks or dips where f changes sign. Move the edge to shade the accumulated area.</p>
+            <div data-cb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="cb-sr-only">Accumulation Grapher controls</legend>
+              <div class="cb-matrix" role="group" aria-label="Your values of A"><label>A(0) <input type="number" name="A0" min="-4" max="4" step="0.5" value="0" required></label><label>A(1) <input type="number" name="A1" min="-4" max="4" step="0.5" value="0" required></label><label>A(2) <input type="number" name="A2" min="-4" max="4" step="0.5" value="0" required></label><label>A(3) <input type="number" name="A3" min="-4" max="4" step="0.5" value="0" required></label><label>A(4) <input type="number" name="A4" min="-4" max="4" step="0.5" value="0" required></label></div><div class="cb-fields"><label>Moving edge x <output data-cb-for="edge">0</output><input type="range" name="edge" min="0" max="4" step="0.25" value="0"></label></div><p class="cb-readout" data-cb-read="state" aria-live="polite">Open a mission card to load its function.</p>
+              <div class="cb-missions">
+          <details class="cb-mission" data-cb-mission="grapher-ramp">
+            <summary>A falling rate<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>f(t) = 2 − t with a = 0. Set A(0) to A(4).</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="grapher-step">
+            <summary>A rate that switches<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>f = 1 on [0, 2) and −2 on [2, 4], with a = 0. Set A(0) to A(4).</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="grapher-peaks">
+            <summary>Find the turning points<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>f(t) = t² − 4t + 3 with a = 0. Where does A have its local maximum and local minimum inside (0, 4)?</p>
+            <div class="cb-fields"><label>Local maximum at x = <select name="peaks-max" required><option value="">Choose</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label><label>Local minimum at x = <select name="peaks-min" required><option value="">Choose</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="grapher-start">
+            <summary>Start in the middle<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>f(t) = 2 − t again, but now a = 2. Set A(0) to A(4).</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+              </div>
+            </fieldset>
+            <details class="cb-math">
+              <summary>Show the math</summary>
+              <p>A(x) = ∫ₐˣ f(t) dt, so A(a) = 0 and A′(x) = f(x). Over a step from x to x + 1, A changes by the signed area under f on that step. When x &lt; a, the integral runs backward, so positive f gives negative A there. A local maximum of A occurs where f changes from positive to negative, and a local minimum where f changes from negative to positive.</p>
+            </details>
+          </section>
+          <section class="cb-station" data-cb-station="ftc" data-cb-accent="red" aria-labelledby="cb-ftc-title" hidden>
+            <h4 id="cb-ftc-title">FTC Shortcut</h4>
+            <p>Build an antiderivative F term by term, including any constant C. Evaluate F(b) − F(a) and confirm it with a rectangle sum. The bottom panel draws your F with a bracket from F(a) to F(b).</p>
+            <div data-cb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="cb-sr-only">FTC Shortcut controls</legend>
+              <div class="cb-matrix" role="group" aria-label="Your antiderivative F"><label>Coefficient 1 <input class="cb-answer" type="text" name="c1" autocomplete="off" spellcheck="false" value="0" required></label><label>Power 1 <select name="p1"><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label><label>Coefficient 2 <input class="cb-answer" type="text" name="c2" autocomplete="off" spellcheck="false" value="0" required></label><label>Power 2 <select name="p2"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option></select></label><label>Coefficient 3 <input class="cb-answer" type="text" name="c3" autocomplete="off" spellcheck="false" value="0" required></label><label>Power 3 <select name="p3"><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option></select></label><label>Constant C <input class="cb-answer" type="text" name="cc" autocomplete="off" spellcheck="false" value="0" required></label></div><div class="cb-fields"><label>Rectangle rule <select name="rule"><option value="left">Left endpoint</option><option value="right">Right endpoint</option><option value="mid" selected>Midpoint</option></select></label><label>Rectangles n <output data-cb-for="n">4</output><input type="range" name="n" min="1" max="64" step="1" value="4"></label></div><p class="cb-readout" data-cb-read="state" aria-live="polite">Open a mission card to load its integral.</p>
+              <div class="cb-missions">
+          <details class="cb-mission" data-cb-mission="ftc-cube">
+            <summary>∫ from 1 to 3 of 3x² dx<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Build F with F′(x) = 3x², then enter F(3) − F(1).</p>
+            <div class="cb-fields"><label>F(3) − F(1) <input class="cb-answer" type="text" name="cube-val" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="ftc-line">
+            <summary>∫ from 0 to 2 of (4x − 1) dx<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Build F with F′(x) = 4x − 1, then enter F(2) − F(0).</p>
+            <div class="cb-fields"><label>F(2) − F(0) <input class="cb-answer" type="text" name="line-val" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="ftc-cross">
+            <summary>∫ from −1 to 2 of x² dx<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Build F with F′(x) = x², then enter F(2) − F(−1).</p>
+            <div class="cb-fields"><label>F(2) − F(−1) <input class="cb-answer" type="text" name="cross-val" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="ftc-plus">
+            <summary>The constant cancels<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>For ∫ from 1 to 4 of 2x dx, build F with a nonzero constant C, then enter F(4) − F(1).</p>
+            <div class="cb-fields"><label>F(4) − F(1) <input class="cb-answer" type="text" name="plus-val" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="ftc-sum">
+            <summary>Confirm with rectangles<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>For ∫ from 0 to 2 of x³ dx, choose a rule and n so the rectangle sum lands within 0.01 of F(2) − F(0).</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+              </div>
+            </fieldset>
+            <details class="cb-math">
+              <summary>Show the math</summary>
+              <p>If F′ = f on [a, b], then ∫ₐᵇ f(x) dx = F(b) − F(a). The accumulation A(x) = ∫ₐˣ f(t) dt and F have the same derivative, so they differ by a constant. That constant cancels in F(b) − F(a), which is why any C works. Rectangle sums approach the same number as n grows.</p>
+            </details>
+          </section>
+          <section class="cb-station" data-cb-station="designer" data-cb-accent="violet" aria-labelledby="cb-designer-title" hidden>
+            <h4 id="cb-designer-title">Antiderivative Designer</h4>
+            <p>Here you work the problem the other way round. Each card sets targets for an accumulation or a derivative, and you design g(x) = px² + qx + r to meet them. Most cards have many answers. The checker tests the function you actually build.</p>
+            <div data-cb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="cb-sr-only">Antiderivative Designer controls</legend>
+              <div class="cb-fields"><label>Treat g as <select name="role"><option value="f" selected>f, a rate to accumulate</option><option value="F">F, an antiderivative</option></select></label></div><div class="cb-matrix" role="group" aria-label="Your function g"><label>p · x² coefficient <input type="number" name="p" min="-8" max="8" step="0.25" value="0" required></label><label>q · x coefficient <input type="number" name="q" min="-8" max="8" step="0.25" value="0" required></label><label>r · constant <input type="number" name="r" min="-8" max="8" step="0.25" value="1" required></label></div><p class="cb-readout" data-cb-read="state" aria-live="polite">g(x) = 1</p>
+              <div class="cb-missions">
+          <details class="cb-mission" data-cb-mission="designer-zero">
+            <summary>Accumulate to zero<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Treat g as f. Design f, not identically zero, with ∫ from 0 to 3 of f(x) dx = 0.</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="designer-split">
+            <summary>Up 4, then down 4<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Treat g as f. Design f with ∫ from 0 to 2 of f = 4 and ∫ from 2 to 4 of f = −4.</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="designer-pos">
+            <summary>Never negative, total 8<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Treat g as f. Design a nonconstant f with f(x) ≥ 0 on [0, 4] and ∫ from 0 to 4 of f = 8.</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="designer-match">
+            <summary>Match a derivative<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Treat g as F. Design F whose derivative is the dashed line f′(x) = 2x − 3.</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="designer-anchor">
+            <summary>Match and anchor<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Treat g as F. Design F with F′(x) = 2x − 3 and F(4) = 0.</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+              </div>
+            </fieldset>
+            <details class="cb-math">
+              <summary>Show the math</summary>
+              <p>For f(x) = px² + qx + r, ∫ₐᵇ f = p(b³ − a³)/3 + q(b² − a²)/2 + r(b − a). Each target is one linear equation in p, q and r, so one or two targets leave free choices. For F(x) = px² + qx + r, F′(x) = 2px + q. Matching a derivative fixes p and q but leaves r free, which is the +C. A point such as F(4) = 0 then fixes r.</p>
+            </details>
+          </section>
+          <section class="cb-station" data-cb-station="detective" data-cb-accent="red" aria-labelledby="cb-detective-title" hidden>
+            <h4 id="cb-detective-title">Error Detective</h4>
+            <p>Each case file holds a worked solution with exactly one planted mistake. Find the first line that goes wrong, and name the mistake. The diagram shows the situation each solution claims to describe.</p>
+            <div data-cb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="cb-sr-only">Error Detective controls</legend>
+              <p class="cb-readout" data-cb-read="state">Open a case file.</p>
+              <div class="cb-missions">
+          <details class="cb-mission" data-cb-mission="detective-divzero">
+            <summary>Case 1 · The flat cubic<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Find f′(2) for f(x) = x³.</p><ol class="cb-worked"><li>[f(2 + h) − f(2)] / h = [(2 + h)³ − 8] / h.</li><li>Set h = 0 in the quotient: (8 − 8) / 0 = 0.</li><li>So the curve is flat at x₀ = 2.</li><li>f′(2) = 0.</li></ol>
+            <div class="cb-fields"><label>First wrong line <select name="divzero-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="divzero-kind" required><option value="">Choose</option><option value="divzero">Divided by h = 0</option><option value="revsign">Dropped the sign for reversed bounds</option><option value="nettotal">Used the net integral as total area</option><option value="minus">Added F(a) instead of subtracting it</option><option value="onesided">Used the wrong formula on one side</option><option value="power">Power-rule slip</option></select></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="detective-revsign">
+            <summary>Case 2 · The backward interval<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Evaluate ∫ from 3 to 1 of 2x dx.</p><ol class="cb-worked"><li>An antiderivative of 2x is F(x) = x².</li><li>The order of the bounds does not matter, so ∫ from 3 to 1 of 2x dx = ∫ from 1 to 3 of 2x dx.</li><li>∫ from 1 to 3 of 2x dx = F(3) − F(1) = 9 − 1 = 8.</li><li>So ∫ from 3 to 1 of 2x dx = 8.</li></ol>
+            <div class="cb-fields"><label>First wrong line <select name="revsign-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="revsign-kind" required><option value="">Choose</option><option value="divzero">Divided by h = 0</option><option value="revsign">Dropped the sign for reversed bounds</option><option value="nettotal">Used the net integral as total area</option><option value="minus">Added F(a) instead of subtracting it</option><option value="onesided">Used the wrong formula on one side</option><option value="power">Power-rule slip</option></select></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="detective-nettotal">
+            <summary>Case 3 · The vanishing region<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Find the total area between f(x) = x − 2 and the x-axis on [0, 4].</p><ol class="cb-worked"><li>An antiderivative is F(x) = x²/2 − 2x.</li><li>F(4) − F(0) = (8 − 8) − 0 = 0.</li><li>So the total area between the graph and the axis is 0.</li><li>The region has no size.</li></ol>
+            <div class="cb-fields"><label>First wrong line <select name="nettotal-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="nettotal-kind" required><option value="">Choose</option><option value="divzero">Divided by h = 0</option><option value="revsign">Dropped the sign for reversed bounds</option><option value="nettotal">Used the net integral as total area</option><option value="minus">Added F(a) instead of subtracting it</option><option value="onesided">Used the wrong formula on one side</option><option value="power">Power-rule slip</option></select></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="detective-minus">
+            <summary>Case 4 · The generous evaluation<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Evaluate ∫ from 1 to 2 of 3x² dx.</p><ol class="cb-worked"><li>An antiderivative of 3x² is F(x) = x³.</li><li>F(2) = 8 and F(1) = 1.</li><li>∫ from 1 to 2 of 3x² dx = F(2) + F(1) = 9.</li><li>So the integral is 9.</li></ol>
+            <div class="cb-fields"><label>First wrong line <select name="minus-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="minus-kind" required><option value="">Choose</option><option value="divzero">Divided by h = 0</option><option value="revsign">Dropped the sign for reversed bounds</option><option value="nettotal">Used the net integral as total area</option><option value="minus">Added F(a) instead of subtracting it</option><option value="onesided">Used the wrong formula on one side</option><option value="power">Power-rule slip</option></select></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="detective-onesided">
+            <summary>Case 5 · The agreeable corner<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>f(x) = 2x for x &lt; 1 and x + 1 for x ≥ 1. Does f′(1) exist?</p><ol class="cb-worked"><li>f(1) = 1 + 1 = 2.</li><li>Right side, h &gt; 0: [(1 + h) + 1 − 2] / h = 1.</li><li>Left side, h &lt; 0: [(1 + h) + 1 − 2] / h = 1.</li><li>Both sides give 1, so f′(1) = 1.</li></ol>
+            <div class="cb-fields"><label>First wrong line <select name="onesided-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="onesided-kind" required><option value="">Choose</option><option value="divzero">Divided by h = 0</option><option value="revsign">Dropped the sign for reversed bounds</option><option value="nettotal">Used the net integral as total area</option><option value="minus">Added F(a) instead of subtracting it</option><option value="onesided">Used the wrong formula on one side</option><option value="power">Power-rule slip</option></select></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+              </div>
+            </fieldset>
+            <details class="cb-math">
+              <summary>Show the math</summary>
+              <p>Watch for five classic slips. You can’t substitute h = 0 into a difference quotient, so simplify first, then let h → 0. Reversing the bounds flips the sign: ∫ from b to a = −∫ from a to b. Total area adds the sizes of the pieces, while the integral keeps their signs. The theorem says F(b) − F(a), with a minus sign. A one-sided quotient must use the formula that holds on that side.</p>
+            </details>
+          </section>
+          <section class="cb-station" data-cb-station="wave" data-cb-accent="blue" aria-labelledby="cb-wave-title" hidden>
+            <h4 id="cb-wave-title">Exponential and Wave Preview</h4>
+            <p>Some functions have derivatives that look like themselves. Compare each function (solid) with its slope curve (dashed), computed from secants. For e^(ikx), a point moves around the unit circle in the complex plane. Its velocity is i·k times its position: a quarter turn ahead, scaled by k.</p>
+            <div data-cb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="cb-sr-only">Exponential and Wave Preview controls</legend>
+              <div class="cb-fields"><label>Function <select name="fn"><option value="exp" selected>e^(kx)</option><option value="sin">sin x</option><option value="cos">cos x</option><option value="phase">e^(ikx)</option></select></label><label>Rate k <output data-cb-for="k">1</output><input type="range" name="k" min="-3" max="3" step="0.5" value="1"></label><label>Position x <output data-cb-for="x">0</output><input type="range" name="x" min="-3" max="3" step="0.25" value="0"></label></div><label class="cb-check-row"><input type="checkbox" name="slope" checked> Show the slope curve</label><p class="cb-readout" data-cb-read="state" aria-live="polite">f(x) = e^(1x) · f(0) = 1 · f′(0) = 1 · f′/f = 1</p>
+              <div class="cb-missions">
+          <details class="cb-mission" data-cb-mission="wave-self">
+            <summary>Slope three times the height<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Choose e^(kx) and set k so the slope is 3 times the height at every x.</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="wave-sin">
+            <summary>What sine’s slope looks like<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Choose sin x and show the slope curve. Which function does the slope curve match?</p>
+            <div class="cb-fields"><label>Slope curve of sin x <select name="sin-pick" required><option value="">Choose</option><option value="cos">cos x</option><option value="ncos">−cos x</option><option value="sin">sin x</option><option value="nsin">−sin x</option></select></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="wave-cos">
+            <summary>Cosine’s slope at a peak of sine<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Enter the derivative of cos x at x = π/2.</p>
+            <div class="cb-fields"><label>d/dx cos x at π/2 <input class="cb-answer" type="text" name="cos-ans" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="wave-spin">
+            <summary>The spinning phase<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>For e^(ikx) with k = 2, the derivative is ik·e^(ikx). Enter it at x = 0 as a + bi.</p>
+            <div class="cb-fields"><label>Real part a <input class="cb-answer" type="text" name="spin-re" autocomplete="off" spellcheck="false" required></label><label>Imaginary part b <input class="cb-answer" type="text" name="spin-im" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="wave-quarter">
+            <summary>Direction of change<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>For e^(ikx) with k = −1.5, how does the velocity arrow sit relative to the position arrow, and how long is it?</p>
+            <div class="cb-fields"><label>Velocity direction <select name="quarter-pick" required><option value="">Choose</option><option value="perp">At right angles: a quarter turn from the position</option><option value="same">Along the position</option><option value="back">Opposite the position</option></select></label><label>Length |velocity| <input class="cb-answer" type="text" name="quarter-mag" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+              </div>
+            </fieldset>
+            <details class="cb-math">
+              <summary>Show the math</summary>
+              <p>d/dx e^(kx) = k·e^(kx), so the slope is always k times the height. d/dx sin x = cos x, and d/dx cos x = −sin x: each slope curve is the original shifted a quarter period. Since e^(ikx) = cos kx + i sin kx, its derivative is −k sin kx + ik cos kx = ik·e^(ikx). Multiplying by i rotates by 90°, so the velocity is perpendicular to the position and has length |k|. That is the steady phase rotation from Lesson 6.</p>
+            </details>
+          </section>
+          <section class="cb-station" data-cb-station="surface" data-cb-accent="orange" aria-labelledby="cb-surface-title" hidden>
+            <h4 id="cb-surface-title">3D Surface Walk</h4>
+            <p>A hill has height z = f(x, y) = 4 − x² − y²/2. Stand at (x₀, y₀) and choose a heading. The slope you feel depends on the direction you walk. The green line traces the hill along your heading. Columns approximate the volume under the hill over [0, 1] × [0, 2].</p>
+            <div data-cb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="cb-sr-only">3D Surface Walk controls</legend>
+              <div class="cb-fields"><label>Walker x₀ <output data-cb-for="x0">1</output><input type="range" name="x0" min="-2" max="2" step="0.5" value="1"></label><label>Walker y₀ <output data-cb-for="y0">1</output><input type="range" name="y0" min="-2" max="2" step="0.5" value="1"></label><label>Heading <select name="heading"><option value="E" selected>East (+x)</option><option value="NE">Northeast</option><option value="N">North (+y)</option><option value="NW">Northwest</option><option value="W">West (−x)</option><option value="SW">Southwest</option><option value="S">South (−y)</option><option value="SE">Southeast</option></select></label><label>Columns per side <select name="cols"><option value="0" selected>None</option><option value="1">1</option><option value="2">2</option><option value="4">4</option><option value="8">8</option></select></label></div><div class="cb-fields"><label>Turn view (°) <output data-cb-for="yaw">300</output><input type="range" name="yaw" min="0" max="355" step="5" value="300"></label><label>Tilt view (°) <output data-cb-for="tilt">30</output><input type="range" name="tilt" min="10" max="80" step="5" value="30"></label></div><p class="cb-readout" data-cb-read="state" aria-live="polite">z = 2.5 · ∂f/∂x = −2 · ∂f/∂y = −1 · slope heading east = −2</p>
+              <div class="cb-missions">
+          <details class="cb-mission" data-cb-mission="surface-east">
+            <summary>Walk east<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>At (1, 1), walking east in the +x direction, what is the slope?</p>
+            <div class="cb-fields"><label>Slope heading east <input class="cb-answer" type="text" name="east-ans" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="surface-north">
+            <summary>Walk north<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>At (1, 1), walking north in the +y direction, what is the slope?</p>
+            <div class="cb-fields"><label>Slope heading north <input class="cb-answer" type="text" name="north-ans" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="surface-flat">
+            <summary>Find a level path<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Stand at (1, 2) and choose a heading where the hill is level, with slope 0.</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="surface-volume">
+            <summary>Volume under the hill<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>Use the columns to estimate, then enter the exact volume under the hill over 0 ≤ x ≤ 1, 0 ≤ y ≤ 2.</p>
+            <div class="cb-fields"><label>Volume <input class="cb-answer" type="text" name="volume-ans" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+              </div>
+            </fieldset>
+            <details class="cb-math">
+              <summary>Show the math</summary>
+              <p>Holding y fixed and changing x gives the partial derivative ∂f/∂x = −2x. Holding x fixed gives ∂f/∂y = −y. Walking in the unit direction (u, v) gives slope u·∂f/∂x + v·∂f/∂y, so some directions climb, some fall, and some are level. The volume adds up accumulation in two directions: ∫₀¹ ∫₀² (4 − x² − y²/2) dy dx. The inner integral is 8 − 2x² − 4/3, and the outer integral gives 8 − 2/3 − 4/3 = 6.</p>
+            </details>
+          </section>
+          <section class="cb-station" data-cb-station="quantum" data-cb-accent="violet" aria-labelledby="cb-quantum-title" hidden>
+            <h4 id="cb-quantum-title">Quantum Calculus Preview</h4>
+            <p class="lesson-kicker">Optional preview</p>
+          <p>This preview is about area only. Scale a nonnegative function g by a factor N so the total area under N·g is exactly 1. Then find the share of that area on an interval. Lesson 21 gives these areas a physical meaning.</p>
+            <div data-cb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="cb-sr-only">Quantum Calculus Preview controls</legend>
+              <div class="cb-fields"><label>Function g <select name="fn"><option value="lin" selected>g(x) = x on [0, 2]</option><option value="sq">g(x) = x² on [0, 3]</option></select></label><label>Scale factor N <input class="cb-answer" type="text" name="N" autocomplete="off" spellcheck="false" value="1" required></label><label>Interval start c <output data-cb-for="c">0</output><input type="range" name="c" min="0" max="3" step="0.25" value="0"></label><label>Interval end d <output data-cb-for="d">1</output><input type="range" name="d" min="0" max="3" step="0.25" value="1"></label></div><p class="cb-readout" data-cb-read="state" aria-live="polite">N·g with N = 1 · total area 2 · area on [0, 1] is 1/2</p>
+              <div class="cb-missions">
+          <details class="cb-mission" data-cb-mission="quantum-lin">
+            <summary>Normalize a ramp<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>For g(x) = x on [0, 2], set N so the total area under N·g is 1.</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="quantum-sq">
+            <summary>Normalize a parabola<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>For g(x) = x² on [0, 3], set N so the total area under N·g is 1.</p>
+  
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="quantum-share">
+            <summary>Share of the ramp<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>With the ramp normalized, what share of the total area lies on [0, 1]?</p>
+            <div class="cb-fields"><label>Share on [0, 1] <input class="cb-answer" type="text" name="share-ans" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="quantum-sharesq">
+            <summary>Share of the parabola<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>With the parabola normalized, what share of the total area lies on [1, 2]?</p>
+            <div class="cb-fields"><label>Share on [1, 2] <input class="cb-answer" type="text" name="sharesq-ans" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+          <details class="cb-mission" data-cb-mission="quantum-half">
+            <summary>Split the ramp in half<span data-cb-done hidden>✓ Complete</span></summary>
+            <p>For the normalized ramp, find c so that the share on [0, c] is exactly 1/2.</p>
+            <div class="cb-fields"><label>c <input class="cb-answer" type="text" name="half-ans" autocomplete="off" spellcheck="false" required></label></div>
+            <button class="calc-primary" type="button" data-cb-check>Check mission</button>
+          </details>
+              </div>
+            </fieldset>
+            <details class="cb-math">
+              <summary>Show the math</summary>
+              <p>If ∫ g = S over the whole interval, then N = 1/S makes ∫ N·g = 1. The share on [c, d] is ∫ from c to d of N·g. For the ramp, ∫₀² x dx = 2, so N = 1/2 and the share on [0, c] is c²/4. Setting c²/4 = 1/2 gives c = √2, not 1, because the ramp holds more area on the right. For the parabola, ∫₀³ x² dx = 9, so N = 1/9 and the share on [1, 2] is (8 − 1)/27 = 7/27.</p>
+            </details>
+          </section>
+        </div>
+
+        <template id="cb-figure-template">
+          <figure class="cb-figure">
+            <figcaption id="cb-title">Station diagram</figcaption>
+            <div class="cb-viewport" id="cb-viewport" data-renderer="svg">
+              <canvas class="cb-canvas" id="cb-canvas" aria-hidden="true" hidden></canvas>
+              <svg class="cb-diagram" id="cb-diagram" viewBox="0 0 560 360" role="img" aria-labelledby="cb-title" aria-describedby="cb-desc">
+                <desc id="cb-desc"></desc>
+                <g data-cb-geometry></g>
+                <g data-cb-labels></g>
+              </svg>
+            </div>
+            <p class="lesson-note" id="cb-render-status"></p>
+          </figure>
+        </template>
+        <template id="cb-mission-template">
+          <div class="cb-mission-tools">
+            <button type="button" data-cb-hint>Show first hint</button>
+            <ol data-cb-hint-list aria-live="polite" hidden></ol>
+            <p class="calc-feedback" data-cb-feedback role="status"></p>
+            <details data-cb-work hidden><summary>Worked steps</summary><p data-cb-work-text></p></details>
+          </div>
+        </template>
+      </div>
+    </details>
+
+    <nav class="lesson-next" aria-label="Continue the course">
+      <a href="../../index.html">Course homepage</a>
+      <a class="calc-primary" href="../11_quantum_states/11_quantum_states.html">
+        Next lesson: Quantum States <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

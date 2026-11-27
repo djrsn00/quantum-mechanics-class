@@ -1,0 +1,1031 @@
+:root {
+  color-scheme: dark;
+
+  --background: #050906;
+  --panel: #09150e;
+  --ink: #ecfff1;
+  --phosphor: #78f8a6;
+  --muted: #a6c5b0;
+  --line: #234c33;
+
+  --red: #ff676f;
+  --orange: #ff9f55;
+  --yellow: #ffe16a;
+  --green: #63f59b;
+  --blue: #65b7ff;
+  --violet: #c19bff;
+
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0;
+  background-color: var(--background);
+  background-image:
+    radial-gradient(ellipse at 50% 35%, rgb(33 123 68 / 15%), transparent 65%),
+    linear-gradient(rgb(120 248 166 / 4%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(120 248 166 / 4%) 1px, transparent 1px);
+  background-size: auto, 32px 32px, 32px 32px;
+  color: var(--ink);
+  font-family: var(--mono);
+}
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+  background-color: #070f0a;
+  box-shadow: 0 1px 18px rgb(93 239 146 / 8%);
+}
+
+.header-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 2rem);
+  width: min(calc(100% - var(--gutter) - var(--gutter)), 84rem);
+  min-height: 7rem;
+  margin-inline: auto;
+  padding-block: 0.75rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.brand-logo {
+  flex: none;
+  width: clamp(2.75rem, 4.5vw, 3.5rem);
+  filter: drop-shadow(0 0 6px rgb(120 248 166 / 24%));
+}
+
+.brand h1 {
+  margin: 0;
+  color: var(--phosphor);
+  font-size: clamp(1rem, 1.5vw, 1.375rem);
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.particle-display {
+  position: relative;
+  grid-column: 2;
+  justify-self: center;
+  width: min(100%, 30rem);
+  aspect-ratio: 480 / 108;
+  overflow: hidden;
+}
+
+.particle-still,
+.particle-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.particle-canvas {
+  visibility: hidden;
+}
+
+.particle-display[data-motion="active"] .particle-still {
+  visibility: hidden;
+}
+
+.particle-display[data-motion="active"] .particle-canvas {
+  visibility: visible;
+}
+
+.particle-guide {
+  stroke: var(--line);
+  stroke-width: 1;
+  stroke-dasharray: 2 7;
+  opacity: 0.65;
+}
+
+.particle-tracks path {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.track-in-a { stroke: #d0ffe3; }
+.track-in-b { stroke: #79d7b2; }
+.track-red { stroke: var(--red); }
+.track-orange { stroke: var(--orange); }
+.track-yellow { stroke: var(--yellow); }
+.track-green { stroke: var(--green); }
+.track-blue { stroke: var(--blue); }
+.track-violet { stroke: var(--violet); }
+
+.collision-halo {
+  fill: none;
+  stroke: var(--phosphor);
+  stroke-width: 1;
+  opacity: 0.25;
+}
+
+.collision-cross {
+  fill: none;
+  stroke: var(--phosphor);
+  stroke-width: 1;
+  opacity: 0.62;
+}
+
+.collision-core {
+  fill: #f2fff5;
+  filter: drop-shadow(0 0 5px var(--phosphor));
+}
+
+.lessons-menu-toggle {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: 44px;
+  padding-inline: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: var(--panel);
+  color: var(--phosphor);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lessons-menu-toggle svg {
+  flex: none;
+}
+
+.lessons-menu-toggle:hover,
+.lessons-menu-toggle[aria-expanded="true"] {
+  border-color: var(--phosphor);
+  background-color: #12271b;
+}
+
+.lessons-menu-toggle[hidden],
+.lessons-menu[hidden] {
+  display: none;
+}
+
+.lessons-menu {
+  inline-size: min(26rem, calc(100% - var(--gutter) - var(--gutter)));
+  max-block-size: clamp(5rem, calc(100vh - 12rem), 24rem);
+  max-block-size: clamp(5rem, calc(100dvh - 12rem), 24rem);
+  margin-inline-start: auto;
+  margin-inline-end: max(var(--gutter), calc((100% - 84rem) / 2));
+  margin-block-end: 0.75rem;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background-color: var(--panel);
+}
+
+.lessons-menu a {
+  display: grid;
+  grid-template-columns: 2ch minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  color: var(--ink);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.lessons-menu a + a {
+  border-block-start: 1px solid var(--line);
+}
+
+.lessons-menu a:hover,
+.lessons-menu a:focus-visible,
+.lessons-menu a[aria-current="page"] {
+  background-color: #12271b;
+}
+
+.lessons-menu-toggle:focus-visible,
+.lessons-menu a:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 2px;
+}
+
+.lessons-menu a:focus-visible {
+  outline-offset: -2px;
+}
+
+.lessons-menu-step {
+  color: var(--phosphor);
+  text-align: end;
+}
+
+.site-footer {
+  padding: 1.25rem var(--gutter);
+  border-top: 1px solid var(--line);
+  background-color: #070f0a;
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+@media (max-width: 56rem) {
+  .header-inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.25rem;
+    min-height: 0;
+    padding-block: 1rem 0.5rem;
+  }
+
+  .brand h1 {
+    overflow-wrap: anywhere;
+  }
+
+  .particle-display {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .lessons-menu-toggle {
+    grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particle-display[data-motion="active"] .particle-still {
+    visibility: visible;
+  }
+
+  .particle-display[data-motion="active"] .particle-canvas {
+    visibility: hidden;
+  }
+}
+
+/* Lesson 5 */
+
+.site-main.math-lesson {
+  display: grid;
+  align-content: start;
+  gap: clamp(1rem, 3vw, 2rem);
+  width: min(calc(100% - var(--gutter) - var(--gutter)), 68rem);
+  margin-inline: auto;
+  padding-block: clamp(1.5rem, 4vw, 3.5rem);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.math-lesson :is(h2, h3, h4, p, figure, dl) {
+  margin: 0;
+}
+
+.math-lesson :is(h2, h3, h4) {
+  line-height: 1.25;
+}
+
+.math-lesson h2 {
+  font-size: clamp(2.5rem, 7vw, 4.75rem);
+  letter-spacing: -0.06em;
+}
+
+.math-lesson h3 {
+  font-size: clamp(1.25rem, 3vw, 1.65rem);
+}
+
+.math-lesson h4 {
+  font-size: 1rem;
+}
+
+.math-lesson a {
+  color: var(--phosphor);
+  text-underline-offset: 0.2em;
+}
+
+.math-lesson :is(a, button, input, select, summary):focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 3px;
+}
+
+.math-lesson :is(.lesson-intro, .lesson-prose) {
+  display: grid;
+  gap: 0.75rem;
+  max-inline-size: 74ch;
+}
+
+.math-lesson .lesson-kicker {
+  color: var(--phosphor);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.math-lesson .lesson-lead {
+  max-inline-size: 58ch;
+  color: var(--phosphor);
+  font-size: clamp(1.0625rem, 2.4vw, 1.375rem);
+  font-weight: 700;
+}
+
+.math-lesson :is(.lesson-panel, .lesson-station) {
+  display: grid;
+  align-content: start;
+  gap: 0.875rem;
+  min-inline-size: 0;
+  padding: clamp(0.875rem, 2.5vw, 1.75rem);
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: linear-gradient(145deg, #0d1b12, var(--panel));
+}
+
+.math-lesson .lesson-station {
+  gap: 0.75rem;
+  padding: clamp(0.75rem, 2vw, 1.25rem);
+  border-radius: 0.375rem;
+  background: #070e09;
+}
+
+.math-lesson details.lesson-panel:not([open]) {
+  display: block;
+}
+
+.math-lesson .lesson-note {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.math-lesson :is(.math-split, .math-space-grid, .math-metrics, .math-slider-stack) {
+  display: grid;
+  gap: 0.75rem;
+  min-inline-size: 0;
+  align-items: start;
+}
+
+.math-lesson fieldset {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.math-lesson fieldset > * + * {
+  margin-block-start: 0.75rem;
+}
+
+.math-lesson legend {
+  margin-block-end: 0.5rem;
+  padding: 0;
+  color: var(--phosphor);
+  font-weight: 700;
+}
+
+.math-lesson .math-slider {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0 0.5rem;
+  font-size: 0.875rem;
+}
+
+.math-lesson .math-slider output {
+  color: var(--phosphor);
+  font-variant-numeric: tabular-nums;
+}
+
+.math-lesson input[type="range"] {
+  grid-column: 1 / -1;
+  inline-size: 100%;
+  min-block-size: 44px;
+  margin: 0;
+  accent-color: var(--phosphor);
+}
+
+.math-lesson .math-number-field {
+  display: grid;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.math-lesson :is(select, input[type="number"]) {
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 44px;
+  padding: 0.375rem 0.5rem;
+  border: 1px solid #517764;
+  border-radius: 0.375rem;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+}
+
+.math-lesson input[type="number"] {
+  max-inline-size: 9rem;
+}
+
+.math-lesson :is(.math-actions, .lesson-next) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.math-lesson .lesson-next {
+  justify-content: space-between;
+}
+
+.math-lesson .lesson-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-block-size: 44px;
+  max-inline-size: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #517764;
+  border-radius: 0.375rem;
+  background: #0b1a12;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.math-lesson .lesson-primary {
+  border-color: var(--phosphor);
+  background: var(--phosphor);
+  color: #08130d;
+}
+
+.math-lesson .lesson-button[aria-pressed="true"] {
+  border-color: var(--phosphor);
+  background: #12271b;
+  color: var(--phosphor);
+}
+
+.math-lesson :is(button:enabled, a.lesson-button):hover {
+  border-color: var(--ink);
+}
+
+.math-lesson :is(button, select, input):disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.math-lesson :is(.math-equation, .math-calculations, .math-reaction) {
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: #102016;
+  font-variant-numeric: tabular-nums;
+}
+
+.math-lesson .math-equation {
+  color: var(--phosphor);
+  font-weight: 700;
+}
+
+.math-lesson .math-calculations {
+  display: grid;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.math-lesson .math-reaction {
+  border-inline-start: 2px solid var(--phosphor);
+  font-size: 0.875rem;
+}
+
+.math-lesson .math-reaction strong {
+  color: var(--phosphor);
+}
+
+.math-lesson .math-figure {
+  display: grid;
+  align-content: start;
+  gap: 0.625rem;
+  min-inline-size: 0;
+  padding: clamp(0.5rem, 2vw, 0.875rem);
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: #060e09;
+}
+
+.math-lesson .math-figure figcaption {
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.math-lesson .math-diagram {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.math-lesson .math-diagram text {
+  fill: var(--muted);
+  font: 600 14px var(--mono);
+  text-anchor: middle;
+}
+
+.math-lesson .math-diagram .math-tick-left {
+  text-anchor: end;
+}
+
+.math-lesson .math-diagram .math-axis-label {
+  fill: var(--ink);
+}
+
+.math-lesson :is(.math-graph-grid, .math-axis, .math-rule-line, .math-guide,
+                 .math-radius-circle, .math-component-x, .math-component-y,
+                 .math-right-angle, .math-angle-arc, .math-vector) {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.math-lesson .math-graph-grid {
+  stroke: var(--line);
+}
+
+.math-lesson :is(.math-axis, .math-right-angle) {
+  stroke: #729783;
+  stroke-width: 1.25;
+}
+
+.math-lesson :is(.math-rule-line, .math-vector) {
+  stroke: var(--phosphor);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.math-lesson .math-guide {
+  stroke: var(--violet);
+  stroke-dasharray: 3 4;
+}
+
+.math-lesson :is(.math-point-dot, .math-arrow-tip) {
+  fill: var(--phosphor);
+}
+
+.math-lesson .math-point-dot {
+  stroke: #060e09;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.math-lesson .math-triangle {
+  fill: rgb(101 183 255 / 10%);
+}
+
+.math-lesson .math-component-x {
+  stroke: var(--orange);
+  stroke-width: 2.25;
+}
+
+.math-lesson .math-component-y {
+  stroke: var(--blue);
+  stroke-width: 2.25;
+  stroke-dasharray: 5 3;
+}
+
+.math-lesson .math-radius-circle {
+  stroke: #729783;
+  stroke-dasharray: 4 4;
+}
+
+.math-lesson .math-angle-arc {
+  stroke: var(--yellow);
+  stroke-width: 2;
+}
+
+.math-lesson .math-diagram .math-angle-text {
+  fill: var(--yellow);
+}
+
+.math-lesson .math-viewport {
+  position: relative;
+  aspect-ratio: 360 / 344;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 0.25rem;
+  background: #060e09;
+}
+
+.math-lesson :is(.math-canvas, .math-xy-view, .math-scene-labels) {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.math-lesson .math-scene-labels {
+  pointer-events: none;
+}
+
+.math-lesson .math-scene-labels [data-math-label] {
+  position: absolute;
+  padding: 0.0625rem 0.2rem;
+  border-radius: 0.2rem;
+  background: rgb(6 14 9 / 85%);
+  color: var(--ink);
+  font-size: clamp(0.625rem, 1.4vw, 0.8125rem);
+  line-height: 1.2;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+
+.math-lesson .math-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem 1rem;
+  margin: 0;
+  padding: 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  list-style: none;
+}
+
+.math-lesson .math-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.math-lesson .math-key {
+  flex: none;
+  inline-size: 1.125rem;
+  border-block-start: 2px solid currentColor;
+}
+
+.math-lesson .math-key-vector { color: var(--phosphor); }
+.math-lesson .math-key-x { color: var(--orange); }
+
+.math-lesson .math-key-y {
+  color: var(--blue);
+  border-block-start-style: dashed;
+}
+
+.math-lesson .math-key-z {
+  color: var(--violet);
+  border-block-start-style: dotted;
+}
+
+.math-lesson .math-metrics {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 0.5rem;
+}
+
+.math-lesson .math-metrics > div {
+  padding: 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: var(--panel);
+}
+
+.math-lesson .math-metrics dt {
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.math-lesson .math-metrics dd {
+  margin: 0;
+  color: var(--phosphor);
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.math-lesson summary {
+  display: list-item;
+  inline-size: fit-content;
+  min-block-size: 44px;
+  padding: 0.5rem 0.125rem;
+  color: var(--phosphor);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.math-lesson details[open] > summary {
+  margin-block-end: 0.375rem;
+}
+
+.math-lesson .math-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.math-lesson .math-table caption {
+  padding-block-end: 0.375rem;
+  color: var(--muted);
+  text-align: start;
+}
+
+.math-lesson .math-table :is(th, td) {
+  padding: 0.5rem 0.375rem;
+  border-block-end: 1px solid var(--line);
+  text-align: start;
+}
+
+.math-lesson .math-answers {
+  display: grid;
+  justify-items: start;
+  gap: 0.5rem;
+  margin-block-start: 0.75rem;
+}
+
+.math-lesson [data-math-question] > * + * {
+  margin-block-start: 0.625rem;
+}
+
+.math-lesson #math-next-question {
+  justify-self: start;
+}
+
+.math-lesson .math-sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.math-lesson [hidden] {
+  display: none !important;
+}
+
+@media (min-width: 48rem) {
+  .math-lesson .math-split {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .math-lesson .math-space-grid {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  }
+}
+
+/* Math Bridge Arcade */
+
+.math-lesson {
+  --arc-surface: #0b1911;
+}
+
+.math-lesson :is(.math-reflection, .arc-station, .arc-missions, .arc-math) {
+  display: grid;
+  gap: 0.75rem;
+  min-inline-size: 0;
+}
+
+.math-lesson #math-space {
+  scroll-margin-block-start: 1rem;
+}
+
+.math-lesson .math-reflection {
+  justify-items: start;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-inline-start: 3px solid var(--orange);
+  border-radius: 0.5rem;
+}
+
+.math-lesson .arc-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-block-size: 44px;
+  color: var(--muted);
+}
+
+.math-lesson .arc-toggle input {
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+  accent-color: var(--phosphor);
+}
+
+.math-lesson .math-arcade > summary,
+.math-lesson [data-mission] > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.375rem 0.75rem;
+  min-block-size: 44px;
+  padding-block: 0.6rem;
+}
+
+.math-lesson :is(.math-arcade, [data-mission]) > summary::before {
+  content: "+";
+  color: var(--phosphor);
+}
+
+.math-lesson :is(.math-arcade, [data-mission])[open] > summary::before {
+  content: "−";
+}
+
+.math-lesson .math-arcade > summary strong {
+  margin-inline-end: auto;
+  font-size: clamp(1rem, 2vw, 1.35rem);
+}
+
+.math-lesson .math-arcade > summary span,
+.math-lesson .arc-readout {
+  color: var(--muted);
+}
+
+.math-lesson :is(.arc-toolbar, .arc-fields, .arc-groups) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.65rem 0.9rem;
+  min-inline-size: 0;
+}
+
+.math-lesson .arc-toolbar {
+  justify-content: space-between;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--arc-surface);
+}
+
+.math-lesson .arc-toolbar label,
+.math-lesson .arc-fields label {
+  display: grid;
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.math-lesson .arc-fields input[type="number"] {
+  width: min(100%, 9rem);
+}
+
+.math-lesson :is(.arc-toolbar, .arc-fields) :is(select, input[type="number"]) {
+  min-block-size: 44px;
+}
+
+.math-lesson .arc-toolbar #arc-progress {
+  align-self: center;
+  color: var(--phosphor);
+  font-size: 0.875rem;
+}
+
+.math-lesson .arc-station {
+  --arc-accent: var(--phosphor);
+  padding: clamp(0.7rem, 2vw, 1.25rem);
+  border: 1px solid var(--line);
+  border-block-start: 3px solid var(--arc-accent);
+  border-radius: 0.6rem;
+  background: var(--arc-surface);
+}
+
+.math-lesson [data-accent="orange"] { --arc-accent: var(--orange); }
+.math-lesson [data-accent="yellow"] { --arc-accent: var(--yellow); }
+.math-lesson [data-accent="blue"] { --arc-accent: var(--blue); }
+.math-lesson [data-accent="violet"] { --arc-accent: var(--violet); }
+.math-lesson [data-accent="green"] { --arc-accent: var(--green); }
+
+.math-lesson .arc-station h4 {
+  margin-block-end: 0.4rem;
+  color: var(--arc-accent);
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+}
+
+.math-lesson .arc-station button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-block-size: 44px;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  background: #102319;
+  color: var(--phosphor);
+  font: inherit;
+  font-size: 0.875rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+.math-lesson .arc-station button.lesson-primary {
+  border-color: var(--arc-accent);
+  color: var(--arc-accent);
+}
+
+.math-lesson .arc-station button:enabled:hover {
+  border-color: var(--phosphor);
+}
+
+.math-lesson .arc-viewport {
+  position: relative;
+  inline-size: 100%;
+  block-size: clamp(12rem, 44vw, 24rem);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: #060e09;
+}
+
+.math-lesson .arc-diagram {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.math-lesson .arc-diagram text {
+  fill: var(--ink);
+  font: 700 15px var(--mono);
+}
+
+.math-lesson .arc-apparatus {
+  margin: 0;
+}
+
+.math-lesson .arc-readout,
+.math-lesson .arc-feedback {
+  overflow-wrap: anywhere;
+}
+
+.math-lesson .arc-feedback:not(:empty) {
+  padding: 0.6rem;
+  border-inline-start: 2px solid var(--arc-accent);
+  background: #0e2318;
+}
+
+.math-lesson [data-mission] {
+  padding-inline: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+}
+
+.math-lesson [data-mission][open] {
+  padding-block-end: 0.75rem;
+}
+
+.math-lesson [data-mission][open] > * + *,
+.math-lesson .arc-math p + p {
+  margin-block-start: 0.65rem;
+}
+
+.math-lesson [data-completion] {
+  margin-inline-start: auto;
+  color: var(--phosphor);
+  font-size: 0.8125rem;
+}
+
+.math-lesson .arc-math {
+  border-block-start: 1px solid var(--line);
+  padding-block-start: 0.5rem;
+}
+
+.math-lesson .arc-math > summary {
+  min-block-size: 44px;
+}
+
+.math-lesson :is(.arc-order, .arc-station ol) {
+  padding-inline-start: 1.5rem;
+}
+
+.math-lesson .arc-table {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 42rem) {
+  .math-lesson .arc-toolbar {
+    display: grid;
+    justify-content: stretch;
+  }
+
+  .math-lesson .arc-groups {
+    align-items: start;
+  }
+
+  .math-lesson .arc-table :is(th, td) {
+    padding: 0.35rem;
+  }
+}

@@ -1,0 +1,615 @@
+:root {
+  color-scheme: dark;
+  --background: #050906;
+  --panel: #09150e;
+  --ink: #ecfff1;
+  --phosphor: #78f8a6;
+  --muted: #a6c5b0;
+  --line: #234c33;
+  --red: #ff676f;
+  --orange: #ff9f55;
+  --yellow: #ffe16a;
+  --green: #63f59b;
+  --blue: #65b7ff;
+  --violet: #c19bff;
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0;
+  background-color: var(--background);
+  background-image:
+    radial-gradient(ellipse at 50% 35%, rgb(33 123 68 / 15%), transparent 65%),
+    linear-gradient(rgb(120 248 166 / 4%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(120 248 166 / 4%) 1px, transparent 1px);
+  background-size: auto, 32px 32px, 32px 32px;
+  color: var(--ink);
+  font-family: var(--mono);
+}
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+  background-color: #070f0a;
+  box-shadow: 0 1px 18px rgb(93 239 146 / 8%);
+}
+
+.header-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 2rem);
+  width: min(calc(100% - var(--gutter) - var(--gutter)), 84rem);
+  min-height: 7rem;
+  margin-inline: auto;
+  padding-block: 0.75rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.brand-logo {
+  flex: none;
+  width: clamp(2.75rem, 4.5vw, 3.5rem);
+  filter: drop-shadow(0 0 6px rgb(120 248 166 / 24%));
+}
+
+.brand h1 {
+  margin: 0;
+  color: var(--phosphor);
+  font-size: clamp(1rem, 1.5vw, 1.375rem);
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.particle-display {
+  position: relative;
+  grid-column: 2;
+  justify-self: center;
+  width: min(100%, 30rem);
+  aspect-ratio: 480 / 108;
+  overflow: hidden;
+}
+
+.particle-still,
+.particle-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.particle-canvas {
+  visibility: hidden;
+}
+
+.particle-display[data-motion="active"] .particle-still {
+  visibility: hidden;
+}
+
+.particle-display[data-motion="active"] .particle-canvas {
+  visibility: visible;
+}
+
+.particle-guide {
+  stroke: var(--line);
+  stroke-width: 1;
+  stroke-dasharray: 2 7;
+  opacity: 0.65;
+}
+
+.particle-tracks path {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.track-in-a { stroke: #d0ffe3; }
+.track-in-b { stroke: #79d7b2; }
+.track-red { stroke: var(--red); }
+.track-orange { stroke: var(--orange); }
+.track-yellow { stroke: var(--yellow); }
+.track-green { stroke: var(--green); }
+.track-blue { stroke: var(--blue); }
+.track-violet { stroke: var(--violet); }
+
+.collision-halo {
+  fill: none;
+  stroke: var(--phosphor);
+  stroke-width: 1;
+  opacity: 0.25;
+}
+
+.collision-cross {
+  fill: none;
+  stroke: var(--phosphor);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  opacity: 0.62;
+}
+
+.collision-core {
+  fill: #f2fff5;
+  filter: drop-shadow(0 0 5px var(--phosphor));
+}
+
+.lessons-menu-toggle {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: 44px;
+  padding-inline: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: var(--panel);
+  color: var(--phosphor);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lessons-menu-toggle svg {
+  flex: none;
+}
+
+.lessons-menu-toggle:hover,
+.lessons-menu-toggle[aria-expanded="true"] {
+  border-color: var(--phosphor);
+  background-color: #12271b;
+}
+
+.lessons-menu-toggle[hidden], .lessons-menu[hidden] {
+  display: none;
+}
+
+.lessons-menu {
+  inline-size: min(26rem, calc(100% - var(--gutter) - var(--gutter)));
+  max-block-size: clamp(5rem, calc(100vh - 12rem), 24rem);
+  max-block-size: clamp(5rem, calc(100dvh - 12rem), 24rem);
+  margin-inline-start: auto;
+  margin-inline-end: max(var(--gutter), calc((100% - 84rem) / 2));
+  margin-block-end: 0.75rem;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background-color: var(--panel);
+}
+
+.lessons-menu a {
+  display: grid;
+  grid-template-columns: 2ch minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  color: var(--ink);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.lessons-menu a + a {
+  border-block-start: 1px solid var(--line);
+}
+
+.lessons-menu a:hover,
+.lessons-menu a:focus-visible,
+.lessons-menu a[aria-current="page"] {
+  background-color: #12271b;
+}
+
+.lessons-menu-toggle:focus-visible,
+.lessons-menu a:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 2px;
+}
+
+.lessons-menu a:focus-visible {
+  outline-offset: -2px;
+}
+
+.lessons-menu-step {
+  color: var(--phosphor);
+  text-align: end;
+}
+
+.site-footer {
+  padding: 1.25rem var(--gutter);
+  border-top: 1px solid var(--line);
+  background-color: #070f0a;
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+@media (max-width: 56rem) {
+  .header-inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.25rem;
+    min-height: 0;
+    padding-block: 1rem 0.5rem;
+  }
+
+  .brand h1 {
+    overflow-wrap: anywhere;
+  }
+
+  .particle-display {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .lessons-menu-toggle {
+    grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particle-display[data-motion="active"] .particle-still {
+    visibility: visible;
+  }
+
+  .particle-display[data-motion="active"] .particle-canvas {
+    visibility: hidden;
+  }
+}
+
+/* Lesson 27 */
+
+.hydrogen-lesson {
+  --ha-cyan: #71e3d8;
+  --ha-edge: #46685a;
+  --ha-field: #0b1820;
+  display: grid;
+  align-content: start;
+  gap: clamp(1rem, 3vw, 2rem);
+  inline-size: min(calc(100% - var(--gutter) - var(--gutter)), 84rem);
+  min-inline-size: 0;
+  margin-inline: auto;
+  padding-block: clamp(1.75rem, 5vw, 4rem);
+  line-height: 1.58;
+  overflow-wrap: break-word;
+}
+
+.hydrogen-lesson :is(h2, h3, h4, p, figure, dl, dd, ul) { margin: 0; }
+.hydrogen-lesson :is(h2, h3, h4, figcaption) { line-height: 1.24; }
+.hydrogen-lesson h2 { font-size: clamp(1.85rem, 5vw, 3.5rem); letter-spacing: -0.055em; }
+.hydrogen-lesson h3 { font-size: clamp(1.3rem, 3vw, 1.8rem); }
+.hydrogen-lesson h4 { font-size: clamp(1.05rem, 2.3vw, 1.3rem); }
+.hydrogen-lesson figcaption { font-weight: 700; }
+.hydrogen-lesson .ha-intro { max-inline-size: 81ch; }
+.hydrogen-lesson .ha-kicker { color: var(--phosphor); font-size: 0.875rem; font-weight: 700; }
+.hydrogen-lesson .ha-lead { font-size: clamp(1rem, 2.5vw, 1.25rem); }
+.hydrogen-lesson .ha-note { color: var(--muted); font-size: 0.875rem; }
+
+.hydrogen-lesson :is(.ha-stack, .ha-panel, .ha-card, .ha-chart-card) {
+  display: grid;
+  align-content: start;
+  gap: 0.7rem;
+  min-inline-size: 0;
+}
+
+.hydrogen-lesson .ha-panel {
+  gap: 1rem;
+  padding: clamp(0.75rem, 2.5vw, 1.5rem);
+  border: 1px solid var(--line);
+  border-radius: 0.625rem;
+  background: rgb(9 21 14 / 92%);
+}
+
+.hydrogen-lesson .ha-card {
+  padding: clamp(0.65rem, 2vw, 1rem);
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+  background: #0a1514;
+}
+
+.hydrogen-lesson .ha-chart-card {
+  padding: 0.65rem;
+  border: 1px solid #3b5263;
+  border-radius: 0.4rem;
+  background: #0b1420;
+}
+
+.hydrogen-lesson .ha-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  align-items: start;
+  gap: 0.85rem;
+}
+
+.hydrogen-lesson :is(.ha-fields, .ha-symbols, .ha-bridge, .ha-slice-grid) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  align-items: start;
+  gap: 0.6rem;
+}
+
+.hydrogen-lesson .ha-slice-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+
+.hydrogen-lesson .ha-fields label {
+  display: grid;
+  align-content: start;
+  gap: 0.25rem;
+}
+
+.hydrogen-lesson .ha-fields strong { color: var(--ha-cyan); }
+
+.hydrogen-lesson .ha-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hydrogen-lesson fieldset { min-inline-size: 0; margin: 0; }
+.hydrogen-lesson fieldset:not(.ha-card) { padding: 0; border: 0; }
+.hydrogen-lesson legend { max-inline-size: 100%; padding-inline: 0.3rem; color: var(--phosphor); font-size: 0.875rem; font-weight: 700; }
+.hydrogen-lesson fieldset:not(.ha-card) legend { padding: 0 0 0.35rem; }
+
+.hydrogen-lesson :is(button, select, input[type="number"], .ha-navigation a, .ha-stations a) {
+  min-block-size: 44px;
+  max-inline-size: 100%;
+  padding: 0.42rem 0.65rem;
+  border: 1px solid var(--ha-edge);
+  border-radius: 0.35rem;
+  background: #10201a;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.875rem;
+}
+
+.hydrogen-lesson :is(select, input[type="number"]) { inline-size: min(100%, 24rem); }
+.hydrogen-lesson .ha-fields :is(select, input[type="number"]) { inline-size: 100%; }
+.hydrogen-lesson button { justify-self: start; cursor: pointer; }
+.hydrogen-lesson a { color: var(--phosphor); }
+.hydrogen-lesson .ha-primary { border-color: var(--phosphor); background: #143424; }
+
+.hydrogen-lesson :is(button, select):enabled:hover,
+.hydrogen-lesson :is(.ha-navigation, .ha-stations) a:hover {
+  border-color: var(--phosphor);
+  background: #183325;
+}
+
+.hydrogen-lesson .ha-stations a {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.hydrogen-lesson :is(button, input, select):disabled { opacity: 0.65; cursor: default; }
+
+.hydrogen-lesson :is(a, button, input, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+.hydrogen-lesson .ha-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: 44px;
+  font-size: 0.875rem;
+}
+
+.hydrogen-lesson input { accent-color: var(--phosphor); }
+.hydrogen-lesson input[type="checkbox"] { inline-size: 1.1rem; block-size: 1.1rem; margin: 0; }
+.hydrogen-lesson input[type="range"] { display: block; inline-size: 100%; min-block-size: 44px; margin: 0; }
+
+.hydrogen-lesson .ha-readouts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  gap: 0.4rem;
+}
+
+.hydrogen-lesson :is(.ha-readouts > div, .ha-bridge > p) {
+  padding: 0.5rem 0.65rem;
+  border: 1px solid #31473e;
+  border-radius: 0.35rem;
+  background: #0c1a17;
+}
+
+.hydrogen-lesson .ha-readouts dt { color: var(--muted); font-size: 0.8rem; }
+.hydrogen-lesson .ha-readouts dd { font-weight: 700; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+
+.hydrogen-lesson .ha-explorer {
+  border-color: #4a5674;
+  background: #0c1422;
+}
+
+.hydrogen-lesson .ha-bridge > p {
+  border-color: #3c526b;
+  background: var(--ha-field);
+  font-size: 0.875rem;
+}
+
+.hydrogen-lesson .ha-viewport {
+  overflow: hidden;
+  block-size: clamp(15rem, 42vw, 32rem);
+  border: 1px solid #4c6080;
+  border-radius: 0.4rem;
+  background: #080f1e;
+}
+
+.hydrogen-lesson .ha-viewport canvas { display: block; inline-size: 100%; block-size: 100%; }
+
+.hydrogen-lesson .ha-slice {
+  display: block;
+  inline-size: min(100%, 24rem);
+  aspect-ratio: 1;
+  block-size: auto;
+  margin-inline: auto;
+  border: 1px solid #405970;
+  border-radius: 0.35rem;
+  background: #080f1e;
+}
+
+.hydrogen-lesson .ha-plot {
+  display: block;
+  inline-size: 100%;
+  max-block-size: 26rem;
+  border: 1px solid #405970;
+  border-radius: 0.35rem;
+  background: #080f1e;
+}
+
+.hydrogen-lesson .ha-ticks { fill: var(--ink); font: 14px var(--mono); }
+
+.hydrogen-lesson .ha-plot :is(path, line, rect, circle) {
+  vector-effect: non-scaling-stroke;
+}
+
+.hydrogen-lesson .ha-plot :is(path, line) {
+  fill: none;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.hydrogen-lesson .ha-axis { stroke: #a3b8b4; }
+.hydrogen-lesson .ha-grid-line { stroke: #2b4351; }
+.hydrogen-lesson .ha-plot .ha-shade { fill: rgb(255 225 106 / 18%); }
+.hydrogen-lesson .ha-shell-line { stroke: var(--yellow); stroke-dasharray: 3 5; }
+.hydrogen-lesson .ha-probe-line { stroke: #bdcbd3; stroke-dasharray: 2 5; opacity: 0.8; }
+.hydrogen-lesson .ha-point { stroke: var(--blue); stroke-width: 2; }
+.hydrogen-lesson .ha-radial { stroke: var(--ha-cyan); stroke-width: 2.2; }
+.hydrogen-lesson .ha-comparison { stroke: var(--violet); stroke-width: 1.8; stroke-dasharray: 5 4; }
+.hydrogen-lesson .ha-node-marks circle { fill: #080f1e; stroke: var(--yellow); stroke-width: 1.35; }
+.hydrogen-lesson .ha-histogram rect { fill: rgb(255 122 161 / 23%); stroke: #ff9ab2; stroke-width: 0.8; }
+.hydrogen-lesson .ha-theory-bins rect { fill: none; stroke: #dce3ee; stroke-width: 0.9; stroke-dasharray: 3 3; }
+.hydrogen-lesson .ha-level-limit { stroke: #8f9eb3; stroke-dasharray: 5 4; }
+.hydrogen-lesson .ha-level-line { stroke: #68859a; }
+.hydrogen-lesson .ha-transition-line { stroke: var(--yellow); stroke-width: 1.7; }
+.hydrogen-lesson .ha-initial-mark { fill: var(--blue); }
+.hydrogen-lesson .ha-final-mark { fill: var(--yellow); }
+.hydrogen-lesson .ha-lines line { stroke-width: 2.75; }
+.hydrogen-lesson .ha-lines [data-band="uv"] { stroke-dasharray: 4 3; }
+
+.hydrogen-lesson .ha-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.85rem;
+  padding: 0;
+  list-style: none;
+  font-size: 0.81rem;
+}
+
+.hydrogen-lesson .ha-legend li { display: flex; align-items: center; gap: 0.35rem; }
+
+.hydrogen-lesson .ha-legend li::before {
+  inline-size: 1rem;
+  border-block-start: 2px solid var(--ha-key, currentColor);
+  content: "";
+}
+
+.hydrogen-lesson :is(.ha-key-point, .ha-key-initial) { --ha-key: var(--blue); }
+.hydrogen-lesson .ha-key-radial { --ha-key: var(--ha-cyan); }
+.hydrogen-lesson .ha-key-compare { --ha-key: var(--violet); }
+.hydrogen-lesson :is(.ha-key-shell, .ha-key-final) { --ha-key: var(--yellow); }
+.hydrogen-lesson .ha-key-sample { --ha-key: #ff9ab2; }
+.hydrogen-lesson .ha-key-theory { --ha-key: #dce3ee; }
+
+.hydrogen-lesson .ha-legend :is(.ha-key-compare, .ha-key-shell, .ha-key-theory)::before {
+  border-block-start-style: dashed;
+}
+
+.hydrogen-lesson .ha-legend :is(.ha-key-initial, .ha-key-final, .ha-key-sample)::before {
+  inline-size: 0.65rem;
+  block-size: 0.65rem;
+  border: 1px solid var(--ha-key);
+  background: var(--ha-key);
+}
+
+.hydrogen-lesson .ha-legend .ha-key-initial::before { border-radius: 50%; }
+.hydrogen-lesson .ha-legend .ha-key-sample::before { background: rgb(255 122 161 / 23%); }
+.hydrogen-lesson .ha-spectrum-list { padding-inline-start: 1.2rem; }
+
+.hydrogen-lesson .ha-table-wrap { overflow-x: auto; }
+.hydrogen-lesson table { inline-size: 100%; border-collapse: collapse; font-size: 0.84rem; font-variant-numeric: tabular-nums; }
+.hydrogen-lesson caption { padding-block: 0.3rem; color: var(--muted); text-align: start; }
+.hydrogen-lesson :is(th, td) { padding: 0.35rem 0.45rem; border: 1px solid #31473e; text-align: start; }
+.hydrogen-lesson thead { background: #12241b; }
+
+.hydrogen-lesson details.ha-card { display: block; }
+
+.hydrogen-lesson summary {
+  display: list-item;
+  min-block-size: 44px;
+  padding-block: 0.4rem;
+  color: var(--phosphor);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.hydrogen-lesson :is(.ha-detail, details[data-ha-symbol][open] > p) { padding-block: 0.2rem; }
+
+.hydrogen-lesson .ha-equation {
+  padding: 0.55rem 0.65rem;
+  border-inline-start: 2px solid var(--blue);
+  background: #101e27;
+  overflow-wrap: anywhere;
+}
+
+.hydrogen-lesson .ha-feedback:not(:empty) {
+  padding: 0.55rem 0.7rem;
+  border-inline-start: 3px solid var(--violet);
+  background: #1c1729;
+}
+
+.hydrogen-lesson #ha-mission-controls > :not(legend) + * { margin-block-start: 0.6rem; }
+
+.hydrogen-lesson [data-ha-mission] {
+  padding: 0.65rem;
+  border: 1px solid var(--ha-edge);
+  border-radius: 0.35rem;
+}
+
+.hydrogen-lesson[data-ha-symbol="radial"] #ha-radial-plot,
+.hydrogen-lesson[data-ha-symbol="angular"] .ha-slice-grid,
+.hydrogen-lesson[data-ha-symbol="n"] #ha-n,
+.hydrogen-lesson[data-ha-symbol="l"] #ha-l,
+.hydrogen-lesson[data-ha-symbol="m"] #ha-m,
+.hydrogen-lesson[data-ha-symbol="density"] #ha-point-density,
+.hydrogen-lesson[data-ha-symbol="scale"] #ha-probe-controls,
+.hydrogen-lesson[data-ha-symbol="energy"] :is(#ha-energy, #ha-gap) {
+  outline: 2px solid var(--yellow);
+  outline-offset: 2px;
+}
+
+.hydrogen-lesson .ha-navigation { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.65rem; }
+.hydrogen-lesson .ha-navigation a { display: grid; align-content: start; gap: 0.2rem; text-decoration: none; }
+.hydrogen-lesson .ha-navigation a[rel="next"] { text-align: end; }
+.hydrogen-lesson [hidden] { display: none; }
+
+@media (max-width: 58rem) {
+  .hydrogen-lesson .ha-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 36rem) {
+  .hydrogen-lesson :is(th, td) { padding: 0.3rem 0.25rem; }
+  .hydrogen-lesson .ha-ticks { font-size: 20px; }
+}

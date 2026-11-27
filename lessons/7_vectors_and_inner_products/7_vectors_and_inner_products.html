@@ -1,0 +1,1330 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Explore real 3D vectors, addition, the dot product, and projection in the Vector Lab.">
+  <title>Vectors and Inner Products | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+  <script type="module" src="./scripts/lesson.js?v=7-vector-arcade"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)"
+                  stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none"
+                   stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8"
+                stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none"
+                   stroke="url(#logo-spectrum)" stroke-width="1.6"
+                   transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none"
+                stroke="#edffef" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static"
+             viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="50%" stop-color="white"/>
+              <stop offset="78%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0.25"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse"
+                  x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 475 82"/>
+            <path class="track-violet" d="M218 54C265 80 333 97 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M212 54h12M218 48v12"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button"
+              aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="./7_vectors_and_inner_products.html" aria-current="page"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and-coordinates/8_bases_and-coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="../22_the_one_dimensional_schrodinger_equation/22_the_one_dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main vector-lesson" aria-labelledby="vector-title">
+    <header class="lesson-intro">
+      <p class="lesson-kicker">Lesson 07 · Vector Lab</p>
+      <h2 id="vector-title">Vectors and Inner Products</h2>
+      <p class="lesson-lead">Two arrows cast exactly the same shadow on the <var>xy</var>-plane. Can they still be perpendicular?</p>
+      <p>Start with the shared shadow. Make a prediction, change the view to see the hidden dimension, and check the full three-dimensional vectors with a dot product.</p>
+      <p><a id="vector-arcade-link" href="#vector-arcade">Open the optional Vector Arcade</a></p>
+    </header>
+
+    <section class="lesson-panel" id="vector-lab" tabindex="-1" aria-labelledby="vector-lab-title"
+             data-origin-x="210" data-origin-y="210" data-unit-px="21"
+             data-axis-limit="8" data-view="xy" data-overlay="components">
+      <h3 id="vector-lab-title">Vector Lab</h3>
+      <p>Our axes are <strong>orthonormal</strong>: they meet at right angles and use the same unit of length. The arrows start at the origin, O = (0, 0, 0). Vector <strong class="vector-text-a">a</strong> starts at (1, 1, 1) and <strong class="vector-text-b">b</strong> at (1, 1, −2). Both tips project to (1, 1) in the XY view. That view keeps <var>x</var> and <var>y</var> and hides <var>z</var>.</p>
+
+      <form class="lesson-station vector-prediction" id="vector-opening-form">
+        <fieldset id="vector-opening-controls" disabled>
+          <legend>Make a prediction before revealing the angle</legend>
+          <div class="vector-actions">
+            <label class="vector-field" for="vector-opening-guess">
+              Can the starting arrows be perpendicular?
+              <select id="vector-opening-guess" required>
+                <option value="" selected>Choose a prediction</option>
+                <option value="yes">Yes, even with the same XY shadow</option>
+                <option value="no">No, the shared shadow rules it out</option>
+              </select>
+            </label>
+            <button class="lesson-button" type="submit">Save prediction</button>
+            <button class="lesson-button lesson-primary" id="vector-check-opening" type="button">Check starting pair</button>
+          </div>
+        </fieldset>
+        <p class="lesson-note" id="vector-opening-feedback" role="status">Save your prediction, then try the XZ or oblique view. Check starting pair reloads the two opening vectors and reveals the calculation.</p>
+      </form>
+
+      <div class="vector-console">
+        <section class="lesson-station" aria-labelledby="vector-display-title">
+          <div class="vector-display-heading">
+            <h4 id="vector-display-title">Coordinate view</h4>
+            <span class="vector-view-tag" id="vector-current-view">XY · z is hidden</span>
+          </div>
+
+          <figure class="vector-figure">
+            <div class="vector-viewport" id="vector-viewport">
+              <canvas class="vector-canvas" id="vector-canvas" aria-hidden="true" hidden></canvas>
+              <div class="vector-scene-labels" id="vector-scene-labels" aria-hidden="true" hidden></div>
+
+              <svg class="vector-plot" id="vector-svg" viewBox="0 0 420 420" role="img"
+                   aria-labelledby="vector-svg-title vector-svg-desc">
+                <title id="vector-svg-title">XY projection of vectors a and b</title>
+                <desc id="vector-svg-desc">The two arrows have one shared shadow from the origin to (1, 1). Vector a has z equal to 1 and vector b has z equal to minus 2. Their z coordinates are hidden in this view.</desc>
+                <defs>
+                  <pattern id="vector-grid-pattern" width="21" height="21" patternUnits="userSpaceOnUse">
+                    <path class="vector-grid-line" d="M21 0H0v21"/>
+                  </pattern>
+                  <marker id="vector-tip-a" viewBox="0 0 10 10" refX="9" refY="5"
+                          markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto">
+                    <path class="vector-fill-a" d="M0 0 10 5 0 10Z"/>
+                  </marker>
+                  <marker id="vector-tip-b" viewBox="0 0 10 10" refX="9" refY="5"
+                          markerWidth="6" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto">
+                    <path class="vector-fill-b" d="M0 0 10 5 0 10Z"/>
+                  </marker>
+                  <marker id="vector-tip-sum" viewBox="0 0 10 10" refX="9" refY="5"
+                          markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto">
+                    <path class="vector-fill-sum" d="M0 0 10 5 0 10Z"/>
+                  </marker>
+                  <marker id="vector-tip-projection" viewBox="0 0 10 10" refX="9" refY="5"
+                          markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto">
+                    <path class="vector-fill-projection" d="M0 0 10 5 0 10Z"/>
+                  </marker>
+                </defs>
+
+                <rect x="42" y="42" width="336" height="336" fill="url(#vector-grid-pattern)"/>
+                <rect class="vector-grid-frame" x="42" y="42" width="336" height="336"/>
+                <path class="vector-axis" d="M42 210h344m-8-5 8 5-8 5M210 378V34m-5 8 5-8 5 8"/>
+                <path class="vector-axis" d="M42 205v10m84-10v10m168-10v10m84-10v10M205 42h10m-10 84h10m-10 168h10m-10 84h10"/>
+                <text x="42" y="234">−8</text>
+                <text x="126" y="234">−4</text>
+                <text x="294" y="234">4</text>
+                <text x="378" y="234">8</text>
+                <text class="vector-tick-left" x="198" y="47">8</text>
+                <text class="vector-tick-left" x="198" y="131">4</text>
+                <text class="vector-tick-left" x="198" y="299">−4</text>
+                <text class="vector-tick-left" x="198" y="383">−8</text>
+                <circle class="vector-origin" cx="210" cy="210" r="3"/>
+                <text x="195" y="230">O</text>
+                <text class="vector-axis-label" id="vector-svg-horizontal" x="380" y="195">+x</text>
+                <text class="vector-axis-label" id="vector-svg-vertical" x="210" y="23">+y</text>
+
+                <g id="vector-svg-overlays" aria-hidden="true">
+                  <path class="vector-guide" d="M210 210h21v-21h-21"/>
+                </g>
+                <g id="vector-svg-arrows" aria-hidden="true">
+                  <line class="vector-line-a" x1="210" y1="210" x2="231" y2="189" marker-end="url(#vector-tip-a)"/>
+                  <line class="vector-line-b" x1="210" y1="210" x2="231" y2="189"/>
+                  <circle class="vector-point-a" cx="231" cy="189" r="4"/>
+                  <path class="vector-point-b" d="M231 182l7 7-7 7-7-7Z"/>
+                </g>
+                <g id="vector-svg-labels" aria-hidden="true">
+                  <text class="vector-label-a" x="259" y="181">a</text>
+                  <text class="vector-label-b" x="280" y="181">b</text>
+                  <text x="280" y="204">(1, 1)</text>
+                </g>
+              </svg>
+            </div>
+
+            <figcaption>One grid interval is one unit. The coordinate-plane views show shadows. A projected angle can look different from the angle between the full arrows.</figcaption>
+            <p class="lesson-note" id="vector-renderer-status" role="status">Static XY example. The lesson script will enable the views and controls.</p>
+          </figure>
+
+          <ul class="vector-legend" aria-label="Vector diagram legend">
+            <li><span class="vector-key vector-key-a" aria-hidden="true"></span><strong>a</strong> · solid, circle tip</li>
+            <li><span class="vector-key vector-key-b" aria-hidden="true"></span><strong>b</strong> · dashed, diamond tip</li>
+            <li><span class="vector-key vector-key-sum" aria-hidden="true"></span><strong>a + b</strong> · sum</li>
+            <li><span class="vector-key vector-key-projection" aria-hidden="true"></span><strong>proj</strong> · b onto a</li>
+            <li><span class="vector-key vector-key-guide" aria-hidden="true"></span>Component and perpendicular guides</li>
+            <li><span class="vector-key vector-key-angle" aria-hidden="true"></span><var>θ</var> · angle arc</li>
+          </ul>
+        </section>
+
+        <section class="lesson-station" aria-labelledby="vector-control-title">
+          <h4 id="vector-control-title">Move the arrows</h4>
+          <fieldset id="vector-controls" disabled>
+            <legend class="vector-sr-only">Vector, camera, and overlay controls</legend>
+            <p class="lesson-note">Each slider changes one signed component in 0.25-unit steps.</p>
+
+            <div class="vector-component-set" role="group" aria-label="Components of vector a">
+              <p class="vector-text-a"><strong>Vector a</strong></p>
+              <div class="vector-components">
+                <label class="vector-slider" for="vector-ax">
+                  <span><var>a</var><sub>x</sub></span>
+                  <output id="vector-ax-value" for="vector-ax">1</output>
+                  <input type="range" id="vector-ax" data-vector-component="ax" min="-4" max="4" step="0.25" value="1">
+                </label>
+                <label class="vector-slider" for="vector-ay">
+                  <span><var>a</var><sub>y</sub></span>
+                  <output id="vector-ay-value" for="vector-ay">1</output>
+                  <input type="range" id="vector-ay" data-vector-component="ay" min="-4" max="4" step="0.25" value="1">
+                </label>
+                <label class="vector-slider" for="vector-az">
+                  <span><var>a</var><sub>z</sub></span>
+                  <output id="vector-az-value" for="vector-az">1</output>
+                  <input type="range" id="vector-az" data-vector-component="az" min="-4" max="4" step="0.25" value="1">
+                </label>
+              </div>
+            </div>
+
+            <div class="vector-component-set" role="group" aria-label="Components of vector b">
+              <p class="vector-text-b"><strong>Vector b</strong></p>
+              <div class="vector-components">
+                <label class="vector-slider" for="vector-bx">
+                  <span><var>b</var><sub>x</sub></span>
+                  <output id="vector-bx-value" for="vector-bx">1</output>
+                  <input type="range" id="vector-bx" data-vector-component="bx" min="-4" max="4" step="0.25" value="1">
+                </label>
+                <label class="vector-slider" for="vector-by">
+                  <span><var>b</var><sub>y</sub></span>
+                  <output id="vector-by-value" for="vector-by">1</output>
+                  <input type="range" id="vector-by" data-vector-component="by" min="-4" max="4" step="0.25" value="1">
+                </label>
+                <label class="vector-slider" for="vector-bz">
+                  <span><var>b</var><sub>z</sub></span>
+                  <output id="vector-bz-value" for="vector-bz">−2</output>
+                  <input type="range" id="vector-bz" data-vector-component="bz" min="-4" max="4" step="0.25" value="-2">
+                </label>
+              </div>
+            </div>
+
+            <div class="vector-actions" role="group" aria-label="View presets">
+              <button class="lesson-button" type="button" data-vector-view="xy" aria-pressed="true">XY view</button>
+              <button class="lesson-button" type="button" data-vector-view="xz" aria-pressed="false">XZ view</button>
+              <button class="lesson-button" type="button" data-vector-view="oblique" aria-pressed="false">Oblique view</button>
+            </div>
+            <p class="lesson-note">Changing the view leaves all six components in place. The SVG fallback offers XY and XZ views.</p>
+
+            <label class="vector-field" for="vector-overlay">
+              Diagram overlay
+              <select id="vector-overlay" aria-describedby="vector-overlay-note">
+                <option value="components" selected>Components</option>
+                <option value="addition">Addition · a + b</option>
+                <option value="projection">Projection · b onto a</option>
+              </select>
+            </label>
+            <p class="lesson-note" id="vector-overlay-note">The component guides break each arrow into steps along the axes.</p>
+
+            <div class="vector-actions" role="group" aria-label="Vector presets">
+              <button class="lesson-button" type="button" data-vector-preset="opening">Opening pair</button>
+              <button class="lesson-button" type="button" data-vector-preset="parallel">Parallel</button>
+              <button class="lesson-button" type="button" data-vector-preset="perpendicular">Perpendicular</button>
+              <button class="lesson-button" type="button" data-vector-preset="opposite">Opposite</button>
+              <button class="lesson-button" type="button" data-vector-preset="zero-a">Zero a</button>
+              <button class="lesson-button" type="button" data-vector-preset="zero-b">Zero b</button>
+              <button class="lesson-button" id="vector-reset" type="button">Reset lab</button>
+            </div>
+            <label class="va-reduced"><input id="vector-reduced" type="checkbox" disabled> Reduced effects</label>
+          </fieldset>
+          <p class="vector-reaction" id="vector-lab-feedback" role="status">Same shadow, different depths. Switch to XZ to see where the two tips separate.</p>
+        </section>
+      </div>
+
+      <section class="lesson-station" aria-labelledby="vector-readout-title">
+        <h4 id="vector-readout-title">Read the vectors</h4>
+        <dl class="vector-metrics">
+          <div><dt class="vector-text-a">Vector a</dt><dd id="vector-a">(1, 1, 1)</dd></div>
+          <div><dt class="vector-text-b">Vector b</dt><dd id="vector-b">(1, 1, −2)</dd></div>
+          <div><dt>Magnitude ‖a‖</dt><dd id="vector-length-a">√3 ≈ 1.732 units</dd></div>
+          <div><dt>Magnitude ‖b‖</dt><dd id="vector-length-b">√6 ≈ 2.449 units</dd></div>
+          <div><dt>XY shadow of a</dt><dd id="vector-shadow-a">(1, 1)</dd></div>
+          <div><dt>XY shadow of b</dt><dd id="vector-shadow-b">(1, 1)</dd></div>
+          <div><dt class="vector-text-sum">Sum a + b</dt><dd id="vector-sum">(2, 2, −1)</dd></div>
+        </dl>
+
+        <p class="lesson-note" id="vector-reveal-placeholder">The numerical dot product, angle, and projection are hidden so you can predict first.</p>
+        <fieldset id="vector-result-controls" disabled>
+          <legend class="vector-sr-only">Calculation controls</legend>
+          <button class="lesson-button" id="vector-reveal-live" type="button"
+                  aria-controls="vector-result-values">Reveal current calculation</button>
+        </fieldset>
+
+        <div class="vector-calculations" id="vector-result-values" tabindex="-1" hidden>
+          <p class="vector-equation" id="vector-dot-expression">a · b = 1(1) + 1(1) + 1(−2) = 0</p>
+          <dl class="vector-metrics">
+            <div><dt>Dot product a · b</dt><dd id="vector-dot">0 square units</dd></div>
+            <div><dt>Normalized dot product</dt><dd id="vector-cosine">0</dd></div>
+            <div><dt class="vector-text-angle">Angle θ</dt><dd id="vector-angle">90° = π/2 rad</dd></div>
+            <div><dt>Alignment</dt><dd id="vector-alignment">Perpendicular</dd></div>
+            <div><dt class="vector-text-projection">Signed component of b along a</dt><dd id="vector-proj-scalar">0 units</dd></div>
+            <div><dt class="vector-text-projection">Vector projection of b onto a</dt><dd id="vector-proj">(0, 0, 0)</dd></div>
+          </dl>
+          <p class="lesson-note" id="vector-projection-status">The projection is at the origin. The guide from the tip of b to that point is perpendicular to the direction of a.</p>
+        </div>
+      </section>
+    </section>
+
+    <details class="lesson-panel">
+      <summary>Read a vector and measure its magnitude</summary>
+      <div class="lesson-prose">
+        <p>A component tells you how far and in which signed direction to step along one axis. In the <strong>Components</strong> overlay, follow <var>x</var>, <var>y</var>, then <var>z</var> to reach the tip. The arrow from the origin records the resulting direction and distance. That distance is the vector’s <strong>magnitude</strong>.</p>
+        <p>First find the diagonal of the right triangle in the XY plane. Its squared length is <var>a</var><sub>x</sub>² + <var>a</var><sub>y</sub>². Use that diagonal and the perpendicular <var>z</var> leg in a second right triangle.</p>
+        <p class="vector-equation">‖a‖ = √(<var>a</var><sub>x</sub>² + <var>a</var><sub>y</sub>² + <var>a</var><sub>z</sub>²)</p>
+        <p>For a = (1, 1, 1), the squared length is 1 + 1 + 1 = 3 square units, so the magnitude is √3 units. The axes determine the component description. Moving the camera simply gives you another view of those same axes and components.</p>
+      </div>
+    </details>
+
+    <section class="lesson-panel" aria-labelledby="vector-add-title">
+      <h3 id="vector-add-title">Add two arrows tip to tail</h3>
+      <p>Load the opening pair and choose <strong>Addition</strong>. Slide a copy of <strong class="vector-text-b">b</strong> so its tail sits at the tip of <strong class="vector-text-a">a</strong>. The drawing moves, and its steps along each axis stay the same. The <strong class="vector-text-sum">resultant a + b</strong> runs from the origin to the tip of that translated copy.</p>
+      <details>
+        <summary>Work through the opening sum</summary>
+        <div class="lesson-prose">
+          <p>Along <var>x</var> the two steps are 1 and 1. Along <var>y</var> they are also 1 and 1. Along <var>z</var> they are 1 and −2. Add each pair separately.</p>
+          <p class="vector-equation">a + b = (1 + 1, 1 + 1, 1 − 2) = (2, 2, −1)</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="vector-dot-title">
+      <h3 id="vector-dot-title">Use the dot product to settle the puzzle</h3>
+      <p>The real Euclidean <strong>inner product</strong> here is the dot product. It combines two vectors into a single number, called a scalar. Multiply components on the same axis and add those three products. For nonzero vectors, the dot product also equals the product of the magnitudes times the cosine of their angle.</p>
+      <p class="vector-equation">a · b = <var>a</var><sub>x</sub><var>b</var><sub>x</sub> + <var>a</var><sub>y</sub><var>b</var><sub>y</sub> + <var>a</var><sub>z</sub><var>b</var><sub>z</sub><br>
+        a · b = ‖a‖ ‖b‖ cos <var>θ</var></p>
+      <p>Here <var>θ</var> is the angle between the full arrows, from 0 to π radians. Dividing by ‖a‖ ‖b‖ gives cos <var>θ</var> for two nonzero vectors. The raw dot product depends on lengths and alignment. The normalized value isolates alignment.</p>
+      <details>
+        <summary>Check the opening puzzle by hand</summary>
+        <div class="lesson-prose">
+          <p>For (1, 1, 1) and (1, 1, −2), the component products are +1, +1, and −2. They add to zero. Both vectors are nonzero, so their cosine is zero and their angle is 90°. Their identical XY shadows hide the depth terms that make this possible.</p>
+        </div>
+      </details>
+      <details>
+        <summary>See why the cosine formula works</summary>
+        <div class="lesson-prose">
+          <p>The squared distance between the tips is ‖a − b‖². Expanding the squared differences of the coordinates gives ‖a‖² + ‖b‖² − 2(a · b). The law of cosines gives the same distance as ‖a‖² + ‖b‖² − 2‖a‖ ‖b‖ cos <var>θ</var>. Equating the two expressions gives the cosine formula. Parallel and opposite directions use the limiting angles 0 and π.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="vector-sign-title">
+      <h3 id="vector-sign-title">Change one component</h3>
+      <p>Hold a at (1, 1, 1) and keep the first two components of b at 1. Predict the sign of the dot product when you change only <var>b</var><sub>z</sub>. In XZ view you can see the depth change.</p>
+
+      <form id="vector-sign-form">
+        <fieldset id="vector-sign-controls" disabled>
+          <legend>Predict the sign, then load the case</legend>
+          <div class="vector-actions">
+            <label class="vector-field" for="vector-sign-z">
+              <var>b</var><sub>z</sub>
+              <select id="vector-sign-z">
+                <option value="-1">−1</option>
+                <option value="-2" selected>−2</option>
+                <option value="-3">−3</option>
+              </select>
+            </label>
+            <label class="vector-field" for="vector-sign-guess">
+              Expected sign of a · b
+              <select id="vector-sign-guess" required>
+                <option value="" selected>Choose a sign</option>
+                <option value="positive">Positive</option>
+                <option value="zero">Zero</option>
+                <option value="negative">Negative</option>
+              </select>
+            </label>
+            <button class="lesson-button" type="submit">Load case and check</button>
+            <a href="#vector-lab">Return to Vector Lab</a>
+          </div>
+        </fieldset>
+      </form>
+      <p class="vector-reaction" id="vector-sign-feedback" role="status">Choose a depth and predict the sign before loading the pair.</p>
+
+      <details>
+        <summary>Compare the three cases and the endpoint angles</summary>
+        <table class="vector-table">
+          <caption>Only <var>b</var><sub>z</sub> changes</caption>
+          <thead><tr><th scope="col"><var>b</var><sub>z</sub></th><th scope="col">a · b</th><th scope="col">Angle</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">−1</th><td>+1</td><td>Acute</td></tr>
+            <tr><th scope="row">−2</th><td>0</td><td>Right</td></tr>
+            <tr><th scope="row">−3</th><td>−1</td><td>Obtuse</td></tr>
+          </tbody>
+        </table>
+        <p>For nonzero vectors, positive cosine means an acute angle or the parallel endpoint 0°. Negative cosine means an obtuse angle or the opposite endpoint 180°. The <strong>Parallel</strong> and <strong>Opposite</strong> presets show those endpoints.</p>
+      </details>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="vector-project-title">
+      <h3 id="vector-project-title">Project b onto the direction of a</h3>
+      <p>Choose <strong>Projection · b onto a</strong>. Imagine a line through the origin in the direction of a. Drop a perpendicular guide from the tip of b to that line. The landing point is the tip of the <strong class="vector-text-projection">vector projection</strong>. This operation uses all three components and differs from taking an XY shadow.</p>
+      <p>Try the −3 depth case from the sign experiment. The signed component is negative, so the landing point lies on the ray opposite a.</p>
+      <details>
+        <summary>Calculate the signed component and the projected arrow</summary>
+        <div class="lesson-prose">
+          <p>For nonzero a, divide the dot product by the magnitude of a to get the <strong>signed scalar component</strong> of b along a. It is a number in units of length. Multiply it by the unit direction a/‖a‖ to get the <strong>vector projection</strong>.</p>
+          <p class="vector-equation">Signed component = (a · b) / ‖a‖<br>
+            proj<sub>a</sub> b = [(a · b) / (a · a)] a</p>
+          <p>In the −3 depth case the dot product is −1 and ‖a‖ = √3. The scalar component is −1/√3 units, and the vector projection is (−⅓, −⅓, −⅓).</p>
+        </div>
+      </details>
+      <details>
+        <summary>Check what zero changes</summary>
+        <div class="lesson-prose">
+          <p>The zero vector has magnitude zero, no direction, and dot product zero with every vector. If either vector is zero, the angle is undefined. A zero dot product establishes a right angle only when both vectors are nonzero.</p>
+          <p>If a = (0, 0, 0), projection onto its direction is undefined. If b = (0, 0, 0) and a is nonzero, the projection is the zero vector. Try both zero presets and compare the readouts.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="lesson-panel" id="vector-challenge" aria-labelledby="vector-challenge-title">
+      <h3 id="vector-challenge-title">Lab checkout</h3>
+      <p class="lesson-kicker" id="vector-challenge-progress">Question 1 of 2</p>
+      <fieldset id="vector-challenge-controls" disabled>
+        <legend class="vector-sr-only">Challenge answers</legend>
+
+        <div data-vector-question="1">
+          <h4 tabindex="-1">Suppose a is nonzero and b is the zero vector. What does the zero dot product tell you about the angle?</h4>
+          <div class="vector-answers">
+            <button class="lesson-button" type="button" data-vector-answer="right">The angle is 90°</button>
+            <button class="lesson-button" type="button" data-vector-answer="undefined">The angle is undefined</button>
+            <button class="lesson-button" type="button" data-vector-answer="parallel">The vectors are parallel with angle 0°</button>
+          </div>
+        </div>
+
+        <div data-vector-question="2" hidden>
+          <h4 tabindex="-1">Build a new perpendicular vector</h4>
+          <p>Keep a = (1, 1, 1). Find a nonzero b whose XY shadow differs from (1, 1) and whose dot product with a is zero. Look for component products that cancel.</p>
+          <div class="vector-actions">
+            <button class="lesson-button" id="vector-challenge-setup" type="button">Load challenge setup</button>
+            <a href="#vector-lab">Adjust b in the lab</a>
+            <button class="lesson-button lesson-primary" id="vector-check-construction" type="button">Check my vector</button>
+          </div>
+          <p class="vector-equation" id="vector-challenge-pair">Current a = (1, 1, 1) · b = (1, 1, −2)</p>
+        </div>
+      </fieldset>
+      <p class="lesson-note" id="vector-challenge-feedback" role="status">The lesson script will check your answers and let you retry.</p>
+      <button class="lesson-button" id="vector-next-question" type="button" hidden>Next question</button>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="vector-bridge-title">
+      <h3 id="vector-bridge-title" tabindex="-1">From arrows to state spaces</h3>
+      <p>This lab used ordinary real vectors in three dimensions. In later lessons, quantum states can live in abstract complex vector spaces. Length and orthogonality still matter there. An inner product gives us a way to define and calculate both, once we know the rules for that space.</p>
+      <p>Next, we’ll look at how the same vector can have different components when we describe it using a different basis.</p>
+    </section>
+
+    <nav class="lesson-next" aria-label="Continue the course">
+      <a href="../../index.html">Course homepage</a>
+      <a class="lesson-button lesson-primary" href="../8_bases_and_coordinates/8_bases_and_coordinates.html">
+        Next lesson: Bases and Coordinates <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+
+    <details class="lesson-panel va-arcade" id="vector-arcade">
+      <summary><strong>Vector Arcade</strong><span>Optional practice</span></summary>
+      <p>Pick a station, try its controls, and open a mission when you’re ready. Use two hints or retry at any time. Progress lasts while this page is open.</p>
+      <p class="lesson-note" id="va-tolerance">Quarter-step component checks use exact arithmetic where possible. For rounded entries in the projection and breakdown missions, answers within 0.002 units per component are accepted.</p>
+      <div class="va-toolbar">
+        <label>Station
+          <select id="va-station" aria-controls="va-panels" disabled>
+            <option value="navigation">Vector Navigation Academy</option>
+            <option value="yard">Head-to-Tail Construction Yard</option>
+            <option value="magnitude">Magnitude and Direction Workshop</option>
+            <option value="dot">Dot Product Target Range</option>
+            <option value="ortho">Orthogonality Escape Room</option>
+            <option value="projection">Projection and Shadow Arcade</option>
+            <option value="breakdown">Component Breakdown Lab</option>
+            <option value="shadow">Vector Shadow Detective</option>
+            <option value="alignment">Angle and Alignment Observatory</option>
+            <option value="codebreaker">Inner Product Codebreaker</option>
+            <option value="complex">Complex Inner Product Preview</option>
+            <option value="overlap">Quantum Overlap Preview</option>
+          </select>
+        </label>
+        <p id="va-progress" role="status">0 of 52 missions completed this session.</p>
+        <button class="lesson-button" id="va-reset" type="button" disabled>Reset this station</button>
+      </div>
+      <p class="lesson-note" id="va-status" role="status"></p>
+      <p><a href="#vector-lab">Return to Vector Lab</a></p>
+      <noscript><p>JavaScript runs the diagrams, calculations, and mission checks.</p></noscript>
+
+      <div id="va-panels">
+        <section class="va-station" data-va-station="navigation" data-va-accent="blue" aria-labelledby="va-navigation-title">
+          <h4 id="va-navigation-title">Vector Navigation Academy</h4>
+          <p>Pilot from the origin. Enter a displacement for each leg, then compare the route with the direct displacement.</p>
+          <div data-va-plot-slot></div>
+          <fieldset disabled>
+            <legend class="vector-sr-only">Vector Navigation Academy controls</legend>
+            <div class="va-fields">
+              <label>Coordinate view <select name="view"><option value="xy">XY</option><option value="xz">XZ</option><option value="oblique">Oblique</option></select></label>
+            </div>
+            <div class="va-fields">
+              <label>Displacement x <input type="number" name="dx" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>Displacement y <input type="number" name="dy" min="-4" max="4" step="0.25" value="0" required></label>
+              <label>Displacement z <input type="number" name="dz" min="-4" max="4" step="0.25" value="0" required></label>
+            </div>
+            <div class="vector-actions">
+              <button class="lesson-primary" type="button" data-va-action="move">Fly this leg</button>
+              <button type="button" data-va-action="restart">Restart at origin</button>
+            </div>
+            <p class="va-readout" data-va-read="state" role="status">Start (0, 0, 0) · Position (0, 0, 0) · Total displacement (0, 0, 0).</p>
+            <ol class="va-log" data-va-log aria-label="Recorded flight legs"></ol>
+
+            <div class="va-missions">
+              <details class="va-mission" data-va-mission="navigation-one">
+                <summary>Reach a target in one leg<span data-va-done hidden>✓ Complete</span></summary>
+                <p>From the origin, reach (2, 1, −1) in exactly one displacement.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="navigation-two">
+                <summary>Build a two-leg route<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Restart at the origin. Reach (3, 2, 1) using two nonzero displacements.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="navigation-negative">
+                <summary>Fly a negative depth leg<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Enter a displacement with negative z. The final z position can have either sign.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="navigation-routes">
+                <summary>Compare two routes<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Save a route of two or more legs. Restart the flight and reach the same endpoint along a different route with different intermediate positions.</p>
+                <button type="button" data-va-action="pin">Save this route</button>
+                <p class="va-readout" data-va-read="saved">No route saved.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="va-math">
+            <summary>Explore the math</summary>
+            <p>New position = old position + displacement. The resultant is the end position minus the origin of the route. Different intermediate positions can share the same resultant.</p>
+          </details>
+        </section>
+
+        <section class="va-station" data-va-station="yard" data-va-accent="orange" aria-labelledby="va-yard-title" hidden>
+          <h4 id="va-yard-title">Head-to-Tail Construction Yard</h4>
+          <p>Build a path with two arrows, then append a third if you want. Subtraction translates a reversed copy of b.</p>
+          <div data-va-plot-slot></div>
+          <fieldset disabled>
+            <legend class="vector-sr-only">Head-to-Tail Construction Yard controls</legend>
+            <div class="va-fields">
+              <label>Coordinate view <select name="view"><option value="xy">XY</option><option value="xz">XZ</option><option value="oblique">Oblique</option></select></label>
+            </div>
+            <div class="va-fields">
+              <label>a x <input type="number" name="ax" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>a y <input type="number" name="ay" min="-4" max="4" step="0.25" value="2" required></label>
+              <label>a z <input type="number" name="az" min="-4" max="4" step="0.25" value="0" required></label>
+            </div>
+            <div class="va-fields">
+              <label>b x <input type="number" name="bx" min="-4" max="4" step="0.25" value="2" required></label>
+              <label>b y <input type="number" name="by" min="-4" max="4" step="0.25" value="-1" required></label>
+              <label>b z <input type="number" name="bz" min="-4" max="4" step="0.25" value="1" required></label>
+            </div>
+            <div class="va-fields">
+              <label>Operation <select name="operation"><option value="add">a + b</option><option value="subtract">a − b</option></select></label>
+              <button class="lesson-primary" type="button" data-va-action="build">Build the path</button>
+              <button type="button" data-va-action="reverse">Build b then a</button>
+            </div>
+            <p class="va-readout" data-va-read="state">Set a and b, then build their path.</p>
+            <div class="va-fields">
+              <label>Next leg x <input type="number" name="cx" min="-16" max="16" step="0.25" value="0" required></label>
+              <label>Next leg y <input type="number" name="cy" min="-16" max="16" step="0.25" value="0" required></label>
+              <label>Next leg z <input type="number" name="cz" min="-16" max="16" step="0.25" value="0" required></label>
+            </div>
+            <button type="button" data-va-action="append">Append next leg</button>
+            <p class="va-readout" data-va-read="comparison">No reversed order recorded.</p>
+
+            <div class="va-missions">
+              <details class="va-mission" data-va-mission="yard-endpoint">
+                <summary>Build a target sum<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Use addition and two vectors to reach (3, 1, 1).</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="yard-order">
+                <summary>Swap the two legs<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Build a sum, then build b followed by a. Compare the two intermediate points and the final endpoint.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="yard-cancel">
+                <summary>Return a running total to zero<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Choose and append a nonzero next leg that cancels the current nonzero total.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="yard-predict">
+                <summary>Predict the two-leg result<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Use the selected a, b, and operation. Enter the expected components before revealing the total.</p>
+                <div class="va-fields">
+                  <label>Predicted x <input type="number" name="guessx" min="-8" max="8" step="0.25" required></label>
+                  <label>Predicted y <input type="number" name="guessy" min="-8" max="8" step="0.25" required></label>
+                  <label>Predicted z <input type="number" name="guessz" min="-8" max="8" step="0.25" required></label>
+                </div>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="va-math">
+            <summary>Explore the math</summary>
+            <p>The arrow from the origin to the last endpoint is the resultant. Changing addition order can change the path while preserving its endpoint. Subtraction uses a + (−b).</p>
+          </details>
+        </section>
+
+        <section class="va-station" data-va-station="magnitude" data-va-accent="green" aria-labelledby="va-magnitude-title" hidden>
+          <h4 id="va-magnitude-title">Magnitude and Direction Workshop</h4>
+          <p>Set a vector, then scale it or save it for comparison. The displayed length comes from all three components.</p>
+          <div data-va-plot-slot></div>
+          <fieldset disabled>
+            <legend class="vector-sr-only">Magnitude and Direction Workshop controls</legend>
+            <div class="va-fields">
+              <label>Coordinate view <select name="view"><option value="xy">XY</option><option value="xz">XZ</option><option value="oblique">Oblique</option></select></label>
+            </div>
+            <div class="va-fields">
+              <label>Vector x <input type="number" name="vx" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>Vector y <input type="number" name="vy" min="-4" max="4" step="0.25" value="2" required></label>
+              <label>Vector z <input type="number" name="vz" min="-4" max="4" step="0.25" value="0" required></label>
+            </div>
+            <div class="va-fields">
+              <label>Scale factor <input type="number" name="factor" min="-4" max="4" step="0.25" value="2" required></label>
+              <button class="lesson-primary" type="button" data-va-action="plot">Plot vector</button>
+              <button type="button" data-va-action="scale">Apply scale</button>
+            </div>
+            <p class="va-readout" data-va-read="state">Vector (1, 2, 0).</p>
+            <p class="va-readout" data-va-read="record">No scaling comparison.</p>
+
+            <div class="va-missions">
+              <details class="va-mission" data-va-mission="magnitude-five">
+                <summary>Build length 5<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Plot a vector whose magnitude is 5.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="magnitude-double">
+                <summary>Double the length<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Scale a nonzero vector. Its length must double and its direction must stay the same.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="magnitude-reverse">
+                <summary>Reverse the direction<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Scale a nonzero vector to the opposite direction while keeping its length.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="magnitude-match">
+                <summary>Match length with a new direction<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Save one nonzero plotted vector. Plot another with the same magnitude and a genuinely different direction.</p>
+                <button type="button" data-va-action="pin">Save plotted vector</button>
+                <p class="va-readout" data-va-read="saved">No vector saved.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="magnitude-zero">
+                <summary>Explain zero direction<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Set all three components to zero and explain the direction readout.</p>
+                <div class="va-fields">
+                  <label>Reason
+                    <select name="why">
+                      <option value="">Choose an answer</option>
+                      <option value="none">A zero-length vector has no direction</option>
+                      <option value="axis">Zero points along +x</option>
+                      <option value="all">Zero makes every angle 90°</option>
+                    </select>
+                  </label>
+                </div>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="va-math">
+            <summary>Explore the math</summary>
+            <p>Magnitude is √(x² + y² + z²). A positive factor preserves direction, a negative factor reverses it, and a factor of zero removes the direction.</p>
+          </details>
+        </section>
+
+        <section class="va-station" data-va-station="dot" data-va-accent="violet" aria-labelledby="va-dot-title" hidden>
+          <h4 id="va-dot-title">Dot Product Target Range</h4>
+          <p>Set a and b. Inspect the three component products, both lengths, normalized alignment, and angle.</p>
+          <div data-va-plot-slot></div>
+          <fieldset disabled>
+            <legend class="vector-sr-only">Dot Product Target Range controls</legend>
+            <div class="va-fields">
+              <label>Coordinate view <select name="view"><option value="xy">XY</option><option value="xz">XZ</option><option value="oblique">Oblique</option></select></label>
+            </div>
+            <div class="va-fields">
+              <label>a x <input type="number" name="ax" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>a y <input type="number" name="ay" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>a z <input type="number" name="az" min="-4" max="4" step="0.25" value="1" required></label>
+            </div>
+            <div class="va-fields">
+              <label>b x <input type="number" name="bx" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>b y <input type="number" name="by" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>b z <input type="number" name="bz" min="-4" max="4" step="0.25" value="-2" required></label>
+            </div>
+            <div class="va-fields">
+              <button class="lesson-primary" type="button" data-va-action="plot">Check the pair</button>
+              <label>Positive scale for b <input type="number" name="factor" min="0.25" max="4" step="0.25" value="2" required></label>
+              <button type="button" data-va-action="scale">Scale b and compare</button>
+            </div>
+            <p class="va-readout" data-va-read="state">Start with the opening vectors.</p>
+            <p class="va-readout" data-va-read="record">No scale comparison.</p>
+
+            <div class="va-missions">
+              <details class="va-mission" data-va-mission="dot-positive">
+                <summary>Hit a positive dot product<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Choose a pair with a · b greater than zero.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="dot-negative">
+                <summary>Hit a negative dot product<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Choose a pair with a · b less than zero.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="dot-zero">
+                <summary>Hit zero with two directions<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Choose two nonzero vectors whose component products sum to zero.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="dot-scale">
+                <summary>Change the raw product at a fixed angle<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Start with nonzero a · b. Use the scale action to change the product while preserving the angle.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="dot-endpoints">
+                <summary>Compare parallel and opposite<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Plot parallel vectors in the same direction and save them. Plot a nonzero opposite pair and compare normalized alignments.</p>
+                <button type="button" data-va-action="pin">Save plotted pair</button>
+                <p class="va-readout" data-va-read="saved">No pair saved.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="va-math">
+            <summary>Explore the math</summary>
+            <p>Multiply matching components and add the three products. Divide by both lengths to obtain normalized alignment when both vectors are nonzero.</p>
+          </details>
+        </section>
+
+        <section class="va-station" data-va-station="ortho" data-va-accent="yellow" aria-labelledby="va-ortho-title" hidden>
+          <h4 id="va-ortho-title">Orthogonality Escape Room</h4>
+          <p>Open each door with a complete three-dimensional check. XY alone may hide the term that makes the difference.</p>
+          <div data-va-plot-slot></div>
+          <fieldset disabled>
+            <legend class="vector-sr-only">Orthogonality Escape Room controls</legend>
+            <div class="va-fields">
+              <label>Coordinate view <select name="view"><option value="xy">XY</option><option value="xz">XZ</option><option value="oblique">Oblique</option></select></label>
+            </div>
+            <div class="va-fields">
+              <label>a x <input type="number" name="ax" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>a y <input type="number" name="ay" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>a z <input type="number" name="az" min="-4" max="4" step="0.25" value="1" required></label>
+            </div>
+            <div class="va-fields">
+              <label>b x <input type="number" name="bx" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>b y <input type="number" name="by" min="-4" max="4" step="0.25" value="-1" required></label>
+              <label>b z <input type="number" name="bz" min="-4" max="4" step="0.25" value="0" required></label>
+            </div>
+            <button class="lesson-primary" type="button" data-va-action="plot">Inspect component products</button>
+            <p class="va-readout" data-va-read="state">Two vectors are ready to inspect.</p>
+            <p class="va-readout" data-va-read="door">Door closed.</p>
+
+            <div class="va-missions">
+              <details class="va-mission" data-va-mission="ortho-fixed">
+                <summary>Unlock the reference door<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Keep a = (1, 1, 1) and construct any nonzero perpendicular b.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="ortho-shadow">
+                <summary>Unlock the shared-shadow door<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Construct two nonzero perpendicular vectors with identical, nonzero XY shadows.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="ortho-missing">
+                <summary>Recover the missing z<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Find z so (2, 1, 1) · (1, 1, z) = 0.</p>
+                <div class="va-fields">
+                  <label>Missing z <input type="number" name="missing" min="-4" max="4" step="0.25" required></label>
+                </div>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="ortho-zero">
+                <summary>Explain the zero-vector trap<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Set b to zero while a is nonzero and choose the geometric conclusion.</p>
+                <div class="va-fields">
+                  <label>Conclusion
+                    <select name="why">
+                      <option value="">Choose an answer</option>
+                      <option value="undefined">The angle is undefined because b has no direction</option>
+                      <option value="right">Zero dot product guarantees 90°</option>
+                      <option value="parallel">The angle is 0°</option>
+                    </select>
+                  </label>
+                </div>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="va-math">
+            <summary>Explore the math</summary>
+            <p>A zero dot product proves a 90° angle when both arrows have a direction. Equal XY shadows still leave two z-components to check.</p>
+          </details>
+        </section>
+
+        <section class="va-station" data-va-station="projection" data-va-accent="blue" aria-labelledby="va-projection-title" hidden>
+          <h4 id="va-projection-title">Projection and Shadow Arcade</h4>
+          <p>Project the source b onto reference direction a. The XY shadow of b is shown independently.</p>
+          <div data-va-plot-slot></div>
+          <fieldset disabled>
+            <legend class="vector-sr-only">Projection and Shadow Arcade controls</legend>
+            <div class="va-fields">
+              <label>Coordinate view <select name="view"><option value="xy">XY</option><option value="xz">XZ</option><option value="oblique">Oblique</option></select></label>
+            </div>
+            <div class="va-fields">
+              <label>Reference a x <input type="number" name="ax" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>Reference a y <input type="number" name="ay" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>Reference a z <input type="number" name="az" min="-4" max="4" step="0.25" value="1" required></label>
+            </div>
+            <div class="va-fields">
+              <label>Source b x <input type="number" name="bx" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>Source b y <input type="number" name="by" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>Source b z <input type="number" name="bz" min="-4" max="4" step="0.25" value="-3" required></label>
+            </div>
+            <button class="lesson-primary" type="button" data-va-action="plot">Apply vectors</button>
+            <p class="va-readout" data-va-read="state">Set the reference and source to inspect both projections.</p>
+
+            <div class="va-missions">
+              <details class="va-mission" data-va-mission="projection-forward">
+                <summary>Project along a<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Choose a pair whose projection lands on the forward ray of a.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="projection-back">
+                <summary>Project against a<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Choose a pair whose projection lies on the ray opposite a.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="projection-zero">
+                <summary>Make a defined zero projection<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Use two nonzero perpendicular vectors.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="projection-shadow">
+                <summary>Distinguish the two shadows<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Choose a pair for which the XY shadow of b differs from its projection along a.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="projection-source">
+                <summary>Predict projection of zero b<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Choose what happens when b is zero and a is nonzero. After checking, try setting a to zero as well.</p>
+                <div class="va-fields">
+                  <label>Projection result
+                    <select name="guess">
+                      <option value="">Choose an answer</option>
+                      <option value="zero">A defined zero vector</option>
+                      <option value="undefined">Undefined</option>
+                      <option value="nonzero">A nonzero vector</option>
+                    </select>
+                  </label>
+                </div>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="va-math">
+            <summary>Explore the math</summary>
+            <p>The signed component is (a · b)/‖a‖. The projected vector is that component times a/‖a‖. With zero a, both are undefined, while zero b onto nonzero a gives a defined zero.</p>
+          </details>
+        </section>
+
+        <section class="va-station" data-va-station="breakdown" data-va-accent="orange" aria-labelledby="va-breakdown-title" hidden>
+          <h4 id="va-breakdown-title">Component Breakdown Lab</h4>
+          <p>Follow steps along the coordinate axes, or split b into a part parallel to a and a perpendicular remainder.</p>
+          <div data-va-plot-slot></div>
+          <fieldset disabled>
+            <legend class="vector-sr-only">Component Breakdown Lab controls</legend>
+            <div class="va-fields">
+              <label>Coordinate view <select name="view"><option value="xy">XY</option><option value="xz">XZ</option><option value="oblique">Oblique</option></select></label>
+            </div>
+            <div class="va-fields">
+              <label>Reference a x <input type="number" name="ax" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>Reference a y <input type="number" name="ay" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>Reference a z <input type="number" name="az" min="-4" max="4" step="0.25" value="1" required></label>
+            </div>
+            <div class="va-fields">
+              <label>Vector b x <input type="number" name="bx" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>Vector b y <input type="number" name="by" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>Vector b z <input type="number" name="bz" min="-4" max="4" step="0.25" value="-3" required></label>
+            </div>
+            <div class="va-fields">
+              <label>Breakdown mode <select name="mode"><option value="axes">Axis components</option><option value="parallel">Parallel and perpendicular</option></select></label>
+              <button class="lesson-primary" type="button" data-va-action="plot">Build decomposition</button>
+            </div>
+            <p class="va-readout" data-va-read="state">Start with b = (1, 1, −3).</p>
+
+            <div class="va-missions">
+              <details class="va-mission" data-va-mission="breakdown-axes">
+                <summary>Build with axis steps<span data-va-done hidden>✓ Complete</span></summary>
+                <p>In axis mode construct b = (2, −1, 3) and check its three steps.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="breakdown-parallel">
+                <summary>Find the parallel component<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Set nonzero a and a source b, then predict the three components of the projection of b onto a.</p>
+                <div class="va-fields">
+                  <label>Predicted projection x <input type="number" name="parallelx" min="-8" max="8" step="any" required></label>
+                  <label>Predicted projection y <input type="number" name="parallely" min="-8" max="8" step="any" required></label>
+                  <label>Predicted projection z <input type="number" name="parallelz" min="-8" max="8" step="any" required></label>
+                </div>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="breakdown-remainder">
+                <summary>Verify a perpendicular remainder<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Choose nonzero a and a pair with a nonzero perpendicular remainder. Enter the expected dot product of a with that remainder.</p>
+                <div class="va-fields">
+                  <label>Predicted remainder dot product <input type="number" name="dot" min="-64" max="64" step="any" required></label>
+                </div>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="breakdown-sum">
+                <summary>Reconstruct b<span data-va-done hidden>✓ Complete</span></summary>
+                <p>In parallel and perpendicular mode, enter the sum of the two displayed parts.</p>
+                <div class="va-fields">
+                  <label>Reconstructed b x <input type="number" name="sumx" min="-8" max="8" step="any" required></label>
+                  <label>Reconstructed b y <input type="number" name="sumy" min="-8" max="8" step="any" required></label>
+                  <label>Reconstructed b z <input type="number" name="sumz" min="-8" max="8" step="any" required></label>
+                </div>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="va-math">
+            <summary>Explore the math</summary>
+            <p>The perpendicular remainder is b − projₐ b. It is orthogonal to a, and the two pieces add back to b. If the remainder is zero, it has no direction.</p>
+          </details>
+        </section>
+
+        <section class="va-station" data-va-station="shadow" data-va-accent="violet" aria-labelledby="va-shadow-title" hidden>
+          <h4 id="va-shadow-title">Vector Shadow Detective</h4>
+          <p>Start with XY evidence. Switch to XZ to reveal z, or submit a mission answer that uses the hidden depth.</p>
+          <div data-va-plot-slot></div>
+          <fieldset disabled>
+            <legend class="vector-sr-only">Vector Shadow Detective controls</legend>
+            <div class="va-fields">
+              <label>Evidence plane <select name="view"><option value="xy">XY · hide depth</option><option value="xz">XZ · show depth</option></select></label>
+              <button type="button" data-va-action="opening">Load the opening pair</button>
+            </div>
+            <div class="va-fields">
+              <label>a x <input type="number" name="ax" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>a y <input type="number" name="ay" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>b x <input type="number" name="bx" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>b y <input type="number" name="by" min="-4" max="4" step="0.25" value="1" required></label>
+            </div>
+            <div class="va-fields" data-va-depth hidden>
+              <label>a z <input type="number" name="az" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>b z <input type="number" name="bz" min="-4" max="4" step="0.25" value="-2" required></label>
+            </div>
+            <button class="lesson-primary" type="button" data-va-action="plot">Plot the available components</button>
+            <p class="va-readout" data-va-read="state">Only XY is visible. Both shadows are (1, 1).</p>
+
+            <div class="va-missions">
+              <details class="va-mission" data-va-mission="shadow-shared">
+                <summary>Construct the same XY shadow<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Use XZ to edit depth. Give a and b matching x and y and different z values.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="shadow-view">
+                <summary>Choose an informative view<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Switch to the view that reveals z, then identify the coordinate newly shown.</p>
+                <div class="va-fields">
+                  <label>New coordinate <select name="axis"><option value="">Choose an answer</option><option value="x">x</option><option value="y">y</option><option value="z">z</option></select></label>
+                </div>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="shadow-length">
+                <summary>Predict what a matching shadow implies<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Use the opening pair or construct a counterexample with matching XY shadows and unequal magnitudes. Predict whether a matching shadow forces equal lengths.</p>
+                <div class="va-fields">
+                  <label>Always equal magnitudes? <select name="guess"><option value="">Choose an answer</option><option value="yes">Yes</option><option value="no">No</option></select></label>
+                </div>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="shadow-opening">
+                <summary>Solve the opening puzzle<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Load the opening pair. Use all three component products to predict the full 3D dot product.</p>
+                <div class="va-fields">
+                  <label>Predicted dot product <input type="number" name="dot" min="-48" max="48" step="0.25" required></label>
+                </div>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="va-math">
+            <summary>Explore the math</summary>
+            <p>An XY shadow preserves x and y and leaves a family of possible depths. Different depths can produce different lengths. Opposite depths of equal absolute value can produce the same length.</p>
+          </details>
+        </section>
+
+        <section class="va-station" data-va-station="alignment" data-va-accent="green" aria-labelledby="va-alignment-title" hidden>
+          <h4 id="va-alignment-title">Angle and Alignment Observatory</h4>
+          <p>Keep a on +x and rotate b in XY. Set lengths independently or engage the lock to preserve both lengths during a turn.</p>
+          <div data-va-plot-slot></div>
+          <fieldset disabled>
+            <legend class="vector-sr-only">Angle and Alignment Observatory controls</legend>
+            <div class="va-fields">
+              <label>Length of a <input type="number" name="a-length" min="0" max="8" step="0.25" value="2" required></label>
+              <label>Length of b <input type="number" name="b-length" min="0" max="8" step="0.25" value="2" required></label>
+              <label>Direction of b (degrees) <input type="number" name="angle" min="-360" max="360" step="1" value="30" required></label>
+            </div>
+            <div class="vector-actions">
+              <button class="lesson-primary" type="button" data-va-action="plot">Apply lengths and rotation</button>
+              <button type="button" data-va-action="lock" aria-pressed="false">Lock lengths</button>
+              <button type="button" data-va-action="pin">Save plotted configuration</button>
+            </div>
+            <p class="va-readout" data-va-read="state">Length 2 for each arrow. Direction of b is 30°.</p>
+            <p class="va-readout" data-va-read="saved">No comparison saved.</p>
+
+            <div class="va-missions">
+              <details class="va-mission" data-va-mission="alignment-parallel">
+                <summary>Align in the same direction<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Set parallel nonzero arrows with normalized alignment +1.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="alignment-right">
+                <summary>Set a right angle<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Set perpendicular nonzero arrows with normalized alignment 0.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="alignment-opposite">
+                <summary>Align in opposite directions<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Set nonzero arrows with normalized alignment −1.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="alignment-length">
+                <summary>Change one length at a fixed angle<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Save a nonzero pair. Change one length while holding both directions fixed.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="alignment-lock">
+                <summary>Rotate through a change of sign<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Lock two positive lengths. Save a positive-dot pair, then rotate to a negative-dot configuration with the same lengths.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="va-math">
+            <summary>Explore the math</summary>
+            <p>Normalized alignment is cosine of the angle. On this rail, b = ‖b‖(cos θ, sin θ, 0). Its direction is undefined when its length is zero.</p>
+          </details>
+        </section>
+
+        <section class="va-station" data-va-station="codebreaker" data-va-accent="yellow" aria-labelledby="va-codebreaker-title" hidden>
+          <h4 id="va-codebreaker-title">Inner Product Codebreaker</h4>
+          <p>Solve for a component or classify the clues. All editable components use quarter-unit steps from −4 through 4.</p>
+          <div data-va-plot-slot></div>
+          <fieldset disabled>
+            <legend class="vector-sr-only">Inner Product Codebreaker controls</legend>
+            <div class="va-fields">
+              <label>Clue card
+                <select name="case">
+                  <option value="missing">Missing depth</option>
+                  <option value="construct">Build a vector</option>
+                  <option value="none">Inconsistent</option>
+                  <option value="many">Underdetermined</option>
+                  <option value="range">Outside the supported range</option>
+                </select>
+              </label>
+              <button type="button" data-va-action="load">Load clues</button>
+            </div>
+            <div class="va-fields">
+              <label>Candidate b x <input type="number" name="bx" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>Candidate b y <input type="number" name="by" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>Candidate b z <input type="number" name="bz" min="-4" max="4" step="0.25" value="0" required></label>
+            </div>
+            <button class="lesson-primary" type="button" data-va-action="try">Try candidate</button>
+            <p class="va-readout" data-va-read="clue">Find z so (1, 1, 1) · (1, 1, z) = 0.</p>
+            <p class="va-readout" data-va-read="state">Submit a candidate to inspect its dot product.</p>
+
+            <div class="va-missions">
+              <details class="va-mission" data-va-mission="codebreaker-missing">
+                <summary>Find the unique missing depth<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Load Missing depth. Keep the first two components at 1 and solve for z.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="codebreaker-construct">
+                <summary>Build any satisfying vector<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Load Build a vector. Find any supported b for which (2, 1, 0) · b = 3.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="codebreaker-none">
+                <summary>Classify an impossible or out-of-range clue<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Load Inconsistent or Outside the supported range. Distinguish no real solution from a real solution outside the controls.</p>
+                <div class="va-fields">
+                  <label>Classification
+                    <select name="verdict">
+                      <option value="">Choose an answer</option>
+                      <option value="none">No real solution</option>
+                      <option value="range">A real solution lies outside the controls</option>
+                      <option value="many">Many supported solutions</option>
+                    </select>
+                  </label>
+                </div>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="codebreaker-many">
+                <summary>Find two distinct solutions<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Load Underdetermined. Save one valid candidate, then submit another with a different z.</p>
+                <button type="button" data-va-action="pin">Save valid candidate</button>
+                <p class="va-readout" data-va-read="saved">No candidate saved.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="va-math">
+            <summary>Explore the math</summary>
+            <p>A hidden component enters through its coefficient in the dot product. With coefficient zero, the target matches every supported depth or none. A nonzero coefficient can yield a solution beyond the input range.</p>
+          </details>
+        </section>
+
+        <section class="va-station" data-va-station="complex" data-va-accent="violet" aria-labelledby="va-complex-title" hidden>
+          <h4 id="va-complex-title">Complex Inner Product Preview</h4>
+          <p class="lesson-kicker">Optional preview</p>
+          <p>Enter two complex components for each vector. Each component has its own real and imaginary coordinates.</p>
+          <div data-va-plot-slot></div>
+          <fieldset disabled>
+            <legend class="vector-sr-only">Complex Inner Product Preview controls</legend>
+            <div class="va-fields">
+              <label>u ₁ real <input type="number" name="u1r" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>u ₁ imaginary <input type="number" name="u1i" min="-4" max="4" step="0.25" value="0" required></label>
+              <label>u ₂ real <input type="number" name="u2r" min="-4" max="4" step="0.25" value="0" required></label>
+              <label>u ₂ imaginary <input type="number" name="u2i" min="-4" max="4" step="0.25" value="1" required></label>
+            </div>
+            <div class="va-fields">
+              <label>v ₁ real <input type="number" name="v1r" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>v ₁ imaginary <input type="number" name="v1i" min="-4" max="4" step="0.25" value="0" required></label>
+              <label>v ₂ real <input type="number" name="v2r" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>v ₂ imaginary <input type="number" name="v2i" min="-4" max="4" step="0.25" value="0" required></label>
+            </div>
+            <div class="vector-actions">
+              <button class="lesson-primary" type="button" data-va-action="compute">Compute inner product</button>
+              <button type="button" data-va-action="swap">Swap u and v</button>
+            </div>
+            <p class="va-readout" data-va-read="state">Start with u = (1, i) and v = (1, 1).</p>
+            <p class="va-readout" data-va-read="record">No swap recorded.</p>
+
+            <div class="va-missions">
+              <details class="va-mission" data-va-mission="complex-norm">
+                <summary>Find a norm squared<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Compute ‖u‖² for u = (1, i).</p>
+                <div class="va-fields">
+                  <label>Predicted norm squared <input type="number" name="norm" min="0" max="64" step="any" required></label>
+                </div>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="complex-swap">
+                <summary>See conjugate symmetry<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Use a pair with a nonreal product. Swap the inputs and compare the recorded products.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="complex-zero">
+                <summary>Find complex orthogonality<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Set two nonzero vectors with zero complex inner product.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="complex-real">
+                <summary>Recover the real dot product<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Use purely real entries and predict the ordinary two-component dot product.</p>
+                <div class="va-fields">
+                  <label>Predicted real dot product <input type="number" name="real" min="-32" max="32" step="any" required></label>
+                </div>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="va-math">
+            <summary>Explore the math</summary>
+            <p>Conjugate the first vector. ⟨u,v⟩ = ū₁v₁ + ū₂v₂ and ⟨u,u⟩ = ‖u‖². Swapping the order conjugates the result. Each component has its own complex plane.</p>
+          </details>
+        </section>
+
+        <section class="va-station" data-va-station="overlap" data-va-accent="red" aria-labelledby="va-overlap-title" hidden>
+          <h4 id="va-overlap-title">Quantum Overlap Preview</h4>
+          <p class="lesson-kicker">Optional preview</p>
+          <p>Prepare ψ and compare it with φ. Normalize each state before using the yes/no projective measurement with yes projector |φ⟩⟨φ|.</p>
+          <div data-va-plot-slot></div>
+          <fieldset disabled>
+            <legend class="vector-sr-only">Quantum Overlap Preview controls</legend>
+            <div class="va-fields">
+              <label>ψ ₁ real <input type="number" name="p1r" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>ψ ₁ imaginary <input type="number" name="p1i" min="-4" max="4" step="0.25" value="0" required></label>
+              <label>ψ ₂ real <input type="number" name="p2r" min="-4" max="4" step="0.25" value="0" required></label>
+              <label>ψ ₂ imaginary <input type="number" name="p2i" min="-4" max="4" step="0.25" value="0" required></label>
+            </div>
+            <button class="lesson-primary" type="button" data-va-action="normalize-p">Normalize ψ</button>
+            <div class="va-fields">
+              <label>φ ₁ real <input type="number" name="f1r" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>φ ₁ imaginary <input type="number" name="f1i" min="-4" max="4" step="0.25" value="0" required></label>
+              <label>φ ₂ real <input type="number" name="f2r" min="-4" max="4" step="0.25" value="1" required></label>
+              <label>φ ₂ imaginary <input type="number" name="f2i" min="-4" max="4" step="0.25" value="0" required></label>
+            </div>
+            <button class="lesson-primary" type="button" data-va-action="normalize-f">Normalize φ</button>
+            <p class="va-readout" data-va-read="state">Normalize both nonzero inputs to see the amplitude and yes probability.</p>
+            <div class="va-fields">
+              <label>Apply global phase to <select name="phase-side"><option value="p">Prepared state ψ</option><option value="f">Comparison state φ</option></select></label>
+              <label>Global phase (degrees) <input type="number" name="phase-angle" min="-360" max="360" step="1" value="90" required></label>
+              <button type="button" data-va-action="phase">Apply global phase</button>
+            </div>
+            <p class="va-readout" data-va-read="record">No global phase comparison.</p>
+
+            <div class="va-missions">
+              <details class="va-mission" data-va-mission="overlap-one">
+                <summary>Match identical states<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Normalize two identical nonzero states and check that the yes probability is 1.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="overlap-zero">
+                <summary>Choose orthogonal states<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Normalize two orthogonal states and check that the yes probability is 0.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="overlap-half">
+                <summary>Reach one half<span data-va-done hidden>✓ Complete</span></summary>
+                <p>Normalize the pair and obtain yes probability 1/2.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+              <details class="va-mission" data-va-mission="overlap-phase">
+                <summary>Rotate the amplitude, preserve probability<span data-va-done hidden>✓ Complete</span></summary>
+                <p>With a nonzero overlap, apply a global phase other than a whole turn. Compare the amplitude and yes probability before and after.</p>
+                <button type="button" data-va-check>Check mission</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="va-math">
+            <summary>Explore the math</summary>
+            <p>For this measurement, the amplitude is ⟨φ|ψ⟩ and the yes probability is |⟨φ|ψ⟩|². Phasing ψ multiplies the overlap by that phase. Phasing φ conjugates the factor. A zero input cannot be normalized.</p>
+          </details>
+        </section>
+      </div>
+
+      <template id="va-figure-template">
+        <figure class="va-figure">
+          <figcaption id="va-title">Station diagram</figcaption>
+          <div class="va-viewport" id="va-viewport">
+            <svg class="va-diagram" id="va-diagram" viewBox="0 0 560 340" role="img" aria-labelledby="va-title" aria-describedby="va-desc">
+              <desc id="va-desc"></desc>
+              <g data-va-geometry></g>
+              <g data-va-labels></g>
+            </svg>
+          </div>
+          <p class="lesson-note" id="va-render-status" role="status"></p>
+        </figure>
+      </template>
+
+      <template id="va-mission-template">
+        <div class="va-mission-tools">
+          <button type="button" data-va-hint>Show first hint</button>
+          <ol data-va-hint-list aria-live="polite" hidden></ol>
+          <p class="va-feedback" data-va-feedback role="status"></p>
+          <details data-va-work hidden><summary>Worked steps</summary><p data-va-work-text></p></details>
+        </div>
+      </template>
+    </details>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

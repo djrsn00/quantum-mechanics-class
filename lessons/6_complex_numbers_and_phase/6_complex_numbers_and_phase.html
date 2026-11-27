@@ -1,0 +1,1172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Plot complex numbers, switch between rectangular and polar form, and explore how multiplication by i rotates a point.">
+  <title>Complex Numbers and Phase | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+  <script type="module" src="./scripts/lesson.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)"
+                  stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none"
+                   stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8"
+                stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none"
+                   stroke="url(#logo-spectrum)" stroke-width="1.6"
+                   transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none"
+                stroke="#edffef" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static"
+             viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0.25"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse"
+                  x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 454 100"/>
+            <path class="track-violet" d="M218 54C265 80 333 97 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M212 54h12M218 48v12"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button"
+              aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="./6_complex_numbers_and_phase.html" aria-current="page"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and-coordinates/8_bases_and-coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="../22_the_one_dimensional_schrodinger_equation/22_the_one_dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main phase-lesson" aria-labelledby="phase-title">
+    <header class="lesson-intro">
+      <p class="lesson-kicker">Lesson 06 · Phasor lab</p>
+      <h2 id="phase-title">Complex Numbers and Phase</h2>
+      <p class="lesson-lead">The point 3 + 4<i>i</i> is five units from the origin. If you rotate it a quarter-turn counterclockwise, what changes, and where does it land?</p>
+      <p>Predict the endpoint and length. Then test your prediction in the complex plane and check the result using multiplication.</p>
+      <p><a id="phase-arcade-link" href="#phase-arcade">Open the optional arcade</a></p>
+    </header>
+
+    <section class="lesson-panel" id="phase-lab" tabindex="-1" aria-labelledby="phase-lab-title"
+             data-max-radius="8" data-origin-x="210" data-origin-y="210"
+             data-unit-px="21" data-arc-px="40">
+      <h3 id="phase-lab-title">Phasor lab</h3>
+      <p>The imaginary unit <i>i</i> satisfies <i>i</i>² = −1. A complex number <var>z</var> = <var>a</var> + <var>b</var><i>i</i> has real part <var>a</var> and imaginary part <var>b</var>, both real numbers. The term <var>b</var><i>i</i> includes <i>i</i>. On the diagram, 3 + 4<i>i</i> is three units along the real axis and four along the imaginary axis.</p>
+      <p>The arrow records those coordinates relative to the origin. The axes describe a mathematical number. A physical model can give them a physical interpretation.</p>
+
+      <div class="phase-console">
+        <section class="lesson-station phase-instrument" aria-labelledby="phase-plane-heading">
+          <h4 id="phase-plane-heading" tabindex="-1">Complex plane</h4>
+          <figure class="phase-figure">
+            <div class="phase-viewport" id="phase-viewport">
+              <canvas class="phase-canvas" id="phase-canvas" aria-hidden="true" hidden></canvas>
+              <div class="phase-scene-labels" id="phase-scene-labels" aria-hidden="true" hidden></div>
+              <svg class="phase-plane" id="phase-plane" viewBox="0 0 420 420"
+                   role="img" aria-labelledby="phase-plot-title phase-plot-desc">
+                <title id="phase-plot-title">Complex number plotted on real and imaginary axes</title>
+                <desc id="phase-plot-desc">The tip is at real coordinate 3 and imaginary coordinate 4. The arrow has magnitude 5 and principal argument about 53.13 degrees counterclockwise from the positive real axis.</desc>
+                <defs>
+                  <pattern id="phase-grid-pattern" width="21" height="21" patternUnits="userSpaceOnUse">
+                    <path class="phase-grid-line" d="M21 0H0v21"/>
+                  </pattern>
+                  <marker id="phase-vector-tip" viewBox="0 0 10 10" refX="9" refY="5"
+                          markerWidth="6" markerHeight="6" orient="auto">
+                    <path class="phase-vector-fill" d="M0 0 10 5 0 10 2.5 5Z"/>
+                  </marker>
+                  <marker id="phase-arc-tip" viewBox="0 0 10 10" refX="9" refY="5"
+                          markerWidth="5" markerHeight="5" orient="auto">
+                    <path class="phase-arc-fill" d="M0 0 10 5 0 10Z"/>
+                  </marker>
+                  <linearGradient id="phase-instrument-edge" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#ff676f"/>
+                    <stop offset="20%" stop-color="#ff9f55"/>
+                    <stop offset="40%" stop-color="#ffe16a"/>
+                    <stop offset="60%" stop-color="#63f59b"/>
+                    <stop offset="80%" stop-color="#65b7ff"/>
+                    <stop offset="100%" stop-color="#c19bff"/>
+                  </linearGradient>
+                </defs>
+
+                <rect x="42" y="42" width="336" height="336" fill="url(#phase-grid-pattern)"/>
+                <rect class="phase-grid-frame" x="42" y="42" width="336" height="336"/>
+                <path class="phase-axis" d="M42 210h344m-8-5 8 5-8 5M210 378V34m-5 8 5-8 5 8"/>
+                <path class="phase-axis" d="M42 205v10m84-10v10m168-10v10m84-10v10M205 42h10m-10 84h10m-10 168h10m-10 84h10"/>
+                <circle class="phase-origin-dot" cx="210" cy="210" r="3"/>
+                <text x="42" y="234">−8</text>
+                <text x="126" y="234">−4</text>
+                <text x="194" y="230">0</text>
+                <text x="294" y="234">4</text>
+                <text x="378" y="234">8</text>
+                <text class="phase-tick-left" x="198" y="47">8</text>
+                <text class="phase-tick-left" x="198" y="131">4</text>
+                <text class="phase-tick-left" x="198" y="299">−4</text>
+                <text class="phase-tick-left" x="198" y="383">−8</text>
+                <text class="phase-axis-name" x="374" y="194">Real</text>
+                <text class="phase-axis-name" x="210" y="23">Imaginary</text>
+
+                <circle class="phase-unit-circle" id="phase-unit-circle" cx="210" cy="210" r="21" hidden/>
+                <path class="phase-triangle" id="phase-triangle" d="M210 210H273V126Z"/>
+                <line class="phase-projection-real" id="phase-real-line" x1="210" y1="210" x2="273" y2="210"/>
+                <line class="phase-projection-imag" id="phase-imag-line" x1="273" y1="210" x2="273" y2="126"/>
+                <line class="phase-axis-guide" id="phase-imag-guide" x1="210" y1="126" x2="273" y2="126"/>
+                <path class="phase-right-angle" id="phase-right-angle" d="M263 210v-10h10"/>
+                <path class="phase-arc" id="phase-angle-arc" d="M250 210A40 40 0 0 0 234 178"
+                      marker-end="url(#phase-arc-tip)"/>
+                <line class="phase-vector" id="phase-vector" x1="210" y1="210" x2="273" y2="126"
+                      marker-end="url(#phase-vector-tip)"/>
+                <circle class="phase-tip-dot" id="phase-dot" cx="273" cy="126" r="4.5"/>
+
+                <text class="phase-label-real" id="phase-label-a" x="240" y="229">a</text>
+                <text class="phase-label-imag" id="phase-label-b" x="287" y="166">b</text>
+                <text class="phase-label-radius" id="phase-label-r" x="229" y="162">r</text>
+                <text class="phase-label-angle" id="phase-label-theta" x="260" y="185">θ</text>
+                <text class="phase-label-tip" id="phase-label-point" x="290" y="113">z</text>
+              </svg>
+            </div>
+
+            <figcaption>One grid interval is one unit on either axis. The magnitude <var>r</var> is the arrow’s length. The phase <var>θ</var> is its angle from the positive real axis, with counterclockwise turns counted as positive.</figcaption>
+            <ul class="phase-legend" aria-label="Phasor diagram legend">
+              <li><span class="phase-key phase-key-real" aria-hidden="true"></span>Real part <var>a</var></li>
+              <li><span class="phase-key phase-key-imag" aria-hidden="true"></span>Imaginary part <var>b</var></li>
+              <li><span class="phase-key phase-key-radius" aria-hidden="true"></span>Magnitude <var>r</var></li>
+              <li><span class="phase-key phase-key-angle" aria-hidden="true"></span>Phase <var>θ</var></li>
+            </ul>
+            <p class="lesson-note" id="phase-renderer-status" role="status">Static SVG example. The controls become available when the lesson script loads.</p>
+          </figure>
+
+          <dl class="phase-metrics">
+            <div><dt>Endpoint (<var>a</var>, <var>b</var>)</dt><dd id="phase-point">(3, 4)</dd></div>
+            <div><dt>Rectangular form</dt><dd id="phase-rectangular">3 + 4i</dd></div>
+            <div><dt>Magnitude <var>r</var></dt><dd id="phase-magnitude">5 units</dd></div>
+            <div><dt>Principal argument <var>θ</var></dt><dd id="phase-argument">53.13° ≈ 0.9273 rad</dd></div>
+          </dl>
+
+          <div class="phase-equations">
+            <p id="phase-magnitude-work">r = √(3² + 4²) = 5</p>
+            <p id="phase-polar-expression">z ≈ 5[cos(0.9273) + i sin(0.9273)]</p>
+            <p id="phase-unit-expression">cos θ + i sin θ = 0.6 + 0.8i</p>
+          </div>
+          <p class="lesson-note">The principal argument lies in (−180°, 180°], so the negative real axis is labeled +180°. Readouts round for display.</p>
+        </section>
+
+        <section class="lesson-station" aria-labelledby="phase-controls-heading">
+          <h4 id="phase-controls-heading">Move the point</h4>
+
+          <fieldset id="phase-mode-controls" disabled>
+            <legend>Choose a representation</legend>
+            <label class="phase-field" for="phase-mode">
+              Input form
+              <select id="phase-mode">
+                <option value="rectangular" selected>Rectangular · a and b</option>
+                <option value="polar">Polar · r and θ</option>
+              </select>
+            </label>
+          </fieldset>
+          <p class="lesson-note" id="phase-range-note">Both forms allow points up to 8 units from the origin. Switching forms leaves the point in place. Submit a form to apply an edit.</p>
+
+          <form id="phase-rect-form">
+            <fieldset id="phase-rect-controls" disabled>
+              <legend>Rectangular coordinates</legend>
+              <div class="phase-fields">
+                <label class="phase-field" for="phase-input-a">
+                  Real part <var>a</var>
+                  <input id="phase-input-a" type="text" value="3" autocomplete="off" spellcheck="false"
+                         aria-describedby="phase-range-note" required>
+                </label>
+                <label class="phase-field" for="phase-input-b">
+                  Imaginary part <var>b</var>
+                  <input id="phase-input-b" type="text" value="4" autocomplete="off" spellcheck="false"
+                         aria-describedby="phase-range-note" required>
+                </label>
+              </div>
+              <button class="lesson-button" type="submit">Apply a and b</button>
+            </fieldset>
+          </form>
+
+          <form id="phase-polar-form" hidden>
+            <fieldset id="phase-polar-controls" disabled>
+              <legend>Polar coordinates</legend>
+              <div class="phase-fields">
+                <label class="phase-field" for="phase-input-r">
+                  Magnitude <var>r</var>
+                  <input id="phase-input-r" type="text" value="5" autocomplete="off" spellcheck="false"
+                         aria-describedby="phase-range-note" required>
+                </label>
+                <label class="phase-field" for="phase-input-theta">
+                  <span id="phase-input-theta-label">Angle θ (degrees)</span>
+                  <input id="phase-input-theta" type="text" value="53.13010235415598"
+                         autocomplete="off" spellcheck="false" aria-describedby="phase-zero-note" required>
+                </label>
+              </div>
+              <p class="lesson-note" id="phase-zero-note">At radius zero, an entered angle only chooses the direction for the next outward move. The measured argument of zero is undefined.</p>
+              <button class="lesson-button" type="submit">Apply r and θ</button>
+            </fieldset>
+          </form>
+
+          <fieldset id="phase-action-controls" disabled>
+            <legend>Presets and turns</legend>
+            <div class="phase-actions" role="group" aria-label="Point presets">
+              <button class="lesson-button" type="button" data-phase-point="opening">3 + 4i</button>
+              <button class="lesson-button" type="button" data-phase-point="lower-left">−3 − 4i</button>
+              <button class="lesson-button" type="button" data-phase-point="negative-real">−5 on Real</button>
+              <button class="lesson-button" type="button" data-phase-point="zero">0 at the origin</button>
+            </div>
+            <div class="phase-actions" role="group" aria-label="Rotation and reset">
+              <button class="lesson-button lesson-primary" type="button" data-phase-turn="90">Quarter-turn +90°</button>
+              <button class="lesson-button" type="button" data-phase-turn="360">Full turn +360°</button>
+              <button class="lesson-button" id="phase-reset" type="button">Reset lab</button>
+            </div>
+            <label class="cp-reduced"><input type="checkbox" id="phase-reduced" disabled> Reduced effects</label>
+          </fieldset>
+
+          <p class="phase-reaction" id="phase-lab-feedback" role="status">Try changing one coordinate. Then switch forms and see which readouts describe the same point.</p>
+
+          <div class="phase-turn-record" aria-labelledby="phase-turn-title">
+            <h4 id="phase-turn-title">Most recent turn</h4>
+            <dl class="phase-metrics">
+              <div><dt>Before</dt><dd id="phase-turn-before">—</dd></div>
+              <div><dt>After</dt><dd id="phase-turn-after">—</dd></div>
+              <div><dt>Applied rotation</dt><dd id="phase-turn-delta">—</dd></div>
+              <div><dt>Magnitude before → after</dt><dd id="phase-turn-length">—</dd></div>
+            </dl>
+          </div>
+        </section>
+      </div>
+
+      <div class="lesson-station phase-prediction">
+        <form id="phase-prediction-form">
+          <fieldset id="phase-prediction-controls" disabled>
+            <legend>Test the opening prediction</legend>
+            <div class="phase-fields">
+              <label class="phase-field" for="phase-predict-tip">
+                Where will 3 + 4i land after +90°?
+                <select id="phase-predict-tip" required>
+                  <option value="" selected>Choose an endpoint</option>
+                  <option value="4-minus-3i">4 − 3i</option>
+                  <option value="minus-3-plus-4i">−3 + 4i</option>
+                  <option value="minus-4-plus-3i">−4 + 3i</option>
+                </select>
+              </label>
+              <label class="phase-field" for="phase-predict-length">
+                What happens to its magnitude?
+                <select id="phase-predict-length" required>
+                  <option value="" selected>Choose a change</option>
+                  <option value="same">It stays 5 units</option>
+                  <option value="larger">It gets larger</option>
+                  <option value="smaller">It gets smaller</option>
+                </select>
+              </label>
+            </div>
+            <div class="phase-actions">
+              <button class="lesson-button" type="submit">Save prediction</button>
+              <button class="lesson-button lesson-primary" type="button" id="phase-test-opening">Run the opening turn</button>
+            </div>
+          </fieldset>
+        </form>
+        <p class="lesson-note" id="phase-prediction-feedback" role="status">Save your prediction, then run the opening turn. This action starts at 3 + 4i and records the result in the lab.</p>
+      </div>
+    </section>
+
+    <details class="lesson-panel">
+      <summary>Measure the length and choose the angle</summary>
+      <div class="lesson-prose">
+        <p>The axis projections form a right triangle with leg lengths |<var>a</var>| and |<var>b</var>|. Pythagoras gives the magnitude <var>r</var>, which is the distance from the origin.</p>
+        <p class="phase-equation"><var>r</var> = |<var>z</var>| = √(<var>a</var>² + <var>b</var>²)</p>
+        <p>For 3 + 4<i>i</i>, the squared length is 9 + 16 = 25, so the length is 5 units. For a nonzero point, <code>atan2(b, a)</code> uses both signed components to choose the quadrant. The ratio <var>b</var>/<var>a</var> alone would give the same value for (3, 4) and (−3, −4), even though their arrows point in opposite directions.</p>
+        <p>Add or subtract 360° and you describe the same endpoint. At the origin, <var>r</var> is zero and the argument is undefined because the arrow has no direction.</p>
+      </div>
+    </details>
+
+    <details class="lesson-panel">
+      <summary>Build rectangular form from polar form</summary>
+      <div class="lesson-prose">
+        <p>For a nonzero arrow of length <var>r</var>, cosine gives the signed horizontal component per unit length, and sine gives the signed vertical component per unit length. Multiply each by <var>r</var>.</p>
+        <p class="phase-equation"><var>a</var> = <var>r</var> cos <var>θ</var><br>
+          <var>b</var> = <var>r</var> sin <var>θ</var><br>
+          <var>z</var> = <var>r</var>(cos <var>θ</var> + <i>i</i> sin <var>θ</var>)</p>
+        <p>Try <var>r</var> = 5 and <var>θ</var> = 90° in the lab, then change only the radius to 2. The tip moves from 5<i>i</i> to 2<i>i</i> along the same direction. Hold the radius at 2 and change the angle to 180° to reach −2 without changing the length.</p>
+      </div>
+    </details>
+
+    <section class="lesson-panel" aria-labelledby="phase-euler-title">
+      <h3 id="phase-euler-title">One turn around the unit circle</h3>
+      <p>Set the magnitude to 1. As <var>θ</var> increases, cos <var>θ</var> + <i>i</i> sin <var>θ</var> traces the unit circle counterclockwise from 1. Euler’s formula identifies that point with a complex exponential. Use radians for <var>θ</var> in the identity.</p>
+      <p class="phase-equation">e<sup><i>i</i><var>θ</var></sup> = cos <var>θ</var> + <i>i</i> sin <var>θ</var></p>
+
+      <fieldset id="phase-euler-controls" disabled>
+        <legend>Load a unit circle check in the lab</legend>
+        <div class="phase-actions">
+          <button class="lesson-button" type="button" data-phase-unit-angle="0">0 rad</button>
+          <button class="lesson-button" type="button" data-phase-unit-angle="90">π/2 rad</button>
+          <button class="lesson-button" type="button" data-phase-unit-angle="180">π rad</button>
+          <a href="#phase-plane-heading">Return to the plot</a>
+        </div>
+      </fieldset>
+      <p class="lesson-note" id="phase-euler-status" role="status">The presets use radius 1 and open the polar controls.</p>
+
+      <details>
+        <summary>Check three exact values</summary>
+        <table class="phase-table">
+          <caption>Points on the unit circle</caption>
+          <thead><tr><th scope="col">Angle</th><th scope="col">Coordinates</th><th scope="col">Number</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">0</th><td>(1, 0)</td><td>1</td></tr>
+            <tr><th scope="row">π/2</th><td>(0, 1)</td><td><i>i</i></td></tr>
+            <tr><th scope="row">π</th><td>(−1, 0)</td><td>−1</td></tr>
+          </tbody>
+        </table>
+      </details>
+
+      <details>
+        <summary>Optional derivation from the exponential series</summary>
+        <div class="lesson-prose">
+          <p>The exponential series gives e<sup><i>i</i><var>θ</var></sup> = 1 + <i>i</i><var>θ</var> + (<i>i</i><var>θ</var>)²/2! + (<i>i</i><var>θ</var>)³/3! + ⋯. The factorial 3! means 3 × 2 × 1, and the powers of <i>i</i> cycle through 1, <i>i</i>, −1, −<i>i</i>.</p>
+          <p>The even powers give 1 − <var>θ</var>²/2! + <var>θ</var>⁴/4! − ⋯, which is the cosine series. The odd powers give <i>i</i>(<var>θ</var> − <var>θ</var>³/3! + <var>θ</var>⁵/5! − ⋯), which is <i>i</i> times the sine series. Adding those two parts gives Euler’s formula.</p>
+        </div>
+      </details>
+    </section>
+
+    <details class="lesson-panel">
+      <summary>Check the opening turn with algebra</summary>
+      <div class="lesson-prose">
+        <p>A quarter-turn counterclockwise takes the positive real direction to the positive imaginary direction, and the positive imaginary direction to the negative real direction. Multiplication by <i>i</i> does exactly that.</p>
+        <p class="phase-equation"><i>i</i>(<var>a</var> + <var>b</var><i>i</i>) = <var>a</var><i>i</i> + <var>b</var><i>i</i>² = −<var>b</var> + <var>a</var><i>i</i></p>
+        <p>For 3 + 4<i>i</i>, the result is −4 + 3<i>i</i>, or the endpoint (−4, 3). The squared magnitudes on either side are 3² + 4² and (−4)² + 3². Both equal 25, so the magnitude stays 5.</p>
+        <p>Four quarter-turns make one full turn. The coordinates return to their starting values. The principal angle may wrap during the turn because the readout reports it in a fixed interval.</p>
+      </div>
+    </details>
+
+    <section class="lesson-panel" id="phase-challenge" aria-labelledby="phase-challenge-title">
+      <h3 id="phase-challenge-title">Lab checkout</h3>
+      <p class="lesson-kicker" id="phase-challenge-progress">Question 1 of 2</p>
+      <fieldset id="phase-challenge-controls" disabled>
+        <legend class="phase-sr-only">Challenge answers</legend>
+        <div data-phase-question="1">
+          <h4 tabindex="-1">The argument of −i is −90° under our convention. Which positive angle describes the same point?</h4>
+          <div class="phase-answers">
+            <button class="lesson-button" type="button" data-phase-answer="90">90°</button>
+            <button class="lesson-button" type="button" data-phase-answer="180">180°</button>
+            <button class="lesson-button" type="button" data-phase-answer="270">270°</button>
+          </div>
+        </div>
+        <div data-phase-question="2" hidden>
+          <h4 tabindex="-1">What is the measured argument when the endpoint is at the origin?</h4>
+          <div class="phase-answers">
+            <button class="lesson-button" type="button" data-phase-answer="zero-degrees">Always 0°</button>
+            <button class="lesson-button" type="button" data-phase-answer="last-angle">The last angle entered</button>
+            <button class="lesson-button" type="button" data-phase-answer="undefined">Undefined</button>
+          </div>
+          <p class="lesson-note"><a href="#phase-lab">Try the zero preset</a> to compare the magnitude and argument readouts.</p>
+        </div>
+      </fieldset>
+      <p class="lesson-note" id="phase-challenge-feedback" role="status">The challenge becomes interactive when the lesson script loads.</p>
+      <button class="lesson-button" id="phase-next-question" type="button" hidden>Next question</button>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="phase-bridge-title">
+      <h3 id="phase-bridge-title" tabindex="-1">Why phase comes back in quantum mechanics</h3>
+      <p>Quantum amplitudes can be complex. When amplitudes combine, their relative phase can affect interference. Two arrows can keep their individual lengths while turning relative to one another, changing the length of their sum.</p>
+      <p>The arrow in this lab represents one mathematical number. Later lessons will explain how complex numbers enter quantum states and how the Born rule relates amplitudes to probabilities. Next, we’ll use vectors and learn how an inner product compares them.</p>
+    </section>
+
+    <nav class="lesson-next" aria-label="Continue the course">
+      <a href="../../index.html">Course homepage</a>
+      <a class="lesson-button lesson-primary" href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html">
+        Next lesson: Vectors and Inner Products <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+
+    <details class="lesson-panel cp-arcade" id="phase-arcade">
+      <summary><strong>Complex Numbers and Phase Arcade</strong> <span>Optional practice</span></summary>
+      <p>Choose a station, try its controls, and open a mission when you’re ready. Hints and retries are free. Progress lasts while this page is open.</p>
+      <div class="cp-toolbar">
+        <label>Station
+          <select id="cp-station" aria-controls="cp-panels" disabled>
+            <option value="treasure">Complex Plane Treasure Hunt</option>
+            <option value="rotate">The i-Rotation Arcade</option>
+            <option value="workshop">Complex Number Workshop</option>
+            <option value="multiply">Multiply and Transform</option>
+            <option value="mirror">Conjugate Mirror Maze</option>
+            <option value="conversion">Polar Conversion Challenge</option>
+            <option value="interference">Phase Match · The Interference Game</option>
+            <option value="global">Global Phase vs. Relative Phase Lab</option>
+            <option value="euler">Euler’s Formula Explorer</option>
+            <option value="powers">Powers of i Reactor</option>
+            <option value="defender">Magnitude and Phase Defender</option>
+            <option value="division">The Complex Division Portal</option>
+          </select>
+        </label>
+        <p id="cp-progress" role="status">0 of 47 missions completed this session.</p>
+        <button class="lesson-button" id="cp-reset" type="button" disabled>Reset this station</button>
+      </div>
+      <p class="lesson-note" id="cp-status" role="status"></p>
+      <noscript><p>JavaScript runs the diagrams, calculations, and mission checks.</p></noscript>
+
+      <div id="cp-panels">
+        <section class="cp-station" data-cp-station="treasure" data-cp-accent="blue" aria-labelledby="cp-treasure-title">
+          <h4 id="cp-treasure-title">Complex Plane Treasure Hunt</h4>
+          <p>Plot a marker using either input form. Switch forms to read the same point.</p>
+          <div data-cp-slot></div>
+          <fieldset disabled>
+            <legend class="phase-sr-only">Complex Plane Treasure Hunt controls</legend>
+            <div class="cp-fields">
+              <label>Map target
+                <select name="target">
+                  <option value="quadrant">Quadrant II · −3 + 2i</option>
+                  <option value="opening">3 + 4i</option>
+                  <option value="both">2i</option>
+                  <option value="angles">Equivalent angles</option>
+                </select>
+              </label>
+              <label>Input form <select name="mode"><option value="rect">Rectangular</option><option value="polar">Polar</option></select></label>
+            </div>
+            <div class="cp-fields" data-cp-form="rect">
+              <label>Real part <input type="number" name="a" min="-8" max="8" step="0.0001" value="0" required></label>
+              <label>Imaginary part <input type="number" name="b" min="-8" max="8" step="0.0001" value="0" required></label>
+            </div>
+            <div class="cp-fields" data-cp-form="polar" hidden>
+              <label>Magnitude <input type="number" name="r" min="0" max="8" step="any" value="0" required></label>
+              <label>Angle (°) <input type="number" name="angle" min="-1000000" max="1000000" step="any" value="0" required></label>
+            </div>
+            <button class="lesson-primary" type="button" data-cp-action="plot">Plot marker</button>
+            <p class="cp-readout" data-cp-read="state">Marker at the origin. Target −3 + 2i.</p>
+            <p class="cp-readout" data-cp-read="trials">No forms submitted for the 2i target.</p>
+
+            <div class="cp-missions">
+              <details class="cp-mission" data-cp-mission="treasure-quadrant">
+                <summary>Reach quadrant II<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Set the marker to −3 + 2i and check both coordinates.</p>
+                <button type="button" data-cp-check>Check marker</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="treasure-length">
+                <summary>Find 3 + 4i<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Plot 3 + 4i and enter its distance from the origin.</p>
+                <div class="cp-fields">
+                  <label>Magnitude in units <input type="number" name="length" min="0" max="12" step="any" required></label>
+                </div>
+                <button type="button" data-cp-check>Check point and magnitude</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="treasure-both">
+                <summary>Build 2i two ways<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Use Plot marker on the 2i map in each form. Submit once with rectangular inputs and once with polar inputs.</p>
+                <button type="button" data-cp-check>Check the two submissions</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="treasure-equivalent">
+                <summary>Match an equivalent angle<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>In polar mode, plot at a nonzero radius and save it. Plot the same radius with a different angle that lands at the same point.</p>
+                <button type="button" data-cp-action="pin">Save the plotted polar point</button>
+                <p class="cp-readout" data-cp-read="saved">No polar point saved.</p>
+                <button type="button" data-cp-check>Compare polar submissions</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="cp-math">
+            <summary>Explore the math</summary>
+            <p>The signed coordinates choose the quadrant. Adding or subtracting a full turn gives the same polar point. Plotted targets and distances use a tolerance of 0.002 unit.</p>
+          </details>
+        </section>
+
+        <section class="cp-station" data-cp-station="rotate" data-cp-accent="violet" aria-labelledby="cp-rotate-title" hidden>
+          <h4 id="cp-rotate-title">The i-Rotation Arcade</h4>
+          <p>Choose a starting number and use a multiplier. The move log records each actual turn.</p>
+          <div data-cp-slot></div>
+          <fieldset disabled>
+            <legend class="phase-sr-only">The i-Rotation Arcade controls</legend>
+            <div class="cp-fields">
+              <label>Starting number <select name="start"><option value="opening">3 + 4i</option><option value="diagonal">1 + i</option><option value="zero">0</option></select></label>
+              <button type="button" data-cp-action="restart">Load starting number</button>
+              <label>Multiplier <select name="by"><option value="i">i · +90°</option><option value="minus-i">−i · −90°</option><option value="minus-one">−1 · 180°</option></select></label>
+              <button class="lesson-primary" type="button" data-cp-action="multiply">Multiply</button>
+            </div>
+            <p class="cp-readout" data-cp-read="state">At 3 + 4i · Magnitude 5.</p>
+            <p class="cp-readout" data-cp-read="history">No moves recorded.</p>
+
+            <div class="cp-missions">
+              <details class="cp-mission" data-cp-mission="rotate-quarter">
+                <summary>One quarter-turn<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Start at 3 + 4i and reach −4 + 3i in one move.</p>
+                <button type="button" data-cp-check>Check the move</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="rotate-four">
+                <summary>Exactly four i moves<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Load a nonzero starting number and use exactly four multiplications by i.</p>
+                <button type="button" data-cp-check>Check the move history</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="rotate-clockwise">
+                <summary>Predict a clockwise turn<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Predict (3 + 4i) × (−i). This test uses 3 + 4i as its starting value.</p>
+                <div class="cp-fields">
+                  <label>Predicted Real part <input type="number" name="guess-a" min="-8" max="8" step="0.0001" required></label>
+                  <label>Predicted Imaginary part <input type="number" name="guess-b" min="-8" max="8" step="0.0001" required></label>
+                </div>
+                <button type="button" data-cp-check>Lock and multiply</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="rotate-opposite">
+                <summary>Reach the opposite point<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Start with a nonzero number. Move to the opposite point at the same distance from the origin.</p>
+                <button type="button" data-cp-check>Check opposite point</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="cp-math">
+            <summary>Explore the math</summary>
+            <p>Multiplication by i sends (a,b) to (−b,a). Multiplication by −i sends it to (b,−a). Multiplication by −1 sends it to (−a,−b). All three preserve magnitude.</p>
+          </details>
+        </section>
+
+        <section class="cp-station" data-cp-station="workshop" data-cp-accent="orange" aria-labelledby="cp-workshop-title" hidden>
+          <h4 id="cp-workshop-title">Complex Number Workshop</h4>
+          <p>Enter z and w, then choose addition or subtraction. Read the component arithmetic beside the construction.</p>
+          <div data-cp-slot></div>
+          <fieldset disabled>
+            <legend class="phase-sr-only">Complex Number Workshop controls</legend>
+            <div class="cp-fields">
+              <label>z · Real part <input type="number" name="z-a" min="-8" max="8" step="0.0001" value="2" required></label>
+              <label>z · Imaginary part <input type="number" name="z-b" min="-8" max="8" step="0.0001" value="3" required></label>
+              <label>w · Real part <input type="number" name="w-a" min="-8" max="8" step="0.0001" value="1" required></label>
+              <label>w · Imaginary part <input type="number" name="w-b" min="-8" max="8" step="0.0001" value="-2" required></label>
+            </div>
+            <div class="cp-fields">
+              <label>Operation <select name="operation"><option value="add">z + w</option><option value="subtract">z − w</option></select></label>
+              <button class="lesson-primary" type="button" data-cp-action="calculate">Calculate</button>
+            </div>
+            <p class="cp-readout" data-cp-read="state">Try (2 + 3i) + (1 − 2i).</p>
+
+            <div class="cp-missions">
+              <details class="cp-mission" data-cp-mission="workshop-target">
+                <summary>Reach 3 + i<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Set two operands and choose addition to reach 3 + i.</p>
+                <button type="button" data-cp-check>Check the sum</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="workshop-real">
+                <summary>Make a real result<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Arrange a sum or difference whose imaginary component is zero.</p>
+                <button type="button" data-cp-check>Check the components</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="workshop-zero">
+                <summary>Cancel two nonzero numbers<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Use addition. Both inputs must be nonzero, and the sum must be zero.</p>
+                <button type="button" data-cp-check>Check cancellation</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="workshop-predict">
+                <summary>Predict the resultant<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Use the visible operands and selected operation. Enter both result components before revealing the resultant.</p>
+                <div class="cp-fields">
+                  <label>Predicted Real part <input type="number" name="guess-a" min="-16" max="16" step="any" required></label>
+                  <label>Predicted Imaginary part <input type="number" name="guess-b" min="-16" max="16" step="any" required></label>
+                </div>
+                <button type="button" data-cp-check>Lock and reveal</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="cp-math">
+            <summary>Explore the math</summary>
+            <p>Add real parts and imaginary parts separately. For subtraction use z + (−w). The translated arrow starts at the tip of z and has the same components as w or −w.</p>
+          </details>
+        </section>
+
+        <section class="cp-station" data-cp-station="multiply" data-cp-accent="orange" aria-labelledby="cp-multiply-title" hidden>
+          <h4 id="cp-multiply-title">Multiply and Transform</h4>
+          <p>Enter z by components and the multiplier w by magnitude and angle. Compare the rectangular product with its polar interpretation.</p>
+          <div data-cp-slot></div>
+          <fieldset disabled>
+            <legend class="phase-sr-only">Multiply and Transform controls</legend>
+            <div class="cp-fields">
+              <label>z · Real part <input type="number" name="z-a" min="-8" max="8" step="0.0001" value="3" required></label>
+              <label>z · Imaginary part <input type="number" name="z-b" min="-8" max="8" step="0.0001" value="4" required></label>
+              <label>w · Magnitude <input type="number" name="w-r" min="0" max="8" step="any" value="1" required></label>
+              <label>w · Angle (°) <input type="number" name="w-angle" min="-1000000" max="1000000" step="any" value="45" required></label>
+            </div>
+            <div class="phase-actions">
+              <button class="lesson-primary" type="button" data-cp-action="calculate">Multiply</button>
+              <button type="button" data-cp-action="example">Load the two polar factors</button>
+            </div>
+            <p class="cp-readout" data-cp-read="state">Start with 3 + 4i and a unit multiplier at 45°.</p>
+
+            <div class="cp-missions">
+              <details class="cp-mission" data-cp-mission="multiply-turn">
+                <summary>Turn by 45°<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Rotate a nonzero z by +45° while keeping the length.</p>
+                <button type="button" data-cp-check>Check rotation</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="multiply-double">
+                <summary>Double the length<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Multiply a nonzero z so its direction is preserved and its magnitude doubles.</p>
+                <button type="button" data-cp-check>Check dilation</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="multiply-map">
+                <summary>Map 1 + i to −2 + 2i<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Find the multiplier that maps this specified input to its target.</p>
+                <button type="button" data-cp-check>Check the mapping</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="multiply-predict">
+                <summary>Predict the polar product<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Use two nonzero factors. Predict the magnitude and angle, then inspect the rectangular result.</p>
+                <div class="cp-fields">
+                  <label>Predicted magnitude <input type="number" name="guess-r" min="0" max="100" step="any" required></label>
+                  <label>Predicted angle (°) <input type="number" name="guess-angle" min="-1000000" max="1000000" step="any" required></label>
+                </div>
+                <button type="button" data-cp-check>Lock and multiply</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="cp-math">
+            <summary>Explore the math</summary>
+            <p>For components the product is (ac − bd) + (ad + bc)i. For two nonzero factors, multiply the magnitudes and add the arguments modulo a turn. Load the example to multiply 2e^(iπ/6) by 3e^(iπ/3).</p>
+          </details>
+        </section>
+
+        <section class="cp-station" data-cp-station="mirror" data-cp-accent="violet" aria-labelledby="cp-mirror-title" hidden>
+          <h4 id="cp-mirror-title">Conjugate Mirror Maze</h4>
+          <p>Plot z across a mirror laid on the real axis. Compare its conjugate and their product.</p>
+          <div data-cp-slot></div>
+          <fieldset disabled>
+            <legend class="phase-sr-only">Conjugate Mirror Maze controls</legend>
+            <div class="cp-fields">
+              <label>Real part <input type="number" name="a" min="-8" max="8" step="0.0001" value="3" required></label>
+              <label>Imaginary part <input type="number" name="b" min="-8" max="8" step="0.0001" value="4" required></label>
+              <button class="lesson-primary" type="button" data-cp-action="show">Reveal mirror</button>
+            </div>
+            <p class="cp-readout" data-cp-read="state">Begin with 3 + 4i. Reveal the mirror to compare.</p>
+
+            <div class="cp-missions">
+              <details class="cp-mission" data-cp-mission="mirror-point">
+                <summary>Conjugate 3 + 4i<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Give the two coordinates of the conjugate of 3 + 4i.</p>
+                <div class="cp-fields">
+                  <label>Predicted Real part <input type="number" name="guess-a" min="-8" max="8" step="0.0001" required></label>
+                  <label>Predicted Imaginary part <input type="number" name="guess-b" min="-8" max="8" step="0.0001" required></label>
+                </div>
+                <button type="button" data-cp-check>Lock and reveal</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="mirror-product">
+                <summary>Build a product of 25<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Choose z so z times its conjugate equals 25.</p>
+                <button type="button" data-cp-check>Check the product</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="mirror-fixed">
+                <summary>Find a fixed point<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Find any nonzero number that is equal to its own conjugate.</p>
+                <button type="button" data-cp-check>Check the mirror</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="mirror-predict">
+                <summary>Predict length and angle<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Use a nonzero z. Predict the magnitude change and the conjugate’s argument before checking.</p>
+                <div class="cp-fields">
+                  <label>Magnitude after conjugation
+                    <select name="magnitude"><option value="">Choose an answer</option><option value="same">Unchanged</option><option value="less">Smaller</option><option value="more">Larger</option></select>
+                  </label>
+                  <label>Predicted argument (°) <input type="number" name="argument" min="-1000000" max="1000000" step="any" required></label>
+                </div>
+                <button type="button" data-cp-check>Lock and compare</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="cp-math">
+            <summary>Explore the math</summary>
+            <p>Conjugation changes b to −b, so z times its conjugate is a² + b². Its argument is negated modulo a full turn. The conjugate of −5 is −5, whose principal argument is +180°.</p>
+          </details>
+        </section>
+
+        <section class="cp-station" data-cp-station="conversion" data-cp-accent="blue" aria-labelledby="cp-conversion-title" hidden>
+          <h4 id="cp-conversion-title">Polar Conversion Challenge</h4>
+          <p>Use magnitude and the quadrant or axis to switch forms. Acceptable error is 0.002 unit or 0.1° modulo a turn.</p>
+          <div data-cp-slot></div>
+          <fieldset disabled>
+            <legend class="phase-sr-only">Polar Conversion Challenge controls</legend>
+            <p class="cp-readout" data-cp-read="state">Choose a mission to see the given value and plot your conversion.</p>
+
+            <div class="cp-missions">
+              <details class="cp-mission" data-cp-mission="conversion-axis">
+                <summary>Convert an axis point<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Choose the source point. For zero, enter magnitude zero and choose undefined argument.</p>
+                <div class="cp-fields">
+                  <label>Source point <select name="axis"><option value="negative">−5</option><option value="positive-i">2i</option><option value="negative-i">−2i</option><option value="zero">0</option></select></label>
+                  <label>Magnitude <input type="number" name="axis-r" min="0" max="8" step="any" required></label>
+                  <label>Argument type <select name="axis-type"><option value="angle">Angle in degrees</option><option value="undefined">Undefined</option></select></label>
+                  <label>Angle (°), when defined <input type="number" name="axis-angle" min="-1000000" max="1000000" step="any"></label>
+                </div>
+                <button type="button" data-cp-check>Check polar form</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="conversion-quadrant">
+                <summary>Convert −3 + 4i<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Identify the magnitude and an angle for this quadrant-II point.</p>
+                <div class="cp-fields">
+                  <label>Magnitude <input type="number" name="quad-r" min="0" max="8" step="any" required></label>
+                  <label>Angle (°) <input type="number" name="quad-angle" min="-1000000" max="1000000" step="any" required></label>
+                </div>
+                <button type="button" data-cp-check>Check polar form</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="conversion-components">
+                <summary>Recover the components<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Convert magnitude 2 and angle 60° to rectangular form.</p>
+                <div class="cp-fields">
+                  <label>Predicted Real part <input type="number" name="guess-a" min="-8" max="8" step="any" required></label>
+                  <label>Predicted Imaginary part <input type="number" name="guess-b" min="-8" max="8" step="any" required></label>
+                </div>
+                <button type="button" data-cp-check>Check components</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="conversion-ratio">
+                <summary>Find the wrong quadrant<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>The points (3,4) and (−3,−4) have equal b/a. Pick the correct comparison of their arguments.</p>
+                <div class="cp-fields">
+                  <label>Arguments
+                    <select name="ratio"><option value="">Choose an answer</option><option value="opposite">The directions differ by 180°</option><option value="same">The arguments are equal</option><option value="right">The directions differ by 90°</option></select>
+                  </label>
+                </div>
+                <button type="button" data-cp-check>Check the comparison</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="cp-math">
+            <summary>Explore the math</summary>
+            <p>The two-argument arctangent atan2(b,a) uses both signs. For example, 1 + i has magnitude √2 and angle π/4 radians, so it equals √2 e^(iπ/4).</p>
+          </details>
+        </section>
+
+        <section class="cp-station" data-cp-station="interference" data-cp-accent="green" aria-labelledby="cp-interference-title" hidden>
+          <h4 id="cp-interference-title">Phase Match · The Interference Game</h4>
+          <p>Combine two mathematical amplitudes. The unit-pair and opposing-pair setups fix the two individual magnitudes.</p>
+          <div data-cp-slot></div>
+          <fieldset disabled>
+            <legend class="phase-sr-only">Phase Match · The Interference Game controls</legend>
+            <div class="cp-fields">
+              <label>Amplitude setup
+                <select name="setup"><option value="unit">Unit pair · fixed magnitudes</option><option value="opposing">2 and 1 · opposite phase</option><option value="free">Free practice</option></select>
+              </label>
+              <button type="button" data-cp-action="load">Load setup</button>
+            </div>
+            <div class="cp-fields">
+              <label>A · Magnitude <input type="number" name="a-r" min="0" max="8" step="any" value="1" required></label>
+              <label>A · Angle (°) <input type="number" name="a-angle" min="-1000000" max="1000000" step="any" value="0" required></label>
+              <label>B · Magnitude <input type="number" name="b-r" min="0" max="8" step="any" value="1" required></label>
+              <label>B · Angle (°) <input type="number" name="b-angle" min="-1000000" max="1000000" step="any" value="60" required></label>
+              <button class="lesson-primary" type="button" data-cp-action="plot">Plot amplitudes</button>
+            </div>
+            <p class="cp-readout" data-cp-read="state">A and B are unit arrows. Start at a relative phase of 60°.</p>
+
+            <div class="cp-missions">
+              <details class="cp-mission" data-cp-mission="interference-max">
+                <summary>Reinforce two unit arrows<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Use the unit-pair setup. Align the two phases without changing the magnitudes.</p>
+                <button type="button" data-cp-check>Check reinforcement</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="interference-zero">
+                <summary>Cancel two unit arrows<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Use the unit-pair setup. Find opposite phases with the same magnitudes.</p>
+                <button type="button" data-cp-check>Check cancellation</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="interference-residual">
+                <summary>Predict the leftover length<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Load the opposing pair of magnitudes 2 and 1. Predict the magnitude of the sum.</p>
+                <div class="cp-fields">
+                  <label>Predicted sum magnitude <input type="number" name="guess" min="0" max="16" step="any" required></label>
+                </div>
+                <button type="button" data-cp-check>Lock and reveal the residual</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="interference-target">
+                <summary>Match a sum magnitude of 1<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Use two unit arrows. Find a relative phase that gives the target magnitude.</p>
+                <button type="button" data-cp-check>Check the target</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="cp-math">
+            <summary>Explore the math</summary>
+            <p>For two nonzero inputs, Δ = arg B − arg A and |A + B|² = r₁² + r₂² + 2r₁r₂ cos Δ. Two aligned unit arrows have raw squared magnitude 4. A probability requires a separately specified, normalized measurement model.</p>
+          </details>
+        </section>
+
+        <section class="cp-station" data-cp-station="global" data-cp-accent="green" aria-labelledby="cp-global-title" hidden>
+          <h4 id="cp-global-title">Global Phase vs. Relative Phase Lab</h4>
+          <p>Start with unit arrows at 0° and 120°. A common turn rotates both. A relative turn changes only B.</p>
+          <div data-cp-slot></div>
+          <fieldset disabled>
+            <legend class="phase-sr-only">Global Phase vs. Relative Phase Lab controls</legend>
+            <div class="cp-fields">
+              <label>Common turn (°) <input type="number" name="common" min="-1000000" max="1000000" step="any" value="90" required></label>
+              <button class="lesson-primary" type="button" data-cp-action="common">Turn both</button>
+              <label>Turn of B alone (°) <input type="number" name="relative" min="-1000000" max="1000000" step="any" value="-60" required></label>
+              <button type="button" data-cp-action="relative">Turn only B</button>
+            </div>
+            <p class="cp-readout" data-cp-read="state">Unit pair · A at 0° · B at 120°.</p>
+            <p class="cp-readout" data-cp-read="last">No turn recorded.</p>
+
+            <div class="cp-missions">
+              <details class="cp-mission" data-cp-mission="global-together">
+                <summary>Turn both arrows<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Apply a nontrivial common rotation with a nonzero sum. Compare the sum’s direction and squared magnitude.</p>
+                <button type="button" data-cp-check>Check the common turn</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="global-increase">
+                <summary>Increase the sum by turning B<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Change B alone to make the sum’s squared magnitude larger. Use the station reset to go back to 120°.</p>
+                <button type="button" data-cp-check>Check the change</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="global-zero">
+                <summary>Keep cancellation through a turn<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Make the unit arrows oppose each other. Apply a nontrivial common turn to the canceled pair.</p>
+                <button type="button" data-cp-check>Check cancellation</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="cp-math">
+            <summary>Explore the math</summary>
+            <p>Multiplying both arrows by e^(iγ) multiplies their sum by the same unit factor. This exercise measures the squared magnitude of a sum of two numbers. A quantum measurement requires a specified model.</p>
+          </details>
+        </section>
+
+        <section class="cp-station" data-cp-station="euler" data-cp-accent="yellow" aria-labelledby="cp-euler-title" hidden>
+          <h4 id="cp-euler-title">Euler’s Formula Explorer</h4>
+          <p>Move the same angle on the unit circle and the sine and cosine graphs.</p>
+          <div data-cp-slot></div>
+          <fieldset disabled>
+            <legend class="phase-sr-only">Euler’s Formula Explorer controls</legend>
+            <div class="cp-fields">
+              <label>Angle along the circle (°) <input type="range" name="angle" min="0" max="360" step="1" value="0"></label>
+            </div>
+            <p class="cp-readout" data-cp-read="state">0 rad · e^(i·0) = 1 · cos θ = 1 · sin θ = 0.</p>
+            <div class="phase-actions">
+              <button type="button" data-cp-action="start">Record 0°</button>
+              <button type="button" data-cp-action="turn">Trace to 360°</button>
+            </div>
+            <p class="cp-readout" data-cp-read="lap">No full turn recorded.</p>
+
+            <div class="cp-missions">
+              <details class="cp-mission" data-cp-mission="euler-cardinal">
+                <summary>Match the four axis points<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Enter one angle in degrees for each point on the unit circle. Equivalent turns are accepted.</p>
+                <div class="cp-fields">
+                  <label>Angle for 1 <input type="number" name="one" min="-1000000" max="1000000" step="any" required></label>
+                  <label>Angle for i <input type="number" name="i" min="-1000000" max="1000000" step="any" required></label>
+                  <label>Angle for −1 <input type="number" name="minus-one" min="-1000000" max="1000000" step="any" required></label>
+                  <label>Angle for −i <input type="number" name="minus-i" min="-1000000" max="1000000" step="any" required></label>
+                </div>
+                <button type="button" data-cp-check>Check all four angles</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="euler-identity">
+                <summary>Evaluate Euler’s identity<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Use the endpoint for π radians to evaluate e^(iπ) + 1.</p>
+                <div class="cp-fields">
+                  <label>Result <select name="identity"><option value="">Choose an answer</option><option value="zero">0</option><option value="two">2</option><option value="i">i</option></select></label>
+                </div>
+                <button type="button" data-cp-check>Check the sum</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="euler-turn">
+                <summary>Record a full turn<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Record 0° and move to 360° using the slider or Trace button. Check both endpoints and the angle traveled.</p>
+                <button type="button" data-cp-check>Check the lap</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="euler-signs">
+                <summary>Predict both signs<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Pick a quadrant. Predict the signs at an interior angle and reveal its projections.</p>
+                <div class="cp-fields">
+                  <label>Quadrant
+                    <select name="quadrant"><option value="1">I · 45°</option><option value="2">II · 135°</option><option value="3">III · 225°</option><option value="4">IV · 315°</option></select>
+                  </label>
+                  <label>Signs of real and imaginary parts
+                    <select name="signs"><option value="">Choose an answer</option><option value="++">Positive, positive</option><option value="-+">Negative, positive</option><option value="--">Negative, negative</option><option value="+-">Positive, negative</option></select>
+                  </label>
+                </div>
+                <button type="button" data-cp-check>Lock and reveal</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="cp-math">
+            <summary>Explore the math</summary>
+            <p>The unit-circle point is cos θ + i sin θ = e^(iθ), using radians. Cosine is the real part and sine is the imaginary part. The original Euler section shows how the even and odd powers in the exponential series give these two functions.</p>
+          </details>
+        </section>
+
+        <section class="cp-station" data-cp-station="powers" data-cp-accent="yellow" aria-labelledby="cp-powers-title" hidden>
+          <h4 id="cp-powers-title">Powers of i Reactor</h4>
+          <p>Enter an integer from 0 through 1,000,000,000. The diagram counts complete cycles and shows the leftover turns.</p>
+          <div data-cp-slot></div>
+          <fieldset disabled>
+            <legend class="phase-sr-only">Powers of i Reactor controls</legend>
+            <div class="cp-fields">
+              <label>Exponent n <input type="number" name="n" min="0" max="1000000000" step="1" value="0" required></label>
+              <button class="lesson-primary" type="button" data-cp-action="evaluate">Evaluate iⁿ</button>
+            </div>
+            <p class="cp-readout" data-cp-read="state">i⁰ = 1. No turn is needed.</p>
+
+            <div class="cp-missions">
+              <details class="cp-mission" data-cp-mission="powers-five">
+                <summary>Predict i⁵<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Make a prediction, then check it by removing one complete cycle.</p>
+                <div class="cp-fields">
+                  <label>Predicted value <select name="guess"><option value="">Choose an answer</option><option value="one">1</option><option value="i">i</option><option value="minus-one">−1</option><option value="minus-i">−i</option></select></label>
+                </div>
+                <button type="button" data-cp-check>Lock and evaluate</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="powers-minus-i">
+                <summary>Find −i<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Use the current exponent to reach −i.</p>
+                <button type="button" data-cp-check>Check the exponent</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="powers-period">
+                <summary>Explain the cycle<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>After starting at 1, why does adding four to the exponent leave the value unchanged?</p>
+                <div class="cp-fields">
+                  <label>Reason
+                    <select name="reason"><option value="">Choose an answer</option><option value="full">Four quarter-turns return to 1</option><option value="zero">The fourth power is 0</option><option value="flip">Four turns reverse the direction</option></select>
+                  </label>
+                </div>
+                <button type="button" data-cp-check>Check the explanation</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="powers-match">
+                <summary>Match two distinct exponents<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Save one exponent, enter another, and check whether their values agree.</p>
+                <button type="button" data-cp-action="pin">Save current exponent</button>
+                <p class="cp-readout" data-cp-read="saved">No exponent saved.</p>
+                <button type="button" data-cp-check>Compare exponents</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="cp-math">
+            <summary>Explore the math</summary>
+            <p>Every factor of i adds a quarter-turn to 1. Since i⁴ = 1, the integer remainder after dividing by four selects 1, i, −1, or −i.</p>
+          </details>
+        </section>
+
+        <section class="cp-station" data-cp-station="defender" data-cp-accent="red" aria-labelledby="cp-defender-title" hidden>
+          <h4 id="cp-defender-title">Magnitude and Phase Defender</h4>
+          <p>Move to each target using the allowed controls. Free practice leaves both controls available.</p>
+          <div data-cp-slot></div>
+          <fieldset disabled>
+            <legend class="phase-sr-only">Magnitude and Phase Defender controls</legend>
+            <div class="cp-fields">
+              <label>Round
+                <select name="round"><option value="free">Free practice</option><option value="radius">Magnitude only · target 5i</option><option value="phase">Phase only · target −3</option><option value="zero">Return to zero</option></select>
+              </label>
+              <button type="button" data-cp-action="load">Load round</button>
+            </div>
+            <div class="cp-fields">
+              <label>Magnitude <input type="number" name="r" min="0" max="8" step="any" value="2" required></label>
+              <label>Angle (°) <input type="number" name="angle" min="-1000000" max="1000000" step="any" value="90" required></label>
+              <button class="lesson-primary" type="button" data-cp-action="plot">Move to setting</button>
+            </div>
+            <p class="cp-readout" data-cp-read="state">Free practice starts at 2i. Try changing the radius or the angle.</p>
+            <p class="cp-readout" data-cp-read="saved">No point saved.</p>
+
+            <div class="cp-missions">
+              <details class="cp-mission" data-cp-mission="defender-radius">
+                <summary>Move along the same ray<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Load Magnitude only. Reach 5i while the angle stays at 90°.</p>
+                <button type="button" data-cp-check>Check the radius move</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="defender-phase">
+                <summary>Turn at a fixed radius<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Load Phase only. Reach −3 while the radius stays at 3.</p>
+                <button type="button" data-cp-check>Check the phase move</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="defender-match">
+                <summary>Same magnitude, different phase<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Use free practice. Save a nonzero point and reach another point at the same radius with a different phase.</p>
+                <button type="button" data-cp-action="pin">Save current plotted point</button>
+                <button type="button" data-cp-check>Compare both points</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="defender-zero">
+                <summary>Dock at the origin<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Load Return to zero. Reach the origin and explain what happens to its measured argument.</p>
+                <div class="cp-fields">
+                  <label>Why is the argument undefined?
+                    <select name="reason"><option value="">Choose an answer</option><option value="direction">Zero has no direction</option><option value="angle">The entered angle becomes 0°</option><option value="real">The imaginary part is always positive</option></select>
+                  </label>
+                </div>
+                <button type="button" data-cp-check>Check zero</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="cp-math">
+            <summary>Explore the math</summary>
+            <p>A magnitude change alone keeps the point on the same ray. A phase change alone keeps it on the same circle. At zero a chosen control angle can guide the next move while the measured argument is undefined.</p>
+          </details>
+        </section>
+
+        <section class="cp-station" data-cp-station="division" data-cp-accent="red" aria-labelledby="cp-division-title" hidden>
+          <h4 id="cp-division-title">The Complex Division Portal</h4>
+          <p>Enter z and w. Multiply by the denominator’s conjugate to see a real denominator and the resulting quotient.</p>
+          <div data-cp-slot></div>
+          <fieldset disabled>
+            <legend class="phase-sr-only">The Complex Division Portal controls</legend>
+            <div class="cp-fields">
+              <label>z · Real part <input type="number" name="z-a" min="-8" max="8" step="0.0001" value="3" required></label>
+              <label>z · Imaginary part <input type="number" name="z-b" min="-8" max="8" step="0.0001" value="4" required></label>
+              <label>w · Real part <input type="number" name="w-a" min="-8" max="8" step="0.0001" value="0" required></label>
+              <label>w · Imaginary part <input type="number" name="w-b" min="-8" max="8" step="0.0001" value="1" required></label>
+            </div>
+            <div class="phase-actions">
+              <button class="lesson-primary" type="button" data-cp-action="calculate">Divide</button>
+              <button type="button" data-cp-action="example">Load (3 + 4i) ÷ (1 − i)</button>
+            </div>
+            <p class="cp-readout" data-cp-read="state">Start with (3 + 4i) ÷ i.</p>
+
+            <div class="cp-missions">
+              <details class="cp-mission" data-cp-mission="division-i">
+                <summary>Predict a clockwise quarter-turn<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Divide 3 + 4i by i. Predict both components before revealing the quotient.</p>
+                <div class="cp-fields">
+                  <label>Predicted Real part <input type="number" name="guess-a" min="-16" max="16" step="any" required></label>
+                  <label>Predicted Imaginary part <input type="number" name="guess-b" min="-16" max="16" step="any" required></label>
+                </div>
+                <button type="button" data-cp-check>Lock and divide</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="division-unit">
+                <summary>Build a unit quotient<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Choose numerator and denominator with equal nonzero magnitudes.</p>
+                <button type="button" data-cp-check>Check the quotient magnitude</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="division-conjugate">
+                <summary>Make the denominator real<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>For the current z and nonzero w, enter the real denominator after multiplying by w’s conjugate.</p>
+                <div class="cp-fields">
+                  <label>Real denominator after conjugating <input type="number" name="denominator" min="0" max="128" step="any" required></label>
+                </div>
+                <button type="button" data-cp-check>Check and simplify</button>
+              </details>
+              <details class="cp-mission" data-cp-mission="division-zero">
+                <summary>Try a zero denominator<span data-cp-done hidden>✓ Complete</span></summary>
+                <p>Enter zero for both components of w. Explain why the quotient is unavailable.</p>
+                <div class="cp-fields">
+                  <label>Why is it unavailable?
+                    <select name="reason"><option value="">Choose an answer</option><option value="zero">The denominator’s squared magnitude is zero</option><option value="angle">Zero is an angle of 0°</option><option value="unchanged">Zero leaves division unchanged</option></select>
+                  </label>
+                </div>
+                <button type="button" data-cp-check>Check division by zero</button>
+              </details>
+            </div>
+          </fieldset>
+          <details class="cp-math">
+            <summary>Explore the math</summary>
+            <p>When w ≠ 0, the real denominator is c² + d² and the numerator is (ac + bd) + (bc − ad)i. For two nonzero inputs, magnitudes divide and arguments subtract. A zero numerator gives a valid zero quotient when w is nonzero.</p>
+          </details>
+        </section>
+      </div>
+
+      <template id="cp-figure-template">
+        <figure class="cp-figure">
+          <figcaption id="cp-figure-title">Station diagram</figcaption>
+          <div class="cp-viewport" id="cp-viewport">
+            <svg class="cp-diagram" id="cp-diagram" viewBox="0 0 560 340" role="img" aria-labelledby="cp-figure-title" aria-describedby="cp-diagram-desc">
+              <desc id="cp-diagram-desc"></desc>
+              <g data-cp-geometry></g>
+              <g data-cp-labels></g>
+            </svg>
+          </div>
+          <p class="lesson-note" id="cp-render-status" role="status"></p>
+        </figure>
+      </template>
+
+      <template id="cp-mission-template">
+        <div class="cp-mission-tools">
+          <button type="button" data-cp-hint>Show first hint</button>
+          <ol data-cp-hint-list aria-live="polite" hidden></ol>
+          <p class="cp-feedback" data-cp-feedback role="status"></p>
+          <details class="cp-work" data-cp-work hidden>
+            <summary>Worked steps</summary>
+            <p data-cp-work-text></p>
+          </details>
+        </div>
+      </template>
+    </details>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

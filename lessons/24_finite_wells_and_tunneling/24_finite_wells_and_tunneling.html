@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Find the bound states of a finite well, measure their exterior tails, and follow a scattering wave packet through a barrier at the Quantum Breach Facility.">
+  <title>Finite Wells and Tunneling | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+  <script type="module" src="./scripts/lesson.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)"
+                  stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none"
+                   stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8"
+                stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none"
+                   stroke="url(#logo-spectrum)" stroke-width="1.6"
+                   transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none"
+                stroke="#edffef" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static" viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 464 83"/>
+            <path class="track-violet" d="M218 54C265 80 333 97 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M218 46v16m-8-8h16" />
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button"
+              aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and-coordinates/8_bases_and-coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="../22_the_one-dimensional_schrodinger_equation/22_the_one-dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html" aria-current="page"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main finite-well-lesson" aria-labelledby="fw-title">
+    <header class="fw-intro fw-stack">
+      <p class="fw-label">Lesson 24</p>
+      <h2 id="fw-title">Finite Wells and Tunneling</h2>
+      <p class="fw-lead"><strong>A detector registers a particle just outside the edge of a finite well. Has containment failed?</strong></p>
+      <p>Predict what the detector can see. Then compare measurements of a bound state at two times with measurements of a fresh packet sent toward a barrier.</p>
+      <details>
+        <summary>Units used at both stations</summary>
+        <p>Use length L₀, mass m₀, energy E₀ = ℏ²/(m₀L₀²), time t₀ = ℏ/E₀, and momentum ℏ/L₀. In these units the numerical value of ℏ is 1. Wave amplitude is in L₀<sup>−1/2</sup> and position density is in L₀<sup>−1</sup>. An interval probability has no units.</p>
+      </details>
+    </header>
+
+    <section class="fw-panel" aria-labelledby="fw-lab-title">
+      <h3 id="fw-lab-title" tabindex="-1">Core lab</h3>
+      <p class="fw-note" id="fw-static-note">The opening diagram and worked example are available here. The lab controls enable when the lesson script initializes.</p>
+
+      <fieldset class="fw-card" id="fw-nav-controls" disabled>
+        <legend>Choose a station</legend>
+        <div class="fw-actions">
+          <label for="fw-station">Experiment</label>
+          <select id="fw-station">
+            <option value="well" selected>Finite Well Containment</option>
+            <option value="barrier">Barrier Breach</option>
+          </select>
+          <button id="fw-enter" type="button" class="fw-primary" aria-expanded="false" aria-controls="fw-facility">Enter the Quantum Breach Facility</button>
+        </div>
+      </fieldset>
+
+      <section class="fw-facility fw-card" id="fw-facility" aria-labelledby="fw-facility-title" hidden>
+        <header class="fw-stack">
+          <h4 id="fw-facility-title" tabindex="-1">The Quantum Breach Facility</h4>
+          <p>Use the station selector to switch between the containment well and the barrier. The plots and controls below operate the same equipment. The room has visual depth, while the experiment has one spatial coordinate.</p>
+        </header>
+        <fieldset id="fw-camera-controls" class="fw-card" disabled>
+          <legend>Viewing the apparatus</legend>
+          <div class="fw-actions">
+            <label for="fw-camera">Camera</label>
+            <select id="fw-camera">
+              <option value="section" selected>Cross-section</option>
+              <option value="inside">Inside the apparatus</option>
+            </select>
+            <button type="button" id="fw-camera-reset">Reset camera</button>
+            <label class="fw-check"><input type="checkbox" id="fw-effects"> Reduced effects</label>
+            <button type="button" id="fw-return">Return to core lab</button>
+          </div>
+        </fieldset>
+        <p class="fw-note" id="fw-renderer">Cross-section uses the calibrated station plots below.</p>
+        <div class="fw-viewport" id="fw-viewport" hidden>
+          <canvas id="fw-canvas" aria-hidden="true"></canvas>
+        </div>
+        <div class="fw-gallery" id="fw-gallery">
+          <h5>Detector gallery</h5>
+          <div class="fw-gallery-banks" aria-hidden="true">
+            <span id="fw-light-left"><i></i> Left</span>
+            <span id="fw-light-center"><i></i> Center</span>
+            <span id="fw-light-right"><i></i> Right</span>
+          </div>
+          <p id="fw-gallery-report">Awaiting a position sample.</p>
+        </div>
+      </section>
+
+      <section id="fw-well" class="fw-stack" aria-labelledby="fw-well-title">
+        <h4 id="fw-well-title">Finite Well Containment</h4>
+        <p>Prepare a single bound eigenstate. The well is centered at zero and each exterior region starts at a well edge. Compare the left and right tail probabilities at t = 0 and t = 4t₀.</p>
+
+        <form id="fw-predict">
+          <fieldset class="fw-card" id="fw-predict-controls" disabled>
+            <legend>Make your opening prediction</legend>
+            <p>What could an outside detection from the prepared bound state show?</p>
+            <div class="fw-options">
+              <label><input type="radio" name="fw-opening" value="escape" required> That the state is leaving the well</label>
+              <label><input type="radio" name="fw-opening" value="tail"> That its stationary density extends past the edge</label>
+              <label><input type="radio" name="fw-opening" value="never"> That the detector must have malfunctioned</label>
+            </div>
+            <div class="fw-actions">
+              <button type="submit">Commit prediction</button>
+              <button type="button" id="fw-predict-retry" hidden>Try again</button>
+            </div>
+            <p class="fw-feedback" id="fw-predict-result" role="status" aria-atomic="true"></p>
+          </fieldset>
+        </form>
+
+        <fieldset class="fw-card" id="fw-w-prepare" disabled>
+          <legend>Prepare a static well</legend>
+          <div class="fw-fields">
+            <label for="fw-w-depth">Depth V₀ / E₀
+              <input type="number" id="fw-w-depth" min="0.05" max="16" step="any" value="0.6168502750680849">
+            </label>
+            <label for="fw-w-width">Full width 2a / L₀
+              <input type="number" id="fw-w-width" min="0.5" max="6" step="0.05" value="2">
+            </label>
+            <label for="fw-w-mass">Mass m / m₀
+              <input type="number" id="fw-w-mass" min="0.5" max="3" step="0.05" value="1">
+            </label>
+            <label for="fw-w-state">Bound state
+              <select id="fw-w-state">
+                <option value="">Choose a bound state</option>
+                <option value="1" selected>1 · Even</option>
+              </select>
+            </label>
+          </div>
+          <p class="fw-note">Changing depth, width, or mass prepares a new well at t = 0 and clears samples. If the selected level disappears, choose a surviving level before measuring.</p>
+          <button type="button" id="fw-w-preset">Restore well preset</button>
+        </fieldset>
+
+        <div class="fw-grid" id="fw-w-data">
+          <div class="fw-stack">
+            <figure class="fw-card" id="fw-w-figure" aria-labelledby="fw-w-caption">
+              <figcaption id="fw-w-caption">Well potential, amplitude, and position density</figcaption>
+              <ul class="fw-legend" aria-label="Plot legend">
+                <li class="fw-key-potential">Potential</li>
+                <li class="fw-key-energy">Selected energy</li>
+                <li class="fw-key-real">Re Ψ</li>
+                <li class="fw-key-imag">Im Ψ</li>
+                <li class="fw-key-density">Density</li>
+                <li class="fw-key-sample">Detections</li>
+              </ul>
+              <svg class="fw-plot" id="fw-w-plot" viewBox="0 0 680 348" role="img" aria-labelledby="fw-w-caption" aria-describedby="fw-w-desc" focusable="false">
+                <desc id="fw-w-desc">The potential drops to −0.61685 E₀ between x = −1 and 1. The even state at −0.30843 E₀ has a central density peak and two exponential exterior tails.</desc>
+                <path class="fw-gridline" d="M64 30H616 M64 135H616 M64 178H616 M64 224H616 M64 302H616 M340 30V302"/>
+                <path class="fw-axis" d="M64 30V135H616 M64 150V206H616 M64 224V302H616"/>
+                <path class="fw-region" id="fw-w-edges" d="M284.8 30V302 M395.2 30V302"/>
+                <path class="fw-potential" id="fw-w-potential" d="M64 53.3H284.8V125.3H395.2V53.3H616"/>
+                <g class="fw-levels" id="fw-w-level-lines"></g>
+                <path class="fw-energy" id="fw-w-energy-line" d="M284.8 89.3H395.2"/>
+                <path class="fw-real" id="fw-w-real" d="M64 177.5 L91.6 177.2 L119.2 176.8 L146.8 176.3 L174.4 175.5 L202 174.2 L229.6 172.4 L257.2 169.8 L271 168 L284.8 165.8 L298.6 163.7 L312.4 162.1 L326.2 161.1 L340 160.8 L353.8 161.1 L367.6 162.1 L381.4 163.7 L395.2 165.8 L409 168 L422.8 169.8 L450.4 172.4 L478 174.2 L505.6 175.5 L533.2 176.3 L560.8 176.8 L588.4 177.2 L616 177.5"/>
+                <path class="fw-imag" id="fw-w-imag" d="M64 178H616"/>
+                <path class="fw-density" id="fw-w-density" d="M64 301.9 L91.6 301.9 L119.2 301.7 L146.8 301.4 L174.4 300.8 L202 299.3 L229.6 296.1 L257.2 289 L271 282.7 L284.8 273.4 L298.6 262.5 L312.4 253.2 L326.2 247 L340 244.8 L353.8 247 L367.6 253.2 L381.4 262.5 L395.2 273.4 L409 282.7 L422.8 289 L450.4 296.1 L478 299.3 L505.6 300.8 L533.2 301.4 L560.8 301.7 L588.4 301.9 L616 301.9"/>
+                <g class="fw-detections" id="fw-w-marks"></g>
+                <g class="fw-ticks">
+                  <text x="66" y="23">Energy / E₀</text>
+                  <text x="66" y="148">Amplitude × L₀¹ᐟ²</text>
+                  <text x="66" y="220">Density × L₀</text>
+                  <g text-anchor="end">
+                    <text id="fw-w-e-top" x="59" y="35">0.20</text>
+                    <text id="fw-w-e-bottom" x="59" y="139">−0.70</text>
+                    <text id="fw-w-amp-top" x="59" y="156">1.00</text>
+                    <text x="59" y="182">0</text>
+                    <text id="fw-w-rho-top" x="59" y="230">0.60</text>
+                    <text x="59" y="307">0</text>
+                  </g>
+                  <g text-anchor="middle">
+                    <text id="fw-w-x-left" x="64" y="324">−5</text>
+                    <text x="340" y="324">0</text>
+                    <text id="fw-w-x-right" x="616" y="324">5</text>
+                    <text x="340" y="343">Position x / L₀</text>
+                  </g>
+                </g>
+              </svg>
+              <p class="fw-note" id="fw-w-omitted">Outside the plotted interval: 0.0523% of the total probability. The detectors include the full tails.</p>
+            </figure>
+
+            <fieldset class="fw-card" id="fw-w-clock" disabled>
+              <legend>Compare two times</legend>
+              <div class="fw-actions">
+                <button id="fw-w-zero" type="button">Set t = 0</button>
+                <button id="fw-w-later" type="button">Set t = 4t₀</button>
+                <label class="fw-check"><input id="fw-w-amplitudes" type="checkbox" checked> Show real and imaginary amplitudes</label>
+                <label class="fw-check"><input id="fw-w-expand" type="checkbox"> Expand tail view</label>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="fw-stack">
+            <section class="fw-card" aria-labelledby="fw-w-state-title">
+              <h5 id="fw-w-state-title">Bound-state report</h5>
+              <dl class="fw-readouts">
+                <div><dt>Time</dt><dd id="fw-w-time">0 t₀</dd></div>
+                <div><dt>Parity</dt><dd id="fw-w-parity">Even</dd></div>
+                <div><dt>Energy</dt><dd id="fw-w-energy">−0.30843 E₀</dd></div>
+                <div><dt>Amplitude decay length 1/κ</dt><dd id="fw-w-decay">1.27324 L₀</dd></div>
+                <div><dt>Probability inside</dt><dd id="fw-w-inside">72.00%</dd></div>
+                <div><dt>Probability outside</dt><dd id="fw-w-outside">28.00%</dd></div>
+                <div><dt>Energy above well floor</dt><dd id="fw-w-floor">0.30843 E₀</dd></div>
+                <div><dt>Equal-width infinite well, above its floor</dt><dd id="fw-w-infinite">1.23370 E₀</dd></div>
+              </dl>
+              <div class="fw-table-wrap">
+                <table>
+                  <caption>Bound energy ladder</caption>
+                  <thead><tr><th scope="col">Level</th><th scope="col">Parity</th><th scope="col">Energy / E₀</th></tr></thead>
+                  <tbody id="fw-w-ladder"><tr data-selected><th scope="row">1</th><td>Even</td><td>−0.30843</td></tr></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="fw-card" aria-labelledby="fw-w-detector-title">
+              <h5 id="fw-w-detector-title">Full-line detectors</h5>
+              <fieldset id="fw-w-measure" disabled>
+                <legend>Measure independently prepared copies</legend>
+                <div class="fw-actions">
+                  <button id="fw-w-single" type="button">Measure once</button>
+                  <button id="fw-w-batch" type="button">Measure 240 copies</button>
+                  <button id="fw-w-clear" type="button" disabled>Clear detections</button>
+                </div>
+              </fieldset>
+              <div class="fw-table-wrap">
+                <table>
+                  <caption>Position tally at the current snapshot</caption>
+                  <thead><tr><th scope="col">Region</th><th scope="col">Full-line probability</th><th scope="col">Count</th></tr></thead>
+                  <tbody>
+                    <tr><th scope="row">Left exterior</th><td id="fw-w-left-p">14.00%</td><td id="fw-w-left-n">0</td></tr>
+                    <tr><th scope="row">Inside</th><td id="fw-w-center-p">72.00%</td><td id="fw-w-center-n">0</td></tr>
+                    <tr><th scope="row">Right exterior</th><td id="fw-w-right-p">14.00%</td><td id="fw-w-right-n">0</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p id="fw-w-sample-report">0 detections. No position measured yet.</p>
+            </section>
+          </div>
+        </div>
+
+        <p class="fw-feedback" id="fw-w-status" role="status" aria-atomic="true"></p>
+      </section>
+
+      <section id="fw-barrier" class="fw-stack" aria-labelledby="fw-barrier-title" hidden>
+        <h4 id="fw-barrier-title">Barrier Breach</h4>
+        <p>Launch a normalized packet from x = −15L₀ toward the barrier. Watch it approach, interact, and separate into outgoing components. Use the probability ledger to account for the entire preparation.</p>
+
+        <fieldset class="fw-card" id="fw-b-prepare" disabled>
+          <legend>Prepare a fresh incident packet</legend>
+          <div class="fw-fields">
+            <label for="fw-b-height">Barrier height V<sub>b</sub> / E₀
+              <input type="number" id="fw-b-height" min="0" max="8" step="0.25" value="3">
+            </label>
+            <label for="fw-b-width">Barrier full width w / L₀
+              <input type="number" id="fw-b-width" min="0.5" max="3" step="0.5" value="1">
+            </label>
+            <label for="fw-b-mass">Mass m / m₀
+              <input type="number" id="fw-b-mass" min="0.75" max="1.5" step="0.05" value="1">
+            </label>
+            <label for="fw-b-sigma">Position spread σ<sub>x</sub> / L₀
+              <input type="number" id="fw-b-sigma" min="2" max="3.5" step="0.25" value="3">
+            </label>
+            <label for="fw-b-momentum">Central momentum p₀ / (ℏ/L₀)
+              <input type="number" id="fw-b-momentum" min="1.6" max="2.8" step="0.05" value="2">
+            </label>
+          </div>
+          <p class="fw-note">Each change restarts at t = 0 and clears the detector tally. A height of zero gives a free-packet reference run.</p>
+          <button type="button" id="fw-b-preset">Restore barrier preset</button>
+        </fieldset>
+
+        <fieldset class="fw-card" id="fw-b-clock" disabled>
+          <legend>Packet clock</legend>
+          <div class="fw-actions">
+            <button type="button" id="fw-b-play" class="fw-primary">Launch / Play</button>
+            <button type="button" id="fw-b-pause" disabled>Pause</button>
+            <button type="button" id="fw-b-step">Step 0.5t₀</button>
+            <button type="button" id="fw-b-restart">Restart this preparation</button>
+            <label class="fw-check"><input type="checkbox" id="fw-b-slow"> Slow motion</label>
+          </div>
+          <p class="fw-note" id="fw-b-clock-note">Ready at t = 0. Slow motion changes the presentation rate. Step advances the solver by 50 fixed time steps.</p>
+        </fieldset>
+
+        <div class="fw-grid" id="fw-b-data">
+          <div class="fw-stack">
+            <figure class="fw-card" id="fw-b-figure" aria-labelledby="fw-b-caption">
+              <figcaption id="fw-b-caption">Grid potential and evolving packet</figcaption>
+              <ul class="fw-legend" aria-label="Plot legend">
+                <li class="fw-key-potential">Potential</li>
+                <li class="fw-key-energy">Central kinetic energy</li>
+                <li class="fw-key-real">Re Ψ</li>
+                <li class="fw-key-imag">Im Ψ</li>
+                <li class="fw-key-density">Density</li>
+                <li class="fw-key-sample">Detections</li>
+              </ul>
+              <svg class="fw-plot" id="fw-b-plot" viewBox="0 0 680 348" role="img" aria-labelledby="fw-b-caption" aria-describedby="fw-b-desc" focusable="false">
+                <desc id="fw-b-desc">The preset starts with a Gaussian of position standard deviation 3 L₀ centered at −15 L₀. The barrier is centered at zero, 1 L₀ wide and 3 E₀ high.</desc>
+                <path class="fw-gridline" d="M64 30H616 M64 135H616 M64 178H616 M64 224H616 M64 302H616 M340 30V302"/>
+                <path class="fw-axis" d="M64 30V135H616 M64 150V206H616 M64 224V302H616"/>
+                <path class="fw-region" id="fw-b-edges" d="M302.1 30V302 M377.9 30V302"/>
+                <path class="fw-potential" id="fw-b-potential" d="M64 135H336.55V56.25H343.45V135H616"/>
+                <path class="fw-energy" id="fw-b-energy-line" d="M64 82.5H616"/>
+                <path class="fw-real" id="fw-b-real" d="" hidden/>
+                <path class="fw-imag" id="fw-b-imag" d="" hidden/>
+                <path class="fw-density" id="fw-b-density" d="M64 302 H195.1 L202 301.7 L208.9 301.0 L215.8 299.0 L222.7 294.5 L229.6 286.5 L236.5 275.3 L243.4 263.1 L250.3 253.6 L257.2 250.1 L264.1 253.6 L271 263.1 L277.9 275.3 L284.8 286.5 L291.7 294.5 L298.6 299.0 L305.5 301.0 L312.4 301.7 L319.3 301.9 L326.2 302 H616"/>
+                <g class="fw-detections" id="fw-b-marks"></g>
+                <g class="fw-ticks">
+                  <text x="66" y="23">Energy / E₀</text>
+                  <text x="66" y="148">Amplitude × L₀¹ᐟ²</text>
+                  <text x="66" y="220">Density × L₀</text>
+                  <g text-anchor="end">
+                    <text id="fw-b-e-top" x="59" y="35">4.00</text>
+                    <text id="fw-b-e-bottom" x="59" y="139">0</text>
+                    <text id="fw-b-amp-top" x="59" y="156">0.50</text>
+                    <text x="59" y="182">0</text>
+                    <text id="fw-b-rho-top" x="59" y="230">0.20</text>
+                    <text x="59" y="307">0</text>
+                  </g>
+                  <g text-anchor="middle">
+                    <text id="fw-b-x-left" x="64" y="324">−40</text>
+                    <text x="340" y="324">0</text>
+                    <text id="fw-b-x-right" x="616" y="324">40</text>
+                    <text x="340" y="343">Position x / L₀</text>
+                  </g>
+                </g>
+              </svg>
+              <p class="fw-note" id="fw-b-omitted">The close view spans −40 to 40 L₀. The probability ledger uses the entire numerical grid.</p>
+            </figure>
+            <fieldset class="fw-card" id="fw-b-view" disabled>
+              <legend>Plot layers</legend>
+              <div class="fw-actions">
+                <label class="fw-check"><input id="fw-b-amplitudes" type="checkbox"> Show real and imaginary amplitudes</label>
+                <label class="fw-check"><input id="fw-b-expand" type="checkbox"> Show full grid and absorbing layers</label>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="fw-stack">
+            <section class="fw-card" aria-labelledby="fw-b-ledger-title">
+              <h5 id="fw-b-ledger-title">Probability ledger</h5>
+              <dl class="fw-readouts">
+                <div><dt>Time</dt><dd id="fw-b-time">0 t₀</dd></div>
+                <div><dt>Central energy compared with barrier</dt><dd id="fw-b-kinetic">2.0000 E₀ &lt; 3.0000 E₀</dd></div>
+                <div><dt>Momentum spread Δp</dt><dd id="fw-b-spread">0.1667 ℏ/L₀</dd></div>
+                <div><dt>Mean initial kinetic energy</dt><dd id="fw-b-mean">2.0139 E₀</dd></div>
+                <div><dt>Surviving norm N</dt><dd id="fw-b-norm">100.00%</dd></div>
+                <div><dt>Accounted probability</dt><dd id="fw-b-total">100.00%</dd></div>
+                <div><dt>Removed by left layer</dt><dd id="fw-b-lost-left">0.00%</dd></div>
+                <div><dt>Removed by right layer</dt><dd id="fw-b-lost-right">0.00%</dd></div>
+              </dl>
+              <p id="fw-b-phase">Ready. Most probability is still in the incident packet on the left.</p>
+              <p id="fw-b-estimates">Outgoing estimates appear after the reflected and transmitted components separate.</p>
+            </section>
+
+            <section class="fw-card" aria-labelledby="fw-b-detector-title">
+              <h5 id="fw-b-detector-title">Packet detectors</h5>
+              <fieldset id="fw-b-measure" disabled>
+                <legend>Pause and sample the surviving packet</legend>
+                <div class="fw-actions">
+                  <button type="button" id="fw-b-single">Measure once</button>
+                  <button type="button" id="fw-b-batch">Measure 240 copies</button>
+                  <button type="button" id="fw-b-clear" disabled>Clear detections</button>
+                </div>
+              </fieldset>
+              <p class="fw-note" id="fw-b-normalization">Regional masses are fractions of the original preparation. The sample predictions are conditional on survival and use N as their denominator.</p>
+              <div class="fw-table-wrap">
+                <table>
+                  <caption>Position tally at the current snapshot</caption>
+                  <thead><tr><th scope="col">Region</th><th scope="col">Region mass</th><th scope="col">Given survival</th><th scope="col">Count</th></tr></thead>
+                  <tbody>
+                    <tr><th scope="row">Left region</th><td id="fw-b-left-p">99.92%</td><td id="fw-b-left-c">99.92%</td><td id="fw-b-left-n">0</td></tr>
+                    <tr><th scope="row">Interaction region</th><td id="fw-b-center-p">0.08%</td><td id="fw-b-center-c">0.08%</td><td id="fw-b-center-n">0</td></tr>
+                    <tr><th scope="row">Right region</th><td id="fw-b-right-p">&lt;0.01%</td><td id="fw-b-right-c">&lt;0.01%</td><td id="fw-b-right-n">0</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p id="fw-b-sample-report">0 detections. No position measured yet.</p>
+            </section>
+          </div>
+        </div>
+
+        <details class="fw-card">
+          <summary>Numerical setup and outgoing estimates</summary>
+          <div class="fw-detail">
+            <p>The cell centers are separated by Δx = 0.05 L₀ and cover −95 to 95 L₀. Each barrier setting occupies whole grid cells, and the plot shows their edges. The first and last cells adjoin zero-valued ghost points. Smooth absorbing layers start at |x| = 70 L₀. The ledger adds the measured removal from each layer to the surviving norm.</p>
+            <p>In scaled units put c = 1/(2mΔx²). The finite-difference Hamiltonian has diagonal 2c + V<sub>j</sub> and off-diagonals −c. Each step solves the complex tridiagonal system (I + iΔtH/2)Ψ<sup>n+1</sup> = (I − iΔtH/2)Ψ<sup>n</sup> with Δt = 0.01 t₀. The initial packet is normalized using the grid sum Σ|Ψ<sub>j</sub>|²Δx. Later steps preserve the surviving scale.</p>
+            <p>The interaction region includes the barrier and an additional 5 L₀ on each side. Outgoing estimates require time for the incident packet to arrive, low residual interaction mass, and stable outgoing masses. The left and right estimates include probability already removed by their respective layers. The report gives the remaining interaction mass and the status of the separation check.</p>
+          </div>
+        </details>
+
+        <p class="fw-feedback" id="fw-b-status" role="status" aria-atomic="true"></p>
+      </section>
+
+      <section class="fw-card" id="fw-missions" aria-labelledby="fw-mission-title">
+        <h4 id="fw-mission-title">Facility missions</h4>
+        <p>Run these investigations from either the core lab or the facility.</p>
+        <fieldset id="fw-mission-controls" disabled>
+          <legend>Choose an investigation</legend>
+          <div class="fw-actions">
+            <label for="fw-mission-select">Mission</label>
+            <select id="fw-mission-select" aria-describedby="fw-resonance-note">
+              <option value="free" selected>Free exploration</option>
+              <option value="containment">Containment 101</option>
+              <option value="thinner">Thinner Walls</option>
+              <option value="lock">Lock It Down</option>
+              <option value="resonance" disabled>The Resonance Key — unavailable</option>
+              <option value="count">Count the States</option>
+              <option value="mystery">The Mystery Barrier</option>
+            </select>
+            <button type="button" id="fw-mission-load">Load mission</button>
+            <button type="button" id="fw-mission-retry" disabled>Retry mission</button>
+            <button type="button" id="fw-mission-exit" disabled>Return to free exploration</button>
+          </div>
+          <p class="fw-note" id="fw-resonance-note">The Resonance Key requires a verified double-barrier transmission peak and a run long enough for the inter-barrier cavity to empty. The current station uses a single barrier.</p>
+          <p id="fw-mission-goal">Free exploration is active.</p>
+          <p class="fw-note" id="fw-mission-hint"></p>
+
+          <div class="fw-stack" data-mission="containment" hidden>
+            <label for="fw-containment-answer">Predict whether the outside detector can fire</label>
+            <select id="fw-containment-answer">
+              <option value="">Choose a prediction</option>
+              <option value="yes">Yes, the bound state has an exterior tail</option>
+              <option value="no">No, the density stops at the well edge</option>
+            </select>
+            <button type="button" id="fw-containment-commit">Commit prediction and sample</button>
+            <button type="button" id="fw-containment-compare" disabled>Compare with t = 4t₀</button>
+          </div>
+
+          <div class="fw-stack" data-mission="thinner" hidden>
+            <div class="fw-actions">
+              <button type="button" id="fw-thinner-save">Save separated baseline</button>
+              <button type="button" id="fw-thinner-check" disabled>Compare separated result</button>
+            </div>
+            <p id="fw-thinner-record">No baseline saved.</p>
+          </div>
+
+          <div class="fw-stack" data-mission="lock" hidden>
+            <div class="fw-actions">
+              <button type="button" id="fw-lock-check">Test separated transmission</button>
+              <button type="button" id="fw-lock-repeat" disabled>Test another batch of fresh copies</button>
+            </div>
+            <p id="fw-lock-record">No detector batches recorded.</p>
+          </div>
+
+          <div class="fw-stack" data-mission="count" hidden>
+            <label for="fw-count-answer">Predicted number of bound states</label>
+            <input type="number" id="fw-count-answer" min="0" max="32" step="1">
+            <button type="button" id="fw-count-commit">Commit level count</button>
+          </div>
+
+          <div class="fw-stack" data-mission="mystery" hidden>
+            <div class="fw-actions">
+              <button type="button" id="fw-mystery-narrow">Run narrow reference</button>
+              <button type="button" id="fw-mystery-wide">Run wide reference</button>
+              <button type="button" id="fw-mystery-hidden">Run hidden barrier</button>
+              <button type="button" id="fw-mystery-capture" disabled>Record separated result</button>
+            </div>
+            <div class="fw-table-wrap">
+              <table>
+                <caption>Controlled transmission comparisons</caption>
+                <thead><tr><th scope="col">Preparation</th><th scope="col">Recorded estimate</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">Narrow reference</th><td id="fw-mystery-narrow-result">—</td></tr>
+                  <tr><th scope="row">Wide reference</th><td id="fw-mystery-wide-result">—</td></tr>
+                  <tr><th scope="row">Hidden barrier</th><td id="fw-mystery-hidden-result">—</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p id="fw-mystery-progress"></p>
+            <label for="fw-mystery-answer">Which barrier matches the hidden result?</label>
+            <select id="fw-mystery-answer">
+              <option value="">Choose a barrier</option>
+              <option value="narrow">Narrow reference</option>
+              <option value="wide">Wide reference</option>
+            </select>
+            <button type="button" id="fw-mystery-commit" disabled>Commit guess and reveal</button>
+          </div>
+        </fieldset>
+        <p class="fw-feedback" id="fw-mission-feedback" role="status" aria-atomic="true"></p>
+      </section>
+    </section>
+
+    <section class="fw-panel" aria-labelledby="fw-math-title">
+      <h3 id="fw-math-title">Mathematical teaching console</h3>
+
+      <details class="fw-card">
+        <summary>Stationary Schrödinger equation</summary>
+        <div class="fw-detail">
+          <p class="fw-equation">−(ℏ²/2m)ψ″ + V(x)ψ = Eψ</p>
+          <p>For one energy eigenstate, ψ describes the spatial amplitude. The solution at time t is Ψ(x,t) = ψ(x)e<sup>−iEt/ℏ</sup>.</p>
+        </div>
+      </details>
+      <details class="fw-card">
+        <summary>Time-dependent Schrödinger equation</summary>
+        <div class="fw-detail">
+          <p class="fw-equation">iℏ ∂Ψ/∂t = [−(ℏ²/2m) ∂²/∂x² + V(x)]Ψ</p>
+          <p>A packet generally combines components of different energies. Their different phase rates change the shape of the packet and allow distinct outgoing parts to emerge.</p>
+        </div>
+      </details>
+
+      <div class="fw-symbols" aria-label="Equation symbols">
+        <details class="fw-card" data-fw-symbol="potential">
+          <summary>V(x) · Potential</summary>
+          <p>Potential energy at position x. The floor of the well is −V₀ and the top of the barrier is V<sub>b</sub>. See the stepped trace in each energy plot.</p>
+        </details>
+        <details class="fw-card" data-fw-symbol="mass">
+          <summary>m · Mass</summary>
+          <p>The mass sets the strength of the kinetic term −ℏ²ψ″/(2m) and the relation K = p²/(2m). Both stations have their own mass control.</p>
+        </details>
+        <details class="fw-card" data-fw-symbol="energy">
+          <summary>E · Energy</summary>
+          <p>An energy eigenvalue. Bound E is measured from the exterior zero and appears in the well ladder. A scattering packet draws from a range of energies.</p>
+        </details>
+        <details class="fw-card" data-fw-symbol="wave">
+          <summary>ψ and Ψ · Amplitude</summary>
+          <p>ψ(x) is a stationary spatial eigenfunction and Ψ(x,t) is a time-dependent state. The amplitude plots show real and imaginary parts. Their squared sum gives position density.</p>
+        </details>
+        <details class="fw-card" data-fw-symbol="hbar">
+          <summary>ℏ · Reduced Planck constant</summary>
+          <p>ℏ = h/(2π) links energy to phase rate E/ℏ and momentum to spatial frequency p/ℏ. Our clock labels time in t₀ = ℏ/E₀.</p>
+        </details>
+      </div>
+
+      <h4>Show Me Why</h4>
+      <details class="fw-card">
+        <summary>1. Read the two piecewise potentials</summary>
+        <div class="fw-detail">
+          <p>The well has V(x) = −V₀ when |x| &lt; a and V(x) = 0 in the two exterior regions. Its full width is 2a. Bound states have energies between the floor and the exterior zero, −V₀ &lt; E &lt; 0.</p>
+          <p>The barrier has V(x) = V<sub>b</sub> when |x| &lt; w/2 and zero in both leads. Its full width is w. A scattering component incident from a lead can have any positive energy.</p>
+        </div>
+      </details>
+      <details class="fw-card">
+        <summary>2. Get oscillatory and exponential solutions</summary>
+        <div class="fw-detail">
+          <p>Rearrange the stationary equation to ψ″ = −[2m(E−V)/ℏ²]ψ. Where E−V is positive the solution is oscillatory. Where E−V is negative the equation gives real exponential solutions.</p>
+          <p class="fw-equation">q = √[2m(E+V₀)]/ℏ inside the well<br>κ = √(−2mE)/ℏ outside the well</p>
+          <p>Retain the decaying exterior exponential on each side of the well so the state is normalizable on the full line. The amplitude falls with decay length 1/κ. Density falls as e<sup>−2κd</sup> at distance d from the edge.</p>
+        </div>
+      </details>
+      <details class="fw-card">
+        <summary>3. Match amplitude and slope at a finite step</summary>
+        <div class="fw-detail">
+          <p>With constant mass and a finite step, both ψ and ψ′ are continuous. For an even state use A cos(qx) inside and B e<sup>−κ(x−a)</sup> to the right. At x = a the two conditions are</p>
+          <p class="fw-equation">A cos(qa) = B<br>−Aq sin(qa) = −κB<br>q tan(qa) = κ</p>
+          <p>On the left, even parity gives the same exterior sign. For an odd state replace cos(qx) by sin(qx). Then A sin(qa) = B and Aq cos(qa) = −κB yield −q cot(qa) = κ. The left exterior has the opposite sign from the right.</p>
+        </div>
+      </details>
+      <details class="fw-card" open>
+        <summary>4. Find and normalize the allowed bound states</summary>
+        <div class="fw-detail">
+          <p>Set z = qa and z₀ = a√(2mV₀)/ℏ, so κa = √(z₀²−z²). Find the root on each physical branch between successive half-integer multiples of π, stopping at z₀. The lab uses an equivalent matching equation without tangent or cotangent poles. It excludes E = 0, where the exterior no longer gives a normalizable tail.</p>
+          <p class="fw-equation">Even: 1/A² = a + sin(2qa)/(2q) + cos²(qa)/κ<br>Odd: 1/A² = a − sin(2qa)/(2q) + sin²(qa)/κ</p>
+          <p>The first two terms in each expression give the interior integral before multiplying by A². The last term gives both exterior tails. Recover E = −ℏ²κ²/(2m).</p>
+          <p><strong>Opening example.</strong> With m/m₀ = 1, a/L₀ = 1 and V₀/E₀ = π²/16, the even root is qa = κa = π/4. The energy is −π²E₀/32. Here 1/A² = (1 + 4/π)L₀, of which the two tails contribute (2/π)L₀. The total outside probability is 2/(π+4), about 28.00%, with half on each side.</p>
+          <p>For an equal-width infinite well the n-th energy above its floor is n²π²ℏ²/[2m(2a)²]. Compare that with E + V₀ for the corresponding finite-well level. Penetration lets the wave extend over a greater distance, which reduces the energy above the floor for that level.</p>
+        </div>
+      </details>
+      <details class="fw-card">
+        <summary>5. Follow transmission through a finite barrier</summary>
+        <div class="fw-detail">
+          <p>For an incident component with 0 &lt; E &lt; V<sub>b</sub>, the solution in the barrier is C e<sup>κ<sub>b</sub>x</sup> + D e<sup>−κ<sub>b</sub>x</sup>, where κ<sub>b</sub> = √[2m(V<sub>b</sub>−E)]/ℏ. Matching the value and slope at both edges usually requires both terms. Beyond the barrier the outgoing wave is oscillatory and can carry probability current.</p>
+          <p class="fw-equation">T(E) = [1 + V<sub>b</sub>² sinh²(κ<sub>b</sub>w)/(4E(V<sub>b</sub>−E))]<sup>−1</sup> for 0 &lt; E &lt; V<sub>b</sub></p>
+          <p>This is a single-energy prediction for equal potentials in both leads. Wider or higher barriers generally reduce transmission under comparable sub-barrier conditions.</p>
+          <p>For the incident Gaussian, Ψ(x,0) is proportional to e<sup>−(x−x₀)²/(4σ<sub>x</sub>²)</sup>e<sup>ip₀(x−x₀)/ℏ</sup>. Its momentum spread is Δp = ℏ/(2σ<sub>x</sub>). K₀ = p₀²/(2m) is the central kinetic energy, while ⟨K⟩ = [p₀² + (Δp)²]/(2m) is the mean. Even when K₀ is below V<sub>b</sub>, some of the packet can start above the barrier energy. An outgoing packet measures transmission over that distribution.</p>
+        </div>
+      </details>
+      <details class="fw-card">
+        <summary>6. Apply the Born rule to the detectors</summary>
+        <div class="fw-detail">
+          <p class="fw-equation">P(u ≤ X ≤ v) = ∫<sub>u</sub><sup>v</sup> |Ψ(x,t)|² dx</p>
+          <p>For a pure bound eigenstate, e<sup>−iEt/ℏ</sup> cancels in the squared magnitude. A real spatial eigenfunction also gives j = (ℏ/m) Im(Ψ*∂Ψ/∂x) = 0. The outside probability is stationary and no net probability flows through either edge.</p>
+          <p>Each position draw uses an independent preparation at the same snapshot. The bound detector includes the full line. For the packet, a regional grid sum gives unconditional mass. Dividing that mass by the surviving norm gives the probability among surviving copies. Finite batches fluctuate around these predictions.</p>
+        </div>
+      </details>
+
+      <p><strong>Revisit the opening:</strong> a bound-state detector can fire outside the well because there is stationary density there. Evidence of transmission comes from a packet’s outgoing far-side component after interaction and separation. Time evolution and probability flow distinguish the two readings.</p>
+      <p>In Lesson 25, the potential has a smooth curved bottom. How will that change the allowed energies and the shape of the bound states?</p>
+    </section>
+
+    <nav class="fw-navigation" aria-label="Lesson navigation">
+      <a rel="prev" href="../23_the_infinite_square_well/23_the_infinite_square_well.html">
+        <span class="fw-note">← Previous</span>
+        <span>The Infinite Square Well</span>
+      </a>
+      <a rel="next" href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html">
+        <span class="fw-note">Next →</span>
+        <span>The Harmonic Oscillator</span>
+      </a>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

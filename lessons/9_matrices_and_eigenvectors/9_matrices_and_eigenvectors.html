@@ -1,0 +1,1585 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Use the Matrix Reactor to transform arrows and grids, discover eigendirections, and derive the eigenvalues of a two-dimensional matrix.">
+  <title>Matrices and Eigenvectors | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css?v=9-matrix-arcade">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+  <script type="module" src="./scripts/lesson.js?v=9-matrix-arcade"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)"
+                  stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none"
+                   stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8"
+                stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none"
+                   stroke="url(#logo-spectrum)" stroke-width="1.6"
+                   transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none"
+                stroke="#edffef" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static"
+             viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse"
+                  x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 464 83"/>
+            <path class="track-violet" d="M218 54C265 80 333 97 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M218 46v16m-8-8h16"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button"
+              aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and-coordinates/8_bases_and-coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="./9_matrices_and_eigenvectors.html" aria-current="page"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="../22_the_one_dimensional_schrodinger_equation/22_the_one_dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main matrix-lesson" aria-labelledby="matrix-title">
+    <header class="lesson-intro">
+      <p class="lesson-kicker">Lesson 09 · Linear transformations</p>
+      <h2 id="matrix-title">Matrices and Eigenvectors</h2>
+      <p class="lesson-lead">A transformation sends (1, 0) to (2, 1) and (0, 1) to (1, 2). Both coordinate axes change direction. Can you find an arrow that stays on its original line?</p>
+      <p>In Lesson 8, you held the arrow fixed and changed its coordinate description. Here the standard axes stay fixed. A matrix acts on the input arrow and produces an output arrow in those same coordinates.</p>
+      <p><a id="mx-arcade-link" href="#matrix-arcade">Open the optional Matrix Arcade</a></p>
+    </header>
+
+    <section class="lesson-panel matrix-reactor" id="matrix-reactor" aria-labelledby="matrix-reactor-title">
+      <h3 id="matrix-reactor-title">Matrix Reactor</h3>
+      <p>Start with <b>e₁</b> and compare its image with column 1. Then try <b>e₂</b> and column 2. Pick another input, make a prediction, and check it before you reveal the eigenlines.</p>
+      <p id="matrix-static-note" class="lesson-note">Static worked example. Column 1 turns the input (1, 0) into (2, 1). The lesson script enables the controls.</p>
+
+      <div class="matrix-layout">
+        <div class="matrix-console">
+          <fieldset class="matrix-controls" id="matrix-controls" disabled>
+            <legend>Set the transformation and input</legend>
+
+            <div class="matrix-group">
+              <label for="matrix-preset">Transformation preset</label>
+              <select id="matrix-preset">
+                <option value="opening" selected>Opening puzzle</option>
+                <option value="stretch">Diagonal stretch</option>
+                <option value="reflection">Reflect across the x-axis</option>
+                <option value="shear">Horizontal shear</option>
+                <option value="rotation">Quarter-turn counterclockwise</option>
+                <option value="projection">Project onto the x-axis</option>
+                <option value="scalar">Scale every direction by 2</option>
+                <option value="zero">Zero matrix</option>
+                <option value="custom" disabled>Custom matrix</option>
+              </select>
+            </div>
+
+            <div class="matrix-group" role="group" aria-labelledby="matrix-entries-title">
+              <h4 id="matrix-entries-title">Matrix A</h4>
+              <div class="matrix-entries" id="matrix-entries" data-active-column="1">
+                <label data-matrix-col="1" for="matrix-a">a · row 1, col. 1
+                  <input id="matrix-a" type="number" min="-3" max="3" step="0.5" value="2" required>
+                </label>
+                <label data-matrix-col="2" for="matrix-b">b · row 1, col. 2
+                  <input id="matrix-b" type="number" min="-3" max="3" step="0.5" value="1" required>
+                </label>
+                <label data-matrix-col="1" for="matrix-c">c · row 2, col. 1
+                  <input id="matrix-c" type="number" min="-3" max="3" step="0.5" value="1" required>
+                </label>
+                <label data-matrix-col="2" for="matrix-d">d · row 2, col. 2
+                  <input id="matrix-d" type="number" min="-3" max="3" step="0.5" value="2" required>
+                </label>
+              </div>
+            </div>
+
+            <div class="matrix-group" role="group" aria-labelledby="matrix-input-title">
+              <h4 id="matrix-input-title" class="matrix-input-color">Input vector v</h4>
+              <div class="matrix-pair">
+                <label for="matrix-x">Input <var>x</var>
+                  <input id="matrix-x" type="number" min="-3" max="3" step="0.5" value="1" required>
+                </label>
+                <label for="matrix-y">Input <var>y</var>
+                  <input id="matrix-y" type="number" min="-3" max="3" step="0.5" value="0" required>
+                </label>
+              </div>
+              <div class="matrix-actions">
+                <button type="button" data-matrix-vector="e1" aria-pressed="true">e₁ (1, 0)</button>
+                <button type="button" data-matrix-vector="e2" aria-pressed="false">e₂ (0, 1)</button>
+                <button type="button" data-matrix-vector="plus" aria-pressed="false">(1, 1)</button>
+                <button type="button" data-matrix-vector="minus" aria-pressed="false">(1, −1)</button>
+                <button type="button" data-matrix-vector="zero" aria-pressed="false">(0, 0)</button>
+              </div>
+            </div>
+
+            <p class="lesson-note" id="matrix-entry-help">Edit entries in half-unit increments from −3 to 3. Presets change the matrix and leave the input in place.</p>
+            <div class="matrix-actions">
+              <button id="matrix-reset" type="button">Reset lab</button>
+            </div>
+          </fieldset>
+
+          <form id="matrix-prediction">
+            <fieldset class="matrix-controls" id="matrix-prediction-controls" disabled>
+              <legend>Predict the relation</legend>
+              <label for="matrix-guess">How does the output relate to the selected input?</label>
+              <select id="matrix-guess" required>
+                <option value="" selected>Choose a prediction</option>
+                <option value="same">It stays on the line and points the same way.</option>
+                <option value="opposite">It stays on the line and points the opposite way.</option>
+                <option value="zero">The input is nonzero and the output is zero.</option>
+                <option value="off-line">It leaves the input’s line.</option>
+                <option value="zero-input">The input is zero. The eigenvector test does not apply.</option>
+              </select>
+              <div class="matrix-actions">
+                <button class="matrix-primary" type="submit">Check prediction</button>
+                <button class="matrix-reveal" id="matrix-reveal" type="button"
+                        aria-controls="matrix-eigen-results" aria-expanded="false">Reveal eigenlines</button>
+              </div>
+              <p id="matrix-prediction-feedback" class="matrix-feedback" role="status"></p>
+            </fieldset>
+          </form>
+        </div>
+
+        <div class="matrix-display">
+          <figure class="matrix-figure" aria-labelledby="matrix-caption">
+            <div class="matrix-viewport" id="matrix-viewport" data-renderer="svg">
+              <canvas id="matrix-canvas" class="matrix-canvas" aria-hidden="true" hidden></canvas>
+              <svg id="matrix-svg" class="matrix-svg" viewBox="0 0 420 420" role="img"
+                   aria-labelledby="matrix-svg-title matrix-svg-desc"
+                   data-origin-x="210" data-origin-y="210" data-plot-radius="180"
+                   data-min-extent="6" data-grid-radius="2">
+                <title id="matrix-svg-title">Matrix Reactor transformation diagram</title>
+                <desc id="matrix-svg-desc">On fixed square axes, the solid input arrow ends at (1, 0). The dashed output arrow ends at (2, 1), the first column of A. The central square grid patch maps to a slanted parallelogram.</desc>
+
+                <defs>
+                  <pattern id="matrix-reference-pattern" x="210" y="210"
+                           width="30" height="30" patternUnits="userSpaceOnUse">
+                    <path class="matrix-reference-line" d="M0 30V0H30"/>
+                  </pattern>
+                </defs>
+
+                <g id="matrix-svg-geometry">
+                  <g id="matrix-svg-reference">
+                    <rect x="30" y="30" width="360" height="360" fill="url(#matrix-reference-pattern)"/>
+                    <rect class="matrix-source-frame" x="150" y="150" width="120" height="120"/>
+                  </g>
+                  <g id="matrix-svg-grid">
+                    <path class="matrix-image-frame" d="M30 390 270 270 390 30 150 150Z"/>
+                    <path class="matrix-image-grid"
+                          d="M90 360 210 120 M150 330 270 90 M210 300 330 60
+                             M60 330 300 210 M90 270 330 150 M120 210 360 90"/>
+                  </g>
+                  <g id="matrix-svg-axes">
+                    <path class="matrix-axis-line" d="M25 210H398m-7-5 7 5-7 5M210 395V22m-5 7 5-7 5 7"/>
+                  </g>
+                  <g id="matrix-svg-eigenlines"></g>
+                  <g id="matrix-svg-arrows">
+                    <path class="matrix-input-arrow" d="M210 210H240m-8-5 8 5-8 5"/>
+                    <path class="matrix-output-arrow" d="M210 210 270 180"/>
+                    <path class="matrix-output-tip" d="M270 180 257 181 262 190Z"/>
+                    <circle class="matrix-column-ring" cx="270" cy="180" r="8"/>
+                  </g>
+                </g>
+
+                <g id="matrix-svg-ticks" class="matrix-axis-label">
+                  <text x="403" y="215">x</text>
+                  <text x="220" y="22">y</text>
+                  <text x="195" y="229">0</text>
+                  <text y="228" text-anchor="middle">
+                    <tspan x="90">−4</tspan><tspan x="150">−2</tspan>
+                    <tspan x="270">2</tspan><tspan x="330">4</tspan>
+                  </text>
+                  <text text-anchor="end">
+                    <tspan x="199" y="94">4</tspan><tspan x="199" y="154">2</tspan>
+                    <tspan x="199" y="274">−2</tspan><tspan x="199" y="334">−4</tspan>
+                  </text>
+                </g>
+
+                <g id="matrix-svg-labels">
+                  <text class="matrix-input-color" x="240" y="247">v (1, 0)</text>
+                  <text class="matrix-output-color" x="279" y="171">Av (2, 1)</text>
+                  <text class="matrix-column-color" x="279" y="190">Column 1</text>
+                </g>
+              </svg>
+            </div>
+
+            <figcaption id="matrix-caption">Equal scales on both fixed axes. The solid square outlines the source patch. Its slanted, dashed image shows where the matrix sends the patch.</figcaption>
+            <ul class="matrix-legend" aria-label="Diagram legend">
+              <li><span class="matrix-key matrix-axis-label" aria-hidden="true"></span> Reference grid</li>
+              <li><span class="matrix-key matrix-key-dashed matrix-grid-color" aria-hidden="true"></span> Transformed grid</li>
+              <li><span class="matrix-key matrix-input-color" aria-hidden="true"></span> Input v</li>
+              <li><span class="matrix-key matrix-key-dashed matrix-output-color" aria-hidden="true"></span> Output Av</li>
+              <li><span class="matrix-key matrix-key-dotted matrix-eigen-color" aria-hidden="true"></span> Eigenline guides</li>
+            </ul>
+          </figure>
+
+          <section class="matrix-readout-panel" aria-labelledby="matrix-live-title">
+            <h4 id="matrix-live-title">Live multiplication</h4>
+            <dl class="matrix-readouts">
+              <div>
+                <dt class="matrix-input-color">Input v</dt>
+                <dd id="matrix-input-readout">(1, 0)</dd>
+              </div>
+              <div>
+                <dt class="matrix-output-color">Output Av</dt>
+                <dd id="matrix-output-readout">(2, 1)</dd>
+              </div>
+              <div>
+                <dt class="matrix-output-color">Output x · ax + by</dt>
+                <dd id="matrix-equation-x">2 × 1 + 1 × 0 = 2</dd>
+              </div>
+              <div>
+                <dt class="matrix-output-color">Output y · cx + dy</dt>
+                <dd id="matrix-equation-y">1 × 1 + 2 × 0 = 1</dd>
+              </div>
+            </dl>
+            <p id="matrix-column-note" class="matrix-column-color">With v = e₁, the output is column 1, (2, 1).</p>
+            <p id="matrix-grid-note" class="lesson-note">The matrix has rank 2. The transformed patch still covers an area.</p>
+            <p id="matrix-status" class="matrix-feedback" role="status"></p>
+          </section>
+
+          <section class="matrix-readout-panel" id="matrix-eigen-results"
+                   aria-labelledby="matrix-eigen-title" hidden>
+            <h4 id="matrix-eigen-title" class="matrix-eigen-color">Eigenvalue check</h4>
+            <dl class="matrix-readouts">
+              <div>
+                <dt>Matrix’s real eigenvalues</dt>
+                <dd id="matrix-spectrum">—</dd>
+              </div>
+              <div>
+                <dt>Selected vector</dt>
+                <dd id="matrix-selected-eigen">—</dd>
+              </div>
+            </dl>
+            <p id="matrix-eigen-note" class="lesson-note"></p>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="matrix-columns-title">
+      <h3 id="matrix-columns-title">The columns tell you where the whole grid goes</h3>
+      <p>The first standard unit vector <b>e₁</b> points right. The second, <b>e₂</b>, points up. In the opening matrix, the columns give their images, <b>Ae₁</b> = (2, 1)ᵀ and <b>Ae₂</b> = (1, 2)ᵀ. The superscript T means we write each pair as a column for multiplication.</p>
+      <p>Try the two unit inputs, then set the input to (1, 1). A linear transformation carries sums to sums and scaled arrows to scaled images. A point one unit right and one unit up therefore moves to the sum of the two column vectors, (3, 3). The same rule works for every point of the grid.</p>
+      <p class="matrix-equation"><span class="matrix-output-color">Av</span> = xAe₁ + yAe₂ = (ax + by, cx + dy)ᵀ</p>
+      <p>With <var>a</var>, <var>b</var> in the first row and <var>c</var>, <var>d</var> in the second, the image of <b>e₁</b> uses the first column, (<var>a</var>, <var>c</var>)ᵀ. The image of <b>e₂</b> uses the second, (<var>b</var>, <var>d</var>)ᵀ. The input coordinates <var>x</var> and <var>y</var> tell you how much of each image to add. The Reactor shows these two sums separately.</p>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="matrix-directions-title">
+      <h3 id="matrix-directions-title">Find a direction that survives the transformation</h3>
+      <p>With the opening matrix, try (1, 1), then (1, −1). For each arrow, ask whether the output is a scaled copy of the input. Once you have a prediction, use <strong>Reveal eigenlines</strong> to see the lines through the origin that contain the eigenvectors.</p>
+      <p class="matrix-equation"><span class="matrix-output-color">Av</span> = <span class="matrix-eigen-color">λ</span><span class="matrix-input-color">v</span>, with <b>v</b> ≠ <b>0</b></p>
+      <p>The nonzero input <b>v</b> is an <strong>eigenvector</strong> when its output satisfies this equation. The factor <var>λ</var> is its <strong>eigenvalue</strong>. Every nonzero multiple along that eigenline has the same factor because <b>A</b> is linear.</p>
+      <ul class="matrix-meaning">
+        <li><strong>λ &gt; 0</strong> preserves the arrow’s orientation.</li>
+        <li><strong>λ &lt; 0</strong> reverses the arrow along the same line.</li>
+        <li><strong>λ = 0</strong> sends a nonzero input to the origin. The output has no direction, and the input is an eigenvector because <b>Av</b> = 0<b>v</b>.</li>
+      </ul>
+      <p>The zero input gives zero for every matrix. It cannot identify any particular scaling factor, so eigenvectors must be nonzero.</p>
+    </section>
+
+    <details class="lesson-panel">
+      <summary>Derive both eigenlines for the opening matrix</summary>
+      <div class="matrix-disclosure">
+        <p>The identity matrix <var>I</var> has ones on its main diagonal and zeros elsewhere, so <b>Iv</b> = <b>v</b>. Move <var>λ</var><b>Iv</b> to the left of the eigenvector equation.</p>
+        <p class="matrix-equation">(A − λI)v = 0</p>
+        <p>We need a nonzero vector that the shifted matrix sends to the origin. An invertible matrix would send only the zero vector there. In the plane, a matrix with zero determinant collapses area to a line or a point and sends at least one nonzero vector to the origin. That is why we look for values of <var>λ</var> that make the shifted matrix singular.</p>
+        <p>Subtract <var>λ</var> from both diagonal entries and take the determinant.</p>
+        <p class="matrix-equation">det(A − λI) = (2 − λ)² − 1 = (λ − 3)(λ − 1)</p>
+        <ol class="matrix-meaning">
+          <li><strong>λ = 3.</strong> The first row of <b>A</b> − 3<b>I</b> gives −<var>x</var> + <var>y</var> = 0. The second row gives <var>x</var> − <var>y</var> = 0. Both describe <var>y</var> = <var>x</var>. Check (1, 1) in the Reactor. Its image is (3, 3), three times the input.</li>
+          <li><strong>λ = 1.</strong> Both rows of <b>A</b> − <b>I</b> give <var>x</var> + <var>y</var> = 0, so <var>y</var> = −<var>x</var>. Check (1, −1). Its image is (1, −1), one times the input.</li>
+        </ol>
+        <p>The two diagonals answer the puzzle. One diagonal stretches by 3. The other keeps its length and orientation.</p>
+      </div>
+    </details>
+
+    <section class="lesson-panel" aria-labelledby="matrix-compare-title">
+      <h3 id="matrix-compare-title">Compare the presets</h3>
+      <p>Choose a preset, test one of the inputs below, then compare your result with the revealed eigenlines. The square brackets show the two rows of each matrix.</p>
+      <dl class="matrix-cases">
+        <div>
+          <dt>Diagonal stretch · [3, 0] [0, 1]</dt>
+          <dd>Try both unit vectors. The horizontal axis stretches by 3. The vertical axis scales by 1. A diagonal input changes its line.</dd>
+        </div>
+        <div>
+          <dt>Reflection · [1, 0] [0, −1]</dt>
+          <dd>Try (0, 1). It lands at (0, −1), so the vertical eigenvalue is −1. The horizontal eigenvalue is +1.</dd>
+        </div>
+        <div>
+          <dt>Horizontal shear · [1, 1] [0, 1]</dt>
+          <dd>Try (0, 1), then (1, 0). The shear adds the input’s height to its horizontal coordinate. Its only eigenvalue is 1, repeated twice in the characteristic equation. Solving <b>Av</b> = <b>v</b> requires <var>y</var> = 0, so there is one eigenline.</dd>
+        </div>
+        <div>
+          <dt>Quarter-turn · [0, −1] [1, 0]</dt>
+          <dd>Try any nonzero input. A 90° rotation lands on a perpendicular line and keeps the length, so there is no real eigenvector.</dd>
+        </div>
+        <div>
+          <dt>Projection · [1, 0] [0, 0]</dt>
+          <dd>Try (0, 1). It reaches the origin, giving eigenvalue 0 along the vertical axis. Horizontal arrows stay in place with eigenvalue 1. The grid collapses to a line.</dd>
+        </div>
+        <div>
+          <dt>Scalar and zero matrices</dt>
+          <dd>Scaling every direction by 2 gives eigenvalue 2 for every nonzero input. The zero matrix sends every input to the origin and assigns eigenvalue 0 to every nonzero input. In both cases every line through the origin is an eigenline, so the display has no special guide lines to single out.</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="lesson-panel" id="matrix-challenge" aria-labelledby="matrix-challenge-title">
+      <h3 id="matrix-challenge-title">Check your understanding</h3>
+      <p>Answer one question at a time. You can return to the Reactor and test a setting before you retry.</p>
+
+      <form id="matrix-challenge-form">
+        <fieldset class="matrix-controls" id="matrix-challenge-controls" disabled>
+          <legend>Matrix Reactor challenge</legend>
+
+          <div class="matrix-question" data-matrix-question="reverse" role="radiogroup"
+               aria-labelledby="matrix-question-reverse">
+            <h4 id="matrix-question-reverse" tabindex="-1">1 of 3 · Reflection sends (0, 2) to (0, −2). What is the eigenvalue of this input?</h4>
+            <label class="matrix-choice"><input type="radio" name="matrix-reverse-answer" value="positive"> +1</label>
+            <label class="matrix-choice"><input type="radio" name="matrix-reverse-answer" value="negative"> −1</label>
+            <label class="matrix-choice"><input type="radio" name="matrix-reverse-answer" value="none"> It is not an eigenvector.</label>
+          </div>
+
+          <div class="matrix-question" data-matrix-question="projection" role="radiogroup"
+               aria-labelledby="matrix-question-projection" hidden>
+            <h4 id="matrix-question-projection" tabindex="-1">2 of 3 · Projection onto the x-axis sends (0, 2) to (0, 0). What does that tell you?</h4>
+            <label class="matrix-choice"><input type="radio" name="matrix-projection-answer" value="one"> The eigenvalue is 1.</label>
+            <label class="matrix-choice"><input type="radio" name="matrix-projection-answer" value="none"> The input cannot be an eigenvector because its output has no direction.</label>
+            <label class="matrix-choice"><input type="radio" name="matrix-projection-answer" value="zero"> The nonzero input is an eigenvector with eigenvalue 0.</label>
+          </div>
+
+          <div class="matrix-question" data-matrix-question="shear" role="radiogroup"
+               aria-labelledby="matrix-question-shear" hidden>
+            <h4 id="matrix-question-shear" tabindex="-1">3 of 3 · Which line contains the eigenvectors of the horizontal shear?</h4>
+            <label class="matrix-choice"><input type="radio" name="matrix-shear-answer" value="vertical"> The vertical axis, x = 0.</label>
+            <label class="matrix-choice"><input type="radio" name="matrix-shear-answer" value="horizontal"> The horizontal axis, y = 0.</label>
+            <label class="matrix-choice"><input type="radio" name="matrix-shear-answer" value="both"> Both axes, because the eigenvalue is repeated.</label>
+          </div>
+
+          <div class="matrix-actions">
+            <button class="matrix-primary" id="matrix-challenge-check" type="submit">Check answer</button>
+            <button id="matrix-challenge-next" type="button" hidden>Next question</button>
+            <button id="matrix-challenge-restart" type="button" hidden>Try the challenge again</button>
+          </div>
+          <p class="matrix-feedback" id="matrix-challenge-feedback" role="status"></p>
+        </fieldset>
+      </form>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="matrix-quantum-title">
+      <h3 id="matrix-quantum-title">Why this algebra returns in quantum mechanics</h3>
+      <p>Later, an observable such as a component of spin will be represented by an operator. In the finite-dimensional examples, its eigenvalues specify possible measurement results. For an ideal measurement of that observable, preparing an eigenstate gives its corresponding eigenvalue with certainty.</p>
+      <p>The Reactor gives you the algebra of an operator acting on a vector. To make a quantum prediction, you also need a physical interpretation of the operator and a rule that assigns outcome probabilities from the state.</p>
+    </section>
+
+    <details class="lesson-panel mx-arcade" id="matrix-arcade">
+      <summary><strong>Matrix Arcade</strong><span>Optional practice</span></summary>
+      <div class="mx-body">
+        <p>Pick a station, try its controls, and open a mission when you’re ready. Each mission has two hints. Progress lasts while this page is open.</p>
+        <p class="lesson-note" id="mx-tolerance">Answer boxes accept whole numbers, decimals, fractions such as −2/3, square roots such as 1/√2, and sums such as (1 + √5)/2. Answers that end as decimals, such as 7.5 or −0.2, are checked exactly. Answers such as 1/3 or √3/2 can be typed exactly, or as decimals within 0.002 of the exact value. In the Eigen Hunter, a recorded line counts when it is within 1° of an eigenline.</p>
+        <div class="mx-toolbar">
+          <label for="mx-station">Station
+            <select id="mx-station" aria-controls="mx-panels" disabled>
+              <optgroup label="Matrices as actions">
+                <option value="columns">1 · Column Reader</option>
+                <option value="warp">2 · Grid Warp Detective</option>
+                <option value="linear">3 · Linearity Lab</option>
+                <option value="zoo">4 · Transformation Zoo</option>
+                <option value="area">5 · Area Scaling Lab</option>
+                <option value="assembly">6 · Assembly Line</option>
+                <option value="undo">7 · Undo Button</option>
+              </optgroup>
+              <optgroup label="Eigenvectors">
+                <option value="hunter">8 · Eigen Hunter</option>
+                <option value="forge">9 · Characteristic Equation Forge</option>
+                <option value="designer">10 · Eigen Designer</option>
+                <option value="repeat">11 · Repeat Until Aligned</option>
+                <option value="payoff">12 · Eigenbasis Payoff</option>
+              </optgroup>
+              <optgroup label="Extras">
+                <option value="symmetric">13 · Symmetric Matrices Preview</option>
+                <option value="rotation">14 · Rotation Has No Real Eigenvectors</option>
+                <option value="axis">15 · 3D Axis Finder</option>
+                <option value="quantum">16 · Quantum Matrix Preview</option>
+              </optgroup>
+            </select>
+          </label>
+          <p id="mx-progress" role="status">0 of 69 missions completed this session.</p>
+          <button id="mx-reset" type="button" disabled>Reset this station</button>
+          <label class="mx-reduced" for="mx-reduced"><input id="mx-reduced" type="checkbox" disabled> Reduced effects</label>
+        </div>
+        <p class="lesson-note" id="mx-status" role="status"></p>
+        <p><a href="#matrix-reactor">Return to the Matrix Reactor</a></p>
+        <noscript><p class="lesson-note">JavaScript runs the arcade diagrams, controls, and mission checks.</p></noscript>
+
+        <div id="mx-panels">
+          <section class="mx-station" data-mx-station="columns" data-mx-accent="blue" aria-labelledby="mx-columns-title">
+            <h4 id="mx-columns-title">Column Reader</h4>
+            <p>A matrix is a list of instructions for where the two standard arrows go. Column 1 of <b>A</b> is <b>Ae₁</b> and column 2 is <b>Ae₂</b>. Every other output is built from those two columns.</p>
+            <div data-mx-plot-slot></div>
+            <fieldset disabled>
+              <legend class="mx-sr-only">Column Reader controls</legend>
+              <p class="mx-readout" data-mx-read="state" aria-live="polite">Ae₁ = (3, −1) · Ae₂ = (2, 4)</p>
+              <div class="mx-missions">
+                <details class="mx-mission" data-mx-mission="columns-build">
+                  <summary>Build A from its columns<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p><b>A</b> sends <b>e₁</b> to (3, −1) and <b>e₂</b> to (2, 4). Write <b>A</b> as rows [a, b] [c, d].</p>
+                  <div class="mx-matrix" role="group" aria-label="Your matrix">
+                    <label>a · row 1, col. 1 <input class="mx-answer" type="text" name="build-a" autocomplete="off" spellcheck="false" required></label>
+                    <label>b · row 1, col. 2 <input class="mx-answer" type="text" name="build-b" autocomplete="off" spellcheck="false" required></label>
+                    <label>c · row 2, col. 1 <input class="mx-answer" type="text" name="build-c" autocomplete="off" spellcheck="false" required></label>
+                    <label>d · row 2, col. 2 <input class="mx-answer" type="text" name="build-d" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="mx-button-row">
+                    <button type="button" data-mx-action="draw">Draw my columns</button>
+                    <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                  </div>
+                </details>
+                <details class="mx-mission" data-mx-mission="columns-predict">
+                  <summary>Predict Av from the columns<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Same <b>A</b>. Without writing out the row products, predict <b>Av</b> for <b>v</b> = (2, −1). Use <b>Av</b> = 2·(column 1) − 1·(column 2).</p>
+                  <div class="mx-fields">
+                    <label>Av <var>x</var> <input class="mx-answer" type="text" name="predict-x" autocomplete="off" spellcheck="false" required></label>
+                    <label>Av <var>y</var> <input class="mx-answer" type="text" name="predict-y" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="columns-half">
+                  <summary>Predict with a fractional weight<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Same <b>A</b>. Predict <b>Av</b> for <b>v</b> = (1/2, 3).</p>
+                  <div class="mx-fields">
+                    <label>Av <var>x</var> <input class="mx-answer" type="text" name="half-x" autocomplete="off" spellcheck="false" required></label>
+                    <label>Av <var>y</var> <input class="mx-answer" type="text" name="half-y" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="columns-recipe">
+                  <summary>Turn a description into a matrix<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>A transformation doubles <b>e₁</b> and sends <b>e₂</b> to <b>e₁</b> + <b>e₂</b>. Write its matrix.</p>
+                  <div class="mx-matrix" role="group" aria-label="Your matrix">
+                    <label>a · row 1, col. 1 <input class="mx-answer" type="text" name="recipe-a" autocomplete="off" spellcheck="false" required></label>
+                    <label>b · row 1, col. 2 <input class="mx-answer" type="text" name="recipe-b" autocomplete="off" spellcheck="false" required></label>
+                    <label>c · row 2, col. 1 <input class="mx-answer" type="text" name="recipe-c" autocomplete="off" spellcheck="false" required></label>
+                    <label>d · row 2, col. 2 <input class="mx-answer" type="text" name="recipe-d" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="mx-button-row">
+                    <button type="button" data-mx-action="draw">Draw my columns</button>
+                    <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                  </div>
+                </details>
+              </div>
+            </fieldset>
+            <details class="mx-math">
+              <summary>Show the math</summary>
+              <p>Av = xAe₁ + yAe₂, so the first column is the image of e₁ and the second column is the image of e₂. Reading a matrix column by column tells you where the unit square goes. Every other input is a weighted sum of those two images.</p>
+            </details>
+          </section>
+
+          <section class="mx-station" data-mx-station="warp" data-mx-accent="green" aria-labelledby="mx-warp-title" hidden>
+            <h4 id="mx-warp-title">Grid Warp Detective</h4>
+            <p>This is the Reactor in reverse. You see only what a mystery matrix did to the grid, and you have to name the matrix. The faint square grid is there for reading coordinates. Use <strong>Overlay my guess</strong> to lay your own warped grid over the evidence.</p>
+            <div data-mx-plot-slot></div>
+            <fieldset disabled>
+              <legend class="mx-sr-only">Grid Warp Detective controls</legend>
+              <p class="mx-readout" data-mx-read="state" aria-live="polite">Open a case to load its evidence.</p>
+              <div class="mx-missions">
+                <details class="mx-mission" data-mx-mission="warp-grid">
+                  <summary>Read a warped grid<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>The violet lines are the images of the grid lines. The shaded cell is the image of the unit square, and the orange dot marks where <b>e₁</b> landed. Name <b>A</b>.</p>
+                  <div class="mx-matrix" role="group" aria-label="Your matrix">
+                    <label>a · row 1, col. 1 <input class="mx-answer" type="text" name="grid-a" autocomplete="off" spellcheck="false" required></label>
+                    <label>b · row 1, col. 2 <input class="mx-answer" type="text" name="grid-b" autocomplete="off" spellcheck="false" required></label>
+                    <label>c · row 2, col. 1 <input class="mx-answer" type="text" name="grid-c" autocomplete="off" spellcheck="false" required></label>
+                    <label>d · row 2, col. 2 <input class="mx-answer" type="text" name="grid-d" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="mx-button-row">
+                    <button type="button" data-mx-action="overlay">Overlay my guess</button>
+                    <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                  </div>
+                </details>
+                <details class="mx-mission" data-mx-mission="warp-arrow">
+                  <summary>Break a mirror tie with one arrow<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>The shaded cell shows the image of the unit square, but not which edge came from <b>e₁</b>. The marked arrow is <b>A</b>(1, 2). Name <b>A</b>.</p>
+                  <div class="mx-matrix" role="group" aria-label="Your matrix">
+                    <label>a · row 1, col. 1 <input class="mx-answer" type="text" name="arrow-a" autocomplete="off" spellcheck="false" required></label>
+                    <label>b · row 1, col. 2 <input class="mx-answer" type="text" name="arrow-b" autocomplete="off" spellcheck="false" required></label>
+                    <label>c · row 2, col. 1 <input class="mx-answer" type="text" name="arrow-c" autocomplete="off" spellcheck="false" required></label>
+                    <label>d · row 2, col. 2 <input class="mx-answer" type="text" name="arrow-d" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="mx-button-row">
+                    <button type="button" data-mx-action="overlay">Overlay my guess</button>
+                    <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                  </div>
+                </details>
+                <details class="mx-mission" data-mx-mission="warp-pair">
+                  <summary>Solve from two diagonal clues<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>There is no grid this time. Only two facts are known: <b>A</b>(1, 1) = (3, 1) and <b>A</b>(1, −1) = (1, −3). Name <b>A</b>.</p>
+                  <div class="mx-matrix" role="group" aria-label="Your matrix">
+                    <label>a · row 1, col. 1 <input class="mx-answer" type="text" name="pair-a" autocomplete="off" spellcheck="false" required></label>
+                    <label>b · row 1, col. 2 <input class="mx-answer" type="text" name="pair-b" autocomplete="off" spellcheck="false" required></label>
+                    <label>c · row 2, col. 1 <input class="mx-answer" type="text" name="pair-c" autocomplete="off" spellcheck="false" required></label>
+                    <label>d · row 2, col. 2 <input class="mx-answer" type="text" name="pair-d" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="mx-button-row">
+                    <button type="button" data-mx-action="overlay">Overlay my guess</button>
+                    <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                  </div>
+                </details>
+                <details class="mx-mission" data-mx-mission="warp-flat">
+                  <summary>Investigate a flattened grid<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>The whole plane has been squashed onto one line. The dots show where whole-number points land. The orange dot is <b>Ae₁</b>, and the matrix sends (2, 1) to the origin. Name <b>A</b>.</p>
+                  <div class="mx-matrix" role="group" aria-label="Your matrix">
+                    <label>a · row 1, col. 1 <input class="mx-answer" type="text" name="flat-a" autocomplete="off" spellcheck="false" required></label>
+                    <label>b · row 1, col. 2 <input class="mx-answer" type="text" name="flat-b" autocomplete="off" spellcheck="false" required></label>
+                    <label>c · row 2, col. 1 <input class="mx-answer" type="text" name="flat-c" autocomplete="off" spellcheck="false" required></label>
+                    <label>d · row 2, col. 2 <input class="mx-answer" type="text" name="flat-d" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="mx-button-row">
+                    <button type="button" data-mx-action="overlay">Overlay my guess</button>
+                    <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                  </div>
+                </details>
+              </div>
+            </fieldset>
+            <details class="mx-math">
+              <summary>Show the math</summary>
+              <p>The images of the grid lines are evenly spaced copies of the two column directions, so the corners of the image of the unit square are 0, Ae₁, Ae₁ + Ae₂ and Ae₂. When only images of other inputs are known, use linearity. A(1, 1) + A(1, −1) = 2Ae₁ and A(1, 1) − A(1, −1) = 2Ae₂.</p>
+            </details>
+          </section>
+
+          <section class="mx-station" data-mx-station="linear" data-mx-accent="orange" aria-labelledby="mx-linear-title" hidden>
+            <h4 id="mx-linear-title">Linearity Lab</h4>
+            <p>A sealed machine <b>A</b> is linear, but its entries are hidden. You know only two of its outputs: <b>Au</b> = (2, 1) for <b>u</b> = (1, 2), and <b>Av</b> = (−1, 4) for <b>v</b> = (3, −1). Predict new outputs from these without ever writing <b>A</b> down.</p>
+            <div data-mx-plot-slot></div>
+            <fieldset disabled>
+              <legend class="mx-sr-only">Linearity Lab controls</legend>
+              <p class="mx-readout" data-mx-read="state" aria-live="polite">u = (1, 2) → Au = (2, 1) · v = (3, −1) → Av = (−1, 4)</p>
+              <div class="mx-missions">
+                <details class="mx-mission" data-mx-mission="linear-sum">
+                  <summary>Predict A(u + v)<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Use <b>A</b>(<b>u</b> + <b>v</b>) = <b>Au</b> + <b>Av</b>.</p>
+                  <div class="mx-fields">
+                    <label>A(u + v) <var>x</var> <input class="mx-answer" type="text" name="sum-x" autocomplete="off" spellcheck="false" required></label>
+                    <label>A(u + v) <var>y</var> <input class="mx-answer" type="text" name="sum-y" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="linear-scale">
+                  <summary>Predict A(−3u)<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Use <b>A</b>(<var>k</var><b>u</b>) = <var>k</var><b>Au</b>.</p>
+                  <div class="mx-fields">
+                    <label>A(−3u) <var>x</var> <input class="mx-answer" type="text" name="scale-x" autocomplete="off" spellcheck="false" required></label>
+                    <label>A(−3u) <var>y</var> <input class="mx-answer" type="text" name="scale-y" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="linear-combo">
+                  <summary>Predict A(2u − v)<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Combine both rules.</p>
+                  <div class="mx-fields">
+                    <label>A(2u − v) <var>x</var> <input class="mx-answer" type="text" name="combo-x" autocomplete="off" spellcheck="false" required></label>
+                    <label>A(2u − v) <var>y</var> <input class="mx-answer" type="text" name="combo-y" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="linear-impostor">
+                  <summary>Unmask the impostor<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Three machines are on the bench: P(x, y) = (2x − y, 3y), Q(x, y) = (x + y, xy) and R(x, y) = (y, −x). One of them is not linear. Pick it, then give inputs <b>u</b> and <b>v</b> for which it breaks the sum rule.</p>
+                  <div class="mx-fields">
+                    <label>Impostor <select name="impostor-machine" required><option value="">Choose</option><option value="p">P</option><option value="q">Q</option><option value="r">R</option></select></label>
+                  </div>
+                  <div class="mx-fields">
+                    <label>u <var>x</var> <input type="number" name="impostor-ux" min="-4" max="4" step="0.5" value="1" required></label>
+                    <label>u <var>y</var> <input type="number" name="impostor-uy" min="-4" max="4" step="0.5" value="0" required></label>
+                    <label>v <var>x</var> <input type="number" name="impostor-vx" min="-4" max="4" step="0.5" value="0" required></label>
+                    <label>v <var>y</var> <input type="number" name="impostor-vy" min="-4" max="4" step="0.5" value="0" required></label>
+                  </div>
+                  <div class="mx-button-row">
+                    <button type="button" data-mx-action="test">Run the sum test</button>
+                    <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                  </div>
+                </details>
+              </div>
+            </fieldset>
+            <details class="mx-math">
+              <summary>Show the math</summary>
+              <p>A matrix transformation obeys A(u + v) = Au + Av and A(ku) = kAu. Together these give A(au + bv) = aAu + bAv, so two outputs on non-parallel inputs fix every other output. A map that fails either rule for even one pair of inputs is not linear and has no matrix.</p>
+            </details>
+          </section>
+
+          <section class="mx-station" data-mx-station="zoo" data-mx-accent="yellow" aria-labelledby="mx-zoo-title" hidden>
+            <h4 id="mx-zoo-title">Transformation Zoo</h4>
+            <p>Each specimen acts on an F-shaped outline. The F has no mirror symmetry, so you can tell whether it has been flipped. The faint F is the input and the filled F is its image.</p>
+            <div data-mx-plot-slot></div>
+            <fieldset disabled>
+              <legend class="mx-sr-only">Transformation Zoo controls</legend>
+              <p class="mx-readout" data-mx-read="state" aria-live="polite">Open a specimen card.</p>
+              <div class="mx-missions">
+                <details class="mx-mission" data-mx-mission="zoo-rot">
+                  <summary>Specimen 1<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Specimen <b>A</b> = [0.6, −0.8] [0.8, 0.6]. Watch what it does to the F, <b>e₁</b> and <b>e₂</b>, then classify it and choose the evidence that proves it.</p>
+                  <div class="mx-fields">
+                    <label>Type <select name="rot-type" required><option value="">Choose</option><option value="rotation">Rotation</option><option value="reflection">Reflection</option><option value="shear">Shear</option><option value="projection">Projection</option><option value="scaling">Scaling along the axes</option><option value="spiral">Rotation combined with scaling</option></select></label>
+                    <label>Evidence <select name="rot-why" required><option value="">Choose</option><option value="lengths">det = 1, and Ae₁ and Ae₂ stay unit length and perpendicular</option><option value="line">det = 1 and one line of arrows stays fixed</option><option value="mirror">det = −1 and the F is mirrored</option></select></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="zoo-refl">
+                  <summary>Specimen 2<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Specimen <b>A</b> = [0, −1] [−1, 0]. Watch what it does to the F, <b>e₁</b> and <b>e₂</b>, then classify it and choose the evidence that proves it.</p>
+                  <div class="mx-fields">
+                    <label>Type <select name="refl-type" required><option value="">Choose</option><option value="rotation">Rotation</option><option value="reflection">Reflection</option><option value="shear">Shear</option><option value="projection">Projection</option><option value="scaling">Scaling along the axes</option><option value="spiral">Rotation combined with scaling</option></select></label>
+                    <label>Evidence <select name="refl-why" required><option value="">Choose</option><option value="lengths">det = 1 and every length is kept</option><option value="mirror">det = −1, the F is mirrored and arrows on y = −x stay put</option><option value="flat">det = 0 and the F is flattened</option></select></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="zoo-shear">
+                  <summary>Specimen 3<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Specimen <b>A</b> = [1, 0] [1.5, 1]. Watch what it does to the F, <b>e₁</b> and <b>e₂</b>, then classify it and choose the evidence that proves it.</p>
+                  <div class="mx-fields">
+                    <label>Type <select name="shear-type" required><option value="">Choose</option><option value="rotation">Rotation</option><option value="reflection">Reflection</option><option value="shear">Shear</option><option value="projection">Projection</option><option value="scaling">Scaling along the axes</option><option value="spiral">Rotation combined with scaling</option></select></label>
+                    <label>Evidence <select name="shear-why" required><option value="">Choose</option><option value="lengths">det = 1 and every length is kept</option><option value="grow">det = 1.5 and the F grows</option><option value="slide">det = 1, arrows on the y-axis stay fixed and every other point slides parallel to it</option></select></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="zoo-proj">
+                  <summary>Specimen 4<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Specimen <b>A</b> = [0.5, 0.5] [0.5, 0.5]. Watch what it does to the F, <b>e₁</b> and <b>e₂</b>, then classify it and choose the evidence that proves it.</p>
+                  <div class="mx-fields">
+                    <label>Type <select name="proj-type" required><option value="">Choose</option><option value="rotation">Rotation</option><option value="reflection">Reflection</option><option value="shear">Shear</option><option value="projection">Projection</option><option value="scaling">Scaling along the axes</option><option value="spiral">Rotation combined with scaling</option></select></label>
+                    <label>Evidence <select name="proj-why" required><option value="">Choose</option><option value="twice">det = 0, and applying it a second time changes nothing (A² = A)</option><option value="origin">det = 0, so every arrow goes to the origin</option><option value="line">det = 1 and the line y = x stays fixed</option></select></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="zoo-spiral">
+                  <summary>Specimen 5<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Specimen <b>A</b> = [1, −1] [1, 1]. Watch what it does to the F, <b>e₁</b> and <b>e₂</b>, then classify it and choose the evidence that proves it.</p>
+                  <div class="mx-fields">
+                    <label>Type <select name="spiral-type" required><option value="">Choose</option><option value="rotation">Rotation</option><option value="reflection">Reflection</option><option value="shear">Shear</option><option value="projection">Projection</option><option value="scaling">Scaling along the axes</option><option value="spiral">Rotation combined with scaling</option></select></label>
+                    <label>Evidence <select name="spiral-why" required><option value="">Choose</option><option value="axes">det = 2, so it is a pure stretch along the axes</option><option value="turn">det = 2, and Ae₁ and Ae₂ stay perpendicular with equal length √2, turned 45°</option><option value="mirror">det = 2 and the F is mirrored</option></select></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="mx-math">
+              <summary>Show the math</summary>
+              <p>Rotations keep every length and have det = 1. Reflections keep lengths, flip orientation (det = −1) and fix a mirror line. Shears fix one line and slide everything else parallel to it, with det = 1. Projections flatten the plane onto a line (det = 0), and doing one twice is the same as doing it once. A matrix [p, −q] [q, p] rotates and scales every arrow by √(p² + q²).</p>
+            </details>
+          </section>
+
+          <section class="mx-station" data-mx-station="area" data-mx-accent="red" aria-labelledby="mx-area-title" hidden>
+            <h4 id="mx-area-title">Area Scaling Lab</h4>
+            <p>A linear transformation scales every area by the same factor, |det A|. The sign of det <b>A</b> tells you whether the shape is flipped over. Choose a shape and a matrix, and compare the areas before and after.</p>
+            <div data-mx-plot-slot></div>
+            <fieldset disabled>
+              <legend class="mx-sr-only">Area Scaling Lab controls</legend>
+              <div class="mx-fields">
+                <label>Shape <select name="shape"><option value="square">Unit square · area 1</option><option value="triangle">Triangle (0, 0), (2, 0), (0, 3) · area 3</option><option value="f">F outline · area 5</option></select></label>
+              </div>
+              <div class="mx-matrix" role="group" aria-label="Matrix A">
+                <label>a · row 1, col. 1 <input type="number" name="ma" min="-4" max="4" step="0.5" value="1" required></label>
+                <label>b · row 1, col. 2 <input type="number" name="mb" min="-4" max="4" step="0.5" value="0.5" required></label>
+                <label>c · row 2, col. 1 <input type="number" name="mc" min="-4" max="4" step="0.5" value="0" required></label>
+                <label>d · row 2, col. 2 <input type="number" name="md" min="-4" max="4" step="0.5" value="1" required></label>
+              </div>
+              <p class="mx-readout" data-mx-read="state" aria-live="polite">Area before 1 · after 1 · factor 1 · orientation kept</p>
+              <div class="mx-missions">
+                <details class="mx-mission" data-mx-mission="area-triangle">
+                  <summary>Predict a triangle’s new area<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Load the card: the triangle with area 3 and <b>A</b> = [3, 1] [1, 2]. Predict the area of its image before you look.</p>
+                  <button type="button" data-mx-action="load">Load this card</button>
+                  <div class="mx-fields">
+                    <label>Image area <input class="mx-answer" type="text" name="triangle-area" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="area-flip">
+                  <summary>Detect a flip<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Load <b>A</b> = [1, 3] [2, 1]. Give the signed area factor det <b>A</b> and say what happens to orientation.</p>
+                  <button type="button" data-mx-action="load">Load this card</button>
+                  <div class="mx-fields">
+                    <label>Signed factor det A <input class="mx-answer" type="text" name="flip-factor" autocomplete="off" spellcheck="false" required></label>
+                    <label>Orientation <select name="flip-orient" required><option value="">Choose</option><option value="kept">Kept</option><option value="flipped">Flipped</option></select></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="area-flat">
+                  <summary>Detect a collapse<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Load <b>A</b> = [2, −4] [−1, 2]. Give the area factor and describe the image of the plane.</p>
+                  <button type="button" data-mx-action="load">Load this card</button>
+                  <div class="mx-fields">
+                    <label>Signed factor det A <input class="mx-answer" type="text" name="flat-factor" autocomplete="off" spellcheck="false" required></label>
+                    <label>Image of the plane <select name="flat-kind" required><option value="">Choose</option><option value="area">Still covers area</option><option value="line">A line through the origin</option><option value="point">Only the origin</option></select></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="area-record">
+                  <summary>Same factor for every shape<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Set your own <b>A</b> with |det A| different from 0 and 1. Record the area ratio for two different shapes with the same matrix, then enter the factor you found.</p>
+                  <div class="mx-button-row">
+                    <button type="button" data-mx-action="record">Record this shape</button>
+                  </div>
+                  <p class="mx-readout" data-mx-read="saved" aria-live="polite">No shapes recorded.</p>
+                  <div class="mx-fields">
+                    <label>Area factor <input class="mx-answer" type="text" name="record-factor" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="mx-math">
+              <summary>Show the math</summary>
+              <p>The unit square goes to the parallelogram with edges Ae₁ = (a, c) and Ae₂ = (b, d), and its signed area is det A = ad − bc. Any shape can be filled with tiny squares, and each of them scales by the same amount, so every area is multiplied by |det A|. A negative det means the shape is mirrored. det A = 0 means the plane collapses onto a line, or onto the origin for the zero matrix.</p>
+            </details>
+          </section>
+
+          <section class="mx-station" data-mx-station="assembly" data-mx-accent="violet" aria-labelledby="mx-assembly-title" hidden>
+            <h4 id="mx-assembly-title">Assembly Line</h4>
+            <p>An input <b>v</b> goes through machine <b>A</b> first, then machine <b>B</b>. The result is <b>B</b>(<b>Av</b>) = (<b>BA</b>)<b>v</b>. The matrix for “A then B” is written BA, with the first machine on the right.</p>
+            <div data-mx-plot-slot></div>
+            <fieldset disabled>
+              <legend class="mx-sr-only">Assembly Line controls</legend>
+              <div class="mx-matrix" role="group" aria-label="Machine A (first)">
+                <label>A row 1, col. 1 <input type="number" name="aa" min="-4" max="4" step="0.5" value="1" required></label>
+                <label>A row 1, col. 2 <input type="number" name="ab" min="-4" max="4" step="0.5" value="2" required></label>
+                <label>A row 2, col. 1 <input type="number" name="ac" min="-4" max="4" step="0.5" value="0" required></label>
+                <label>A row 2, col. 2 <input type="number" name="ad" min="-4" max="4" step="0.5" value="1" required></label>
+              </div>
+              <div class="mx-matrix" role="group" aria-label="Machine B (second)">
+                <label>B row 1, col. 1 <input type="number" name="ba" min="-4" max="4" step="0.5" value="2" required></label>
+                <label>B row 1, col. 2 <input type="number" name="bb" min="-4" max="4" step="0.5" value="0" required></label>
+                <label>B row 2, col. 1 <input type="number" name="bc" min="-4" max="4" step="0.5" value="0" required></label>
+                <label>B row 2, col. 2 <input type="number" name="bd" min="-4" max="4" step="0.5" value="-1" required></label>
+              </div>
+              <div class="mx-fields">
+                <label>v <var>x</var> <input type="number" name="vx" min="-4" max="4" step="0.5" value="1" required></label>
+                <label>v <var>y</var> <input type="number" name="vy" min="-4" max="4" step="0.5" value="1" required></label>
+              </div>
+              <p class="mx-readout" data-mx-read="state" aria-live="polite">v = (1, 1) → Av = (3, 1) → B(Av) = (6, −1)</p>
+              <div class="mx-missions">
+                <details class="mx-mission" data-mx-mission="assembly-combine">
+                  <summary>One matrix for A then B<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Load A = [1, 2] [0, 1] and B = [2, 0] [0, −1]. Find the single matrix that does A first and then B.</p>
+                  <button type="button" data-mx-action="load">Load the line</button>
+                  <div class="mx-matrix" role="group" aria-label="BA">
+                    <label>a · row 1, col. 1 <input class="mx-answer" type="text" name="combine-a" autocomplete="off" spellcheck="false" required></label>
+                    <label>b · row 1, col. 2 <input class="mx-answer" type="text" name="combine-b" autocomplete="off" spellcheck="false" required></label>
+                    <label>c · row 2, col. 1 <input class="mx-answer" type="text" name="combine-c" autocomplete="off" spellcheck="false" required></label>
+                    <label>d · row 2, col. 2 <input class="mx-answer" type="text" name="combine-d" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="assembly-reverse">
+                  <summary>Swap the machines<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Same A and B, but now B runs first and A second. Find that matrix.</p>
+                  <button type="button" data-mx-action="load">Load the line</button>
+                  <div class="mx-matrix" role="group" aria-label="AB">
+                    <label>a · row 1, col. 1 <input class="mx-answer" type="text" name="reverse-a" autocomplete="off" spellcheck="false" required></label>
+                    <label>b · row 1, col. 2 <input class="mx-answer" type="text" name="reverse-b" autocomplete="off" spellcheck="false" required></label>
+                    <label>c · row 2, col. 1 <input class="mx-answer" type="text" name="reverse-c" autocomplete="off" spellcheck="false" required></label>
+                    <label>d · row 2, col. 2 <input class="mx-answer" type="text" name="reverse-d" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="assembly-counter">
+                  <summary>Build your own counterexample<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Set any A, B and input <b>v</b> with A(B<b>v</b>) ≠ B(A<b>v</b>). Your example proves that AB ≠ BA.</p>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="assembly-partner">
+                  <summary>Find a partner that commutes<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Load A = [1, 2] [0, 3]. Then set B so that AB = BA. B must not be a multiple of I, and it must not equal A.</p>
+                  <button type="button" data-mx-action="load">Load A</button>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="mx-math">
+              <summary>Show the math</summary>
+              <p>Column j of BA is B applied to column j of A. Running A then B on e₁ gives B(Ae₁). In general AB ≠ BA, so the order of the machines matters. Some pairs do commute, for example any matrix and a polynomial in it, such as A and A + I.</p>
+            </details>
+          </section>
+
+          <section class="mx-station" data-mx-station="undo" data-mx-accent="blue" aria-labelledby="mx-undo-title" hidden>
+            <h4 id="mx-undo-title">Undo Button</h4>
+            <p>The inverse A⁻¹ is the transformation that puts every arrow back where it started, so A⁻¹A = AA⁻¹ = I. Use <strong>Compose</strong> to run your candidate after A and see whether the grid snaps back to the square grid.</p>
+            <div data-mx-plot-slot></div>
+            <fieldset disabled>
+              <legend class="mx-sr-only">Undo Button controls</legend>
+              <p class="mx-readout" data-mx-read="state" aria-live="polite">Open a card.</p>
+              <div class="mx-missions">
+                <details class="mx-mission" data-mx-mission="undo-first">
+                  <summary>Undo [2, 1] [1, 1]<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Find the inverse of <b>A</b> = [2, 1] [1, 1].</p>
+                  <div class="mx-matrix" role="group" aria-label="Your inverse">
+                    <label>a · row 1, col. 1 <input class="mx-answer" type="text" name="first-a" autocomplete="off" spellcheck="false" required></label>
+                    <label>b · row 1, col. 2 <input class="mx-answer" type="text" name="first-b" autocomplete="off" spellcheck="false" required></label>
+                    <label>c · row 2, col. 1 <input class="mx-answer" type="text" name="first-c" autocomplete="off" spellcheck="false" required></label>
+                    <label>d · row 2, col. 2 <input class="mx-answer" type="text" name="first-d" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="mx-button-row">
+                    <button type="button" data-mx-action="compose">Compose</button>
+                    <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                  </div>
+                </details>
+                <details class="mx-mission" data-mx-mission="undo-vshear">
+                  <summary>Undo a vertical shear<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Find the inverse of <b>A</b> = [1, 0] [−3, 1].</p>
+                  <div class="mx-matrix" role="group" aria-label="Your inverse">
+                    <label>a · row 1, col. 1 <input class="mx-answer" type="text" name="vshear-a" autocomplete="off" spellcheck="false" required></label>
+                    <label>b · row 1, col. 2 <input class="mx-answer" type="text" name="vshear-b" autocomplete="off" spellcheck="false" required></label>
+                    <label>c · row 2, col. 1 <input class="mx-answer" type="text" name="vshear-c" autocomplete="off" spellcheck="false" required></label>
+                    <label>d · row 2, col. 2 <input class="mx-answer" type="text" name="vshear-d" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="mx-button-row">
+                    <button type="button" data-mx-action="compose">Compose</button>
+                    <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                  </div>
+                </details>
+                <details class="mx-mission" data-mx-mission="undo-fifths">
+                  <summary>Undo with fractions<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Find the inverse of <b>A</b> = [2, 1] [1, 3]. Type fractions such as 3/5 or decimals.</p>
+                  <div class="mx-matrix" role="group" aria-label="Your inverse">
+                    <label>a · row 1, col. 1 <input class="mx-answer" type="text" name="fifths-a" autocomplete="off" spellcheck="false" required></label>
+                    <label>b · row 1, col. 2 <input class="mx-answer" type="text" name="fifths-b" autocomplete="off" spellcheck="false" required></label>
+                    <label>c · row 2, col. 1 <input class="mx-answer" type="text" name="fifths-c" autocomplete="off" spellcheck="false" required></label>
+                    <label>d · row 2, col. 2 <input class="mx-answer" type="text" name="fifths-d" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="mx-button-row">
+                    <button type="button" data-mx-action="compose">Compose</button>
+                    <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                  </div>
+                </details>
+                <details class="mx-mission" data-mx-mission="undo-project">
+                  <summary>Show a projection can’t be undone<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p><b>P</b> = [0.2, 0.4] [0.4, 0.8] projects onto the line y = 2x. Give two different inputs with the same output. No undo button could know which one to return.</p>
+                  <div class="mx-fields">
+                    <label>u <var>x</var> <input type="number" name="project-ux" min="-4" max="4" step="0.5" value="1" required></label>
+                    <label>u <var>y</var> <input type="number" name="project-uy" min="-4" max="4" step="0.5" value="0" required></label>
+                    <label>v <var>x</var> <input type="number" name="project-vx" min="-4" max="4" step="0.5" value="0" required></label>
+                    <label>v <var>y</var> <input type="number" name="project-vy" min="-4" max="4" step="0.5" value="0" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="undo-zero">
+                  <summary>Explain the zero matrix<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Why can’t the zero matrix be undone?</p>
+                  <div class="mx-fields">
+                    <label>Reason <select name="zero-why" required><option value="">Choose</option><option value="inverse">Its inverse is the zero matrix again</option><option value="lost">Every input lands on the origin, so the output can’t tell you which input you started from</option><option value="det">It can be undone by any matrix with det 0</option></select></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="mx-math">
+              <summary>Show the math</summary>
+              <p>For A = [a, b] [c, d] with det A = ad − bc ≠ 0, the inverse is (1/det A)·[d, −b] [−c, a]. Check a candidate by multiplying: the product must be I. When det A = 0, two different inputs share an output, so no inverse can exist.</p>
+            </details>
+          </section>
+
+          <section class="mx-station" data-mx-station="hunter" data-mx-accent="green" aria-labelledby="mx-hunter-title" hidden>
+            <h4 id="mx-hunter-title">Eigen Hunter</h4>
+            <p>Sweep the blue input arrow around the circle. Drag it, use the slider, or nudge it. Stop when the orange output lies on the same line as the input, whether it points the same way or the opposite way, then record that line. No algebra is needed. Read λ by comparing lengths and directions.</p>
+            <div data-mx-plot-slot></div>
+            <fieldset disabled>
+              <legend class="mx-sr-only">Eigen Hunter controls</legend>
+              <div class="mx-fields">
+                <label>Input direction (degrees) <input type="range" name="angle" min="0" max="180" step="0.5" value="90"></label>
+              </div>
+              <div class="mx-button-row">
+                <button type="button" data-mx-action="nudge" data-mx-step="-0.5">Nudge −0.5°</button>
+                <button type="button" data-mx-action="nudge" data-mx-step="0.5">Nudge +0.5°</button>
+                <button class="matrix-primary" type="button" data-mx-action="record">Record this line</button>
+                <button type="button" data-mx-action="clear">Clear records</button>
+              </div>
+              <p class="mx-readout" data-mx-read="state" aria-live="polite">Input at 90°.</p>
+              <p class="mx-readout" data-mx-read="saved" aria-live="polite">No lines recorded.</p>
+              <div class="mx-missions">
+                <details class="mx-mission" data-mx-mission="hunter-distinct">
+                  <summary>Find both lines<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p><b>A</b> = [3, 2] [1, 2]. Record both eigenlines, then give λ for each one in the order you recorded them.</p>
+                  <div class="mx-fields">
+                    <label>λ for record 1 <input class="mx-answer" type="text" name="distinct-l1" autocomplete="off" spellcheck="false" required></label>
+                    <label>λ for record 2 <input class="mx-answer" type="text" name="distinct-l2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="hunter-negative">
+                  <summary>Catch a reversing line<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p><b>A</b> = [−2, 3] [0, 1]. Record the line where the output points the opposite way, and give its λ.</p>
+                  <div class="mx-fields">
+                    <label>λ <input class="mx-answer" type="text" name="negative-l" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="hunter-zero">
+                  <summary>Find the line that vanishes<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p><b>A</b> = [2, −1] [−4, 2]. Record the line whose arrows are sent to the origin, and give its λ.</p>
+                  <div class="mx-fields">
+                    <label>λ <input class="mx-answer" type="text" name="zero-l" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="hunter-single">
+                  <summary>Hunt a lonely line<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p><b>A</b> = [3, −1] [1, 1]. Sweep all the way round. Record every eigenline you find, give λ and say how many lines there are.</p>
+                  <div class="mx-fields">
+                    <label>λ <input class="mx-answer" type="text" name="single-l" autocomplete="off" spellcheck="false" required></label>
+                    <label>Number of eigenlines <select name="single-count" required><option value="">Choose</option><option value="one">One</option><option value="two">Two</option></select></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="mx-math">
+              <summary>Show the math</summary>
+              <p>On an eigenline, Av = λv. Recording that line gives you an eigenvector v. Then λ is the output length divided by the input length, made negative when the output points backward. If v goes to the origin, then λ = 0. A shear-like matrix can have a repeated λ with only one eigenline.</p>
+            </details>
+          </section>
+
+          <section class="mx-station" data-mx-station="forge" data-mx-accent="orange" aria-labelledby="mx-forge-title" hidden>
+            <h4 id="mx-forge-title">Characteristic Equation Forge</h4>
+            <p>Forge the polynomial det(<b>A</b> − λ<b>I</b>). Its roots are the eigenvalues. Then use the shortcuts: λ₁ + λ₂ = trace A and λ₁·λ₂ = det A. <strong>Plot my polynomial</strong> draws your parabola so you can see where it crosses zero.</p>
+            <div data-mx-plot-slot></div>
+            <fieldset disabled>
+              <legend class="mx-sr-only">Characteristic Equation Forge controls</legend>
+              <p class="mx-readout" data-mx-read="state" aria-live="polite">Open a card.</p>
+              <div class="mx-missions">
+                <details class="mx-mission" data-mx-mission="forge-f1">
+                  <summary>Two whole roots<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p><b>A</b> = [4, −2] [1, 1]. Expand det(<b>A</b> − λ<b>I</b>) = λ² − (trace A)λ + det A, then solve.</p>
+                  <div class="mx-fields">
+                    <label>trace A <input class="mx-answer" type="text" name="f1-tr" autocomplete="off" spellcheck="false" required></label>
+                    <label>det A <input class="mx-answer" type="text" name="f1-det" autocomplete="off" spellcheck="false" required></label>
+                    <label>λ₁ <input class="mx-answer" type="text" name="f1-l1" autocomplete="off" spellcheck="false" required></label>
+                    <label>λ₂ <input class="mx-answer" type="text" name="f1-l2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="mx-button-row">
+                    <button type="button" data-mx-action="plot">Plot my polynomial</button>
+                    <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                  </div>
+                </details>
+                <details class="mx-mission" data-mx-mission="forge-f2">
+                  <summary>A negative root<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p><b>A</b> = [1, 4] [2, 3]. Expand det(<b>A</b> − λ<b>I</b>) = λ² − (trace A)λ + det A, then solve.</p>
+                  <div class="mx-fields">
+                    <label>trace A <input class="mx-answer" type="text" name="f2-tr" autocomplete="off" spellcheck="false" required></label>
+                    <label>det A <input class="mx-answer" type="text" name="f2-det" autocomplete="off" spellcheck="false" required></label>
+                    <label>λ₁ <input class="mx-answer" type="text" name="f2-l1" autocomplete="off" spellcheck="false" required></label>
+                    <label>λ₂ <input class="mx-answer" type="text" name="f2-l2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="mx-button-row">
+                    <button type="button" data-mx-action="plot">Plot my polynomial</button>
+                    <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                  </div>
+                </details>
+                <details class="mx-mission" data-mx-mission="forge-f3">
+                  <summary>Irrational roots<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p><b>A</b> = [1, 1] [1, 0]. Expand det(<b>A</b> − λ<b>I</b>) = λ² − (trace A)λ + det A, then solve. Type roots such as (1 + √5)/2.</p>
+                  <div class="mx-fields">
+                    <label>trace A <input class="mx-answer" type="text" name="f3-tr" autocomplete="off" spellcheck="false" required></label>
+                    <label>det A <input class="mx-answer" type="text" name="f3-det" autocomplete="off" spellcheck="false" required></label>
+                    <label>λ₁ <input class="mx-answer" type="text" name="f3-l1" autocomplete="off" spellcheck="false" required></label>
+                    <label>λ₂ <input class="mx-answer" type="text" name="f3-l2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="mx-button-row">
+                    <button type="button" data-mx-action="plot">Plot my polynomial</button>
+                    <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                  </div>
+                </details>
+                <details class="mx-mission" data-mx-mission="forge-f4">
+                  <summary>A repeated root<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p><b>A</b> = [5, −1] [4, 1]. Expand det(<b>A</b> − λ<b>I</b>) = λ² − (trace A)λ + det A, then solve. Enter the same value twice.</p>
+                  <div class="mx-fields">
+                    <label>trace A <input class="mx-answer" type="text" name="f4-tr" autocomplete="off" spellcheck="false" required></label>
+                    <label>det A <input class="mx-answer" type="text" name="f4-det" autocomplete="off" spellcheck="false" required></label>
+                    <label>λ₁ <input class="mx-answer" type="text" name="f4-l1" autocomplete="off" spellcheck="false" required></label>
+                    <label>λ₂ <input class="mx-answer" type="text" name="f4-l2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="mx-button-row">
+                    <button type="button" data-mx-action="plot">Plot my polynomial</button>
+                    <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                  </div>
+                </details>
+              </div>
+            </fieldset>
+            <details class="mx-math">
+              <summary>Show the math</summary>
+              <p>det(A − λI) = (a − λ)(d − λ) − bc = λ² − (a + d)λ + (ad − bc). The quadratic formula gives λ = (trace ± √(trace² − 4 det))/2. Because the polynomial factors as (λ − λ₁)(λ − λ₂), the roots add to trace A and multiply to det A. When the discriminant is zero, the root is repeated.</p>
+            </details>
+          </section>
+
+          <section class="mx-station" data-mx-station="designer" data-mx-accent="yellow" aria-labelledby="mx-designer-title" hidden>
+            <h4 id="mx-designer-title">Eigen Designer</h4>
+            <p>Here you work the problem the other way round. Each card specifies eigenvalues and eigenvectors, and you design the matrix. Some cards have many answers. The checker tests the matrix you actually build.</p>
+            <div data-mx-plot-slot></div>
+            <fieldset disabled>
+              <legend class="mx-sr-only">Eigen Designer controls</legend>
+              <div class="mx-matrix" role="group" aria-label="Your matrix A">
+                <label>a · row 1, col. 1 <input type="number" name="ma" min="-8" max="8" step="0.25" value="1" required></label>
+                <label>b · row 1, col. 2 <input type="number" name="mb" min="-8" max="8" step="0.25" value="0" required></label>
+                <label>c · row 2, col. 1 <input type="number" name="mc" min="-8" max="8" step="0.25" value="0" required></label>
+                <label>d · row 2, col. 2 <input type="number" name="md" min="-8" max="8" step="0.25" value="1" required></label>
+              </div>
+              <p class="mx-readout" data-mx-read="state" aria-live="polite">A = [1, 0] [0, 1] · trace 2 · det 1</p>
+              <div class="mx-missions">
+                <details class="mx-mission" data-mx-mission="designer-pair">
+                  <summary>Two lines, two eigenvalues<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Design <b>A</b> with λ = 2 on (1, 1) and λ = −1 on (1, −1).</p>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="designer-null">
+                  <summary>Include a zero eigenvalue<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Design <b>A</b> with λ = 3 on (1, 2) and λ = 0 on (1, 0).</p>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="designer-det">
+                  <summary>One line and a determinant<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Design <b>A</b> so that (2, 1) is an eigenvector with λ = 3 and det <b>A</b> = −6. Many matrices work.</p>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="designer-repeat">
+                  <summary>A repeated eigenvalue with one line<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Design <b>A</b> whose only eigenvalue is 2, repeated, with eigenvectors only along (1, 1). <b>A</b> must not be 2<b>I</b>.</p>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="mx-math">
+              <summary>Show the math</summary>
+              <p>Asking for Av = λv is two linear equations in the entries of A. Two independent eigenvectors fix A completely, because A = PDP⁻¹ with the eigenvectors in the columns of P. With only one specified pair, you can still choose two entries freely. For a repeated λ with a single line, A − λI must be nonzero, yet it must send the eigenvector to zero.</p>
+            </details>
+          </section>
+
+          <section class="mx-station" data-mx-station="repeat" data-mx-accent="red" aria-labelledby="mx-repeat-title" hidden>
+            <h4 id="mx-repeat-title">Repeat Until Aligned</h4>
+            <p>Apply <b>A</b> again and again to one arrow: <b>v</b>, <b>Av</b>, <b>A</b>²<b>v</b>, and so on. Watch which line the arrow swings toward. When <strong>Rescale each step</strong> is on, every arrow is drawn at the same length, so you see only its direction.</p>
+            <div data-mx-plot-slot></div>
+            <fieldset disabled>
+              <legend class="mx-sr-only">Repeat Until Aligned controls</legend>
+              <div class="mx-fields">
+                <label>Start <var>x</var> <input type="number" name="sx" min="-4" max="4" step="0.5" value="1" required></label>
+                <label>Start <var>y</var> <input type="number" name="sy" min="-4" max="4" step="0.5" value="0" required></label>
+              </div>
+              <div class="mx-button-row">
+                <button class="matrix-primary" type="button" data-mx-action="step">Apply A once</button>
+                <button type="button" data-mx-action="run">Apply A 8 times</button>
+                <button type="button" data-mx-action="restart">Restart</button>
+              </div>
+              <label class="mx-check-row"><input type="checkbox" name="rescale" checked> Rescale each step</label>
+              <p class="mx-readout" data-mx-read="state" aria-live="polite">Step 0 · v = (1, 0)</p>
+              <div class="mx-missions">
+                <details class="mx-mission" data-mx-mission="repeat-settle">
+                  <summary>Where does it settle?<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p><b>A</b> = [3, 2] [1, 4], starting at (1, 0). Predict what happens before you run it.</p>
+                  <button type="button" data-mx-action="load">Load this system</button>
+                  <div class="mx-fields">
+                    <label>Prediction <select name="settle-pick" required><option value="">Choose</option><option value="yx">Settles on the line y = x</option><option value="ymx">Settles on the line y = −x</option><option value="half">Settles on the line y = −x/2</option><option value="xaxis">Settles on the x-axis</option><option value="turn">Keeps turning</option></select></label>
+                    <label>Factor per step <input class="mx-answer" type="text" name="settle-factor" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="repeat-flip">
+                  <summary>A negative winner<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p><b>A</b> = [−1, 2] [2, −1], starting at (1, 0). Predict what happens before you run it. Give the signed factor.</p>
+                  <button type="button" data-mx-action="load">Load this system</button>
+                  <div class="mx-fields">
+                    <label>Prediction <select name="flip-pick" required><option value="">Choose</option><option value="yx">Settles on the line y = x</option><option value="ymx">Settles on the line y = −x</option><option value="half">Settles on the line y = −x/2</option><option value="xaxis">Settles on the x-axis</option><option value="turn">Keeps turning</option></select></label>
+                    <label>Factor per step <input class="mx-answer" type="text" name="flip-factor" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="repeat-swap">
+                  <summary>Equal-size eigenvalues<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p><b>A</b> = [0, 2] [2, 0], starting at (1, 0). Predict what happens before you run it.</p>
+                  <button type="button" data-mx-action="load">Load this system</button>
+                  <div class="mx-fields">
+                    <label>Prediction <select name="swap-pick" required><option value="">Choose</option><option value="yx">Settles on the line y = x</option><option value="alternate">Never settles. It alternates between two directions</option><option value="xaxis">Settles on the x-axis</option></select></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="repeat-spin">
+                  <summary>A turning matrix<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p><b>A</b> = [1, −2] [2, 1], starting at (1, 0). Predict what happens before you run it.</p>
+                  <button type="button" data-mx-action="load">Load this system</button>
+                  <div class="mx-fields">
+                    <label>Prediction <select name="spin-pick" required><option value="">Choose</option><option value="yx">Settles on the line y = x</option><option value="turn">Never settles. It keeps turning</option><option value="alternate">Alternates between two directions</option></select></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="repeat-slow">
+                  <summary>Start on the slow line<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p><b>A</b> = [3, 2] [1, 4], starting at (2, −1). Predict what happens before you run it.</p>
+                  <button type="button" data-mx-action="load">Load this system</button>
+                  <div class="mx-fields">
+                    <label>Prediction <select name="slow-pick" required><option value="">Choose</option><option value="yx">Swings to the line y = x</option><option value="stay">Stays on its own line</option><option value="turn">Keeps turning</option></select></label>
+                    <label>Factor per step <input class="mx-answer" type="text" name="slow-factor" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="mx-math">
+              <summary>Show the math</summary>
+              <p>Write v = c₁v₁ + c₂v₂ in eigenvectors. Then Aⁿv = c₁λ₁ⁿv₁ + c₂λ₂ⁿv₂. When |λ₁| > |λ₂| and c₁ ≠ 0, the first term wins, and the direction lines up with v₁ while the length grows by about |λ₁| each step. If |λ₁| = |λ₂|, neither term wins. Complex eigenvalues keep turning the arrow. A start exactly on the other eigenline has c₁ = 0 and stays there.</p>
+            </details>
+          </section>
+
+          <section class="mx-station" data-mx-station="payoff" data-mx-accent="violet" aria-labelledby="mx-payoff-title" hidden>
+            <h4 id="mx-payoff-title">Eigenbasis Payoff</h4>
+            <p><b>A</b> = [7, −8] [4, −5] has eigenvectors b₁ = (2, 1) with λ = 3 and b₂ = (1, 1) with λ = −1. This is the skew basis from Lesson 8’s Coordinate Decoder. In the eigenbasis <var>B</var> = (b₁, b₂), <b>A</b> only scales each coordinate.</p>
+            <div data-mx-plot-slot></div>
+            <fieldset disabled>
+              <legend class="mx-sr-only">Eigenbasis Payoff controls</legend>
+              <label class="mx-check-row"><input type="checkbox" name="showeig" checked> Show the eigenbasis grid</label>
+              <p class="mx-readout" data-mx-read="state" aria-live="polite">v = (5, 3)</p>
+              <div class="mx-missions">
+                <details class="mx-mission" data-mx-mission="payoff-coords">
+                  <summary>Find the eigen-coordinates<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Write <b>v</b> = (5, 3) in the eigenbasis. Find [<b>v</b>]<sub>B</sub> = (c₁, c₂).</p>
+                  <div class="mx-fields">
+                    <label>c₁ <input class="mx-answer" type="text" name="coords-c1" autocomplete="off" spellcheck="false" required></label>
+                    <label>c₂ <input class="mx-answer" type="text" name="coords-c2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="payoff-action">
+                  <summary>Let A act on coordinates<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Give [<b>Av</b>]<sub>B</sub> by scaling each coordinate by its eigenvalue, then convert back to standard coordinates.</p>
+                  <div class="mx-fields">
+                    <label>[Av]<sub>B</sub> first <input class="mx-answer" type="text" name="action-c1" autocomplete="off" spellcheck="false" required></label>
+                    <label>[Av]<sub>B</sub> second <input class="mx-answer" type="text" name="action-c2" autocomplete="off" spellcheck="false" required></label>
+                    <label>Av <var>x</var> <input class="mx-answer" type="text" name="action-x" autocomplete="off" spellcheck="false" required></label>
+                    <label>Av <var>y</var> <input class="mx-answer" type="text" name="action-y" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="payoff-diagonal">
+                  <summary>Write A in the eigenbasis<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Which matrix does the same job as <b>A</b> when inputs and outputs are written in <var>B</var>-coordinates?</p>
+                  <div class="mx-matrix" role="group" aria-label="A in the eigenbasis">
+                    <label>a · row 1, col. 1 <input class="mx-answer" type="text" name="diagonal-a" autocomplete="off" spellcheck="false" required></label>
+                    <label>b · row 1, col. 2 <input class="mx-answer" type="text" name="diagonal-b" autocomplete="off" spellcheck="false" required></label>
+                    <label>c · row 2, col. 1 <input class="mx-answer" type="text" name="diagonal-c" autocomplete="off" spellcheck="false" required></label>
+                    <label>d · row 2, col. 2 <input class="mx-answer" type="text" name="diagonal-d" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="payoff-cube">
+                  <summary>Apply A three times<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Use eigen-coordinates to find <b>A</b>³<b>v</b> in standard coordinates without multiplying matrices.</p>
+                  <div class="mx-fields">
+                    <label>A³v <var>x</var> <input class="mx-answer" type="text" name="cube-x" autocomplete="off" spellcheck="false" required></label>
+                    <label>A³v <var>y</var> <input class="mx-answer" type="text" name="cube-y" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="mx-math">
+              <summary>Show the math</summary>
+              <p>If v = c₁b₁ + c₂b₂, then Av = c₁λ₁b₁ + c₂λ₂b₂. In B-coordinates, A acts as the diagonal matrix D = [λ₁, 0] [0, λ₂], and Aⁿ acts as [λ₁ⁿ, 0] [0, λ₂ⁿ]. In standard coordinates, A = PDP⁻¹, where P has the eigenvectors as its columns. This is the change of basis from Lesson 8.</p>
+            </details>
+          </section>
+
+          <section class="mx-station" data-mx-station="symmetric" data-mx-accent="blue" aria-labelledby="mx-symmetric-title" hidden>
+            <h4 id="mx-symmetric-title">Symmetric Matrices Preview</h4>
+            <p class="lesson-kicker">Optional preview</p>
+            <p>A matrix is symmetric when b = c, so it equals its own mirror image across the main diagonal. Compare its eigenlines with those of a non-symmetric matrix. This is a preview. Lesson 14 develops the complex version for quantum operators.</p>
+            <div data-mx-plot-slot></div>
+            <fieldset disabled>
+              <legend class="mx-sr-only">Symmetric Matrices Preview controls</legend>
+              <div class="mx-matrix" role="group" aria-label="Matrix A">
+                <label>a · row 1, col. 1 <input type="number" name="ma" min="-4" max="4" step="0.5" value="2" required></label>
+                <label>b · row 1, col. 2 <input type="number" name="mb" min="-4" max="4" step="0.5" value="-2" required></label>
+                <label>c · row 2, col. 1 <input type="number" name="mc" min="-4" max="4" step="0.5" value="-2" required></label>
+                <label>d · row 2, col. 2 <input type="number" name="md" min="-4" max="4" step="0.5" value="5" required></label>
+              </div>
+              <label class="mx-check-row"><input type="checkbox" name="mirror"> Keep b and c equal</label>
+              <p class="mx-readout" data-mx-read="state" aria-live="polite"></p>
+              <div class="mx-missions">
+                <details class="mx-mission" data-mx-mission="symmetric-sym">
+                  <summary>Inspect a symmetric matrix<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Load <b>A</b> = [2, −2] [−2, 5]. Find both eigenvalues and the angle between the eigenlines.</p>
+                  <button type="button" data-mx-action="load">Load this card</button>
+                  <div class="mx-fields">
+                    <label>λ₁ <input class="mx-answer" type="text" name="sym-l1" autocomplete="off" spellcheck="false" required></label>
+                    <label>λ₂ <input class="mx-answer" type="text" name="sym-l2" autocomplete="off" spellcheck="false" required></label>
+                    <label>Angle between eigenlines (degrees) <input class="mx-answer" type="text" name="sym-angle" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="symmetric-contrast">
+                  <summary>Contrast a non-symmetric matrix<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Load <b>A</b> = [3, 1] [0, 2]. Find the angle between its eigenlines.</p>
+                  <button type="button" data-mx-action="load">Load this card</button>
+                  <div class="mx-fields">
+                    <label>Angle (degrees) <input class="mx-answer" type="text" name="contrast-angle" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="symmetric-build">
+                  <summary>Test your own symmetric matrix<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Set any symmetric <b>A</b> with b = c ≠ 0. Then say what angle its eigenlines make.</p>
+                  <div class="mx-fields">
+                    <label>Angle (degrees) <input class="mx-answer" type="text" name="build-angle" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="symmetric-why">
+                  <summary>Why are the eigenvalues real?<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>For a symmetric [a, b] [b, d], the discriminant of the characteristic equation is (a − d)² + 4b². What does that guarantee?</p>
+                  <div class="mx-fields">
+                    <label>Reason <select name="why-reason" required><option value="">Choose</option><option value="det">A symmetric matrix always has det > 0</option><option value="square">(a − d)² + 4b² can’t be negative, so the eigenvalues are always real</option><option value="trace">The trace is always positive</option></select></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="mx-math">
+              <summary>Show the math</summary>
+              <p>For [a, b] [b, d], the discriminant (a − d)² + 4b² is a sum of squares, so both eigenvalues are real. If (A − λ₁I)v₁ = 0 and (A − λ₂I)v₂ = 0 with λ₁ ≠ λ₂, symmetry gives λ₁(v₁·v₂) = (Av₁)·v₂ = v₁·(Av₂) = λ₂(v₁·v₂), so v₁·v₂ = 0. The eigenlines are perpendicular. A non-symmetric matrix has no such guarantee.</p>
+            </details>
+          </section>
+
+          <section class="mx-station" data-mx-station="rotation" data-mx-accent="orange" aria-labelledby="mx-rotation-title" hidden>
+            <h4 id="mx-rotation-title">Rotation Has No Real Eigenvectors</h4>
+            <p>A rotation turns every arrow by the same angle θ. Unless θ is 0° or 180°, no arrow stays on its own line. Use the slider to watch eight sample inputs turn. Lesson 6’s complex numbers explain what the eigenvalues become.</p>
+            <div data-mx-plot-slot></div>
+            <fieldset disabled>
+              <legend class="mx-sr-only">Rotation Has No Real Eigenvectors controls</legend>
+              <div class="mx-fields">
+                <label>Rotation angle θ (degrees) <input type="range" name="theta" min="-180" max="180" step="1" value="90"></label>
+              </div>
+              <p class="mx-readout" data-mx-read="state" aria-live="polite">θ = 90°</p>
+              <div class="mx-missions">
+                <details class="mx-mission" data-mx-mission="rotation-perp">
+                  <summary>Test the quarter-turn<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>With θ = 90°, <b>A</b> = [0, −1] [1, 0]. Choose any nonzero <b>v</b>, find <b>v</b> · <b>Av</b>, and draw a conclusion.</p>
+                  <div class="mx-fields">
+                    <label>v <var>x</var> <input type="number" name="perp-x" min="-4" max="4" step="0.5" value="1" required></label>
+                    <label>v <var>y</var> <input type="number" name="perp-y" min="-4" max="4" step="0.5" value="2" required></label>
+                    <label>v · Av <input class="mx-answer" type="text" name="perp-dot" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="mx-fields">
+                    <label>Conclusion <select name="perp-why" required><option value="">Choose</option><option value="axes">Only the axes are eigenlines</option><option value="perp">Every output is perpendicular to its input, so no output stays on its line</option><option value="all">Every line is an eigenline</option></select></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="rotation-roots">
+                  <summary>Solve λ² + 1 = 0<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>For the quarter-turn, det(<b>A</b> − λ<b>I</b>) = λ² + 1. Give both roots as real and imaginary parts.</p>
+                  <div class="mx-fields">
+                    <label>λ₁ real part <input class="mx-answer" type="text" name="roots-r1" autocomplete="off" spellcheck="false" required></label>
+                    <label>λ₁ imaginary part <input class="mx-answer" type="text" name="roots-i1" autocomplete="off" spellcheck="false" required></label>
+                    <label>λ₂ real part <input class="mx-answer" type="text" name="roots-r2" autocomplete="off" spellcheck="false" required></label>
+                    <label>λ₂ imaginary part <input class="mx-answer" type="text" name="roots-i2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="rotation-vector">
+                  <summary>Find a complex eigenvector<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>For λ = <var>i</var>, look for <b>v</b> = (1, <var>z</var>) with <b>Av</b> = <var>i</var><b>v</b>. Give <var>z</var>.</p>
+                  <div class="mx-fields">
+                    <label><var>z</var> real part <input class="mx-answer" type="text" name="vector-zr" autocomplete="off" spellcheck="false" required></label>
+                    <label><var>z</var> imaginary part <input class="mx-answer" type="text" name="vector-zi" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="rotation-half">
+                  <summary>Find the other real case<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Set the slider to the nonzero angle at which every line is an eigenline again. Then give λ.</p>
+                  <div class="mx-fields">
+                    <label>λ <input class="mx-answer" type="text" name="half-l" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="rotation-sixty">
+                  <summary>Rotate by 60°<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Rotation by 60° has eigenvalues cos 60° ± <var>i</var> sin 60°. Give one of them.</p>
+                  <div class="mx-fields">
+                    <label>Real part <input class="mx-answer" type="text" name="sixty-re" autocomplete="off" spellcheck="false" required></label>
+                    <label>Imaginary part <input class="mx-answer" type="text" name="sixty-im" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="mx-math">
+              <summary>Show the math</summary>
+              <p>Rotation by θ is [cos θ, −sin θ] [sin θ, cos θ], with det(A − λI) = λ² − 2cos θ·λ + 1. Its roots are cos θ ± i sin θ, which are real only when sin θ = 0. In Lesson 6, multiplying by cos θ + i sin θ turned a complex number by θ. The complex eigenvalue is the rotation itself, written as a single number. For the quarter-turn, A(1, −i) = (i, 1) = i(1, −i).</p>
+            </details>
+          </section>
+
+          <section class="mx-station" data-mx-station="axis" data-mx-accent="green" aria-labelledby="mx-axis-title" hidden>
+            <h4 id="mx-axis-title">3D Axis Finder</h4>
+            <p>Every 3D rotation turns space around a fixed axis. Arrows on that axis don’t move, so the axis is an eigenvector with λ = 1. The faint arrows are e₁, e₂ and e₃, and the bright arrows are their images, the columns of <b>A</b>. Drag the diagram or use the sliders to look around.</p>
+            <div data-mx-plot-slot></div>
+            <fieldset disabled>
+              <legend class="mx-sr-only">3D Axis Finder controls</legend>
+              <div class="mx-fields">
+                <label>Turn the view <input type="range" name="yaw" min="-180" max="180" step="5" value="-55"></label>
+                <label>Tilt the view <input type="range" name="tilt" min="-10" max="80" step="5" value="25"></label>
+              </div>
+              <label class="mx-check-row"><input type="checkbox" name="spin"> Turn the view slowly (paused when Reduced effects is on)</label>
+              <p class="mx-readout" data-mx-read="state" aria-live="polite">Open a card.</p>
+              <div class="mx-missions">
+                <details class="mx-mission" data-mx-mission="axis-z90">
+                  <summary>A quarter-turn in space<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p><b>A</b> = [0, −1, 0] [1, 0, 0] [0, 0, 1]. Find its axis. Any nonzero multiple is accepted.</p>
+                  <div class="mx-fields">
+                    <label>Axis <var>x</var> <input class="mx-answer" type="text" name="z90-x" autocomplete="off" spellcheck="false" required></label>
+                    <label>Axis <var>y</var> <input class="mx-answer" type="text" name="z90-y" autocomplete="off" spellcheck="false" required></label>
+                    <label>Axis <var>z</var> <input class="mx-answer" type="text" name="z90-z" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="mx-button-row">
+                    <button type="button" data-mx-action="test">Test my axis</button>
+                    <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                  </div>
+                </details>
+                <details class="mx-mission" data-mx-mission="axis-cycle">
+                  <summary>The cyclic shuffle<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p><b>A</b> = [0, 0, 1] [1, 0, 0] [0, 1, 0] sends e₁ → e₂ → e₃ → e₁. Find its axis and its rotation angle.</p>
+                  <div class="mx-fields">
+                    <label>Axis <var>x</var> <input class="mx-answer" type="text" name="cycle-x" autocomplete="off" spellcheck="false" required></label>
+                    <label>Axis <var>y</var> <input class="mx-answer" type="text" name="cycle-y" autocomplete="off" spellcheck="false" required></label>
+                    <label>Axis <var>z</var> <input class="mx-answer" type="text" name="cycle-z" autocomplete="off" spellcheck="false" required></label>
+                    <label>Angle (degrees) <input class="mx-answer" type="text" name="cycle-angle" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="mx-button-row">
+                    <button type="button" data-mx-action="test">Test my axis</button>
+                    <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                  </div>
+                </details>
+                <details class="mx-mission" data-mx-mission="axis-half">
+                  <summary>A half-turn<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p><b>A</b> = [0, 1, 0] [1, 0, 0] [0, 0, −1] is a 180° rotation. Find its axis.</p>
+                  <div class="mx-fields">
+                    <label>Axis <var>x</var> <input class="mx-answer" type="text" name="half-x" autocomplete="off" spellcheck="false" required></label>
+                    <label>Axis <var>y</var> <input class="mx-answer" type="text" name="half-y" autocomplete="off" spellcheck="false" required></label>
+                    <label>Axis <var>z</var> <input class="mx-answer" type="text" name="half-z" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="mx-button-row">
+                    <button type="button" data-mx-action="test">Test my axis</button>
+                    <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                  </div>
+                </details>
+                <details class="mx-mission" data-mx-mission="axis-mirror">
+                  <summary>A mirror instead<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p><b>A</b> = [0, 1, 0] [1, 0, 0] [0, 0, 1] reflects space across the plane x = y. A whole plane is fixed here. Find the direction that is flipped, with λ = −1.</p>
+                  <div class="mx-fields">
+                    <label>Axis <var>x</var> <input class="mx-answer" type="text" name="mirror-x" autocomplete="off" spellcheck="false" required></label>
+                    <label>Axis <var>y</var> <input class="mx-answer" type="text" name="mirror-y" autocomplete="off" spellcheck="false" required></label>
+                    <label>Axis <var>z</var> <input class="mx-answer" type="text" name="mirror-z" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="mx-button-row">
+                    <button type="button" data-mx-action="test">Test my axis</button>
+                    <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                  </div>
+                </details>
+              </div>
+            </fieldset>
+            <details class="mx-math">
+              <summary>Show the math</summary>
+              <p>Solving (A − I)v = 0 gives the axis of a rotation. A rotation by θ about a unit axis has trace 1 + 2cos θ, so the cyclic shuffle, with trace 0, has cos θ = −1/2 and θ = 120°. A reflection has a fixed plane, where λ = 1 twice, and one flipped direction perpendicular to it, where λ = −1.</p>
+            </details>
+          </section>
+
+          <section class="mx-station" data-mx-station="quantum" data-mx-accent="violet" aria-labelledby="mx-quantum-title" hidden>
+            <h4 id="mx-quantum-title">Quantum Matrix Preview</h4>
+            <p class="lesson-kicker">Optional preview</p>
+            <p>This is a preview covering eigenvectors and eigenvalues only. The matrices σ<sub>z</sub> = [1, 0] [0, −1] and σ<sub>x</sub> = [0, 1] [1, 0] act on the states from Lesson 8: |0⟩ = (1, 0), |1⟩ = (0, 1), |+⟩ = (|0⟩ + |1⟩)/√2 and |−⟩ = (|0⟩ − |1⟩)/√2.</p>
+            <div data-mx-plot-slot></div>
+            <fieldset disabled>
+              <legend class="mx-sr-only">Quantum Matrix Preview controls</legend>
+              <div class="mx-fields">
+                <label>Matrix <select name="op"><option value="z">σ<sub>z</sub></option><option value="x">σ<sub>x</sub></option></select></label>
+                <label>State <select name="state"><option value="0">|0⟩</option><option value="1">|1⟩</option><option value="p">|+⟩</option><option value="m">|−⟩</option></select></label>
+              </div>
+              <label class="mx-check-row"><input type="checkbox" name="showx" checked> Show the x-basis axes</label>
+              <p class="mx-readout" data-mx-read="state" aria-live="polite">σz|0⟩ = (1, 0) = |0⟩</p>
+              <div class="mx-missions">
+                <details class="mx-mission" data-mx-mission="quantum-z">
+                  <summary>Eigenvalues of σz<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Apply σ<sub>z</sub> to |0⟩ and to |1⟩. Both are eigenvectors. Give each eigenvalue.</p>
+                  <div class="mx-fields">
+                    <label>λ for |0⟩ <input class="mx-answer" type="text" name="z-l0" autocomplete="off" spellcheck="false" required></label>
+                    <label>λ for |1⟩ <input class="mx-answer" type="text" name="z-l1" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="quantum-plus">
+                  <summary>σx on |+⟩<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Compute σ<sub>x</sub>|+⟩ in z-basis coordinates and give its eigenvalue.</p>
+                  <div class="mx-fields">
+                    <label>first coordinate <input class="mx-answer" type="text" name="plus-x" autocomplete="off" spellcheck="false" required></label>
+                    <label>second coordinate <input class="mx-answer" type="text" name="plus-y" autocomplete="off" spellcheck="false" required></label>
+                    <label>λ <input class="mx-answer" type="text" name="plus-l" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="quantum-minus">
+                  <summary>σx on |−⟩<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Compute σ<sub>x</sub>|−⟩ in z-basis coordinates and give its eigenvalue.</p>
+                  <div class="mx-fields">
+                    <label>first coordinate <input class="mx-answer" type="text" name="minus-x" autocomplete="off" spellcheck="false" required></label>
+                    <label>second coordinate <input class="mx-answer" type="text" name="minus-y" autocomplete="off" spellcheck="false" required></label>
+                    <label>λ <input class="mx-answer" type="text" name="minus-l" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="quantum-swap">
+                  <summary>Is |0⟩ an eigenvector of σx?<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Apply σ<sub>x</sub> to |0⟩ and decide.</p>
+                  <div class="mx-fields">
+                    <label>Conclusion <select name="swap-why" required><option value="">Choose</option><option value="zero">Yes, with eigenvalue 0</option><option value="swap">No. σx|0⟩ = |1⟩, which is not a multiple of |0⟩</option><option value="one">Yes, with eigenvalue 1</option></select></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+                <details class="mx-mission" data-mx-mission="quantum-cross">
+                  <summary>Is |+⟩ an eigenvector of σz?<span data-mx-done hidden>✓ Complete</span></summary>
+                  <p>Apply σ<sub>z</sub> to |+⟩ and decide.</p>
+                  <div class="mx-fields">
+                    <label>Conclusion <select name="cross-why" required><option value="">Choose</option><option value="minus">Yes, with eigenvalue −1</option><option value="turn">No. σz|+⟩ = |−⟩, a different direction</option><option value="one">Yes, with eigenvalue 1</option></select></label>
+                  </div>
+                  <button class="matrix-primary" type="button" data-mx-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="mx-math">
+              <summary>Show the math</summary>
+              <p>The z basis {|0⟩, |1⟩} is the eigenbasis of σz, with eigenvalues +1 and −1. The x basis {|+⟩, |−⟩} from Lesson 8’s Quantum Basis Preview is the eigenbasis of σx, again with eigenvalues ±1. Each matrix just scales its own eigenbasis and mixes the other one. Lesson 13 explains what these numbers mean for measurement, and Lesson 14 develops the idea of an observable.</p>
+            </details>
+          </section>
+        </div>
+
+        <template id="mx-figure-template">
+          <figure class="mx-figure">
+            <figcaption id="mx-title">Station diagram</figcaption>
+            <div class="mx-viewport" id="mx-viewport" data-renderer="svg">
+              <canvas class="mx-canvas" id="mx-canvas" aria-hidden="true" hidden></canvas>
+              <svg class="mx-diagram" id="mx-diagram" viewBox="0 0 560 360" role="img" aria-labelledby="mx-title" aria-describedby="mx-desc">
+                <desc id="mx-desc"></desc>
+                <g data-mx-geometry></g>
+                <g data-mx-labels></g>
+              </svg>
+            </div>
+            <p class="lesson-note" id="mx-render-status"></p>
+          </figure>
+        </template>
+        <template id="mx-mission-template">
+          <div class="mx-mission-tools">
+            <button type="button" data-mx-hint>Show first hint</button>
+            <ol data-mx-hint-list aria-live="polite" hidden></ol>
+            <p class="matrix-feedback" data-mx-feedback role="status"></p>
+            <details data-mx-work hidden><summary>Worked steps</summary><p data-mx-work-text></p></details>
+          </div>
+        </template>
+      </div>
+    </details>
+
+    <nav class="lesson-next" aria-label="Continue the course">
+      <a href="../../index.html">Course homepage</a>
+      <a class="matrix-primary" href="../10_calculus_bridge/10_calculus_bridge.html">
+        Next lesson: Calculus Bridge <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

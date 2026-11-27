@@ -1,0 +1,1050 @@
+:root {
+  color-scheme: dark;
+
+  --background: #050906;
+  --panel: #09150e;
+  --ink: #ecfff1;
+  --phosphor: #78f8a6;
+  --muted: #a6c5b0;
+  --line: #234c33;
+
+  --red: #ff676f;
+  --orange: #ff9f55;
+  --yellow: #ffe16a;
+  --green: #63f59b;
+  --blue: #65b7ff;
+  --violet: #c19bff;
+
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0;
+  background-color: var(--background);
+  background-image:
+    radial-gradient(ellipse at 50% 35%, rgb(33 123 68 / 15%), transparent 65%),
+    linear-gradient(rgb(120 248 166 / 4%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(120 248 166 / 4%) 1px, transparent 1px);
+  background-size: auto, 32px 32px, 32px 32px;
+  color: var(--ink);
+  font-family: var(--mono);
+}
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+  background-color: #070f0a;
+  box-shadow: 0 1px 18px rgb(93 239 146 / 8%);
+}
+
+.header-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 2rem);
+  width: min(calc(100% - var(--gutter) - var(--gutter)), 84rem);
+  min-height: 7rem;
+  margin-inline: auto;
+  padding-block: 0.75rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.brand-logo {
+  flex: none;
+  width: clamp(2.75rem, 4.5vw, 3.5rem);
+  filter: drop-shadow(0 0 6px rgb(120 248 166 / 24%));
+}
+
+.brand h1 {
+  margin: 0;
+  color: var(--phosphor);
+  font-size: clamp(1rem, 1.5vw, 1.375rem);
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.particle-display {
+  position: relative;
+  grid-column: 2;
+  justify-self: center;
+  width: min(100%, 30rem);
+  aspect-ratio: 480 / 108;
+  overflow: hidden;
+}
+
+.particle-still,
+.particle-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.particle-canvas {
+  visibility: hidden;
+}
+
+.particle-display[data-motion="active"] .particle-still {
+  visibility: hidden;
+}
+
+.particle-display[data-motion="active"] .particle-canvas {
+  visibility: visible;
+}
+
+.particle-guide {
+  stroke: var(--line);
+  stroke-width: 1;
+  stroke-dasharray: 2 7;
+  opacity: 0.65;
+}
+
+.particle-tracks path {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.track-in-a { stroke: #d0ffe3; }
+.track-in-b { stroke: #79d7b2; }
+.track-red { stroke: var(--red); }
+.track-orange { stroke: var(--orange); }
+.track-yellow { stroke: var(--yellow); }
+.track-green { stroke: var(--green); }
+.track-blue { stroke: var(--blue); }
+.track-violet { stroke: var(--violet); }
+
+.collision-halo {
+  fill: none;
+  stroke: var(--phosphor);
+  stroke-width: 1;
+  opacity: 0.25;
+}
+
+.collision-cross {
+  fill: none;
+  stroke: var(--phosphor);
+  stroke-width: 1;
+  opacity: 0.62;
+}
+
+.collision-core {
+  fill: #f2fff5;
+  filter: drop-shadow(0 0 5px var(--phosphor));
+}
+
+.lessons-menu-toggle {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: 44px;
+  padding-inline: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: var(--panel);
+  color: var(--phosphor);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lessons-menu-toggle svg {
+  flex: none;
+}
+
+.lessons-menu-toggle:hover,
+.lessons-menu-toggle[aria-expanded="true"] {
+  border-color: var(--phosphor);
+  background-color: #12271b;
+}
+
+.lessons-menu-toggle[hidden],
+.lessons-menu[hidden] {
+  display: none;
+}
+
+.lessons-menu {
+  inline-size: min(26rem, calc(100% - var(--gutter) - var(--gutter)));
+  max-block-size: clamp(5rem, calc(100vh - 12rem), 24rem);
+  max-block-size: clamp(5rem, calc(100dvh - 12rem), 24rem);
+  margin-inline-start: auto;
+  margin-inline-end: max(var(--gutter), calc((100% - 84rem) / 2));
+  margin-block-end: 0.75rem;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background-color: var(--panel);
+}
+
+.lessons-menu a {
+  display: grid;
+  grid-template-columns: 2ch minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  color: var(--ink);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.lessons-menu a + a {
+  border-block-start: 1px solid var(--line);
+}
+
+.lessons-menu a:hover,
+.lessons-menu a:focus-visible,
+.lessons-menu a[aria-current="page"] {
+  background-color: #12271b;
+}
+
+.lessons-menu-toggle:focus-visible,
+.lessons-menu a:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 2px;
+}
+
+.lessons-menu a:focus-visible {
+  outline-offset: -2px;
+}
+
+.lessons-menu-step {
+  color: var(--phosphor);
+  text-align: end;
+}
+
+.site-footer {
+  padding: 1.25rem var(--gutter);
+  border-top: 1px solid var(--line);
+  background-color: #070f0a;
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+@media (max-width: 56rem) {
+  .header-inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.25rem;
+    min-height: 0;
+    padding-block: 1rem 0.5rem;
+  }
+
+  .brand h1 {
+    overflow-wrap: anywhere;
+  }
+
+  .particle-display {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .lessons-menu-toggle {
+    grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particle-display[data-motion="active"] .particle-still {
+    visibility: visible;
+  }
+
+  .particle-display[data-motion="active"] .particle-canvas {
+    visibility: hidden;
+  }
+}
+
+/* Lesson 8 */
+
+.site-main.basis-lesson {
+  --basis-target: var(--yellow);
+  --basis-first: var(--blue);
+  --basis-second: var(--violet);
+  --basis-plot: #081019;
+  --basis-square: #3b4e60;
+  --basis-oblique: #745b95;
+  --basis-axis: #a9b8c7;
+
+  display: grid;
+  align-content: start;
+  gap: clamp(1rem, 3vw, 2rem);
+  width: min(calc(100% - var(--gutter) - var(--gutter)), 68rem);
+  margin-inline: auto;
+  padding-block: clamp(1.5rem, 4vw, 3.5rem);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.basis-lesson [hidden] {
+  display: none !important;
+}
+
+.basis-lesson :is(h2, h3, h4, p, figure, dl, dd) {
+  margin: 0;
+}
+
+.basis-lesson :is(h2, h3, h4) {
+  line-height: 1.25;
+}
+
+.basis-lesson h2 {
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  letter-spacing: -0.06em;
+}
+
+.basis-lesson h3 {
+  font-size: clamp(1.25rem, 3vw, 1.65rem);
+}
+
+.basis-lesson h4 {
+  font-size: 1rem;
+}
+
+.basis-lesson a {
+  color: var(--phosphor);
+  text-underline-offset: 0.2em;
+}
+
+.basis-lesson :is(a, button, input, select, summary, h4):focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 3px;
+}
+
+.basis-lesson .lesson-intro {
+  display: grid;
+  gap: 0.75rem;
+  max-inline-size: 76ch;
+}
+
+.basis-lesson .lesson-kicker {
+  color: var(--phosphor);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.basis-lesson .lesson-lead {
+  max-inline-size: 60ch;
+  color: var(--phosphor);
+  font-size: clamp(1.0625rem, 2.4vw, 1.375rem);
+  font-weight: 700;
+}
+
+.basis-lesson .lesson-panel {
+  display: grid;
+  align-content: start;
+  gap: 0.875rem;
+  min-inline-size: 0;
+  padding: clamp(0.875rem, 2.5vw, 1.75rem);
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: linear-gradient(145deg, #0d1b12, var(--panel));
+}
+
+.basis-lesson details.lesson-panel {
+  display: block;
+}
+
+.basis-lesson summary {
+  align-content: center;
+  min-block-size: 44px;
+  color: var(--phosphor);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.basis-lesson .basis-disclosure {
+  display: grid;
+  gap: 0.875rem;
+  padding-block-start: 0.75rem;
+}
+
+.basis-lesson :is(.lesson-note, figcaption) {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.basis-lesson .basis-target { color: var(--basis-target); }
+.basis-lesson .basis-first { color: var(--basis-first); }
+.basis-lesson .basis-second { color: var(--basis-second); }
+
+.basis-lesson .basis-lab {
+  border-block-start: 3px solid transparent;
+  background:
+    linear-gradient(145deg, #0e2119, #0a111b) padding-box,
+    linear-gradient(
+      90deg, var(--red), var(--orange), var(--yellow),
+      var(--green), var(--blue), var(--violet)
+    ) border-box;
+}
+
+.basis-lesson .basis-layout {
+  display: grid;
+  grid-template-columns: minmax(14rem, 0.85fr) minmax(0, 1.15fr);
+  align-items: start;
+  gap: clamp(1rem, 2.75vw, 1.75rem);
+}
+
+.basis-lesson :is(.basis-console, .basis-display, .basis-figure, .basis-control-group, .basis-question) {
+  display: grid;
+  gap: 0.75rem;
+  min-inline-size: 0;
+}
+
+.basis-lesson .basis-controls {
+  display: grid;
+  align-content: start;
+  gap: 0.875rem;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0.875rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: #07110e;
+}
+
+.basis-lesson legend {
+  padding-inline: 0.375rem;
+  color: var(--phosphor);
+  font-weight: 700;
+}
+
+.basis-lesson .basis-input-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.625rem;
+}
+
+.basis-lesson .basis-input-pair label {
+  display: grid;
+  gap: 0.25rem;
+  min-inline-size: 0;
+}
+
+.basis-lesson :is(button, input[type="number"], select, .lesson-next a) {
+  min-block-size: 44px;
+  padding: 0.45rem 0.625rem;
+  border: 1px solid #4b6c5b;
+  border-radius: 0.375rem;
+  background: #101e18;
+  color: var(--ink);
+  font: inherit;
+}
+
+.basis-lesson :is(input[type="number"], select) {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+.basis-lesson button {
+  cursor: pointer;
+}
+
+.basis-lesson :is(button, input, select):disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.basis-lesson button:not(:disabled):hover,
+.basis-lesson .lesson-next a:hover {
+  border-color: var(--phosphor);
+  background-color: #1b3a2b;
+}
+
+.basis-lesson :is(button, a).basis-primary {
+  border-color: #527d63;
+  background-color: #142d20;
+  color: var(--phosphor);
+  font-weight: 700;
+}
+
+.basis-lesson .basis-button-row,
+.basis-lesson .lesson-next {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.basis-lesson .basis-check {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-block-size: 44px;
+  padding: 0.25rem 0.375rem;
+  border-radius: 0.25rem;
+  background: #102018;
+}
+
+.basis-lesson .basis-check input {
+  flex: none;
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+  margin: 0;
+  accent-color: var(--phosphor);
+}
+
+.basis-lesson .basis-viewport {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  inline-size: 100%;
+  aspect-ratio: 1;
+  border: 1px solid #536681;
+  border-radius: 0.5rem;
+  background: var(--basis-plot);
+}
+
+.basis-lesson :is(.basis-canvas, .basis-svg) {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.basis-lesson .basis-viewport[data-renderer="webgl"] #basis-svg-geometry {
+  visibility: hidden;
+}
+
+.basis-lesson .basis-svg text {
+  fill: currentColor;
+  paint-order: stroke;
+  stroke: var(--basis-plot);
+  stroke-width: 3;
+  stroke-linejoin: round;
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.basis-lesson .basis-axis-label {
+  color: var(--basis-axis);
+}
+
+.basis-lesson :is(.basis-square-line, .basis-oblique-line, .basis-axes) {
+  fill: none;
+}
+
+.basis-lesson .basis-square-line {
+  stroke: var(--basis-square);
+  stroke-width: 1;
+}
+
+.basis-lesson .basis-oblique-line {
+  stroke: var(--basis-oblique);
+  stroke-width: 1;
+  stroke-dasharray: 2 5;
+}
+
+.basis-lesson .basis-axes {
+  stroke: var(--basis-axis);
+  stroke-width: 1.5;
+}
+
+.basis-lesson :is(.basis-arrow-target, .basis-arrow-first, .basis-arrow-second, .basis-step-first, .basis-step-second) {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.basis-lesson .basis-arrow-target {
+  stroke: var(--basis-target);
+  stroke-width: 3;
+}
+
+.basis-lesson :is(.basis-target-tip, .basis-target-point) {
+  fill: var(--basis-target);
+}
+
+.basis-lesson .basis-target-point {
+  stroke: var(--basis-plot);
+  stroke-width: 1.5;
+}
+
+.basis-lesson :is(.basis-arrow-first, .basis-step-first) {
+  stroke: var(--basis-first);
+  stroke-width: 2.4;
+}
+
+.basis-lesson :is(.basis-arrow-second, .basis-step-second) {
+  stroke: var(--basis-second);
+  stroke-width: 2.4;
+}
+
+.basis-lesson .basis-first-tip { fill: var(--basis-first); }
+.basis-lesson .basis-second-tip { fill: var(--basis-second); }
+
+.basis-lesson .basis-step {
+  stroke-width: 4;
+  stroke-dasharray: 5 5;
+}
+
+.basis-lesson .basis-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem 0.875rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.basis-lesson .basis-key {
+  display: inline-block;
+  inline-size: 1.1rem;
+  margin-inline-end: 0.2rem;
+  border-block-start: 3px solid currentColor;
+  vertical-align: middle;
+}
+
+.basis-lesson .basis-key.basis-dashed {
+  border-block-start-style: dashed;
+}
+
+.basis-lesson .basis-readouts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.basis-lesson :is(.basis-readouts, .basis-definitions) > div {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: #081310;
+}
+
+.basis-lesson .basis-readouts dt {
+  font-size: 0.875rem;
+}
+
+.basis-lesson .basis-readouts dd {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.basis-lesson .basis-result:last-child {
+  grid-column: 1 / -1;
+}
+
+.basis-lesson .basis-feedback:not(:empty) {
+  padding: 0.55rem 0.7rem;
+  border-inline-start: 3px solid var(--phosphor);
+  background: #11241a;
+  font-size: 0.875rem;
+}
+
+.basis-lesson .basis-equation {
+  padding: 0.55rem 0.7rem;
+  border-inline-start: 3px solid var(--line);
+  background: #07110d;
+  font-weight: 700;
+}
+
+.basis-lesson .basis-definitions {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.basis-lesson .basis-definitions dt {
+  color: var(--phosphor);
+  font-weight: 700;
+}
+
+.basis-lesson .lesson-next a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (max-width: 42rem) {
+  .basis-lesson .basis-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 25rem) {
+  .basis-lesson .basis-readouts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* Basis Arcade */
+
+.site-main.basis-lesson {
+  --ba-surface: #0b1612;
+}
+
+.basis-lesson #basis-arcade {
+  scroll-margin-block-start: 1rem;
+}
+
+.basis-lesson :is(.ba-body, .ba-station, .ba-figure, .ba-missions, .ba-mission-tools, .ba-station > fieldset) {
+  display: grid;
+  gap: 0.75rem;
+  min-inline-size: 0;
+}
+
+.basis-lesson .ba-body {
+  padding-block-start: 0.75rem;
+}
+
+.basis-lesson :is(.ba-arcade, .ba-mission, .ba-math, .ba-mission-tools details) > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem 0.75rem;
+  list-style: none;
+}
+
+.basis-lesson :is(.ba-arcade, .ba-mission, .ba-math, .ba-mission-tools details) > summary::-webkit-details-marker {
+  display: none;
+}
+
+.basis-lesson :is(.ba-arcade, .ba-mission, .ba-math, .ba-mission-tools details) > summary::before {
+  content: "+";
+  inline-size: 1ch;
+}
+
+.basis-lesson :is(.ba-arcade, .ba-mission, .ba-math, .ba-mission-tools details)[open] > summary::before {
+  content: "−";
+}
+
+.basis-lesson .ba-arcade > summary strong {
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+}
+
+.basis-lesson .ba-arcade > summary span {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.basis-lesson .ba-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto auto;
+  align-items: end;
+  gap: 0.75rem;
+  min-inline-size: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--ba-surface);
+}
+
+.basis-lesson .ba-toolbar label {
+  display: grid;
+  gap: 0.25rem;
+  min-inline-size: 0;
+  font-size: 0.875rem;
+}
+
+/* Keep label text such as "b₁ x" on one line, with the control below it. */
+.basis-lesson .ba-fields label {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: end;
+  gap: 0.25rem 0.3em;
+  min-inline-size: 0;
+  font-size: 0.875rem;
+}
+
+.basis-lesson .ba-fields label > :is(input, select) {
+  flex: 1 0 100%;
+}
+
+.basis-lesson #ba-progress {
+  align-self: center;
+  color: var(--phosphor);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.basis-lesson .ba-toolbar .ba-reduced {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-block-size: 44px;
+  color: var(--muted);
+}
+
+.basis-lesson .ba-reduced input,
+.basis-lesson .ba-check-row input {
+  flex: none;
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+  margin: 0;
+  accent-color: var(--phosphor);
+}
+
+.basis-lesson .ba-station {
+  --ba-accent: var(--phosphor);
+  padding: clamp(0.75rem, 2vw, 1.35rem);
+  border: 1px solid var(--line);
+  border-block-start: 3px solid var(--ba-accent);
+  border-radius: 0.6rem;
+  background: var(--ba-surface);
+}
+
+.basis-lesson [data-ba-accent="blue"] { --ba-accent: var(--blue); }
+.basis-lesson [data-ba-accent="violet"] { --ba-accent: var(--violet); }
+.basis-lesson [data-ba-accent="orange"] { --ba-accent: var(--orange); }
+.basis-lesson [data-ba-accent="green"] { --ba-accent: var(--green); }
+.basis-lesson [data-ba-accent="yellow"] { --ba-accent: var(--yellow); }
+.basis-lesson [data-ba-accent="red"] { --ba-accent: var(--red); }
+
+.basis-lesson .ba-station h4 {
+  color: var(--ba-accent);
+  font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+}
+
+.basis-lesson .ba-station > fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.basis-lesson .ba-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+  align-items: end;
+  gap: 0.65rem 0.85rem;
+}
+
+.basis-lesson .ba-button-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.basis-lesson input.ba-answer {
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 44px;
+  padding: 0.45rem 0.625rem;
+  border: 1px solid #4b6c5b;
+  border-radius: 0.375rem;
+  background: #101e18;
+  color: var(--ink);
+  font: inherit;
+}
+
+.basis-lesson input.ba-answer[aria-invalid="true"],
+.basis-lesson input.ba-answer:user-invalid {
+  border-color: var(--red);
+}
+
+.basis-lesson .ba-station input[type="range"] {
+  inline-size: 100%;
+  min-block-size: 44px;
+  margin: 0;
+  accent-color: var(--ba-accent);
+}
+
+.basis-lesson .ba-check-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-block-size: 44px;
+  font-size: 0.875rem;
+}
+
+.basis-lesson .ba-readout {
+  padding: 0.5rem 0.7rem;
+  border-inline-start: 3px solid var(--ba-accent);
+  background: #081310;
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.basis-lesson .ba-pad {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.basis-lesson button.ba-first-button {
+  border-color: var(--basis-first);
+  color: var(--basis-first);
+  font-weight: 700;
+}
+
+.basis-lesson button.ba-second-button {
+  border-color: var(--basis-second);
+  color: var(--basis-second);
+  font-weight: 700;
+}
+
+.basis-lesson .ba-mission {
+  padding: 0.15rem 0.75rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+  background: #0a1410;
+}
+
+.basis-lesson .ba-mission[open] {
+  border-color: color-mix(in srgb, var(--ba-accent) 55%, var(--line));
+}
+
+.basis-lesson .ba-mission > :not(summary) {
+  margin-block-start: 0.65rem;
+}
+
+.basis-lesson .ba-mission [data-ba-done] {
+  margin-inline-start: auto;
+  color: var(--green);
+  font-size: 0.875rem;
+}
+
+.basis-lesson .ba-mission-tools > button {
+  justify-self: start;
+}
+
+.basis-lesson .ba-mission-tools ol {
+  margin: 0;
+  padding-inline-start: 1.25rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.basis-lesson .ba-mission-tools details > summary {
+  font-size: 0.875rem;
+}
+
+.basis-lesson .ba-mission-tools details p {
+  margin-block-start: 0.4rem;
+  padding: 0.5rem 0.7rem;
+  border-inline-start: 3px solid var(--line);
+  background: #07110d;
+  font-size: 0.875rem;
+}
+
+.basis-lesson .ba-choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr));
+  gap: 0.5rem;
+}
+
+.basis-lesson .ba-math > p {
+  margin-block-start: 0.5rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.basis-lesson .ba-viewport {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  inline-size: 100%;
+  aspect-ratio: 14 / 9;
+  border: 1px solid #536681;
+  border-radius: 0.5rem;
+  background: var(--basis-plot);
+  touch-action: pan-y;
+}
+
+.basis-lesson .ba-viewport[data-space="true"] {
+  cursor: grab;
+}
+
+.basis-lesson :is(.ba-canvas, .ba-diagram) {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.basis-lesson .ba-viewport[data-renderer="webgl"] [data-ba-geometry] {
+  visibility: hidden;
+}
+
+.basis-lesson .ba-diagram text {
+  paint-order: stroke;
+  stroke: var(--basis-plot);
+  stroke-width: 3.5;
+  stroke-linejoin: round;
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.basis-lesson .ba-diagram text.ba-label-small {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.basis-lesson .ba-sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 42rem) {
+  .basis-lesson .ba-toolbar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .basis-lesson .ba-pad {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.basis-lesson .ba-matrix {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem 0.75rem;
+  max-inline-size: 26rem;
+  padding: 0.5rem 0.75rem;
+  border-inline: 3px solid var(--ba-accent);
+  border-radius: 0.5rem;
+}
+
+.basis-lesson .ba-matrix label {
+  display: grid;
+  gap: 0.25rem;
+  min-inline-size: 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.basis-lesson .ba-worked {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0.6rem 0.75rem 0.6rem 2.2rem;
+  border-inline-start: 3px solid var(--ba-accent);
+  background: #07110d;
+  font-variant-numeric: tabular-nums;
+}

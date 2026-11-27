@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Use a simulated coin to compare model probabilities, observed frequencies, and independent runs.">
+  <title>Probability | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css?v=probability-lab-1">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+  <script src="./scripts/lesson.js?v=probability-lab-1" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)" stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none" stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8" stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none" stroke="url(#logo-spectrum)" stroke-width="1.6" transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none" stroke="#edffef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static" viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 464 83"/>
+            <path class="track-violet" d="M218 54C265 80 333 97 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M218 46v16m-8-8h16"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button" aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="./4_probability.html" aria-current="page"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and-coordinates/8_bases_and-coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="../22_the_one_dimensional_schrodinger_equation/22_the_one_dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main prob-lesson" aria-labelledby="prob-title">
+    <header class="lesson-intro">
+      <p class="lesson-kicker">Lesson 04 · Coin lab</p>
+      <h2 id="prob-title">Probability</h2>
+      <p class="lesson-lead">If heads has a 70% chance on every toss, what does that tell you about the next 10 tosses?</p>
+      <p>Predict what a ten-toss run can look like. Then compare fresh runs and ask which parts of your prediction apply to one run and which describe an average.</p>
+    </header>
+
+    <section class="lesson-panel" aria-labelledby="prob-experiment-title">
+      <h3 id="prob-experiment-title">Define the experiment</h3>
+      <dl class="prob-terms">
+        <div><dt>Outcome</dt><dd>One result of one toss. This simulated coin gives H for heads or T for tails.</dd></div>
+        <div><dt>Sample space</dt><dd>The set of all possible outcomes we describe. For one toss, it is {H, T}.</dd></div>
+        <div><dt>Event</dt><dd>A set of outcomes we choose to count. For “heads on this toss,” the event is {H}.</dd></div>
+      </dl>
+      <p>The model probability of heads is <var>p</var>. The probability of tails is 1 − <var>p</var>. Tosses are independent: with the bias fixed, earlier results do not change the odds of the next toss.</p>
+    </section>
+
+    <section class="lesson-panel" id="prob-lab" tabindex="-1" aria-labelledby="prob-lab-title">
+      <h3 id="prob-lab-title">Coin lab</h3>
+      <p>The opening coin is set to 70% heads. Save a prediction for this setting, or pick a different bias first. Then <a href="#prob-compare">compare fresh runs</a> to check your prediction against the model and actual simulated results.</p>
+
+      <div class="prob-lab-grid">
+        <div class="lesson-station">
+          <fieldset id="prob-toss-controls" disabled>
+            <legend>Set the coin and toss</legend>
+            <div class="prob-bias-control">
+              <label for="prob-bias">Model probability of heads</label>
+              <output id="prob-bias-value" for="prob-bias">70%</output>
+              <input type="range" id="prob-bias" min="0" max="100" step="1" value="70" aria-valuetext="70 percent heads" aria-describedby="prob-bias-note">
+            </div>
+            <div class="prob-actions" role="group" aria-label="Coin presets">
+              <button class="lesson-button" type="button" data-prob-bias="50">Fair · 50%</button>
+              <button class="lesson-button" type="button" data-prob-bias="70">Biased · 70%</button>
+            </div>
+            <p class="lesson-note" id="prob-bias-note">Changing the bias clears the counters, comparisons, and predictions so records from different settings stay separate.</p>
+            <div class="prob-actions" role="group" aria-label="Toss controls">
+              <button class="lesson-button" type="button" data-prob-tosses="1">Add 1 toss</button>
+              <button class="lesson-button lesson-primary" type="button" data-prob-tosses="10">Add 10 tosses</button>
+              <button class="lesson-button" type="button" data-prob-tosses="100">Add 100 tosses</button>
+              <button class="lesson-button" type="button" data-prob-tosses="1000">Add 1,000 tosses</button>
+              <button class="lesson-button" id="prob-reset-run" type="button">Start fresh run</button>
+            </div>
+            <p class="lesson-note">Add keeps the current tally. Start fresh run clears this tally and its recent outcomes at the same bias. The comparison and pair counters are separate.</p>
+          </fieldset>
+
+          <form id="prob-prediction-form">
+            <fieldset id="prob-prediction-controls" disabled>
+              <legend>Predict a fresh run of ten</legend>
+              <div class="prob-field">
+                <label for="prob-possible">Which head counts could you see in ten tosses?</label>
+                <select id="prob-possible" required>
+                  <option value="" selected>Choose the possible counts</option>
+                  <option value="any">Any whole count from 0 through 10</option>
+                  <option value="exactly-seven">Exactly 7 every time</option>
+                  <option value="only-zero">Only 0</option>
+                  <option value="only-ten">Only 10</option>
+                </select>
+              </div>
+              <div class="prob-field">
+                <label for="prob-expected">How many heads would you expect on average?</label>
+                <input type="number" id="prob-expected" min="0" max="10" step="0.1" inputmode="decimal" required aria-describedby="prob-expected-hint">
+                <p class="lesson-note" id="prob-expected-hint">An average across many runs can fall between whole numbers.</p>
+              </div>
+              <button class="lesson-button" type="submit">Save prediction</button>
+            </fieldset>
+          </form>
+          <p class="lesson-note" id="prob-prediction-status" role="status">Your prediction will be checked when you generate a comparison.</p>
+        </div>
+
+        <section class="lesson-station" aria-labelledby="prob-results-title">
+          <h4 id="prob-results-title">Current run · Simulated results</h4>
+          <div class="prob-scene-slot" data-prob-scene="coin">
+            <figure class="prob-scene" id="prob-apparatus">
+              <div class="prob-viewport">
+                <canvas id="prob-gl" aria-hidden="true" hidden></canvas>
+                <canvas id="prob-flat" aria-hidden="true" hidden></canvas>
+                <p id="prob-apparatus-static">Toss the coin to see a landing and start the frequency trace.</p>
+              </div>
+              <figcaption>
+                <div>
+                  <p id="prob-apparatus-caption">The landed face and the trace use the same toss outcomes.</p>
+                  <p class="lesson-note" id="prob-render-status" role="status"></p>
+                </div>
+                <label class="prob-check"><input type="checkbox" id="prob-reduced" data-prob-enable disabled> Reduced effects</label>
+              </figcaption>
+            </figure>
+          </div>
+          <dl class="prob-metrics">
+            <div><dt>Total tosses (<var>n</var>)</dt><dd id="prob-total">0</dd></div>
+            <div><dt>Heads counted (<var>h</var>)</dt><dd id="prob-head-count">0</dd></div>
+          </dl>
+          <table class="prob-table" aria-describedby="prob-frequency-note">
+            <thead><tr><th scope="col">Outcome</th><th scope="col">Count</th><th scope="col">Model probability</th><th scope="col">Observed frequency</th></tr></thead>
+            <tbody>
+              <tr><th class="prob-head-label" scope="row">H · Heads</th><td id="prob-head-table-count">0</td><td id="prob-head-model">70%</td><td id="prob-head-observed">—</td></tr>
+              <tr><th class="prob-tail-label" scope="row">T · Tails</th><td id="prob-tail-count">0</td><td id="prob-tail-model">30%</td><td id="prob-tail-observed">—</td></tr>
+            </tbody>
+          </table>
+          <p class="lesson-note" id="prob-frequency-note">Model probability is the chance assigned before a toss. Observed heads frequency is <var>h</var>/<var>n</var>: the heads you counted divided by the tosses you made. A dash means there are no tosses yet.</p>
+          <p>Last outcome <strong id="prob-last-toss">—</strong></p>
+          <div class="prob-history-block">
+            <h4>Recent outcomes</h4>
+            <p class="lesson-note">Up to 20 tosses, oldest to newest. H means heads and T means tails.</p>
+            <p class="lesson-note" id="prob-history-empty">No tosses yet.</p>
+            <ol class="prob-history" id="prob-history" role="list" aria-label="Recent toss outcomes, oldest first" hidden></ol>
+          </div>
+          <p class="prob-reaction" id="prob-run-feedback" role="status"><strong>Lab assistant:</strong> The tally is empty. The controls become available when the Lesson 4 script loads.</p>
+        </section>
+      </div>
+    </section>
+
+    <section class="lesson-panel" id="prob-compare" tabindex="-1" aria-labelledby="prob-compare-title" data-runs="8" data-short-size="10" data-long-size="100">
+      <h3 id="prob-compare-title">Compare independent runs</h3>
+      <p>Draw eight fresh runs of 10 tosses and eight fresh runs of 100 tosses, all at the same bias. Look at the first two ten-toss runs, then compare the spread across each group.</p>
+      <fieldset id="prob-compare-controls" disabled>
+        <legend>Repeat the experiment</legend>
+        <button class="lesson-button lesson-primary" id="prob-generate-comparison" type="button">Generate comparison runs</button>
+      </fieldset>
+      <p class="lesson-note">Each click replaces the comparison with new runs. It leaves the current run and pair counters alone.</p>
+
+      <figure class="prob-figure">
+        <figcaption>Observed percentage of heads by run size</figcaption>
+        <svg class="prob-plot" id="prob-comparison-plot" viewBox="0 0 400 246" role="img" aria-labelledby="prob-plot-title prob-plot-desc"
+             data-plot-left="48" data-plot-right="376" data-short-first-y="40" data-long-first-y="138" data-dot-gap="8">
+          <title id="prob-plot-title">Comparison of heads frequencies on a 0 to 100 percent scale</title>
+          <desc id="prob-plot-desc">The dashed line marks the 70 percent model probability. No comparison runs have been generated.</desc>
+          <rect class="prob-plot-band" x="48" y="32" width="328" height="73" rx="4"/>
+          <rect class="prob-plot-band" x="48" y="130" width="328" height="73" rx="4"/>
+          <path class="prob-plot-grid" d="M48 32v188M130 32v188M212 32v188M294 32v188M376 32v188"/>
+          <line class="prob-model-line" id="prob-model-line" x1="277.6" x2="277.6" y1="32" y2="220"/>
+          <text class="prob-lane-label" x="48" y="23">10 tosses per run</text>
+          <text class="prob-lane-label" x="48" y="121">100 tosses per run</text>
+          <g class="prob-dots-10" id="prob-dots-10" aria-hidden="true"></g>
+          <g class="prob-dots-100" id="prob-dots-100" aria-hidden="true"></g>
+          <path class="prob-plot-axis" d="M48 220h328M48 216v8m82-8v8m82-8v8m82-8v8m82-8v8"/>
+          <text x="48" y="242">0%</text><text x="130" y="242">25%</text><text x="212" y="242">50%</text>
+          <text x="294" y="242">75%</text><text x="376" y="242">100%</text>
+        </svg>
+        <ul class="prob-plot-key">
+          <li><span class="prob-key-dot prob-key-short" aria-hidden="true"></span>10 tosses</li>
+          <li><span class="prob-key-dot prob-key-long" aria-hidden="true"></span>100 tosses</li>
+          <li><span class="prob-key-line" aria-hidden="true"></span>Model probability: <strong id="prob-plot-bias">70%</strong></li>
+        </ul>
+        <p class="lesson-note">Each dot is one fresh run. Only its horizontal position gives a value. The vertical spacing lets you see separate runs that land at the same percentage.</p>
+      </figure>
+      <p class="lesson-note" id="prob-comparison-spreads" hidden></p>
+      <p class="lesson-note" id="prob-comparison-status" role="status">No comparison runs yet.</p>
+      <p class="prob-reaction" id="prob-opening-feedback" role="status">Come back to the opening question after you’ve seen two fresh ten-toss runs.</p>
+
+      <details>
+        <summary>Read all run counts and frequencies</summary>
+        <table class="prob-table">
+          <caption>Separate simulated runs at the selected bias</caption>
+          <thead><tr><th scope="col">Run</th><th scope="col">10 tosses · H and frequency</th><th scope="col">100 tosses · H and frequency</th></tr></thead>
+          <tbody id="prob-comparison-rows"><tr><td colspan="3">No comparison runs yet.</td></tr></tbody>
+        </table>
+      </details>
+      <p>The <strong>fraction of heads</strong> typically varies less across larger runs at the same bias. Compare the spread again with a new set of runs. In a particular run, adding a toss can move the observed fraction farther from the model probability.</p>
+
+      <details>
+        <summary>Worked example: observed frequency and expected count</summary>
+        <div class="lesson-prose">
+          <p>Imagine one run with 6 heads out of 10 and another with 8 out of 10. Their observed heads frequencies are 60% and 80%. These are example counts, separate from your simulated results.</p>
+          <p>At <var>p</var> = 0.70, the expected count in ten tosses is 10 × 0.70 = 7 heads. Imagine writing 1 each time heads occurs and 0 each time tails occurs. The expected value of each entry is 0.70, and the ten expected values add to 7.</p>
+          <p>Seven describes the average head count across repeated ten-toss runs. Every whole count from 0 through 10 is possible at 70%, and those counts do not all have the same probability. At 0% or 100% heads, the model gives only one possible head count.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="lesson-panel" id="prob-pairs" aria-labelledby="prob-pairs-title">
+      <h3 id="prob-pairs-title">Challenge: at least one head</h3>
+      <p>In two independent tosses, what is the chance of getting at least one head? Here <strong>one pair is one trial</strong>. A pair can have one head or two and still counts as one success.</p>
+
+      <div class="prob-lab-grid">
+        <div class="lesson-station">
+          <form id="prob-pair-prediction-form">
+            <fieldset id="prob-pair-prediction-controls" disabled>
+              <legend>Predict the event probability</legend>
+              <p class="lesson-note">Both tosses use the <a href="#prob-lab">same coin setting</a>. The chance of heads on one toss is <strong id="prob-pair-bias">70%</strong>.</p>
+              <div class="prob-field">
+                <label for="prob-pair-guess">Chance of at least one head (%)</label>
+                <input type="number" id="prob-pair-guess" min="0" max="100" step="0.01" inputmode="decimal" required>
+              </div>
+              <button class="lesson-button" type="submit">Check predicted probability</button>
+            </fieldset>
+          </form>
+          <p class="lesson-note" id="prob-pair-feedback" role="status">Your answer will be checked against the model probability. Pair sampling gives a separate frequency you can compare with it.</p>
+          <fieldset id="prob-pair-controls" disabled>
+            <legend>Sample pairs</legend>
+            <div class="prob-actions">
+              <button class="lesson-button" type="button" data-prob-pairs="1">Add 1 pair</button>
+              <button class="lesson-button lesson-primary" type="button" data-prob-pairs="100">Add 100 pairs</button>
+              <button class="lesson-button" id="prob-reset-pairs" type="button">Reset pair tally</button>
+            </div>
+          </fieldset>
+        </div>
+
+        <section class="lesson-station" aria-labelledby="prob-pair-results-title">
+          <h4 id="prob-pair-results-title">Pair lab · Simulated results</h4>
+          <dl class="prob-metrics">
+            <div><dt>Pairs sampled</dt><dd id="prob-pair-total">0</dd></div>
+            <div><dt>Pairs with at least one H</dt><dd id="prob-pair-hits">0</dd></div>
+            <div><dt>Model event probability</dt><dd id="prob-pair-model">—</dd></div>
+            <div><dt>Observed event frequency</dt><dd id="prob-pair-observed">—</dd></div>
+          </dl>
+          <p class="lesson-note">The model event probability appears after you check a prediction. The observed frequency appears after you sample at least one pair.</p>
+          <p>Most recent pair: <strong id="prob-last-pair">—</strong></p>
+          <p class="lesson-note" id="prob-pair-status" role="status">No pairs sampled yet.</p>
+        </section>
+      </div>
+
+      <div class="prob-reasoning">
+        <details>
+          <summary>Step 1 · Find the complementary event</summary>
+          <div class="lesson-prose">
+            <p>The sample space for two ordered tosses is {HH, HT, TH, TT}. HT means heads first, tails second. “At least one H” is {HH, HT, TH}. Its <strong>complement</strong> is the event in which it fails: {TT}.</p>
+          </div>
+        </details>
+        <details>
+          <summary>Step 2 · Find the probability of two tails</summary>
+          <div class="lesson-prose">
+            <p>Each tail has probability 1 − <var>p</var>. Independence means the chance of tails on the second toss remains 1 − <var>p</var> after a tail on the first. Multiply the two probabilities to get P(TT) = (1 − <var>p</var>)².</p>
+            <p>Listing four outcomes alone gives no reason to weight them equally. They each have probability ¼ here only when the coin is fair and the tosses are independent.</p>
+          </div>
+        </details>
+        <details>
+          <summary>Step 3 · Subtract from one and check at 70%</summary>
+          <div class="lesson-prose">
+            <p>The event and its complement together account for every pair. Their probabilities add to one.</p>
+            <p class="prob-equation">P(at least one H) = 1 − (1 − <var>p</var>)²</p>
+            <p>At <var>p</var> = 0.70, two tails have probability 0.30 × 0.30 = 0.09. Subtract from one to get 0.91, or <strong>91%</strong>. Sample pairs at 70% to see how a finite tally compares with that prediction.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="prob-bridge-title">
+      <h3 id="prob-bridge-title">What happens after a streak?</h3>
+      <p>At the original 70% setting, suppose the coin produces four tails in a row. What chance does this model assign to heads next?</p>
+      <details>
+        <summary>Check your reasoning</summary>
+        <div class="lesson-prose">
+          <p>The chance is still 70%. The bias stays fixed, and the tosses are independent. The streak changes the observed tally. The model assigns the same probability to the next toss.</p>
+        </div>
+      </details>
+      <p>Quantum theory also assigns probabilities to specified measurement outcomes. When we repeat the same preparation and measurement, we can compare those predictions with observed frequencies, as we did in the coin lab. Later lessons will explain where the quantum probabilities come from.</p>
+    </section>
+
+    <details class="lesson-panel prob-expansion" id="prob-stations">
+      <summary>Probability Lab · Eight optional stations</summary>
+      <p>The Observatory shares the coin lab’s bias and current tally. The other stations keep their own settings and results.</p>
+      <fieldset id="prob-station-picker" disabled data-prob-enable>
+        <legend class="prob-sr-only">Choose a station</legend>
+        <div class="prob-actions">
+          <button class="lesson-button" type="button" data-prob-station="observatory" aria-controls="station-observatory" aria-pressed="true">Coin Run Observatory</button>
+          <button class="lesson-button" type="button" data-prob-station="tree" aria-controls="station-tree" aria-pressed="false">Probability Tree House</button>
+          <button class="lesson-button" type="button" data-prob-station="factory" aria-controls="station-factory" aria-pressed="false">Binomial Distribution Factory</button>
+          <button class="lesson-button" type="button" data-prob-station="board" aria-controls="station-board" aria-pressed="false">Galton Board</button>
+          <button class="lesson-button" type="button" data-prob-station="streak" aria-controls="station-streak" aria-pressed="false">Streak Detective</button>
+          <button class="lesson-button" type="button" data-prob-station="vault" aria-controls="station-vault" aria-pressed="false">Conditional Probability Vault</button>
+          <button class="lesson-button" type="button" data-prob-station="rare" aria-controls="station-rare" aria-pressed="false">Rare Event Challenge</button>
+          <button class="lesson-button" type="button" data-prob-station="cal" aria-controls="station-cal" aria-pressed="false">Probability Calibration Game</button>
+        </div>
+      </fieldset>
+
+      <section class="lesson-station prob-experiment" id="station-observatory" data-prob-panel="observatory" aria-labelledby="obs-title">
+        <h3 id="obs-title" tabindex="-1">Coin Run Observatory</h3>
+        <p>Add a batch to the shared current run. The chart shows the running heads frequency and the horizontal model reference. Each new dot uses all tosses up to that index.</p>
+        <div class="prob-scene-slot" data-prob-scene="observatory"></div>
+        <p class="prob-result" id="obs-current">70% heads · 0 tosses · Observed frequency — · Last face —.</p>
+        <fieldset disabled data-prob-enable>
+          <legend>Toss the shared coin</legend>
+          <div class="prob-actions">
+            <button class="lesson-button" type="button" data-prob-tosses="1" data-toss-view="observatory">Add 1 toss</button>
+            <button class="lesson-button lesson-primary" type="button" data-prob-tosses="1000" data-toss-view="observatory">Add 1,000 tosses</button>
+            <a href="#prob-lab">Change the shared bias or start a fresh run</a>
+          </div>
+        </fieldset>
+        <details>
+          <summary>Math and three missions</summary>
+          <p>After n tosses with h heads, the observed frequency is h/n. A new toss can move a particular tally farther from p. Longer runs typically show less variation in frequency across independent runs.</p>
+          <fieldset disabled data-prob-enable>
+            <legend>Find two short runs that differ</legend>
+            <p>Sample two fresh ten-toss runs at the shared bias. Try again if they match. These samples stay separate from the tally and original comparison.</p>
+            <button class="lesson-button" type="button" id="obs-two">Sample two short runs</button>
+            <p class="lesson-note" id="obs-two-feedback" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-prob-enable>
+            <legend>Predict the next toss after a streak</legend>
+            <p>Teaching example · Eight tails in a row at a fixed 70% chance of heads on every independent toss.</p>
+            <label class="prob-field">Chance of heads next (%) <input type="number" id="obs-streak-guess" min="0" max="100" step="1"></label>
+            <button class="lesson-button" type="button" id="obs-streak-check">Check prediction</button>
+            <p class="lesson-note" id="obs-streak-feedback" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-prob-enable>
+            <legend>Compare variation across three groups</legend>
+            <p>Each group has eight fresh 10-toss runs and eight fresh 100-toss runs. Spread is maximum minus minimum observed heads frequency, in percentage points.</p>
+            <button class="lesson-button" type="button" id="obs-groups">Generate three fresh groups</button>
+            <table class="prob-table">
+              <caption>Observed spreads by group at the shared bias</caption>
+              <thead><tr><th scope="col">Group</th><th scope="col">10-toss spread (pp)</th><th scope="col">100-toss spread (pp)</th><th scope="col">Wider spread</th></tr></thead>
+              <tbody id="obs-group-rows"><tr><td colspan="4">No samples yet.</td></tr></tbody>
+            </table>
+            <p class="lesson-note" id="obs-group-feedback" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+
+      <section class="lesson-station prob-experiment" id="station-tree" data-prob-panel="tree" aria-labelledby="tree-title" hidden>
+        <h3 id="tree-title" tabindex="-1">Probability Tree House</h3>
+        <p>Follow one ordered path, then switch to an event that includes several paths. The Tree House has its own coin setting.</p>
+        <fieldset disabled data-prob-enable>
+          <legend>Set up the tree</legend>
+          <div class="prob-fields">
+            <label>Tosses <select id="tree-n"><option>2</option><option>3</option></select></label>
+            <label>Heads chance (%) <input id="tree-p" type="number" min="0" max="100" step="1" value="70"></label>
+            <label>Highlight <select id="tree-event"><option value="path">One path</option><option value="one">Exactly one H</option><option value="some">At least one H</option><option value="none">No H</option></select></label>
+            <label>Ordered path <select id="tree-path"><option>HH</option><option selected>HT</option><option>TH</option><option>TT</option></select></label>
+          </div>
+        </fieldset>
+        <div class="prob-scene-slot" data-prob-scene="tree"></div>
+        <p class="prob-result" id="tree-reading">HT selected · 21%.</p>
+        <div class="prob-scroll" role="region" aria-label="Tree path weights" tabindex="0">
+          <table class="prob-table">
+            <caption>Ordered leaves · The fair column appears when you request it.</caption>
+            <thead><tr><th scope="col">Leaf</th><th scope="col">Branch probabilities</th><th scope="col">Path probability</th><th scope="col">Selected</th><th scope="col" data-tree-fair hidden>Fair reference</th></tr></thead>
+            <tbody id="tree-rows">
+              <tr><th scope="row">HH</th><td>70% × 70%</td><td>49%</td><td>—</td><td data-tree-fair hidden>25%</td></tr>
+              <tr><th scope="row">HT</th><td>70% × 30%</td><td>21%</td><td>Yes</td><td data-tree-fair hidden>25%</td></tr>
+              <tr><th scope="row">TH</th><td>30% × 70%</td><td>21%</td><td>—</td><td data-tree-fair hidden>25%</td></tr>
+              <tr><th scope="row">TT</th><td>30% × 30%</td><td>9%</td><td>—</td><td data-tree-fair hidden>25%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <details>
+          <summary>Math and three missions</summary>
+          <p>Multiply branch probabilities along an ordered path. Add the weights of disjoint leaves to find an event’s probability. At each reachable history, independence keeps the H branch at p and the T branch at 1 − p.</p>
+          <fieldset disabled data-prob-enable>
+            <legend>Find exactly one H in two tosses</legend>
+            <div class="prob-actions">
+              <label class="prob-check"><input type="checkbox" value="HH" data-tree-member> HH</label>
+              <label class="prob-check"><input type="checkbox" value="HT" data-tree-member> HT</label>
+              <label class="prob-check"><input type="checkbox" value="TH" data-tree-member> TH</label>
+              <label class="prob-check"><input type="checkbox" value="TT" data-tree-member> TT</label>
+              <button class="lesson-button" type="button" id="tree-check-one">Check selected leaves</button>
+            </div>
+            <p class="lesson-note" id="tree-one-feedback" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-prob-enable>
+            <legend>Find at least one H two ways</legend>
+            <p>Use two tosses. Enter the sum of HH, HT, and TH, then calculate 100% minus the TT probability. Enter both answers as percentages.</p>
+            <div class="prob-fields">
+              <label>Sum of leaves (%) <input id="tree-sum-guess" type="number" min="0" max="100" step="0.01"></label>
+              <label>Using the complement (%) <input id="tree-complement-guess" type="number" min="0" max="100" step="0.01"></label>
+            </div>
+            <button class="lesson-button" type="button" id="tree-check-some">Compare the methods</button>
+            <p class="lesson-note" id="tree-some-feedback" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-prob-enable>
+            <legend>Compare fair and biased weights</legend>
+            <p>Set a biased coin and compare its tree with a fair one using the same number and order of leaves.</p>
+            <button class="lesson-button" type="button" id="tree-compare-fair">Show both weights</button>
+            <p class="lesson-note" id="tree-fair-feedback" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+
+      <section class="lesson-station prob-experiment" id="station-factory" data-prob-panel="factory" aria-labelledby="factory-title" hidden>
+        <h3 id="factory-title" tabindex="-1">Binomial Distribution Factory</h3>
+        <p>Predict the most likely head count for the opening settings, then simulate. Each run contributes one count K to one bin. The scale shows relative frequencies from 0% to 100%.</p>
+        <fieldset disabled data-prob-enable>
+          <legend>Set the experiment</legend>
+          <div class="prob-fields">
+            <label>Heads chance (%) <input id="factory-p" type="number" min="0" max="100" step="1" value="70"></label>
+            <label>Tosses per run n <input id="factory-n" type="number" min="1" max="20" step="1" value="10"></label>
+            <label>Independent runs M <input id="factory-m" type="number" min="1" max="1000" step="1" value="200"></label>
+          </div>
+          <div class="prob-actions">
+            <button class="lesson-button" type="button" id="factory-run">Simulate without a mode prediction</button>
+            <button class="lesson-button" type="button" id="factory-clear">Clear this histogram</button>
+          </div>
+        </fieldset>
+        <div class="prob-scene-slot" data-prob-scene="factory"></div>
+        <p class="prob-result" id="factory-reading">200 planned runs of 10 tosses at 70% heads.</p>
+        <div class="prob-scroll" role="region" aria-label="Head count bins" tabindex="0">
+          <table class="prob-table">
+            <caption>Each row covers one possible bin. The reference columns appear after a fair/biased comparison.</caption>
+            <thead><tr><th scope="col">Heads k</th><th scope="col">Runs</th><th scope="col">Observed</th><th scope="col">Model</th><th scope="col" data-factory-ref hidden>Reference observed</th><th scope="col" data-factory-ref hidden>Reference model</th></tr></thead>
+            <tbody id="factory-rows"><tr><td colspan="4">Simulate a batch to inspect the bins.</td></tr></tbody>
+          </table>
+        </div>
+        <details>
+          <summary>Math and three missions</summary>
+          <p>P(K = k) = C(n,k)pᵏ(1 − p)ⁿ⁻ᵏ. Here n is tosses per run, K is the head count, k is one particular count, p is the chance of H, and C(n,k) counts paths with k heads. The expected count is np.</p>
+          <fieldset disabled data-prob-enable>
+            <legend>Predict the binomial mode</legend>
+            <p>Use ten tosses at 70% heads. Your guess describes the largest exact model weight. The tallest observed bar can differ.</p>
+            <label class="prob-field">Most likely count <input id="factory-mode-guess" type="number" min="0" max="10" step="1"></label>
+            <button class="lesson-button" type="button" id="factory-check-mode">Check and simulate a fresh batch</button>
+            <p class="lesson-note" id="factory-mode-feedback" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-prob-enable>
+            <legend>Find a noninteger expectation</legend>
+            <p>Try five tosses at 50%. Can the long-run mean lie between two possible counts?</p>
+            <button class="lesson-button" type="button" id="factory-check-mean">Check expected count</button>
+            <p class="lesson-note" id="factory-mean-feedback" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-prob-enable>
+            <legend>Compare fair and biased distributions</legend>
+            <p>Simulate any bias, save that histogram, then simulate again at the same n. Use 50% in one case and a different bias in the other.</p>
+            <div class="prob-actions">
+              <button class="lesson-button" type="button" id="factory-pin">Save the current histogram</button>
+              <button class="lesson-button" type="button" id="factory-compare">Compare with saved histogram</button>
+            </div>
+            <p class="lesson-note" id="factory-baseline"></p>
+            <p class="lesson-note" id="factory-compare-feedback" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+
+      <section class="lesson-station prob-experiment" id="station-board" data-prob-panel="board" aria-labelledby="board-title" hidden>
+        <h3 id="board-title" tabindex="-1">Galton Board</h3>
+        <p>Drop a ball and read its L/R path. Every row makes one independent decision. The number of R decisions gives the bin number.</p>
+        <fieldset disabled data-prob-enable>
+          <legend>Set and run the board</legend>
+          <div class="prob-fields">
+            <label>Rows <input id="board-r" type="number" min="1" max="8" step="1" value="4"></label>
+            <label>Rightward chance q (%) <input id="board-q" type="number" min="0" max="100" step="1" value="50"></label>
+          </div>
+          <div class="prob-actions">
+            <button class="lesson-button lesson-primary" type="button" id="board-one">Drop 1 ball</button>
+            <button class="lesson-button" type="button" id="board-many">Drop 100 balls</button>
+            <button class="lesson-button" type="button" id="board-clear">Clear this board tally</button>
+          </div>
+        </fieldset>
+        <div class="prob-scene-slot" data-prob-scene="board"></div>
+        <p class="prob-result" id="board-reading">0 balls · Last sampled path —.</p>
+        <div class="prob-scroll" role="region" aria-label="Galton bins" tabindex="0">
+          <table class="prob-table">
+            <caption>Bin index counts right decisions. Model weights appear after a mission check or a request.</caption>
+            <thead><tr><th scope="col">Bin</th><th scope="col">Balls</th><th scope="col">Observed</th><th scope="col">Model</th></tr></thead>
+            <tbody id="board-rows"><tr><td colspan="4">Drop a ball to begin.</td></tr></tbody>
+          </table>
+        </div>
+        <details>
+          <summary>Math and three missions</summary>
+          <p>The number of right decisions has a binomial distribution with r decisions and rightward probability q. At fair settings, an odd row count gives a tie between the two center bins.</p>
+          <fieldset disabled data-prob-enable>
+            <legend>Predict the model’s most likely bins</legend>
+            <p>Use a fair board. Enter every bin that ties for the largest probability, separated by commas if needed.</p>
+            <label class="prob-field">Bin number or numbers <input id="board-mode-guess" type="text" autocomplete="off"></label>
+            <div class="prob-actions">
+              <button class="lesson-button" type="button" id="board-check-mode">Check predicted bins</button>
+              <button class="lesson-button" type="button" id="board-show-model">Show model weights</button>
+            </div>
+            <p class="lesson-note" id="board-mode-feedback" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-prob-enable>
+            <legend>Predict a distribution shift</legend>
+            <p>Lock a directional prediction from your current setting. Then change q while keeping the row count.</p>
+            <label class="prob-field">The mean bin will… <select id="board-shift-guess"><option value="">Choose</option><option value="left">Move left</option><option value="right">Move right</option><option value="same">Stay put</option></select></label>
+            <div class="prob-actions">
+              <button class="lesson-button" type="button" id="board-lock-shift">Lock guess and starting setting</button>
+              <button class="lesson-button" type="button" id="board-check-shift">Compare mean bins</button>
+            </div>
+            <p class="lesson-note" id="board-shift-feedback" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-prob-enable>
+            <legend>Build two paths to the same bin</legend>
+            <p>Use one L or R per row. These are constructed paths, separate from the drop tally.</p>
+            <div class="prob-fields">
+              <label>Constructed path 1 <input id="board-path-a" type="text" maxlength="8" autocomplete="off" spellcheck="false"></label>
+              <label>Constructed path 2 <input id="board-path-b" type="text" maxlength="8" autocomplete="off" spellcheck="false"></label>
+            </div>
+            <button class="lesson-button" type="button" id="board-check-paths">Compare endpoints</button>
+            <p class="lesson-note" id="board-path-feedback" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+
+      <section class="lesson-station prob-experiment" id="station-streak" data-prob-panel="streak" aria-labelledby="streak-title" hidden>
+        <h3 id="streak-title" tabindex="-1">Streak Detective</h3>
+        <p>Inspect the labeled example or draw a fresh sequence. Then report the first and last positions of a streak.</p>
+        <fieldset disabled data-prob-enable>
+          <legend>Choose a sequence</legend>
+          <div class="prob-fields">
+            <label>Random sequence heads chance (%) <input id="streak-p" type="number" min="0" max="100" step="1" value="70"></label>
+            <label>Random sequence length <select id="streak-n"><option>20</option><option selected>40</option><option>80</option></select></label>
+          </div>
+          <div class="prob-actions">
+            <button class="lesson-button" type="button" id="streak-example">Load teaching example</button>
+            <button class="lesson-button lesson-primary" type="button" id="streak-generate">Generate a fresh sequence</button>
+          </div>
+        </fieldset>
+        <div class="prob-scene-slot" data-prob-scene="streak"></div>
+        <p class="prob-result" id="streak-reading">Teaching example · Fixed 70% heads · 12 specified outcomes.</p>
+        <ol class="prob-indexed" id="streak-sequence" role="list" aria-label="Indexed tosses">
+          <li aria-label="Toss 1: tails">T</li><li aria-label="Toss 2: tails">T</li><li aria-label="Toss 3: tails">T</li><li aria-label="Toss 4: tails">T</li>
+          <li aria-label="Toss 5: heads">H</li><li aria-label="Toss 6: heads">H</li><li aria-label="Toss 7: tails">T</li><li aria-label="Toss 8: heads">H</li>
+          <li aria-label="Toss 9: heads">H</li><li aria-label="Toss 10: heads">H</li><li aria-label="Toss 11: tails">T</li><li aria-label="Toss 12: tails">T</li>
+        </ol>
+        <details>
+          <summary>Math and three missions</summary>
+          <p>Multiply independent probabilities for specified positions. A longer sequence can contain a streak at many different starting points, while the probability of the next toss depends only on the fixed bias in this model.</p>
+          <fieldset disabled data-prob-enable>
+            <legend>Predict heads after four tails</legend>
+            <p>Use the fixed 70% teaching example, regardless of your random sequence setting.</p>
+            <label class="prob-field">Heads next (%) <input id="streak-head-guess" type="number" min="0" max="100" step="0.01"></label>
+            <button class="lesson-button" type="button" id="streak-check-head">Check next-toss forecast</button>
+            <p class="lesson-note" id="streak-head-feedback" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-prob-enable>
+            <legend>Compare specified positions with one next toss</legend>
+            <div class="prob-fields">
+              <label>Four specified tails at 70% heads (%) <input id="streak-four-guess" type="number" min="0" max="100" step="0.01"></label>
+              <label>Tails on the next toss after that streak (%) <input id="streak-tail-guess" type="number" min="0" max="100" step="0.01"></label>
+            </div>
+            <button class="lesson-button" type="button" id="streak-check-four">Compare both probabilities</button>
+            <p class="lesson-note" id="streak-four-feedback" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-prob-enable>
+            <legend>Find a contiguous streak in a displayed sequence</legend>
+            <p>Report at least three matching outcomes in consecutive positions. Use inclusive position numbers.</p>
+            <div class="prob-fields">
+              <label>Start <input id="streak-start" type="number" min="1" max="80" step="1"></label>
+              <label>End <input id="streak-end" type="number" min="1" max="80" step="1"></label>
+            </div>
+            <button class="lesson-button" type="button" id="streak-check-span">Check and mark positions</button>
+            <p class="lesson-note" id="streak-span-feedback" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+
+      <section class="lesson-station prob-experiment" id="station-vault" data-prob-panel="vault" aria-labelledby="vault-title" hidden>
+        <h3 id="vault-title" tabindex="-1">Conditional Probability Vault</h3>
+        <p>Start with three red balls marked R and two blue balls marked B. Draw once and check the composition before drawing again.</p>
+        <fieldset disabled data-prob-enable>
+          <legend>Choose the starting composition</legend>
+          <div class="prob-fields">
+            <label>Red balls R <input id="vault-r" type="number" min="0" max="8" step="1" value="3"></label>
+            <label>Blue balls B <input id="vault-b" type="number" min="0" max="8" step="1" value="2"></label>
+            <label>Rule <select id="vault-mode"><option value="with">With replacement</option><option value="without">Without replacement</option></select></label>
+          </div>
+          <div class="prob-actions">
+            <button class="lesson-button lesson-primary" type="button" id="vault-draw">Draw next ball</button>
+            <button class="lesson-button" type="button" id="vault-reset">Restore starting composition</button>
+          </div>
+        </fieldset>
+        <div class="prob-scene-slot" data-prob-scene="vault"></div>
+        <p class="prob-result" id="vault-reading">Starting mix: 3 R and 2 B. First draw: R 60%, B 40%.</p>
+        <p class="lesson-note" id="vault-second">Draw one ball to see the composition before draw two.</p>
+        <p class="lesson-note" id="vault-result" role="status">No ordered result yet.</p>
+        <details>
+          <summary>Math and four missions</summary>
+          <p>For an ordered path, multiply the first-draw probability by the conditional probability for the second draw. With replacement, return the first ball before drawing again. A second draw that cannot happen is unavailable. Conditioning on a first result with zero chance is undefined.</p>
+          <fieldset disabled data-prob-enable>
+            <legend>Calculate two reds for each rule</legend>
+            <div class="prob-fields">
+              <label>With replacement (%) <input id="vault-rr-with" type="number" min="0" max="100" step="0.01"></label>
+              <label>Without replacement (%) <input id="vault-rr-without" type="number" min="0" max="100" step="0.01"></label>
+            </div>
+            <div class="prob-actions">
+              <button class="lesson-button" type="button" id="vault-check-rr-with">Check with replacement</button>
+              <button class="lesson-button" type="button" id="vault-check-rr-without">Check without replacement</button>
+            </div>
+            <p class="lesson-note" id="vault-rr-feedback" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-prob-enable>
+            <legend>Predict when the first draw matters</legend>
+            <p>Use a mix with both colors. Predict which rule changes the chance of a red on draw two between an R-first and B-first path.</p>
+            <label class="prob-field">Dependent draws <select id="vault-depend-guess"><option value="">Choose</option><option value="with">With replacement</option><option value="without">Without replacement</option><option value="neither">Neither rule</option></select></label>
+            <button class="lesson-button" type="button" id="vault-check-depend">Check and reveal conditional probabilities</button>
+            <p class="lesson-note" id="vault-depend-feedback" role="status"></p>
+            <table class="prob-table" id="vault-depend-table" hidden>
+              <caption>Chance of R on draw two, given the first result</caption>
+              <thead><tr><th scope="col">Rule</th><th scope="col">After R</th><th scope="col">After B</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">With replacement</th><td id="vault-with-r">—</td><td id="vault-with-b">—</td></tr>
+                <tr><th scope="row">Without replacement</th><td id="vault-without-r">—</td><td id="vault-without-b">—</td></tr>
+              </tbody>
+            </table>
+          </fieldset>
+          <fieldset disabled data-prob-enable>
+            <legend>Use the complement of two blues</legend>
+            <p>Use the current replacement rule. Predict the probability of at least one R in two draws.</p>
+            <label class="prob-field">At least one R (%) <input id="vault-some-guess" type="number" min="0" max="100" step="0.01"></label>
+            <button class="lesson-button" type="button" id="vault-check-some">Check complement</button>
+            <p class="lesson-note" id="vault-some-feedback" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+
+      <section class="lesson-station prob-experiment" id="station-rare" data-prob-panel="rare" aria-labelledby="rare-title" hidden>
+        <h3 id="rare-title" tabindex="-1">Rare Event Challenge</h3>
+        <p>One simulated detector trial either records the chosen event or does not. Start at 1% per trial. Compare the chance on the next trial with the chance of at least one event across 100 independent trials.</p>
+        <fieldset disabled data-prob-enable>
+          <legend>Set up independent trials</legend>
+          <div class="prob-fields">
+            <label>Event chance per trial (%) <input id="rare-p" type="number" min="0" max="100" step="0.01" value="1"></label>
+            <label>Trials per run n <input id="rare-n" type="number" min="0" max="2000" step="1" value="100"></label>
+          </div>
+          <div class="prob-actions">
+            <button class="lesson-button lesson-primary" type="button" id="rare-one">Run once</button>
+            <button class="lesson-button" type="button" id="rare-many">Run 100 repetitions</button>
+            <button class="lesson-button" type="button" id="rare-clear">Clear run results</button>
+          </div>
+          <p class="lesson-note">The simulator supports up to 2,000 trials per run. Changing p or n starts a separate tally.</p>
+        </fieldset>
+        <div class="prob-scene-slot" data-prob-scene="rare"></div>
+        <dl class="prob-metrics">
+          <div><dt>Model chance next trial</dt><dd id="rare-next">1%</dd></div>
+          <div><dt>Model chance of any event this run</dt><dd id="rare-any">63.40%</dd></div>
+          <div><dt>Last run · actual events</dt><dd id="rare-last">—</dd></div>
+          <div><dt>Runs with any event / total runs</dt><dd id="rare-observed">—</dd></div>
+        </dl>
+        <p class="lesson-note" id="rare-status" role="status">No runs yet.</p>
+        <details>
+          <summary>Math and three missions</summary>
+          <p>P(at least one event) = 1 − (1 − p)ⁿ. Here p is the chance in one trial and n is the number of independent trials. The complementary probability (1 − p)ⁿ is the chance of zero events. Zero trials cannot yield an event.</p>
+          <fieldset disabled data-prob-enable>
+            <legend>Find the first n strictly over a target</legend>
+            <p>Enter a candidate whole n. Its chance must exceed the target, and the previous n must be at or below it. The check uses full precision.</p>
+            <div class="prob-fields">
+              <label>Target probability (%) <input id="rare-target" type="number" min="0" max="100" step="0.01" value="50"></label>
+              <label>Candidate n <input id="rare-candidate" type="number" min="0" max="2000" step="1"></label>
+            </div>
+            <button class="lesson-button" type="button" id="rare-check-target">Check candidate and its predecessor</button>
+            <p class="lesson-note" id="rare-target-feedback" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-prob-enable>
+            <legend>Compare one trial with a 100-trial run</legend>
+            <label class="prob-field">Chance of at least one in 100 trials (%) <input id="rare-hundred-guess" type="number" min="0" max="100" step="0.01"></label>
+            <button class="lesson-button" type="button" id="rare-check-hundred">Compare with the next-trial chance</button>
+            <p class="lesson-note" id="rare-hundred-feedback" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-prob-enable>
+            <legend>Predict whether zero is still possible</legend>
+            <p>Find settings where any event is more likely than not. Predict whether a run can still have no events.</p>
+            <label class="prob-field">Can the current run have zero events? <select id="rare-zero-guess"><option value="">Choose</option><option value="yes">Yes</option><option value="no">No</option></select></label>
+            <button class="lesson-button" type="button" id="rare-check-zero">Check and sample one run</button>
+            <p class="lesson-note" id="rare-zero-feedback" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+
+      <section class="lesson-station prob-experiment" id="station-cal" data-prob-panel="cal" aria-labelledby="cal-title" hidden>
+        <h3 id="cal-title" tabindex="-1">Probability Calibration Game</h3>
+        <p>Forecast a starred token before drawing. Every draw uses the selected mixture, with the token returned afterward. A locked forecast holds its mixture until you draw or cancel.</p>
+        <fieldset disabled data-prob-enable>
+          <legend>Forecast, lock, then draw</legend>
+          <div class="prob-fields">
+            <label>Mixture <select id="cal-mixture"><option value="low">2 starred, 6 plain</option><option value="mid" selected>5 starred, 5 plain</option><option value="high">6 starred, 2 plain</option></select></label>
+            <label>Forecast (%) <select id="cal-forecast">
+              <option value="">Choose a forecast</option><option>0</option><option>10</option><option>20</option><option>30</option><option>40</option><option>50</option><option>60</option><option>70</option><option>80</option><option>90</option><option>100</option>
+            </select></label>
+          </div>
+          <div class="prob-actions">
+            <button class="lesson-button" type="button" id="cal-lock">Lock forecast</button>
+            <button class="lesson-button lesson-primary" type="button" id="cal-draw" disabled>Draw one token</button>
+            <button class="lesson-button" type="button" id="cal-cancel" disabled>Cancel locked forecast</button>
+          </div>
+        </fieldset>
+        <div class="prob-scene-slot" data-prob-scene="cal"></div>
+        <p class="prob-result" id="cal-reading">Mixture: 5 starred and 5 plain. Completed forecasts: 0.</p>
+        <p class="lesson-note" id="cal-status" role="status">Choose a forecast before drawing.</p>
+        <div class="prob-scroll" role="region" aria-label="Forecast groups" tabindex="0">
+          <table class="prob-table">
+            <caption>Exact forecast groups in 10-point steps</caption>
+            <thead><tr><th scope="col">Forecast</th><th scope="col">Trials</th><th scope="col">Stars drawn</th><th scope="col">Mean forecast</th><th scope="col">Observed star frequency</th></tr></thead>
+            <tbody id="cal-groups">
+              <tr><th scope="row">0%</th><td>0</td><td>0</td><td>—</td><td>—</td></tr>
+              <tr><th scope="row">10%</th><td>0</td><td>0</td><td>—</td><td>—</td></tr>
+              <tr><th scope="row">20%</th><td>0</td><td>0</td><td>—</td><td>—</td></tr>
+              <tr><th scope="row">30%</th><td>0</td><td>0</td><td>—</td><td>—</td></tr>
+              <tr><th scope="row">40%</th><td>0</td><td>0</td><td>—</td><td>—</td></tr>
+              <tr><th scope="row">50%</th><td>0</td><td>0</td><td>—</td><td>—</td></tr>
+              <tr><th scope="row">60%</th><td>0</td><td>0</td><td>—</td><td>—</td></tr>
+              <tr><th scope="row">70%</th><td>0</td><td>0</td><td>—</td><td>—</td></tr>
+              <tr><th scope="row">80%</th><td>0</td><td>0</td><td>—</td><td>—</td></tr>
+              <tr><th scope="row">90%</th><td>0</td><td>0</td><td>—</td><td>—</td></tr>
+              <tr><th scope="row">100%</th><td>0</td><td>0</td><td>—</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <details>
+          <summary>Read recent trial records</summary>
+          <div class="prob-scroll" role="region" aria-label="Recent forecast trials" tabindex="0">
+            <table class="prob-table">
+              <caption>Latest 20 completed forecasts, oldest first</caption>
+              <thead><tr><th scope="col">Trial</th><th scope="col">Mixture</th><th scope="col">Forecast</th><th scope="col">Known chance</th><th scope="col">Result</th></tr></thead>
+              <tbody id="cal-records"><tr><td colspan="5">No completed forecasts.</td></tr></tbody>
+            </table>
+          </div>
+        </details>
+        <details>
+          <summary>Math and three missions</summary>
+          <p>The known chance of drawing a star is starred tokens divided by total tokens. Calibration compares many forecasts with the observed star frequency within each forecast group. A single outcome gives limited evidence about the quality of a probability forecast.</p>
+          <fieldset disabled data-prob-enable>
+            <legend>Forecast three different mixtures</legend>
+            <button class="lesson-button" type="button" id="cal-check-mixtures">Check completed mixtures</button>
+            <p class="lesson-note" id="cal-mixture-feedback" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-prob-enable>
+            <legend>Compare the 50% forecast group</legend>
+            <button class="lesson-button" type="button" id="cal-check-fifty">Inspect 50% forecasts</button>
+            <p class="lesson-note" id="cal-fifty-feedback" role="status"></p>
+          </fieldset>
+          <fieldset disabled data-prob-enable>
+            <legend>Interpret a surprising outcome</legend>
+            <p>Choose a recent forecast between 0% and 100%. If you have a surprise, use it. Otherwise use a recorded trial and reason about what an unexpected outcome would mean.</p>
+            <div class="prob-fields">
+              <label>Recorded forecast <select id="cal-example"><option value="">Complete a forecast first</option></select></label>
+              <label>What can one surprising result tell you?
+                <select id="cal-interpret"><option value="">Choose</option><option value="disprove">It disproves the forecast</option><option value="context">The less likely outcome can occur. Compare many forecasts.</option></select>
+              </label>
+            </div>
+            <button class="lesson-button" type="button" id="cal-check-example">Check using this record</button>
+            <p class="lesson-note" id="cal-example-feedback" role="status"></p>
+          </fieldset>
+        </details>
+      </section>
+    </details>
+
+    <nav class="lesson-next" aria-label="Continue the course">
+      <a href="../../index.html">Course homepage</a>
+      <a class="lesson-button lesson-primary" href="../5_math_bridge/5_math_bridge.html">
+        Next lesson: Math Bridge <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

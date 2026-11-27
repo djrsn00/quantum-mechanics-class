@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Change the measurement basis, calculate quantum outcome probabilities, and compare the Born rule with simulated measurements.">
+  <title>Measurement and the Born Rule | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+  <script type="module" src="./scripts/lesson.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)"
+                  stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none"
+                   stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8"
+                stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none"
+                   stroke="url(#logo-spectrum)" stroke-width="1.6"
+                   transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none"
+                stroke="#edffef" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static"
+             viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse"
+                  x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 464 83"/>
+            <path class="track-violet" d="M218 54C265 80 333 97 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M218 46v16m-8-8h16"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button"
+              aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and-coordinates/8_bases_and-coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="./13_measurement_and_the_born_rule.html" aria-current="page"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="../22_the_one_dimensional_schrodinger_equation/22_the_one_dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main born-rule-lesson" aria-labelledby="born-title">
+    <header class="lesson-intro">
+      <p class="lesson-kicker">Lesson 13 · Quantum measurement</p>
+      <h2 id="born-title">Measurement and the Born Rule</h2>
+      <p class="lesson-lead">You prepare the same state 100 times. One measurement setting predicts outcome 1 with probability 64%. Another predicts outcome + with probability 98%. How can both predictions be right, and what will a single measurement actually show?</p>
+      <p>The preparation specifies the state. The apparatus setting specifies which basis you measure in. Each run gives one outcome from that setting. Here we use an ideal projective measurement with two outcomes, each associated with one basis ket.</p>
+    </header>
+
+    <section class="lesson-panel born-lab" id="born-lab" aria-labelledby="born-lab-title">
+      <div class="born-stack">
+        <h3 id="born-lab-title">Measurement Lab</h3>
+        <p id="born-static-note" class="lesson-note">The opening preparation and its Z predictions are shown below. The lesson script enables the controls and simulated trials.</p>
+      </div>
+
+      <div class="born-lab-grid">
+        <div class="born-stack">
+          <fieldset class="born-instrument" id="born-setup-controls" disabled>
+            <legend>Prepare and select a basis</legend>
+
+            <label class="born-select-label" for="born-state">Prepared state
+              <select id="born-state">
+                <option value="opening" selected>Opening · (3/5, 4/5)</option>
+                <option value="complex">Imaginary coefficient · (3/5, 4i/5)</option>
+                <option value="zero">Basis state |0⟩</option>
+                <option value="plus">Basis state |+⟩</option>
+              </select>
+            </label>
+
+            <fieldset class="born-question">
+              <legend>Measurement basis</legend>
+              <div class="born-basis-options">
+                <label class="born-choice">
+                  <input type="radio" name="born-basis" value="z" checked> Z · 0/1
+                </label>
+                <label class="born-choice">
+                  <input type="radio" name="born-basis" value="x"> X · +/−
+                </label>
+              </div>
+            </fieldset>
+
+            <p class="lesson-note">Changing preparation or basis starts a fresh count series. Changing the basis keeps the prepared ket fixed.</p>
+            <div class="born-actions">
+              <button type="button" id="born-reset">Reset lab</button>
+            </div>
+          </fieldset>
+
+          <form id="born-prediction">
+            <fieldset class="born-instrument" id="born-prediction-controls" disabled>
+              <legend>Predict before measuring</legend>
+              <p id="born-prediction-question">The opening preparation has amplitudes 3/5 and 4/5 in the 0/1 basis. When you switch to X, what should you do to find the probability of the minus outcome?</p>
+
+              <div class="born-choices" role="radiogroup" aria-labelledby="born-prediction-question">
+                <label class="born-choice">
+                  <input type="radio" name="born-guess" value="combine" required>
+                  Subtract the amplitudes, divide by √2, then square the magnitude.
+                </label>
+                <label class="born-choice">
+                  <input type="radio" name="born-guess" value="square-first">
+                  Square both amplitudes first, then subtract their squares.
+                </label>
+                <label class="born-choice">
+                  <input type="radio" name="born-guess" value="keep">
+                  Keep the probability of outcome 1 and relabel it minus.
+                </label>
+              </div>
+
+              <div class="born-actions">
+                <button class="born-primary" type="submit">Check prediction and unlock trials</button>
+              </div>
+              <p class="born-feedback" id="born-prediction-feedback" role="status" aria-atomic="true"></p>
+            </fieldset>
+          </form>
+
+          <fieldset class="born-instrument" id="born-run-controls" disabled>
+            <legend>Measure freshly prepared systems</legend>
+            <p class="lesson-note">Each simulated trial uses a fresh copy of the selected preparation and returns one outcome.</p>
+            <div class="born-actions">
+              <button class="born-primary" type="button" data-born-trials="1">Measure one</button>
+              <button type="button" data-born-trials="10">Run 10</button>
+              <button type="button" data-born-trials="100">Run 100</button>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="born-stack">
+          <section class="born-instrument" aria-labelledby="born-preparation-title">
+            <h4 id="born-preparation-title">Preparation sent to the apparatus</h4>
+            <div class="born-representations">
+              <p class="born-equation" id="born-ket">|ψ⟩ = (3/5)|0⟩ + (4/5)|1⟩</p>
+              <div class="born-column-equation">
+                <span>[|ψ⟩]<sub>0/1</sub> =</span>
+                <div class="born-column" role="group" aria-label="Amplitudes in the ordered basis ket zero, ket one">
+                  <span class="born-alpha-color" id="born-alpha">3/5</span>
+                  <span class="born-beta-color" id="born-beta">4/5</span>
+                </div>
+              </div>
+            </div>
+            <p class="lesson-note" id="born-norm">Normalization · |α|² + |β|² = 9/25 + 16/25 = 1.</p>
+          </section>
+
+          <figure class="born-instrument born-figure" aria-labelledby="born-apparatus-title">
+            <figcaption id="born-apparatus-title">One preparation enters. One outcome comes out.</figcaption>
+            <svg id="born-apparatus" class="born-apparatus" viewBox="0 0 520 172"
+                 role="img" aria-labelledby="born-diagram-title born-diagram-desc">
+              <title id="born-diagram-title">Two-channel measurement apparatus</title>
+              <desc id="born-diagram-desc">The prepared state enters the Z measurement. A single trial reports either outcome 0 or outcome 1.</desc>
+
+              <rect class="born-diagram-box" x="16" y="56" width="116" height="60" rx="8"/>
+              <text class="born-diagram-label" x="74" y="82" text-anchor="middle">Prepared</text>
+              <text class="born-diagram-label" x="74" y="104" text-anchor="middle">state ψ</text>
+              <path class="born-input-line" d="M132 86H204m-8-6 8 6-8 6"/>
+              <rect class="born-setting-box" x="204" y="56" width="112" height="60" rx="8"/>
+              <text class="born-diagram-label" x="260" y="82" text-anchor="middle">Measure</text>
+              <text class="born-setting-label" id="born-diagram-basis" x="260" y="104" text-anchor="middle">Z basis</text>
+
+              <g class="born-channel born-first-color" id="born-channel-first" data-active="false">
+                <path d="M316 74H350L388 42H408"/>
+                <rect x="408" y="23" width="95" height="38" rx="7"/>
+                <text id="born-diagram-first" x="455.5" y="48" text-anchor="middle">0</text>
+              </g>
+              <g class="born-channel born-channel-dashed born-second-color" id="born-channel-second" data-active="false">
+                <path d="M316 98H350L388 130H408"/>
+                <rect x="408" y="111" width="95" height="38" rx="7"/>
+                <text id="born-diagram-second" x="455.5" y="136" text-anchor="middle">1</text>
+              </g>
+            </svg>
+            <p class="lesson-note">The lines show the two possible reports from the apparatus. A trial selects one channel.</p>
+          </figure>
+
+          <section class="born-instrument" aria-labelledby="born-results-title">
+            <h4 id="born-results-title">Predictions and simulated results</h4>
+            <p class="born-series" id="born-series">Series 1 · Opening preparation · Z basis</p>
+            <p class="lesson-note" id="born-run-lock">Check your prediction to unlock the live calculations for other settings and the simulated trials.</p>
+            <p class="lesson-note">Solid bars show predicted probabilities. Outlined bars show observed frequencies from this series.</p>
+
+            <dl class="born-stats">
+              <div>
+                <dt>Total trials</dt>
+                <dd id="born-total">0</dd>
+              </div>
+              <div>
+                <dt>Most recent outcome</dt>
+                <dd id="born-last">—</dd>
+              </div>
+              <div>
+                <dt>Last system after measurement</dt>
+                <dd id="born-last-ket">—</dd>
+              </div>
+            </dl>
+
+            <p class="lesson-note" id="born-theory-pending" hidden>Check the opening prediction to reveal the calculation for this setting.</p>
+
+            <div class="born-outcomes">
+              <section class="born-outcome born-first-color" aria-labelledby="born-first-title">
+                <h5 id="born-first-title">Outcome <span id="born-first-label">0</span></h5>
+                <div class="born-theory" id="born-first-theory">
+                  <p class="born-equation" id="born-first-amplitude">c₀ = ⟨0|ψ⟩ = 3/5</p>
+                  <p class="born-equation" id="born-first-work">|3/5|² = 9/25</p>
+                  <div class="born-bar">
+                    <label for="born-first-probability">Predicted probability</label>
+                    <span id="born-first-probability-text">36%</span>
+                    <meter id="born-first-probability" min="0" max="1" value="0.36">36%</meter>
+                  </div>
+                </div>
+                <div class="born-bar born-observed">
+                  <label for="born-first-frequency">Observed frequency</label>
+                  <span id="born-first-frequency-text">—</span>
+                  <meter id="born-first-frequency" min="0" max="1" value="0" hidden>0%</meter>
+                </div>
+                <p class="born-count"><strong id="born-first-count">0</strong> observed</p>
+              </section>
+
+              <section class="born-outcome born-second-color" aria-labelledby="born-second-title">
+                <h5 id="born-second-title">Outcome <span id="born-second-label">1</span></h5>
+                <div class="born-theory" id="born-second-theory">
+                  <p class="born-equation" id="born-second-amplitude">c₁ = ⟨1|ψ⟩ = 4/5</p>
+                  <p class="born-equation" id="born-second-work">|4/5|² = 16/25</p>
+                  <div class="born-bar">
+                    <label for="born-second-probability">Predicted probability</label>
+                    <span id="born-second-probability-text">64%</span>
+                    <meter id="born-second-probability" min="0" max="1" value="0.64">64%</meter>
+                  </div>
+                </div>
+                <div class="born-bar born-observed">
+                  <label for="born-second-frequency">Observed frequency</label>
+                  <span id="born-second-frequency-text">—</span>
+                  <meter id="born-second-frequency" min="0" max="1" value="0" hidden>0%</meter>
+                </div>
+                <p class="born-count"><strong id="born-second-count">0</strong> observed</p>
+              </section>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <p class="born-feedback" id="born-announcement" role="status" aria-atomic="true"></p>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="born-amplitude-title">
+      <h3 id="born-amplitude-title">An amplitude is the coefficient along a measurement ket</h3>
+      <p>Write the prepared ket as |ψ⟩ = α|0⟩ + β|1⟩. The amplitudes α and β are the coordinates in the ordered orthonormal basis (|0⟩, |1⟩). The opening preparation is normalized because (3/5)² + (4/5)² = 1.</p>
+      <p>If outcome <var>a</var> is associated with the basis ket |a⟩, its amplitude is <var>c</var><sub>a</sub> = ⟨a|ψ⟩. This inner product picks out the coefficient of |ψ⟩ along |a⟩.</p>
+
+      <details>
+        <summary>Calculate the complex inner product and square the magnitude</summary>
+        <div class="born-disclosure">
+          <p>Let <var>a</var><sub>0</sub> and <var>a</var><sub>1</sub> be the coordinates of |a⟩ in the same 0/1 basis. The bra ⟨a| is the conjugate transpose of |a⟩. This turns the column into a row and replaces each entry with its complex conjugate. The star indicates conjugation. For example, (<var>u</var> + <var>iv</var>)* = <var>u</var> − <var>iv</var>, where <var>u</var> and <var>v</var> are real and <var>i</var>² = −1.</p>
+          <p class="born-equation">c<sub>a</sub> = ⟨a|ψ⟩ = a<sub>0</sub>*α + a<sub>1</sub>*β</p>
+          <p>Apply the Born rule after computing the amplitude. Even when the amplitude is negative or complex, the probability is a nonnegative real number.</p>
+          <p class="born-equation">P(a) = |c<sub>a</sub>|² = c<sub>a</sub>*c<sub>a</sub> = (u − iv)(u + iv) = u² + v²</p>
+          <p>A complete orthonormal measurement basis expands the entire state. When you take the inner product of that expansion with itself, each cross term vanishes and the remaining terms add up to the squared norm. For this normalized state, Σ<sub>a</sub> |c<sub>a</sub>|² = ⟨ψ|ψ⟩ = 1.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="born-basis-title">
+      <h3 id="born-basis-title">The same state gives different predictions in a different basis</h3>
+      <p>In Z, the two outcome kets are |0⟩ and |1⟩. In X, they are |+⟩ and |−⟩. These are alternative apparatus settings. Compare them using systems prepared in the same state.</p>
+      <p class="born-equation">|+⟩ = (|0⟩ + |1⟩)/√2<br>|−⟩ = (|0⟩ − |1⟩)/√2</p>
+
+      <details>
+        <summary>Work through the opening state in Z and X</summary>
+        <div class="born-disclosure">
+          <p>In Z, take one coefficient at a time. The opening amplitudes are 3/5 and 4/5, so the probabilities are 9/25 and 16/25.</p>
+          <p>In X, each outcome receives contributions from both coefficients. The signs in the basis kets determine whether those contributions add or subtract.</p>
+          <p class="born-equation">
+            c<sub>+</sub> = (α + β)/√2 = (3/5 + 4/5)/√2 = 7/(5√2)<br>
+            c<sub>−</sub> = (α − β)/√2 = (3/5 − 4/5)/√2 = −1/(5√2)
+          </p>
+          <p>Square the magnitudes to get P(+) = 49/50 = 98% and P(−) = 1/50 = 2%. The minus amplitude is negative and its probability is positive.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Predict what changes when 4/5 becomes 4i/5</summary>
+        <div class="born-disclosure">
+          <p>Only the relative phase changes. Before looking at the calculation, decide whether the Z probabilities and the X probabilities should change. Try the <strong>Imaginary coefficient</strong> preset in both settings.</p>
+          <p class="born-equation">|ψ<sub>i</sub>⟩ = (3/5)|0⟩ + (4i/5)|1⟩</p>
+          <p>Z stays at 36% and 64%. In X, the amplitudes are (3 + 4i)/(5√2) and (3 − 4i)/(5√2). Each has squared magnitude (3² + 4²)/50 = 1/2. As in Lesson 12, combine the amplitudes before squaring their magnitudes.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="born-runs-title">
+      <h3 id="born-runs-title">One outcome, many trials</h3>
+      <p>A single measurement reports a single label. With the opening preparation in X, plus is likely and minus can still occur. One click cannot recover an unknown state because many preparations can produce the same outcome.</p>
+      <p>The Born rule predicts the distribution. A finite simulated run gives counts, and the observed frequency is the count divided by the number of trials. For example, if exactly 98 of 100 trials give plus, one more minus gives a plus frequency of 98/101, about 97.03%. That extra trial moves the observed frequency farther from 98%.</p>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="born-repeat-title">
+      <h3 id="born-repeat-title">Remeasure the same system or prepare another?</h3>
+      <p>In this ideal nondegenerate projective measurement, each outcome corresponds to a single basis ket. Once the outcome is <var>a</var>, the measured system is in |a⟩ up to a global phase. Repeat the same measurement immediately on that system, with no intervening evolution or disturbance, and it reports <var>a</var> with certainty.</p>
+      <p>The lab’s trials each start from a new copy of the selected preparation. The last system’s post-measurement ket is shown separately from the ket used for the next trial.</p>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="born-challenge-title">
+      <h3 id="born-challenge-title">Check your understanding</h3>
+      <form id="born-challenge">
+        <fieldset class="born-instrument" id="born-challenge-controls" disabled>
+          <legend>Measurement challenge</legend>
+
+          <div class="born-question" data-born-question="frequency" role="radiogroup"
+               aria-labelledby="born-frequency-question">
+            <h4 id="born-frequency-question" tabindex="-1">1 of 2 · The model predicts P(+) = 98%. What can you say about a batch of 100 freshly prepared systems?</h4>
+            <label class="born-choice">
+              <input type="radio" name="born-challenge-frequency" value="exact">
+              Every batch must contain exactly 98 plus outcomes.
+            </label>
+            <label class="born-choice">
+              <input type="radio" name="born-challenge-frequency" value="varies">
+              The expected count is 98, and the actual count can vary.
+            </label>
+            <label class="born-choice">
+              <input type="radio" name="born-challenge-frequency" value="certain">
+              Each trial gives plus with certainty.
+            </label>
+          </div>
+
+          <div class="born-question" data-born-question="repeat" role="radiogroup"
+               aria-labelledby="born-repeat-question" hidden>
+            <h4 id="born-repeat-question" tabindex="-1">2 of 2 · The opening state gave minus in X. Which action guarantees minus on the next readout?</h4>
+            <label class="born-choice">
+              <input type="radio" name="born-challenge-repeat" value="same-system">
+              Immediately repeat X on that same undisturbed system.
+            </label>
+            <label class="born-choice">
+              <input type="radio" name="born-challenge-repeat" value="fresh-system">
+              Prepare a fresh copy of the opening state and measure it in X.
+            </label>
+          </div>
+
+          <div class="born-actions">
+            <button class="born-primary" type="submit">Check answer</button>
+            <button id="born-challenge-next" type="button" hidden>Next question</button>
+            <button id="born-challenge-restart" type="button" hidden>Try the challenge again</button>
+          </div>
+          <p class="born-feedback" id="born-challenge-feedback" role="status" aria-atomic="true"></p>
+        </fieldset>
+      </form>
+    </section>
+
+    <nav class="lesson-next" aria-label="Lesson navigation">
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html">
+        <span aria-hidden="true">←</span> Previous: Superposition and Relative Phase
+      </a>
+      <a class="born-primary" href="../14_observables_and_operators/14_observables_and_operators.html">
+        Next: Observables and Operators <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

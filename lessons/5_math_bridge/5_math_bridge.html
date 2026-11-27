@@ -1,0 +1,1096 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Explore equations, coordinates, vector length, and angles in Math Space.">
+  <title>Math Bridge | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+  <script type="module" src="./scripts/lesson.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)"
+                  stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none"
+                   stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8"
+                stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none"
+                   stroke="url(#logo-spectrum)" stroke-width="1.6"
+                   transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none"
+                stroke="#edffef" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static"
+             viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0.25"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse"
+                  x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C276 45 368 42 466 47"/>
+            <path class="track-green" d="M218 54C265 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 464 83"/>
+            <path class="track-violet" d="M218 54C257 76 333 97 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M212 54h12M218 48v12"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button"
+              aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="./5_math_bridge.html" aria-current="page"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and-coordinates/8_bases_and-coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_quantum_probability_and_probability_current/21_quantum_probability_and_probability_current.html"><span class="lessons-menu-step">21</span> <span>Quantum Probability and Probability Current</span></a>
+      <a href="../22_the_one_dimensional_schrodinger_equation/22_the_one_dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main math-lesson" aria-labelledby="math-title">
+    <header class="lesson-intro">
+      <p class="lesson-kicker">Lesson 05 · Coordinate lab</p>
+      <h2 id="math-title">Math Bridge</h2>
+      <p class="lesson-lead">Can you move the tip of an arrow to a different point while keeping its length exactly 5 units?</p>
+      <p>Start with a rule you can see on a graph. Then build an arrow from its coordinates, predict how its length will change, and try turning it while holding its length fixed.</p>
+      <p><a href="#math-arcade" id="math-arcade-link">Open the optional Math Bridge Arcade</a></p>
+    </header>
+
+    <section class="lesson-panel" id="math-calibration" aria-labelledby="math-calibration-title"
+             data-origin-x="184" data-origin-y="119" data-x-step-px="36" data-y-step-px="11">
+      <h3 id="math-calibration-title">Read a rule, then work backward</h3>
+      <p>Suppose a calibration tool doubles its input and adds one. The <strong>input variable</strong> is <var>x</var>. The <strong>expression</strong> is 2<var>x</var> + 1. The <strong>equation</strong> <var>y</var> = 2<var>x</var> + 1 says the output <var>y</var> equals the value of that expression.</p>
+
+      <div class="math-split">
+        <div class="lesson-station">
+          <fieldset id="math-rule-controls" disabled>
+            <legend>Choose the input</legend>
+            <div class="math-slider">
+              <label for="math-rule-x">Input <var>x</var></label>
+              <output id="math-rule-x-value" for="math-rule-x">3</output>
+              <input type="range" id="math-rule-x" min="-4" max="4" step="1" value="3">
+            </div>
+          </fieldset>
+
+          <p class="math-equation" id="math-rule-substitution"><var>y</var> = 2(3) + 1 = 7</p>
+          <p>Point on the graph: <strong id="math-rule-point">(3, 7)</strong></p>
+
+          <form id="math-inverse-form">
+            <fieldset id="math-inverse-controls" disabled>
+              <legend>Work backward</legend>
+              <label class="math-number-field" for="math-inverse-guess">
+                Which input gives <var>y</var> = 7?
+                <input id="math-inverse-guess" type="number" min="-4" max="4" step="1"
+                       inputmode="numeric" required>
+              </label>
+              <button class="lesson-button" type="submit">Check input</button>
+            </fieldset>
+          </form>
+          <p class="lesson-note" id="math-inverse-feedback" role="status">Choose the input, then check it against the rule.</p>
+        </div>
+
+        <figure class="math-figure">
+          <figcaption>Calibration graph · both axes are dimensionless</figcaption>
+          <svg class="math-diagram math-rule-graph" viewBox="0 0 360 232" role="img"
+               aria-labelledby="math-rule-graph-title math-rule-graph-desc">
+            <title id="math-rule-graph-title">Graph of y equals two x plus one</title>
+            <desc id="math-rule-graph-desc">The straight line passes through the marked point with input 3 and output 7.</desc>
+            <path class="math-graph-grid" d="M40 20h288M40 64h288M40 152h288M40 196h288M40 20v176M112 20v176M256 20v176M328 20v176"/>
+            <path class="math-axis" d="M40 196h288M40 20v176M40 119h288M184 20v176"/>
+            <path class="math-rule-line" d="M40 196L328 20"/>
+            <path class="math-guide" id="math-rule-guides" d="M292 119V42H184"/>
+            <circle class="math-point-dot" id="math-rule-marker" cx="292" cy="42" r="5"/>
+
+            <text class="math-tick-left" x="32" y="24">9</text>
+            <text class="math-tick-left" x="32" y="68">5</text>
+            <text class="math-tick-left" x="32" y="123">0</text>
+            <text class="math-tick-left" x="32" y="156">−3</text>
+            <text class="math-tick-left" x="32" y="200">−7</text>
+            <text x="40" y="216">−4</text>
+            <text x="112" y="216">−2</text>
+            <text x="184" y="216">0</text>
+            <text x="256" y="216">2</text>
+            <text x="328" y="216">4</text>
+            <text class="math-axis-label" x="346" y="216">x</text>
+            <text class="math-axis-label" x="23" y="12">y</text>
+          </svg>
+        </figure>
+      </div>
+
+      <details>
+        <summary>Show the algebra for an output of 7</summary>
+        <div class="lesson-prose">
+          <p>Start with 7 = 2<var>x</var> + 1. Subtract 1 from both sides to get 6 = 2<var>x</var>. Then divide both sides by 2 to get 3 = <var>x</var>. Both operations keep the two sides equal.</p>
+          <p>Check by putting 3 back into the original rule: 2(3) + 1 = 7. On the graph, that is the point (3, 7).</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="lesson-panel" id="math-space" aria-labelledby="math-space-title" tabindex="-1"
+             data-radius="5" data-length-tolerance="0.05"
+             data-xy-origin-x="176" data-xy-origin-y="170" data-xy-unit-px="24">
+      <h3 id="math-space-title">Math Space</h3>
+      <p>The arrow starts at the origin, O = (0, 0, 0). Its tip starts at P = (3, 4, 0). Predict what will happen to its length if <var>x</var> changes from +3 to −3 while the other coordinates stay fixed. Then try the reflected point.</p>
+
+      <div class="math-space-grid">
+        <div class="lesson-station">
+          <fieldset id="math-space-controls" disabled>
+            <legend>Move the tip</legend>
+
+            <label class="math-number-field" for="math-mode">
+              Coordinate mode
+              <select id="math-mode" aria-describedby="math-mode-note">
+                <option value="free" selected>Free coordinates</option>
+                <option value="radius">Fixed radius of 5 in the xy plane</option>
+              </select>
+            </label>
+            <p class="lesson-note" id="math-mode-note">Free mode lets you change all three coordinates. Radius mode starts at (5, 0, 0) and holds <var>z</var> = 0 and <var>r</var> = 5. Returning to free mode rounds the current coordinates to the nearest tenth.</p>
+
+            <div class="math-reflection" id="math-reflection">
+              <label class="math-number-field">Prediction for the reflected arrow’s length
+                <select id="math-reflection-guess">
+                  <option value="">Choose a prediction</option>
+                  <option value="same">It stays at 5 units</option>
+                  <option value="less">It becomes shorter</option>
+                  <option value="more">It becomes longer</option>
+                </select>
+              </label>
+              <button class="lesson-button" id="math-reflection-save" type="button" disabled>Save reflection prediction</button>
+              <p class="lesson-note" id="math-reflection-feedback" role="status"></p>
+            </div>
+
+            <div class="math-slider-stack" id="math-free-controls">
+              <div class="math-slider">
+                <label for="math-x"><var>x</var> component</label>
+                <output id="math-x-value" for="math-x">+3.00 units</output>
+                <input type="range" id="math-x" min="-5" max="5" step="0.1" value="3">
+              </div>
+              <div class="math-slider">
+                <label for="math-y"><var>y</var> component</label>
+                <output id="math-y-value" for="math-y">+4.00 units</output>
+                <input type="range" id="math-y" min="-5" max="5" step="0.1" value="4">
+              </div>
+              <div class="math-slider">
+                <label for="math-z"><var>z</var> component</label>
+                <output id="math-z-value" for="math-z">0.00 units</output>
+                <input type="range" id="math-z" min="-5" max="5" step="0.1" value="0">
+              </div>
+
+              <div class="math-actions" role="group" aria-label="Point presets">
+                <button class="lesson-button" type="button" data-math-point="reflected">Try (−3, 4, 0)</button>
+                <button class="lesson-button" type="button" data-math-point="depth">Try (3, 4, 2)</button>
+                <button class="lesson-button" type="button" data-math-point="origin">Try the origin</button>
+              </div>
+            </div>
+
+            <div class="math-slider-stack" id="math-radius-controls" hidden>
+              <div class="math-slider">
+                <label for="math-angle">Turn counterclockwise from +<var>x</var></label>
+                <output id="math-angle-value" for="math-angle">0°</output>
+                <input type="range" id="math-angle" min="0" max="360" step="1" value="0"
+                       aria-describedby="math-angle-note">
+              </div>
+              <p class="lesson-note" id="math-angle-note">The angle moves the tip around a circle of radius 5 units. Zero and 360° give the same endpoint.</p>
+              <div class="math-actions" role="group" aria-label="Angle presets">
+                <button class="lesson-button" type="button" data-math-angle="0">0°</button>
+                <button class="lesson-button" type="button" data-math-angle="90">90°</button>
+                <button class="lesson-button" type="button" data-math-angle="120">120°</button>
+              </div>
+            </div>
+
+            <div class="math-actions" role="group" aria-label="Camera presets and reset">
+              <button class="lesson-button" type="button" data-math-view="xy" aria-pressed="true">XY view</button>
+              <button class="lesson-button" type="button" data-math-view="depth" aria-pressed="false">Depth view</button>
+              <button class="lesson-button" id="math-reset" type="button">Reset lab</button>
+            </div>
+            <label class="arc-toggle"><input id="math-reduced" type="checkbox" disabled> Reduced effects for lesson diagrams</label>
+            <p class="lesson-note">A view change moves the camera while P stays in place. Reset restores the starting point, free mode, and the XY view.</p>
+          </fieldset>
+
+          <p class="math-reaction" id="math-space-feedback" role="status"><strong>Lab assistant:</strong> The starting arrow is 5 units long. Predict what a sign change will do.</p>
+        </div>
+
+        <div class="lesson-station">
+          <figure class="math-figure">
+            <figcaption>Coordinate view · one grid interval is one unit</figcaption>
+            <div class="math-viewport" id="math-viewport">
+              <canvas class="math-canvas" id="math-canvas" aria-hidden="true" hidden></canvas>
+              <div class="math-scene-labels" id="math-scene-labels" aria-hidden="true" hidden></div>
+
+              <svg class="math-diagram math-xy-view" id="math-xy-view" viewBox="0 0 360 344"
+                   role="img" aria-labelledby="math-xy-title math-xy-description">
+                <title id="math-xy-title">XY projection of the arrow</title>
+                <desc id="math-xy-description">The arrow starts at the origin and ends at x equals 3 and y equals 4. Its depth is zero. The horizontal and vertical projections form a right triangle.</desc>
+                <defs>
+                  <pattern id="math-plane-grid" x="8" y="2" width="24" height="24" patternUnits="userSpaceOnUse">
+                    <path class="math-graph-grid" d="M24 0H0v24"/>
+                  </pattern>
+                  <marker id="math-arrow-head" viewBox="0 0 8 8" refX="7" refY="4"
+                          markerWidth="6" markerHeight="6" orient="auto">
+                    <path class="math-arrow-tip" d="M0 0l8 4-8 4z"/>
+                  </marker>
+                </defs>
+
+                <rect x="32" y="26" width="288" height="288" fill="url(#math-plane-grid)"/>
+                <path class="math-axis" d="M32 170h291m-8-5 8 5-8 5M176 314V23m-5 8 5-8 5 8"/>
+                <path class="math-axis" d="M56 166v8M296 166v8M172 50h8M172 290h8"/>
+                <text x="56" y="190">−5</text>
+                <text x="296" y="190">5</text>
+                <text class="math-tick-left" x="164" y="54">5</text>
+                <text class="math-tick-left" x="164" y="294">−5</text>
+                <text x="162" y="189">O</text>
+                <text class="math-axis-label" x="338" y="174">+x</text>
+                <text class="math-axis-label" x="189" y="19">+y</text>
+
+                <circle class="math-radius-circle" id="math-xy-radius-circle" cx="176" cy="170" r="120" hidden/>
+                <path class="math-triangle" id="math-xy-triangle" d="M176 170H248V74Z"/>
+                <line class="math-component-x" id="math-xy-component-x" x1="176" y1="170" x2="248" y2="170"/>
+                <line class="math-component-y" id="math-xy-component-y" x1="248" y1="170" x2="248" y2="74"/>
+                <path class="math-right-angle" id="math-xy-right-angle" d="M238 170v-10h10"/>
+                <path class="math-angle-arc" id="math-xy-arc" d="" hidden/>
+                <text class="math-angle-text" id="math-xy-angle-label" x="219" y="151" hidden>θ</text>
+
+                <line class="math-vector" id="math-xy-arrow" x1="176" y1="170" x2="248" y2="74"
+                      marker-end="url(#math-arrow-head)"/>
+                <circle class="math-point-dot" id="math-xy-point" cx="248" cy="74" r="4.5"/>
+                <text id="math-xy-point-label" x="269" y="64">Pxy</text>
+              </svg>
+            </div>
+
+            <p class="lesson-note" id="math-renderer-status" role="status">Static XY projection. The interactive controls become available when the lesson script loads.</p>
+            <p class="lesson-note">In the XY projection, Pxy is the tip’s shadow on the plane. The signed depth of the full point is <strong id="math-depth">0.00 units</strong>.</p>
+
+            <ul class="math-legend" aria-label="Coordinate diagram legend">
+              <li><span class="math-key math-key-vector" aria-hidden="true"></span>Arrow from O</li>
+              <li><span class="math-key math-key-x" aria-hidden="true"></span><var>x</var> component</li>
+              <li><span class="math-key math-key-y" aria-hidden="true"></span><var>y</var> component</li>
+              <li><span class="math-key math-key-z" aria-hidden="true"></span><var>z</var> depth</li>
+            </ul>
+          </figure>
+
+          <dl class="math-metrics">
+            <div><dt>Active constraint</dt><dd id="math-mode-label">Free coordinates</dd></div>
+            <div><dt>Endpoint P</dt><dd id="math-point">(3.00, 4.00, 0.00)</dd></div>
+            <div><dt>XY length</dt><dd id="math-length-xy">5.00 units</dd></div>
+            <div><dt>Total length</dt><dd id="math-length">5.00 units</dd></div>
+          </dl>
+
+          <div class="math-calculations">
+            <p><var>r</var><sub>xy</sub><sup>2</sup> = <span id="math-rxy-calc">3² + 4² = 25 square units</span></p>
+            <p><var>r</var><sup>2</sup> = <span id="math-r-calc">5² + 0² = 25 square units</span></p>
+          </div>
+
+          <div class="math-calculations" id="math-angle-readout" hidden>
+            <p>Angle <var>θ</var>: <strong id="math-angle-reading">0° = 0.000 rad</strong></p>
+            <p><var>x</var> = <span id="math-angle-x">5 cos(0°) = 5.00 units</span></p>
+            <p><var>y</var> = <span id="math-angle-y">5 sin(0°) = 0.00 units</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <details class="lesson-panel">
+      <summary>Why the two right triangles give the length</summary>
+      <div class="lesson-prose">
+        <p>Start with the right triangle in the <var>xy</var> plane. Its perpendicular legs have lengths |<var>x</var>| and |<var>y</var>|. The diagonal from the origin to Pxy is <var>r</var><sub>xy</sub>. In depth view, look for the second triangle. Its legs are that diagonal and the perpendicular depth |<var>z</var>|.</p>
+        <p class="math-equation"><var>r</var><sub>xy</sub><sup>2</sup> = <var>x</var><sup>2</sup> + <var>y</var><sup>2</sup><br>
+          <var>r</var><sup>2</sup> = <var>r</var><sub>xy</sub><sup>2</sup> + <var>z</var><sup>2</sup></p>
+        <p>At (3, 4, 0), the first sum is 9 + 16 = 25 square units and depth adds zero. Taking the nonnegative square root gives 5 units of length. At (3, 4, 2), the second sum is 25 + 4 = 29 square units, so the length is √29 units, about 5.39.</p>
+        <p>Coordinates can have either sign because they describe directions from the origin. Squaring removes those signs. At (0, 0, 0), the length is zero and the arrow has no direction.</p>
+      </div>
+    </details>
+
+    <details class="lesson-panel">
+      <summary>Angles, projections, and radians</summary>
+      <div class="lesson-prose">
+        <p>In radius mode, the endpoint stays in the <var>xy</var> plane. Start on the positive <var>x</var>-axis and turn counterclockwise through angle <var>θ</var>. The angle arc shows that turn. The two projections give the signed horizontal and vertical components.</p>
+        <p class="math-equation"><var>x</var> = <var>r</var> cos <var>θ</var><br>
+          <var>y</var> = <var>r</var> sin <var>θ</var></p>
+        <p>A <strong>radian</strong> measures angle as arc length divided by radius. On a circle of radius 5 units, a 5-unit arc spans one radian. A full turn covers arc length 2π<var>r</var>, so 360° equals 2π radians. Multiply degrees by π/180 to convert them to radians.</p>
+
+        <table class="math-table">
+          <caption>Checks to reproduce at radius 5</caption>
+          <thead>
+            <tr><th scope="col">Degrees</th><th scope="col">Radians</th><th scope="col">Endpoint</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">0°</th><td>0</td><td>(5, 0, 0)</td></tr>
+            <tr><th scope="row">90°</th><td>π/2</td><td>(0, 5, 0)</td></tr>
+            <tr><th scope="row">120°</th><td>2π/3</td><td>(−2.5, 5√3/2, 0)</td></tr>
+          </tbody>
+        </table>
+        <p>At 120° the tip is in the second quadrant. Here cos <var>θ</var> = −1/2 and sin <var>θ</var> = √3/2. The horizontal component is negative and the vertical component is positive. The length stays 5 because cos² <var>θ</var> + sin² <var>θ</var> = 1.</p>
+      </div>
+    </details>
+
+    <section class="lesson-panel" id="math-challenge" aria-labelledby="math-challenge-title">
+      <h3 id="math-challenge-title">Lab checkout</h3>
+      <p class="lesson-kicker" id="math-challenge-progress">Question 1 of 3</p>
+
+      <fieldset id="math-challenge-controls" disabled>
+        <legend class="math-sr-only">Challenge answers</legend>
+
+        <div data-math-question="1">
+          <h4 tabindex="-1">What happens to the length when P moves from (3, 4, 0) to (−3, 4, 0)?</h4>
+          <div class="math-answers">
+            <button class="lesson-button" type="button" data-math-answer="same">It stays 5 units</button>
+            <button class="lesson-button" type="button" data-math-answer="negative">It becomes −5 units</button>
+            <button class="lesson-button" type="button" data-math-answer="longer">It becomes longer than 5 units</button>
+          </div>
+        </div>
+
+        <div data-math-question="2" hidden>
+          <h4 tabindex="-1">At radius 5 and 90° counterclockwise from +x, where is P?</h4>
+          <div class="math-answers">
+            <button class="lesson-button" type="button" data-math-answer="positive-x">(5, 0, 0)</button>
+            <button class="lesson-button" type="button" data-math-answer="positive-y">(0, 5, 0)</button>
+            <button class="lesson-button" type="button" data-math-answer="negative-y">(0, −5, 0)</button>
+          </div>
+        </div>
+
+        <div data-math-question="3" hidden>
+          <h4 tabindex="-1">Find another point of length 5</h4>
+          <p><a href="#math-space" id="math-checkout-return">Move the tip in Math Space</a> to any point other than (3, 4, 0) that is 5 units from the origin. Try either mode, then return here and check the live point.</p>
+          <p class="lesson-note">Free mode accepts a length within 0.05 unit of 5 because its coordinate sliders move in tenths. Radius mode holds the length at 5 exactly.</p>
+          <p class="math-equation" id="math-challenge-point">Current P = (3.00, 4.00, 0.00) · Length 5.00 units</p>
+          <button class="lesson-button lesson-primary" id="math-check-point" type="button">Check current point</button>
+        </div>
+      </fieldset>
+
+      <p class="lesson-note" id="math-challenge-feedback" role="status">The lesson script will check your answers and let you retry.</p>
+      <button class="lesson-button" id="math-next-question" type="button" hidden>Next question</button>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="math-bridge-title">
+      <h3 id="math-bridge-title" tabindex="-1">Where these tools show up next</h3>
+      <p>Angles help describe phase when we introduce complex numbers. Arrows are our first example of vectors, and inner products give us a way to compare vectors. Bases let us describe the same vector with different coordinates. Matrices describe transformations, and eigenvectors point in directions those transformations preserve up to a scale factor. Calculus gives us tools for describing how a graph changes.</p>
+      <p>Keep the opening question in mind: the tip can move while the length stays fixed. Later we’ll use the same habit of asking what changes and what stays fixed when we work with quantum states.</p>
+    </section>
+
+    <nav class="lesson-next" aria-label="Continue the course">
+      <a href="../../index.html">Course homepage</a>
+      <a class="lesson-button lesson-primary" href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html">
+        Next lesson: Complex Numbers and Phase <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+
+    <details class="lesson-panel math-arcade" id="math-arcade">
+      <summary><strong>Math Bridge Arcade</strong><span>Optional practice</span></summary>
+      <p>Pick a station and try its experiment. Open any mission when you’re ready. Your work stays here while this page is open.</p>
+      <div class="arc-toolbar">
+        <label>Station <select id="arc-select" aria-controls="arc-panels" disabled>
+          <option value="function">Function Machine Factory</option>
+          <option value="equation">Equation Escape Room</option>
+          <option value="coordinate">Coordinate Treasure Hunt</option>
+          <option value="vector">Vector Construction Yard</option>
+          <option value="power">Pythagorean Power Station</option>
+          <option value="circle">Unit Circle Circuit</option>
+          <option value="projection">Projection and Shadow Lab</option>
+          <option value="transform">Transformation Arcade</option>
+          <option value="graph">Graph Detective</option>
+          <option value="change">What Changed? Challenge</option>
+        </select></label>
+        <p id="arc-progress" role="status">0 of 41 missions completed this session.</p>
+        <button class="lesson-button" type="button" id="arc-reset" disabled>Reset this station</button>
+      </div>
+      <p id="arc-reset-status" class="lesson-note" role="status"></p>
+      <noscript><p>The arcade uses JavaScript for calculations and mission checks.</p></noscript>
+
+      <div id="arc-panels">
+        <section class="arc-station" data-station="function" data-accent="orange" aria-labelledby="arc-function-title">
+          <header><h4 id="arc-function-title" tabindex="-1">Function Machine Factory</h4><p>Send an integer from −4 through 4 into the machine. It doubles the input, adds one, and plots the result.</p></header>
+          <div class="arc-scene-slot" data-arc-slot></div>
+          <fieldset disabled>
+            <legend class="math-sr-only">Function Machine Factory controls</legend>
+            <div class="arc-fields">
+              <label>Machine input <input name="x" type="number" min="-4" max="4" step="1" value="3" required></label>
+              <button class="lesson-primary" type="button" data-action="run">Run the machine</button>
+            </div>
+            <p class="arc-readout" data-readout="machine" role="status">Set an input and run the machine to see both stages.</p>
+            <div class="arc-missions">
+              <details data-mission="function-output">
+                <summary>Predict the output<span data-completion hidden>✓ Complete</span></summary>
+                <p>Enter your prediction for the machine’s current input, then run it to compare.</p>
+                <div class="arc-fields">
+                  <label>Predicted output <input name="guess" type="number" min="-20" max="20" step="1" required></label>
+                </div>
+                <button type="button" data-check>Lock and run</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="function-inverse">
+                <summary>Work backward<span data-completion hidden>✓ Complete</span></summary>
+                <p>Choose a reachable output and find the input that gives it. The machine will verify the input by running forward.</p>
+                <div class="arc-fields">
+                  <label>Target output <select name="target">
+                    <option value="-7">-7</option><option value="-5">-5</option><option value="-3">-3</option>
+                    <option value="-1">-1</option><option value="1">1</option><option value="3">3</option>
+                    <option value="5">5</option><option value="7">7</option><option value="9">9</option>
+                  </select></label>
+                  <label>Proposed input <input name="inverse" type="number" min="-4" max="4" step="1" required></label>
+                </div>
+                <button type="button" data-check>Check and run</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="function-order">
+                <summary>Arrange the operations<span data-completion hidden>✓ Complete</span></summary>
+                <p>Swap the order to build the rule y = 2x + 1. Check your sequence across the integer domain.</p>
+                <ol class="arc-order" data-readout="order"><li>Add 1</li><li>Multiply by 2</li></ol>
+                <button type="button" data-action="swap">Swap the operations</button>
+                <button type="button" data-check>Check the rule</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="function-delta">
+                <summary>Compare two inputs<span data-completion hidden>✓ Complete</span></summary>
+                <p>Record one input. Choose a different one and compare the changes in input and output.</p>
+                <button type="button" data-action="pin">Save current input</button>
+                <p class="arc-readout" data-readout="baseline" role="status">No input saved.</p>
+                <button type="button" data-check>Compare with saved input</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+            </div>
+          </fieldset>
+          <details class="arc-math">
+            <summary>Explore the math</summary>
+            <p>The order matters. Multiplying first gives 2<var>x</var> + 1. Adding first gives 2(<var>x</var> + 1). For the original machine, subtracting two outputs gives Δ<var>y</var> = 2Δ<var>x</var>. The symbol Δ means “change in.”</p>
+          </details>
+        </section>
+
+        <section class="arc-station" data-station="equation" data-accent="yellow" aria-labelledby="arc-equation-title" hidden>
+          <header><h4 id="arc-equation-title" tabindex="-1">Equation Escape Room</h4><p>Keep the two sides equal. Choose an operation and apply it to both sides to isolate x.</p></header>
+          <div class="arc-scene-slot" data-arc-slot></div>
+          <fieldset disabled>
+            <legend class="math-sr-only">Equation Escape Room controls</legend>
+            <div class="arc-fields">
+              <label>Puzzle <select name="puzzle"><option value="positive">2x + 1 = 7</option><option value="negative">−2x + 1 = 7</option></select></label>
+              <button type="button" data-action="restart">Restart this puzzle</button>
+            </div>
+            <p class="arc-readout" data-readout="equation">Current equation · 2x + 1 = 7</p>
+            <div class="arc-fields">
+              <label>Operation <select name="operation"><option value="add">Add</option><option value="subtract">Subtract</option><option value="multiply">Multiply by</option><option value="divide">Divide by</option></select></label>
+              <label>Same integer on both sides <input name="amount" type="number" min="-12" max="12" step="1" value="1" required></label>
+              <button class="lesson-primary" type="button" data-action="apply">Apply to both sides</button>
+            </div>
+            <p class="arc-readout" data-readout="steps" role="status">No operations applied.</p>
+            <div class="arc-missions">
+              <details data-mission="equation-positive">
+                <summary>Solve the opening equation<span data-completion hidden>✓ Complete</span></summary>
+                <p>Select 2x + 1 = 7. Use the balance controls until x stands alone.</p>
+                <button type="button" data-check>Check isolated x</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="equation-negative">
+                <summary>Solve the negative equation<span data-completion hidden>✓ Complete</span></summary>
+                <p>Select −2x + 1 = 7. Use the balance controls until x stands alone.</p>
+                <button type="button" data-check>Check isolated x</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="equation-error">
+                <summary>Spot the first incorrect step<span data-completion hidden>✓ Complete</span></summary>
+                <p>Start at 2x + 1 = 7. The worked solution shows these three lines.</p>
+                <ol><li>Subtract 1 from both sides → 2x = 6</li><li>Divide by 2 → x = 6</li><li>Write x = 6 as the solution</li></ol>
+                <div class="arc-fields">
+                  <label>First incorrect step <select name="error"><option value="">Choose an answer</option><option value="1">Step 1</option><option value="2">Step 2</option><option value="3">Step 3</option></select></label>
+                </div>
+                <button type="button" data-check>Check the step</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="equation-verify">
+                <summary>Verify by substitution<span data-completion hidden>✓ Complete</span></summary>
+                <p>Enter a solution for the selected puzzle. Compare the two sides of the original equation.</p>
+                <div class="arc-fields">
+                  <label>Proposed x <input name="proposed" type="number" min="-12" max="12" step="1" required></label>
+                </div>
+                <button type="button" data-check>Substitute in the original</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+            </div>
+          </fieldset>
+          <details class="arc-math">
+            <summary>Explore the math</summary>
+            <p>If <var>A</var> = <var>B</var>, then <var>A</var> + <var>c</var> = <var>B</var> + <var>c</var>. Multiplication and division by a nonzero constant also preserve the solution set. The balance uses exact fractions. Restart the selected puzzle to recover from a long or unhelpful sequence.</p>
+          </details>
+        </section>
+
+        <section class="arc-station" data-station="coordinate" data-accent="blue" aria-labelledby="arc-coordinate-title" hidden>
+          <header><h4 id="arc-coordinate-title" tabindex="-1">Coordinate Treasure Hunt</h4><p>Move your marker on the integer grid. Switch views to inspect a different pair of axes.</p></header>
+          <div class="arc-scene-slot" data-arc-slot></div>
+          <fieldset disabled>
+            <legend class="math-sr-only">Coordinate Treasure Hunt controls</legend>
+            <div class="arc-fields">
+              <label>x <input name="x" type="number" min="-5" max="5" step="1" value="0" required></label>
+              <label>y <input name="y" type="number" min="-5" max="5" step="1" value="0" required></label>
+              <label>z <input name="z" type="number" min="-5" max="5" step="1" value="0" required></label>
+            </div>
+            <div class="arc-fields">
+              <label>View <select name="view"><option value="xy">XY</option><option value="xz">XZ</option><option value="yz">YZ</option></select></label>
+              <button class="lesson-primary" type="button" data-action="plot">Plot marker</button>
+            </div>
+            <p class="arc-readout" data-readout="point">Marker · (0, 0, 0) · XY view</p>
+            <div class="arc-missions">
+              <details data-mission="coordinate-negative">
+                <summary>Reach a target with a negative coordinate<span data-completion hidden>✓ Complete</span></summary>
+                <p>Reach (−2, 3, 1). Confirm a match in all three coordinates.</p>
+                <button type="button" data-check>Check target</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="coordinate-shadow">
+                <summary>Share an XY projection<span data-completion hidden>✓ Complete</span></summary>
+                <p>Save a point, then change only z. Check that both 3D points cast the same XY shadow.</p>
+                <button type="button" data-action="pin-shadow">Save first point</button>
+                <p class="arc-readout" data-readout="shadow" role="status">No point saved.</p>
+                <button type="button" data-check>Compare with saved point</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="coordinate-clue">
+                <summary>Find the hidden marker<span data-completion hidden>✓ Complete</span></summary>
+                <p>On the grid, y is 2 units above zero, x is 4 units to the right of zero, and the marker is 3 units below the XY plane. Read all three coordinates before checking.</p>
+                <button type="button" data-check>Check the hidden marker</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="coordinate-depth">
+                <summary>Predict a depth change<span data-completion hidden>✓ Complete</span></summary>
+                <p>The comparison keeps x and y fixed and changes z by one unit. Predict which objects change.</p>
+                <div class="arc-fields">
+                  <label>What changes? <select name="depth-guess"><option value="">Choose an answer</option><option value="point">Only the full point</option><option value="xy">Only the XY projection</option><option value="both">Both points</option><option value="neither">Neither point</option></select></label>
+                </div>
+                <button type="button" data-check>Lock and compare</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+            </div>
+          </fieldset>
+          <details class="arc-math">
+            <summary>Explore the math</summary>
+            <p>A point names a location. Comparing only the coordinates visible in one projection can hide a mismatch. A target match uses all three mathematical coordinates on the integer grid.</p>
+          </details>
+        </section>
+
+        <section class="arc-station" data-station="vector" data-accent="violet" aria-labelledby="arc-vector-title" hidden>
+          <header><h4 id="arc-vector-title" tabindex="-1">Vector Construction Yard</h4><p>Vector preview. Set arrows A and B. The drawing places B at the tip of A and shows the resultant from the origin.</p></header>
+          <div class="arc-scene-slot" data-arc-slot></div>
+          <fieldset disabled>
+            <legend class="math-sr-only">Vector Construction Yard controls</legend>
+            <div class="arc-groups">
+              <div role="group" aria-label="Arrow A">
+                <p><strong>Arrow A</strong></p>
+                <div class="arc-fields">
+                  <label>x <input name="ax" type="number" min="-5" max="5" step="1" value="3" required></label>
+                  <label>y <input name="ay" type="number" min="-5" max="5" step="1" value="4" required></label>
+                  <label>z <input name="az" type="number" min="-5" max="5" step="1" value="0" required></label>
+                </div>
+              </div>
+              <div role="group" aria-label="Arrow B">
+                <p><strong>Arrow B</strong></p>
+                <div class="arc-fields">
+                  <label>x <input name="bx" type="number" min="-5" max="5" step="1" value="0" required></label>
+                  <label>y <input name="by" type="number" min="-5" max="5" step="1" value="0" required></label>
+                  <label>z <input name="bz" type="number" min="-5" max="5" step="1" value="0" required></label>
+                </div>
+              </div>
+            </div>
+            <button class="lesson-primary" type="button" data-action="plot">Build arrows</button>
+            <p class="arc-readout" data-readout="arrows">A = (3, 4, 0), length 5 units. B = (0, 0, 0), length 0. A + B = (3, 4, 0), length 5 units.</p>
+            <div class="arc-missions">
+              <details data-mission="vector-five">
+                <summary>Build a length-5 arrow<span data-completion hidden>✓ Complete</span></summary>
+                <p>Build A = (3, 4, 0), then check its magnitude.</p>
+                <button type="button" data-check>Check A</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="vector-add">
+                <summary>Build a resultant<span data-completion hidden>✓ Complete</span></summary>
+                <p>Add A and B to reach (3, 1, 1). B and A must both be nonzero.</p>
+                <button type="button" data-check>Check the sum</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="vector-opposite">
+                <summary>Point the other way<span data-completion hidden>✓ Complete</span></summary>
+                <p>Set A to any nonzero vector pointing exactly opposite to reference R = (1, −1, 0). The lengths can differ.</p>
+                <button type="button" data-check>Check direction</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="vector-equal">
+                <summary>Same magnitude, different directions<span data-completion hidden>✓ Complete</span></summary>
+                <p>Save a nonzero A, then make a second nonzero A at the same length and a different direction.</p>
+                <button type="button" data-action="pin">Save current A</button>
+                <p class="arc-readout" data-readout="baseline" role="status">No arrow saved.</p>
+                <button type="button" data-check>Compare with saved A</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+            </div>
+          </fieldset>
+          <details class="arc-math">
+            <summary>Explore the math</summary>
+            <p>A displacement vector specifies a change in coordinates. Its components stay fixed when you move its tail. Add arrows by adding their corresponding components, and take the square root of the sum of the squared components for the magnitude. The zero vector has no direction.</p>
+          </details>
+        </section>
+
+        <section class="arc-station" data-station="power" data-accent="green" aria-labelledby="arc-power-title" hidden>
+          <header><h4 id="arc-power-title" tabindex="-1">Pythagorean Power Station</h4><p>Build a point and read the squared areas of the XY triangle and the depth triangle.</p></header>
+          <div class="arc-scene-slot" data-arc-slot></div>
+          <fieldset disabled>
+            <legend class="math-sr-only">Pythagorean Power Station controls</legend>
+            <div class="arc-fields">
+              <label>x <input name="x" type="number" min="-5" max="5" step="1" value="3" required></label>
+              <label>y <input name="y" type="number" min="-5" max="5" step="1" value="4" required></label>
+              <label>z <input name="z" type="number" min="-5" max="5" step="1" value="0" required></label>
+            </div>
+            <div class="arc-fields">
+              <label>View <select name="view"><option value="xy">XY triangle</option><option value="depth">Both triangles</option></select></label>
+              <button class="lesson-primary" type="button" data-action="plot">Build triangles</button>
+            </div>
+            <p class="arc-readout" data-readout="areas">P = (3, 4, 0) · XY squares 9 + 16 = 25 square units · Full squared length 25 square units · Length 5 units</p>
+            <div class="arc-missions">
+              <details data-mission="power-triangle">
+                <summary>Build a 3–4–5 triangle<span data-completion hidden>✓ Complete</span></summary>
+                <p>Use XY legs of lengths 3 and 4, with z = 0, then check the squared areas.</p>
+                <button type="button" data-check>Check the triangle</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="power-reflect">
+                <summary>Predict the distance after reflection<span data-completion hidden>✓ Complete</span></summary>
+                <p>Use a point with nonzero x. Predict how its distance from O changes when it reflects across the y-axis in the XY plane with depth held fixed.</p>
+                <div class="arc-fields">
+                  <label>Distance after reflection <select name="reflection"><option value="">Choose an answer</option><option value="same">Stays the same</option><option value="larger">Increases</option><option value="smaller">Decreases</option></select></label>
+                </div>
+                <button type="button" data-check>Lock and reflect</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="power-depth">
+                <summary>Build a point √29 units from the origin<span data-completion hidden>✓ Complete</span></summary>
+                <p>Give the point nonzero depth and make its squared length equal to 29.</p>
+                <button type="button" data-check>Check the squared length</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="power-sign">
+                <summary>Explain a sign flip<span data-completion hidden>✓ Complete</span></summary>
+                <p>Choose a nonzero coordinate of P. Explain what happens to its squared contribution if its sign flips.</p>
+                <div class="arc-fields">
+                  <label>Coordinate <select name="axis"><option value="x">x</option><option value="y">y</option><option value="z">z</option></select></label>
+                  <label>Reason <select name="sign-rule"><option value="">Choose an answer</option><option value="square">The two negative factors multiply to a positive</option><option value="zero">Squaring turns a negative into zero</option><option value="negative">The square has the original sign</option></select></label>
+                </div>
+                <button type="button" data-check>Check and show both squares</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+            </div>
+          </fieldset>
+          <details class="arc-math">
+            <summary>Explore the math</summary>
+            <p>The XY diagonal has squared length <var>x</var>² + <var>y</var>². It becomes one leg of the depth triangle, whose other leg has length |<var>z</var>|. Squared lengths are areas in square units. Lengths are distances in units. A zero-length leg makes the corresponding triangle degenerate.</p>
+          </details>
+        </section>
+
+        <section class="arc-station" data-station="circle" data-accent="yellow" aria-labelledby="arc-circle-title" hidden>
+          <header><h4 id="arc-circle-title" tabindex="-1">Unit Circle Circuit</h4><p>Start at radius 1 and measure your angle counterclockwise from +x. Try radius 5 to scale the same signed components.</p></header>
+          <div class="arc-scene-slot" data-arc-slot></div>
+          <fieldset disabled>
+            <legend class="math-sr-only">Unit Circle Circuit controls</legend>
+            <div class="arc-fields">
+              <label>Radius in units <input name="radius" type="number" min="1" max="5" step="1" value="1" required></label>
+              <label>Angle in degrees <input name="angle" type="number" min="0" max="360" step="1" value="0" required></label>
+              <button class="lesson-primary" type="button" data-action="plot">Set radius and angle</button>
+            </div>
+            <p class="arc-readout" data-readout="trig">0° = 0 rad · cos θ = 1 · sin θ = 0 · Endpoint (1, 0) · Radius 1 unit</p>
+            <div class="arc-missions">
+              <details data-mission="circle-top">
+                <summary>Reach the top of the unit circle<span data-completion hidden>✓ Complete</span></summary>
+                <p>Set radius 1 and move the tip to (0, 1).</p>
+                <button type="button" data-check>Check endpoint</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="circle-quadrant">
+                <summary>Find negative cosine and positive sine<span data-completion hidden>✓ Complete</span></summary>
+                <p>Move the tip into the interior of quadrant II. Points on an axis are the boundary.</p>
+                <button type="button" data-check>Check the signs</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="circle-pi">
+                <summary>Match degrees and radians<span data-completion hidden>✓ Complete</span></summary>
+                <p>For 180°, choose the matching angle in radians.</p>
+                <div class="arc-fields">
+                  <label>Radians at 180° <select name="radians"><option value="">Choose an answer</option><option value="half">π/2</option><option value="pi">π</option><option value="double">2π</option></select></label>
+                </div>
+                <button type="button" data-check>Check radians</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="circle-rotate">
+                <summary>Rotate while keeping radius fixed<span data-completion hidden>✓ Complete</span></summary>
+                <p>Save the point, then rotate to a different endpoint at the same radius.</p>
+                <button type="button" data-action="pin-rotation">Save radius and endpoint</button>
+                <p class="arc-readout" data-readout="rotation" role="status">No endpoint saved.</p>
+                <button type="button" data-check>Compare after rotation</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="circle-pair">
+                <summary>Same cosine, different sine<span data-completion hidden>✓ Complete</span></summary>
+                <p>Save an angle, then find a second angle with the same cosine and a different sine.</p>
+                <button type="button" data-action="pin-pair">Save first angle</button>
+                <p class="arc-readout" data-readout="angle-pair" role="status">No angle saved.</p>
+                <button type="button" data-check>Compare both angles</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+            </div>
+          </fieldset>
+          <details class="arc-math">
+            <summary>Explore the math</summary>
+            <p>Degrees × π/180 gives radians. The unit circle’s coordinates are cos θ and sin θ. Multiplying the radius by each component scales the endpoint without changing the trig values. The 0° and 360° endpoints coincide. Rounded trig values are marked with ≈.</p>
+          </details>
+        </section>
+
+        <section class="arc-station" data-station="projection" data-accent="blue" aria-labelledby="arc-projection-title" hidden>
+          <header><h4 id="arc-projection-title" tabindex="-1">Projection and Shadow Lab</h4><p>Drop a perpendicular from P to each coordinate plane. Predict the XZ shadow to add it to the diagram.</p></header>
+          <div class="arc-scene-slot" data-arc-slot></div>
+          <fieldset disabled>
+            <legend class="math-sr-only">Projection and Shadow Lab controls</legend>
+            <div class="arc-fields">
+              <label>x <input name="x" type="number" min="-5" max="5" step="1" value="3" required></label>
+              <label>y <input name="y" type="number" min="-5" max="5" step="1" value="4" required></label>
+              <label>z <input name="z" type="number" min="-5" max="5" step="1" value="2" required></label>
+            </div>
+            <div class="arc-fields">
+              <label>View <select name="view"><option value="depth">Depth</option><option value="xy">XY</option><option value="xz">XZ</option><option value="yz">YZ</option></select></label>
+              <button class="lesson-primary" type="button" data-action="plot">Plot full point</button>
+            </div>
+            <p class="arc-readout" data-readout="projections">P = (3, 4, 2) · Pxy = (3, 4, 0) · Pyz = (0, 4, 2) · XZ prediction pending</p>
+            <div class="arc-missions">
+              <details data-mission="projection-xy">
+                <summary>Share a shadow in the XY plane<span data-completion hidden>✓ Complete</span></summary>
+                <p>Save a point, then find a different point with the same XY projection.</p>
+                <button type="button" data-action="pin-xy">Save first point</button>
+                <p class="arc-readout" data-readout="xy-pair" role="status">No point saved.</p>
+                <button type="button" data-check>Compare two points</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="projection-xz">
+                <summary>Predict the XZ projection<span data-completion hidden>✓ Complete</span></summary>
+                <p>Enter all three coordinates of the XZ shadow before revealing it. Editing P starts a new prediction.</p>
+                <div class="arc-fields">
+                  <label>x <input name="guess-x" type="number" min="-5" max="5" step="1" required></label>
+                  <label>y <input name="guess-y" type="number" min="-5" max="5" step="1" required></label>
+                  <label>z <input name="guess-z" type="number" min="-5" max="5" step="1" required></label>
+                </div>
+                <button type="button" data-check>Lock and reveal XZ</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="projection-camera">
+                <summary>Move the camera only<span data-completion hidden>✓ Complete</span></summary>
+                <p>Record the current point and view. Select a different view with the coordinates unchanged.</p>
+                <button type="button" data-action="pin-camera">Save point and view</button>
+                <p class="arc-readout" data-readout="camera" role="status">No view saved.</p>
+                <button type="button" data-check>Compare the views</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="projection-preserve">
+                <summary>Keep a chosen projection fixed<span data-completion hidden>✓ Complete</span></summary>
+                <p>Choose a plane and save P. Change the coordinate perpendicular to that plane while keeping the other two fixed.</p>
+                <div class="arc-fields">
+                  <label>Plane to preserve <select name="plane"><option value="xy">XY</option><option value="xz">XZ</option><option value="yz">YZ</option></select></label>
+                  <button type="button" data-action="pin-plane">Save point and plane</button>
+                </div>
+                <p class="arc-readout" data-readout="plane" role="status">No plane saved.</p>
+                <button type="button" data-check>Check the projection</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+            </div>
+          </fieldset>
+          <details class="arc-math">
+            <summary>Explore the math</summary>
+            <p>Orthogonal projection holds the in-plane coordinates fixed and sets the perpendicular coordinate to zero. Changing the camera preserves the full point and all three mathematical projections.</p>
+          </details>
+        </section>
+
+        <section class="arc-station" data-station="transform" data-accent="violet" aria-labelledby="arc-transform-title" hidden>
+          <header><h4 id="arc-transform-title" tabindex="-1">Transformation Arcade</h4><p>Apply a transformation about the origin in XY. Positive rotation is counterclockwise from +z. Use the quarter-turn mission to predict and apply rotation.</p></header>
+          <div class="arc-scene-slot" data-arc-slot></div>
+          <fieldset disabled>
+            <legend class="math-sr-only">Transformation Arcade controls</legend>
+            <div class="arc-fields">
+              <label>x <input name="x" type="number" min="-5" max="5" step="1" value="3" required></label>
+              <label>y <input name="y" type="number" min="-5" max="5" step="1" value="4" required></label>
+            </div>
+            <div class="arc-fields">
+              <label>Transformation <select name="type"><option value="reflect">Reflect across the y-axis</option><option value="rotate">Rotate by +90°</option><option value="scale">Scale from the origin</option></select></label>
+              <label>Scale factor <input name="factor" type="number" min="-3" max="3" step="0.5" value="2" required></label>
+              <button class="lesson-primary" type="button" data-action="apply">Apply selected transformation</button>
+            </div>
+            <p class="arc-readout" data-readout="transform">Original (3, 4) · Length 5 units. Apply a transformation to compare.</p>
+            <div class="arc-missions">
+              <details data-mission="transform-reflect">
+                <summary>Reflect across the y-axis<span data-completion hidden>✓ Complete</span></summary>
+                <p>Use an arrow with nonzero x. Apply the reflection and check which component changes sign.</p>
+                <button type="button" data-check>Check reflection</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="transform-rotate">
+                <summary>Predict a quarter turn<span data-completion hidden>✓ Complete</span></summary>
+                <p>For the current nonzero arrow, predict both coordinates after a positive 90° turn. Use the mission button to reveal the result.</p>
+                <div class="arc-fields">
+                  <label>x <input name="guess-x" type="number" min="-5" max="5" step="1" required></label>
+                  <label>y <input name="guess-y" type="number" min="-5" max="5" step="1" required></label>
+                </div>
+                <button type="button" data-check>Lock and rotate</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="transform-scale">
+                <summary>Preserve direction while scaling<span data-completion hidden>✓ Complete</span></summary>
+                <p>Use a nonzero arrow and apply a positive scale factor other than 1. Check the direction and length.</p>
+                <button type="button" data-check>Check scaling</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="transform-length">
+                <summary>Preserve length while changing direction<span data-completion hidden>✓ Complete</span></summary>
+                <p>Apply a transformation to a nonzero arrow. Find a result at the same length pointing in a different direction.</p>
+                <button type="button" data-check>Check both properties</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+            </div>
+          </fieldset>
+          <details class="arc-math">
+            <summary>Explore the math</summary>
+            <p><strong>Matrix preview.</strong> For column vectors, reflection across y uses rows (−1, 0) and (0, 1). A +90° rotation uses rows (0, −1) and (1, 0). A scale by <var>s</var> uses rows (<var>s</var>, 0) and (0, <var>s</var>). In the product BA, A acts first.</p>
+            <p>A negative scale reverses the direction of a nonzero arrow. A scale of zero gives the zero vector, which has no direction.</p>
+          </details>
+        </section>
+
+        <section class="arc-station" data-station="graph" data-accent="orange" aria-labelledby="arc-graph-title" hidden>
+          <header><h4 id="arc-graph-title" tabindex="-1">Graph Detective</h4><p>Adjust m and b in y = mx + b. Compare the learner line with a target using the graph and sampled points.</p></header>
+          <div class="arc-scene-slot" data-arc-slot></div>
+          <fieldset disabled>
+            <legend class="math-sr-only">Graph Detective controls</legend>
+            <div class="arc-fields">
+              <label>Slope m <input name="m" type="number" min="-4" max="4" step="0.5" value="0" required></label>
+              <label>Intercept b <input name="b" type="number" min="-5" max="5" step="1" value="0" required></label>
+              <button class="lesson-primary" type="button" data-action="plot">Plot learner line</button>
+            </div>
+            <p class="arc-readout" data-readout="rule">Learner line · y = 0 · Domain −4 ≤ x ≤ 4</p>
+            <table class="math-table arc-table">
+              <caption>Graph evidence at three inputs</caption>
+              <thead><tr><th scope="col">x</th><th scope="col">Learner y</th><th scope="col">Target y</th></tr></thead>
+              <tbody data-readout="samples">
+                <tr><th scope="row">−2</th><td>0</td><td>−3</td></tr>
+                <tr><th scope="row">0</th><td>0</td><td>1</td></tr>
+                <tr><th scope="row">2</th><td>0</td><td>5</td></tr>
+              </tbody>
+            </table>
+            <div class="arc-missions">
+              <details data-mission="graph-match">
+                <summary>Recreate the calibration line<span data-completion hidden>✓ Complete</span></summary>
+                <p>Use the samples to recreate the target line from the opening lesson. Match the entire rule.</p>
+                <button type="button" data-check>Check both lines</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="graph-decrease">
+                <summary>Build a decreasing line<span data-completion hidden>✓ Complete</span></summary>
+                <p>Make the learner output decrease as x increases. Compare its values at −2 and 2.</p>
+                <button type="button" data-check>Check slope</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="graph-inverse">
+                <summary>Work backward from a selected output<span data-completion hidden>✓ Complete</span></summary>
+                <p>Pick an integer x from −4 to 4 to generate an output on your line, or test output 3 or 4. For a nonhorizontal line, enter the inverse x to within 0.001. Leave x blank if every input or no input works.</p>
+                <div class="arc-fields">
+                  <label>Output choice <select name="output-mode"><option value="reachable">Generate a reachable output</option><option value="3">Use output 3</option><option value="4">Use output 4</option></select></label>
+                  <label>Input for generating an output <input name="trial-x" type="number" min="-4" max="4" step="1" value="2" required></label>
+                  <button type="button" data-action="set-output">Choose output</button>
+                </div>
+                <p class="arc-readout" data-readout="output" role="status">Choose an output before checking.</p>
+                <div class="arc-fields">
+                  <label>Solutions in the domain <select name="solution"><option value="">Choose an answer</option><option value="one">One input</option><option value="all">Every input</option><option value="none">No input</option></select></label>
+                  <label>Inverse input x when there is one <input name="inverse-x" type="number" min="-4" max="4" step="any"></label>
+                </div>
+                <button type="button" data-check>Check the solution set</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="graph-equations">
+                <summary>Match two equations to their graphs<span data-completion hidden>✓ Complete</span></summary>
+                <p>Compare the slope and intercept of graphs A and B from these samples.</p>
+                <table class="math-table arc-table">
+                  <caption>Two line graphs sampled at −2, 0, and 2</caption>
+                  <thead><tr><th scope="col">Graph</th><th scope="col">y at −2</th><th scope="col">y at 0</th><th scope="col">y at 2</th></tr></thead>
+                  <tbody>
+                    <tr><th scope="row">A</th><td>−3</td><td>1</td><td>5</td></tr>
+                    <tr><th scope="row">B</th><td>4</td><td>2</td><td>0</td></tr>
+                  </tbody>
+                </table>
+                <div class="arc-fields">
+                  <label>Graph A <select name="match-a"><option value="">Choose an answer</option><option value="a">y = 2x + 1</option><option value="b">y = −x + 2</option></select></label>
+                  <label>Graph B <select name="match-b"><option value="">Choose an answer</option><option value="a">y = 2x + 1</option><option value="b">y = −x + 2</option></select></label>
+                </div>
+                <button type="button" data-action="show-ab">Plot graphs A and B</button>
+                <button type="button" data-check>Check both matches</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+            </div>
+          </fieldset>
+          <details class="arc-math">
+            <summary>Explore the math</summary>
+            <p>The slope <var>m</var> is the output change per unit of input. The intercept <var>b</var> is the output when <var>x</var> is zero. When <var>m</var> is nonzero, solve for <var>x</var> by subtracting <var>b</var> and dividing by <var>m</var>. A horizontal line gives the same output for all inputs.</p>
+          </details>
+        </section>
+
+        <section class="arc-station" data-station="change" data-accent="green" aria-labelledby="arc-change-title" hidden>
+          <header><h4 id="arc-change-title" tabindex="-1">What Changed? Challenge</h4><p>Compare records of the point, arrow length, and camera view. Start with the reflection of (3, 4, 0).</p></header>
+          <div class="arc-scene-slot" data-arc-slot></div>
+          <fieldset disabled>
+            <legend class="math-sr-only">What Changed? Challenge controls</legend>
+            <div class="arc-fields">
+              <label>x <input name="x" type="number" min="-5" max="5" step="1" value="-3" required></label>
+              <label>y <input name="y" type="number" min="-5" max="5" step="1" value="4" required></label>
+              <label>z <input name="z" type="number" min="-5" max="5" step="1" value="0" required></label>
+            </div>
+            <div class="arc-fields">
+              <label>View <select name="view"><option value="xy">XY</option><option value="depth">Depth</option></select></label>
+              <button class="lesson-primary" type="button" data-action="plot">Update the after point</button>
+            </div>
+            <dl class="math-metrics arc-pair">
+              <div><dt>Before</dt><dd data-readout="before">(3, 4, 0) · 5 units · XY view</dd></div>
+              <div><dt>After</dt><dd data-readout="after">(−3, 4, 0) · 5 units · XY view</dd></div>
+            </dl>
+            <button type="button" data-action="pin">Use the after point as the new baseline</button>
+            <div class="arc-missions">
+              <details data-mission="change-length">
+                <summary>Move the tip at fixed length<span data-completion hidden>✓ Complete</span></summary>
+                <p>Find an after point at the same length as the before point. Identify what changed in the reflection example.</p>
+                <div class="arc-fields">
+                  <label>What did the example reflection change? <select name="reflection"><option value="">Choose an answer</option><option value="tip">The sign of x, tip, and direction</option><option value="length">Only the length</option><option value="view">Only the view</option></select></label>
+                </div>
+                <button type="button" data-check>Compare length and tip</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="change-direction">
+                <summary>Preserve direction and change length<span data-completion hidden>✓ Complete</span></summary>
+                <p>Scale the saved nonzero arrow by a positive factor other than 1. The comparison shows both arrows.</p>
+                <div class="arc-fields">
+                  <label>Positive scale factor <input name="factor" type="number" min="0.5" max="2" step="0.5" value="0.5" required></label>
+                </div>
+                <button type="button" data-check>Apply and check</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="change-camera">
+                <summary>Distinguish a camera move from a point change<span data-completion hidden>✓ Complete</span></summary>
+                <p>Use the current point as the baseline, then change only the view. Check the two records.</p>
+                <div class="arc-fields">
+                  <label>What does a camera-only move change? <select name="camera"><option value="">Choose an answer</option><option value="view">Only the view</option><option value="point">The mathematical point</option><option value="length">The arrow length</option></select></label>
+                </div>
+                <button type="button" data-check>Compare the records</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+              <details data-mission="change-turn">
+                <summary>Compare angles one turn apart<span data-completion hidden>✓ Complete</span></summary>
+                <p>Enter two angles with a difference of 360°. Check their endpoints on the same unit circle.</p>
+                <div class="arc-fields">
+                  <label>First angle in degrees <input name="angle-a" type="number" min="0" max="720" step="1" value="0" required></label>
+                  <label>Second angle in degrees <input name="angle-b" type="number" min="0" max="720" step="1" value="360" required></label>
+                </div>
+                <button type="button" data-check>Compare the endpoints</button>
+                <p class="arc-feedback" role="status"></p>
+              </details>
+            </div>
+          </fieldset>
+          <details class="arc-math">
+            <summary>Explore the math</summary>
+            <p>Length describes distance from the origin. Direction describes which way a nonzero arrow points. Two arrows of equal length can point in different directions. A turn of 360° returns a circular endpoint to the same point.</p>
+          </details>
+        </section>
+      </div>
+
+      <template id="arc-apparatus-template">
+        <figure class="math-figure arc-apparatus">
+          <figcaption id="arc-figure-caption">Station diagram</figcaption>
+          <div class="arc-viewport" id="arc-viewport">
+            <svg class="arc-diagram" id="arc-diagram" viewBox="0 0 560 340" role="img" aria-labelledby="arc-figure-caption"></svg>
+          </div>
+          <p class="lesson-note" id="arc-render-status" role="status"></p>
+        </figure>
+      </template>
+    </details>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

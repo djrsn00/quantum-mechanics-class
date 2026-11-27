@@ -1,0 +1,1042 @@
+:root {
+  color-scheme: dark;
+
+  --background: #050906;
+  --panel: #09150e;
+  --ink: #ecfff1;
+  --phosphor: #78f8a6;
+  --muted: #a6c5b0;
+  --line: #234c33;
+
+  --red: #ff676f;
+  --orange: #ff9f55;
+  --yellow: #ffe16a;
+  --green: #63f59b;
+  --blue: #65b7ff;
+  --violet: #c19bff;
+
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0;
+  background-color: var(--background);
+  background-image:
+    radial-gradient(ellipse at 50% 35%, rgb(33 123 68 / 15%), transparent 65%),
+    linear-gradient(rgb(120 248 166 / 4%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(120 248 166 / 4%) 1px, transparent 1px);
+  background-size: auto, 32px 32px, 32px 32px;
+  color: var(--ink);
+  font-family: var(--mono);
+}
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+  background-color: #070f0a;
+  box-shadow: 0 1px 18px rgb(93 239 146 / 8%);
+}
+
+.header-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 2rem);
+  width: min(calc(100% - var(--gutter) - var(--gutter)), 84rem);
+  min-height: 7rem;
+  margin-inline: auto;
+  padding-block: 0.75rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.brand-logo {
+  flex: none;
+  width: clamp(2.75rem, 4.5vw, 3.5rem);
+  filter: drop-shadow(0 0 6px rgb(120 248 166 / 24%));
+}
+
+.brand h1 {
+  margin: 0;
+  color: var(--phosphor);
+  font-size: clamp(1rem, 1.5vw, 1.375rem);
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.particle-display {
+  position: relative;
+  grid-column: 2;
+  justify-self: center;
+  width: min(100%, 30rem);
+  aspect-ratio: 480 / 108;
+  overflow: hidden;
+}
+
+.particle-still,
+.particle-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.particle-canvas {
+  visibility: hidden;
+}
+
+.particle-display[data-motion="active"] .particle-still {
+  visibility: hidden;
+}
+
+.particle-display[data-motion="active"] .particle-canvas {
+  visibility: visible;
+}
+
+.particle-guide {
+  stroke: var(--line);
+  stroke-width: 1;
+  stroke-dasharray: 2 7;
+  opacity: 0.65;
+}
+
+.particle-tracks path {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.track-in-a { stroke: #d0ffe3; }
+.track-in-b { stroke: #79d7b2; }
+.track-red { stroke: var(--red); }
+.track-orange { stroke: var(--orange); }
+.track-yellow { stroke: var(--yellow); }
+.track-green { stroke: var(--green); }
+.track-blue { stroke: var(--blue); }
+.track-violet { stroke: var(--violet); }
+
+.collision-halo {
+  fill: none;
+  stroke: var(--phosphor);
+  stroke-width: 1;
+  opacity: 0.25;
+}
+
+.collision-cross {
+  fill: none;
+  stroke: var(--phosphor);
+  stroke-width: 1;
+  opacity: 0.62;
+}
+
+.collision-core {
+  fill: #f2fff5;
+  filter: drop-shadow(0 0 5px var(--phosphor));
+}
+
+.lessons-menu-toggle {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: 44px;
+  padding-inline: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: var(--panel);
+  color: var(--phosphor);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lessons-menu-toggle svg {
+  flex: none;
+}
+
+.lessons-menu-toggle:hover,
+.lessons-menu-toggle[aria-expanded="true"] {
+  border-color: var(--phosphor);
+  background-color: #12271b;
+}
+
+.lessons-menu-toggle[hidden],
+.lessons-menu[hidden] {
+  display: none;
+}
+
+.lessons-menu {
+  inline-size: min(26rem, calc(100% - var(--gutter) - var(--gutter)));
+  max-block-size: clamp(5rem, calc(100vh - 12rem), 24rem);
+  max-block-size: clamp(5rem, calc(100dvh - 12rem), 24rem);
+  margin-inline-start: auto;
+  margin-inline-end: max(var(--gutter), calc((100% - 84rem) / 2));
+  margin-block-end: 0.75rem;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background-color: var(--panel);
+}
+
+.lessons-menu a {
+  display: grid;
+  grid-template-columns: 2ch minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  color: var(--ink);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.lessons-menu a + a {
+  border-block-start: 1px solid var(--line);
+}
+
+.lessons-menu a:hover,
+.lessons-menu a:focus-visible,
+.lessons-menu a[aria-current="page"] {
+  background-color: #12271b;
+}
+
+.lessons-menu-toggle:focus-visible,
+.lessons-menu a:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 2px;
+}
+
+.lessons-menu a:focus-visible {
+  outline-offset: -2px;
+}
+
+.lessons-menu-step {
+  color: var(--phosphor);
+  text-align: end;
+}
+
+.site-footer {
+  padding: 1.25rem var(--gutter);
+  border-top: 1px solid var(--line);
+  background-color: #070f0a;
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+@media (max-width: 56rem) {
+  .header-inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.25rem;
+    min-height: 0;
+    padding-block: 1rem 0.5rem;
+  }
+
+  .brand h1 {
+    overflow-wrap: anywhere;
+  }
+
+  .particle-display {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .lessons-menu-toggle {
+    grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particle-display[data-motion="active"] .particle-still {
+    visibility: visible;
+  }
+
+  .particle-display[data-motion="active"] .particle-canvas {
+    visibility: hidden;
+  }
+}
+
+/* Lesson 6 */
+
+.site-main.phase-lesson {
+  --phase-real: var(--orange);
+  --phase-imag: var(--blue);
+  --phase-radius: var(--green);
+  --phase-angle: var(--yellow);
+  --phase-point: var(--violet);
+
+  display: grid;
+  align-content: start;
+  gap: clamp(1rem, 3vw, 2rem);
+  width: min(calc(100% - var(--gutter) - var(--gutter)), 68rem);
+  margin-inline: auto;
+  padding-block: clamp(1.5rem, 4vw, 3.5rem);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.phase-lesson :is(h2, h3, h4, p, figure, dl) {
+  margin: 0;
+}
+
+.phase-lesson :is(h2, h3, h4) {
+  line-height: 1.25;
+}
+
+.phase-lesson h2 {
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  letter-spacing: -0.06em;
+}
+
+.phase-lesson h3 {
+  font-size: clamp(1.25rem, 3vw, 1.65rem);
+}
+
+.phase-lesson h4 {
+  font-size: 1rem;
+}
+
+.phase-lesson a {
+  color: var(--phosphor);
+  text-underline-offset: 0.2em;
+}
+
+.phase-lesson :is(a, button, input, select, summary):focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 3px;
+}
+
+.phase-lesson :is(.lesson-intro, .lesson-prose) {
+  display: grid;
+  gap: 0.75rem;
+  max-inline-size: 74ch;
+}
+
+.phase-lesson .lesson-kicker {
+  color: var(--phosphor);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.phase-lesson .lesson-lead {
+  max-inline-size: 60ch;
+  color: var(--phosphor);
+  font-size: clamp(1.0625rem, 2.4vw, 1.375rem);
+  font-weight: 700;
+}
+
+.phase-lesson :is(.lesson-panel, .lesson-station) {
+  display: grid;
+  align-content: start;
+  gap: 0.875rem;
+  min-inline-size: 0;
+  padding: clamp(0.875rem, 2.5vw, 1.75rem);
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: linear-gradient(145deg, #0d1b12, var(--panel));
+}
+
+.phase-lesson .lesson-station {
+  gap: 0.75rem;
+  padding: clamp(0.75rem, 2vw, 1.25rem);
+  border-radius: 0.375rem;
+  background: #070e09;
+}
+
+.phase-lesson details.lesson-panel:not([open]) {
+  display: block;
+}
+
+.phase-lesson .lesson-note {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.phase-lesson :is(.phase-console, .phase-fields, .phase-turn-record, .phase-figure) {
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+  min-inline-size: 0;
+}
+
+.phase-lesson .phase-figure figcaption {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.phase-lesson .phase-viewport {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  background:
+    linear-gradient(#050d09, #050d09) padding-box,
+    linear-gradient(135deg,
+      var(--red), var(--orange), var(--yellow), var(--green), var(--blue), var(--violet)
+    ) border-box;
+}
+
+.phase-lesson :is(.phase-plane, .phase-canvas, .phase-scene-labels) {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.phase-lesson .phase-scene-labels {
+  pointer-events: none;
+}
+
+.phase-lesson .phase-scene-labels [data-phase-label] {
+  position: absolute;
+  padding: 0.0625rem 0.2rem;
+  border-radius: 0.2rem;
+  background: rgb(5 13 9 / 86%);
+  color: var(--ink);
+  font-size: clamp(0.6875rem, 1.5vw, 0.875rem);
+  line-height: 1.2;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+
+.phase-lesson .phase-plane text {
+  fill: var(--muted);
+  font: 600 16px var(--mono);
+  text-anchor: middle;
+}
+
+.phase-lesson .phase-plane .phase-tick-left {
+  text-anchor: end;
+}
+
+.phase-lesson .phase-plane .phase-axis-name {
+  fill: var(--ink);
+}
+
+.phase-lesson :is(.phase-grid-line, .phase-grid-frame, .phase-axis, .phase-axis-guide,
+                 .phase-unit-circle, .phase-projection-real, .phase-projection-imag,
+                 .phase-right-angle, .phase-vector, .phase-arc) {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.phase-lesson .phase-grid-line {
+  stroke: #163623;
+}
+
+.phase-lesson .phase-grid-frame {
+  stroke: url(#phase-instrument-edge);
+  stroke-opacity: 0.36;
+}
+
+.phase-lesson :is(.phase-axis, .phase-right-angle) {
+  stroke: #729783;
+  stroke-width: 1.25;
+}
+
+.phase-lesson .phase-axis-guide {
+  stroke: var(--muted);
+  stroke-dasharray: 2 4;
+  opacity: 0.55;
+}
+
+.phase-lesson .phase-origin-dot {
+  fill: var(--ink);
+}
+
+.phase-lesson .phase-unit-circle {
+  stroke: var(--red);
+  stroke-dasharray: 4 4;
+  opacity: 0.75;
+}
+
+.phase-lesson .phase-triangle {
+  fill: rgb(101 183 255 / 10%);
+}
+
+.phase-lesson .phase-projection-real {
+  stroke: var(--phase-real);
+  stroke-width: 2.25;
+  stroke-dasharray: 7 4;
+}
+
+.phase-lesson .phase-projection-imag {
+  stroke: var(--phase-imag);
+  stroke-width: 2.25;
+  stroke-dasharray: 1 4;
+  stroke-linecap: round;
+}
+
+.phase-lesson .phase-vector {
+  stroke: var(--phase-radius);
+  stroke-width: 2.75;
+  stroke-linecap: round;
+}
+
+.phase-lesson .phase-arc {
+  stroke: var(--phase-angle);
+  stroke-width: 2;
+}
+
+.phase-lesson .phase-vector-fill {
+  fill: var(--phase-radius);
+}
+
+.phase-lesson .phase-arc-fill {
+  fill: var(--phase-angle);
+}
+
+.phase-lesson .phase-tip-dot {
+  fill: var(--phase-point);
+  stroke: #050d09;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.phase-lesson .phase-plane .phase-label-real { fill: var(--phase-real); }
+.phase-lesson .phase-plane .phase-label-imag { fill: var(--phase-imag); }
+.phase-lesson .phase-plane .phase-label-radius { fill: var(--phase-radius); }
+.phase-lesson .phase-plane .phase-label-angle { fill: var(--phase-angle); }
+.phase-lesson .phase-plane .phase-label-tip { fill: var(--phase-point); }
+
+.phase-lesson .phase-scene-labels [data-phase-label="a"] { color: var(--phase-real); }
+.phase-lesson .phase-scene-labels [data-phase-label="b"] { color: var(--phase-imag); }
+.phase-lesson .phase-scene-labels [data-phase-label="r"] { color: var(--phase-radius); }
+.phase-lesson .phase-scene-labels [data-phase-label="theta"] { color: var(--phase-angle); }
+.phase-lesson .phase-scene-labels [data-phase-label="point"] { color: var(--phase-point); }
+
+.phase-lesson .phase-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem 1rem;
+  margin: 0;
+  padding: 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  list-style: none;
+}
+
+.phase-lesson .phase-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.phase-lesson .phase-key {
+  flex: none;
+  inline-size: 1.25rem;
+  border-block-start: 2px solid currentColor;
+}
+
+.phase-lesson .phase-key-real {
+  border-block-start-style: dashed;
+  color: var(--phase-real);
+}
+
+.phase-lesson .phase-key-imag {
+  border-block-start-style: dotted;
+  color: var(--phase-imag);
+}
+
+.phase-lesson .phase-key-radius {
+  color: var(--phase-radius);
+}
+
+.phase-lesson .phase-key-angle {
+  block-size: 0.65rem;
+  border-inline-end: 2px solid currentColor;
+  border-start-end-radius: 0.65rem;
+  color: var(--phase-angle);
+}
+
+.phase-lesson .phase-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.phase-lesson .phase-metrics > div {
+  padding: 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: var(--panel);
+}
+
+.phase-lesson .phase-metrics dt {
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.phase-lesson .phase-metrics dd {
+  margin: 0;
+  color: var(--phosphor);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.phase-lesson :is(.phase-equations, .phase-equation, .phase-reaction) {
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: #102016;
+  font-variant-numeric: tabular-nums;
+}
+
+.phase-lesson .phase-equations {
+  display: grid;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.phase-lesson .phase-equation {
+  color: var(--phosphor);
+  font-weight: 700;
+}
+
+.phase-lesson .phase-reaction {
+  border-inline-start: 2px solid var(--phosphor);
+  font-size: 0.875rem;
+}
+
+.phase-lesson fieldset {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.phase-lesson fieldset > * + * {
+  margin-block-start: 0.75rem;
+}
+
+.phase-lesson legend {
+  margin-block-end: 0.5rem;
+  padding: 0;
+  color: var(--phosphor);
+  font-weight: 700;
+}
+
+.phase-lesson .phase-field {
+  display: grid;
+  align-content: end;
+  gap: 0.375rem;
+  min-inline-size: 0;
+  font-size: 0.875rem;
+}
+
+.phase-lesson :is(select, input[type="text"]) {
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 44px;
+  padding: 0.375rem 0.5rem;
+  border: 1px solid #517764;
+  border-radius: 0.375rem;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+}
+
+.phase-lesson [aria-invalid="true"] {
+  border-color: var(--red);
+}
+
+.phase-lesson :is(.phase-actions, .lesson-next) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.phase-lesson .lesson-next {
+  justify-content: space-between;
+}
+
+.phase-lesson .lesson-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-block-size: 44px;
+  max-inline-size: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #517764;
+  border-radius: 0.375rem;
+  background: #0b1a12;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.phase-lesson .lesson-primary {
+  border-color: var(--phosphor);
+  background: var(--phosphor);
+  color: #08130d;
+}
+
+.phase-lesson :is(button:enabled, a.lesson-button):hover {
+  border-color: var(--ink);
+}
+
+.phase-lesson :is(button, input, select):disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.phase-lesson summary {
+  display: list-item;
+  inline-size: fit-content;
+  min-block-size: 44px;
+  padding: 0.5rem 0.125rem;
+  color: var(--phosphor);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.phase-lesson details[open] > summary {
+  margin-block-end: 0.375rem;
+}
+
+.phase-lesson .phase-table {
+  inline-size: 100%;
+  max-inline-size: 40rem;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.phase-lesson .phase-table caption {
+  padding-block-end: 0.375rem;
+  color: var(--muted);
+  text-align: start;
+}
+
+.phase-lesson .phase-table :is(th, td) {
+  padding: 0.5rem 0.375rem;
+  border-block-end: 1px solid var(--line);
+  text-align: start;
+}
+
+.phase-lesson .phase-answers {
+  display: grid;
+  justify-items: start;
+  gap: 0.5rem;
+  margin-block-start: 0.75rem;
+}
+
+.phase-lesson [data-phase-question] .lesson-note {
+  margin-block-start: 0.625rem;
+}
+
+.phase-lesson #phase-next-question {
+  justify-self: start;
+}
+
+.phase-lesson .phase-sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.phase-lesson [hidden] {
+  display: none !important;
+}
+
+@media (min-width: 35rem) {
+  .phase-lesson .phase-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 48rem) {
+  .phase-lesson .phase-console {
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+    align-items: start;
+  }
+}
+
+/* Complex Numbers and Phase Arcade */
+
+.site-main.phase-lesson {
+  --cp-surface: #0b1911;
+}
+
+.phase-lesson :is(#phase-lab, #phase-plane-heading, #phase-arcade) {
+  scroll-margin-block-start: 1rem;
+}
+
+.phase-lesson .cp-reduced {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-block-size: 44px;
+  color: var(--muted);
+}
+
+.phase-lesson .cp-reduced input {
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+  margin: 0;
+  accent-color: var(--phosphor);
+}
+
+.phase-lesson :is(.cp-arcade, .cp-mission) > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.375rem 0.75rem;
+  inline-size: 100%;
+}
+
+.phase-lesson :is(.cp-arcade, .cp-mission) > summary::before {
+  content: "+";
+}
+
+.phase-lesson :is(.cp-arcade, .cp-mission)[open] > summary::before {
+  content: "−";
+}
+
+.phase-lesson .cp-arcade > summary strong {
+  font-size: clamp(1rem, 2vw, 1.35rem);
+}
+
+.phase-lesson :is(.cp-arcade > summary span, .cp-readout) {
+  color: var(--muted);
+}
+
+.phase-lesson :is(.cp-toolbar, .cp-station, .cp-figure, .cp-missions, .cp-mission-tools) {
+  display: grid;
+  min-inline-size: 0;
+  gap: 0.75rem;
+}
+
+.phase-lesson .cp-toolbar {
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) auto;
+  align-items: end;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--cp-surface);
+}
+
+.phase-lesson :is(.cp-toolbar, .cp-fields) label {
+  display: grid;
+  gap: 0.25rem;
+  min-inline-size: 0;
+  font-size: 0.875rem;
+}
+
+.phase-lesson #cp-progress {
+  align-self: center;
+  color: var(--phosphor);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.phase-lesson .cp-station {
+  --cp-accent: var(--phosphor);
+  padding: clamp(0.75rem, 2vw, 1.35rem);
+  border: 1px solid var(--line);
+  border-block-start: 3px solid var(--cp-accent);
+  border-radius: 0.6rem;
+  background: var(--cp-surface);
+}
+
+.phase-lesson [data-cp-accent="blue"] { --cp-accent: var(--blue); }
+.phase-lesson [data-cp-accent="violet"] { --cp-accent: var(--violet); }
+.phase-lesson [data-cp-accent="orange"] { --cp-accent: var(--orange); }
+.phase-lesson [data-cp-accent="green"] { --cp-accent: var(--green); }
+.phase-lesson [data-cp-accent="yellow"] { --cp-accent: var(--yellow); }
+.phase-lesson [data-cp-accent="red"] { --cp-accent: var(--red); }
+
+.phase-lesson .cp-station h4 {
+  color: var(--cp-accent);
+  font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+}
+
+.phase-lesson .cp-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11.5rem), 1fr));
+  align-items: end;
+  gap: 0.65rem 0.85rem;
+}
+
+.phase-lesson .cp-fields input[type="number"] {
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 44px;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid #517764;
+  border-radius: 0.375rem;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+}
+
+.phase-lesson .cp-fields input[type="range"] {
+  inline-size: 100%;
+  min-block-size: 44px;
+  margin: 0;
+  accent-color: var(--cp-accent);
+}
+
+.phase-lesson .cp-fields input[readonly] {
+  border-style: dashed;
+  color: var(--muted);
+}
+
+.phase-lesson .cp-station button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-block-size: 44px;
+  max-inline-size: 100%;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid #517764;
+  border-radius: 0.4rem;
+  background: #11241a;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.875rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+.phase-lesson .cp-station button.lesson-primary {
+  border-color: var(--cp-accent);
+  color: var(--cp-accent);
+}
+
+.phase-lesson .cp-station button:enabled:hover {
+  border-color: var(--ink);
+}
+
+.phase-lesson .cp-figure {
+  padding: 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: #050d09;
+}
+
+.phase-lesson .cp-figure figcaption {
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.phase-lesson .cp-viewport {
+  position: relative;
+  inline-size: 100%;
+  min-block-size: 11rem;
+  max-block-size: 25rem;
+  aspect-ratio: 560 / 340;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 0.35rem;
+  background: #050d09;
+}
+
+.phase-lesson .cp-diagram {
+  position: relative;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  pointer-events: none;
+}
+
+.phase-lesson .cp-diagram text {
+  fill: var(--ink);
+  font: 700 15px var(--mono);
+  paint-order: stroke fill;
+  stroke: #050d09;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+.phase-lesson .cp-readout {
+  font-variant-numeric: tabular-nums;
+}
+
+.phase-lesson .cp-mission {
+  padding-inline: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+}
+
+.phase-lesson .cp-mission[open] {
+  padding-block-end: 0.75rem;
+}
+
+.phase-lesson .cp-mission[open] > * + * {
+  margin-block-start: 0.65rem;
+}
+
+.phase-lesson [data-cp-done] {
+  margin-inline-start: auto;
+  color: var(--phosphor);
+  font-size: 0.8125rem;
+}
+
+.phase-lesson :is(.cp-mission-tools, .cp-math, .cp-work) {
+  border-block-start: 1px solid var(--line);
+}
+
+.phase-lesson .cp-mission-tools {
+  justify-items: start;
+  padding-block-start: 0.65rem;
+}
+
+.phase-lesson .cp-mission-tools ol {
+  margin: 0;
+  padding-inline-start: 1.75rem;
+  color: var(--muted);
+}
+
+.phase-lesson .cp-feedback:not(:empty) {
+  padding: 0.55rem 0.75rem;
+  border-inline-start: 2px solid var(--cp-accent);
+  background: #102419;
+}
+
+.phase-lesson .cp-work {
+  inline-size: 100%;
+}
+
+@media (max-width: 46rem) {
+  .phase-lesson .cp-toolbar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

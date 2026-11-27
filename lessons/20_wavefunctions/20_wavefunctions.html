@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Explore how a quantum wavefunction gives position probabilities, compare coherent Gaussian packets, and test detector windows with simulated measurements.">
+  <title>Wavefunctions | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+  <script type="module" src="./scripts/lesson.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)"
+                  stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none"
+                   stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8"
+                stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none"
+                   stroke="url(#logo-spectrum)" stroke-width="1.6"
+                   transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none"
+                stroke="#edffef" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static" viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 464 83"/>
+            <path class="track-violet" d="M218 54C265 80 333 97 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M218 46v16m-8-8h16"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button"
+              aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and-coordinates/8_bases_and-coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html" aria-current="page"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="../22_the_one_dimensional_schrodinger_equation/22_the_one_dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main wavefunction-lesson" aria-labelledby="wf-title">
+    <header class="wf-intro wf-stack">
+      <p class="wf-kicker">Lesson 20</p>
+      <h2 id="wf-title">Wavefunctions</h2>
+      <p class="wf-lead"><strong>A detector covers the center of a wave packet. If you halve its width without moving its center, does its chance of detecting the particle also halve?</strong></p>
+      <p>Start with the detector from −1 to +1 nm. Move its edges to −0.5 and +0.5 nm, then compare the shaded area and the probability. The state is a snapshot at a fixed time.</p>
+    </header>
+
+    <section class="wf-panel" aria-labelledby="wf-lab-title">
+      <h3 id="wf-lab-title">Wavefunction Lab</h3>
+      <p class="wf-note" id="wf-static-note">The plots and readouts show the opening Gaussian. Interactive controls become available when the lesson script loads.</p>
+
+      <div class="wf-lab-grid">
+        <div class="wf-stack">
+          <fieldset class="wf-card" id="wf-preparation-controls" disabled>
+            <legend>Prepare the state</legend>
+            <div class="wf-field">
+              <label for="wf-preset">Preparation</label>
+              <select id="wf-preset">
+                <option value="single" selected>Single Gaussian</option>
+                <option value="coherent">Two coherent packets</option>
+              </select>
+            </div>
+
+            <div class="wf-field" id="wf-center-field">
+              <div class="wf-label-row"><label for="wf-mu">Packet center μ</label><span id="wf-mu-value">0.0 nm</span></div>
+              <input type="range" id="wf-mu" min="-2" max="2" step="0.1" value="0" aria-valuetext="0.0 nanometers">
+            </div>
+
+            <div class="wf-field">
+              <div class="wf-label-row"><label for="wf-sigma">Packet width σ</label><span id="wf-sigma-value">1.00 nm</span></div>
+              <input type="range" id="wf-sigma" min="0.5" max="1.5" step="0.05" value="1"
+                     aria-valuetext="1.00 nanometers" aria-describedby="wf-sigma-help">
+              <p class="wf-note" id="wf-sigma-help">σ is the standard deviation of each component’s position density.</p>
+            </div>
+
+            <div class="wf-field" id="wf-phase-field" hidden>
+              <div class="wf-label-row"><label for="wf-phase">Relative phase φ</label><span id="wf-phase-value">0°</span></div>
+              <input type="range" id="wf-phase" min="0" max="360" step="1" value="0"
+                     aria-valuetext="0 degrees" aria-describedby="wf-phase-help">
+              <p class="wf-note" id="wf-phase-help">Packet centers are fixed at −1 and +1 nm. Phase φ multiplies the right packet by exp(iφ).</p>
+              <div class="wf-actions" role="group" aria-label="Relative phase shortcuts">
+                <button type="button" data-wf-phase="0">0°</button>
+                <button type="button" data-wf-phase="90">90°</button>
+                <button type="button" data-wf-phase="180">180°</button>
+                <button type="button" data-wf-phase="360">360°</button>
+              </div>
+            </div>
+            <p class="wf-note">Changing the preparation clears detections and ends any scanner challenge.</p>
+          </fieldset>
+
+          <fieldset class="wf-card" id="wf-position-controls" disabled>
+            <legend>Probe and detector</legend>
+            <div class="wf-field">
+              <div class="wf-label-row"><label for="wf-probe">Point probe x</label><span id="wf-probe-value">0.0 nm</span></div>
+              <input type="range" id="wf-probe" min="-5" max="5" step="0.1" value="0"
+                     aria-valuetext="0.0 nanometers" aria-describedby="wf-probe-help">
+              <p class="wf-note" id="wf-probe-help">Read the curves at the dotted vertical marker.</p>
+            </div>
+            <div class="wf-field">
+              <div class="wf-label-row"><label for="wf-a">Detector left edge a</label><span id="wf-a-value">−1.0 nm</span></div>
+              <input type="range" id="wf-a" min="-5" max="5" step="0.1" value="-1"
+                     aria-valuetext="minus 1.0 nanometers" aria-describedby="wf-edge-help">
+            </div>
+            <div class="wf-field">
+              <div class="wf-label-row"><label for="wf-b">Detector right edge b</label><span id="wf-b-value">1.0 nm</span></div>
+              <input type="range" id="wf-b" min="-5" max="5" step="0.1" value="1"
+                     aria-valuetext="1.0 nanometers" aria-describedby="wf-edge-help">
+            </div>
+            <p class="wf-note" id="wf-edge-help">Edges can meet to make a zero-width detector. Moving the window rechecks the existing hits.</p>
+          </fieldset>
+        </div>
+
+        <div class="wf-stack">
+          <figure class="wf-card">
+            <figcaption id="wf-amplitude-caption">Wavefunction components · nm⁻¹ᐟ²</figcaption>
+            <ul class="wf-legend">
+              <li><span class="wf-key wf-key-real" aria-hidden="true"></span> Real Re ψ</li>
+              <li><span class="wf-key wf-key-imag" aria-hidden="true"></span> Imaginary Im ψ</li>
+              <li><span class="wf-key wf-key-probe" aria-hidden="true"></span> Probe</li>
+            </ul>
+            <svg class="wf-plot" id="wf-amplitude-plot" viewBox="0 0 560 190" role="img"
+                 aria-labelledby="wf-amplitude-caption" aria-describedby="wf-amplitude-description" focusable="false">
+              <desc id="wf-amplitude-description">The real part of the opening Gaussian peaks at x equals zero. The imaginary part is zero. The dotted probe is at zero nanometers.</desc>
+              <path class="wf-grid" d="M58 18H542 M58 49H542 M58 111H542 M58 142H542 M106.4 18V142 M203.2 18V142 M300 18V142 M396.8 18V142 M493.6 18V142"/>
+              <path class="wf-axis" d="M58 18V142H542 M58 80H542"/>
+              <g class="wf-ticks" text-anchor="end">
+                <text x="51" y="23">+1</text><text x="51" y="54">+0.5</text><text x="51" y="85">0</text>
+                <text x="51" y="116">−0.5</text><text x="51" y="147">−1</text>
+              </g>
+              <g class="wf-ticks" text-anchor="middle">
+                <text x="58" y="162">−5</text><text x="106.4" y="162">−4</text><text x="203.2" y="162">−2</text>
+                <text x="300" y="162">0</text><text x="396.8" y="162">2</text><text x="493.6" y="162">4</text><text x="542" y="162">5</text>
+                <text x="300" y="184">x (nm)</text>
+              </g>
+              <path class="wf-trace wf-real" id="wf-real-curve"
+                    d="M58 79.92 L82.2 79.75 L106.4 79.28 L130.6 78.17 L154.8 75.87 L179 71.79 L203.2 65.59 L227.4 57.69 L251.6 49.5 L275.8 43.21 L300 40.84 L324.2 43.21 L348.4 49.5 L372.6 57.69 L396.8 65.59 L421 71.79 L445.2 75.87 L469.4 78.17 L493.6 79.28 L517.8 79.75 L542 79.92"/>
+              <path class="wf-trace wf-imag" id="wf-imag-curve" d="M58 80H542"/>
+              <line class="wf-probe-line" id="wf-amplitude-probe" x1="300" y1="18" x2="300" y2="142"/>
+            </svg>
+          </figure>
+
+          <figure class="wf-card">
+            <figcaption id="wf-density-caption">Position probability density · nm⁻¹</figcaption>
+            <ul class="wf-legend">
+              <li><span class="wf-key wf-key-density" aria-hidden="true"></span> Predicted ρ</li>
+              <li><span class="wf-key wf-key-detector" aria-hidden="true"></span> Detector area</li>
+              <li><span class="wf-key wf-key-histogram" aria-hidden="true"></span> Detection bars</li>
+            </ul>
+            <svg class="wf-plot" id="wf-density-plot" viewBox="0 0 560 190" role="img"
+                 aria-labelledby="wf-density-caption" aria-describedby="wf-density-description" focusable="false">
+              <desc id="wf-density-description">The opening bell-shaped density has its maximum at zero. The interval from minus one to plus one nanometers is shaded under the curve. There are no sampled detections.</desc>
+              <path class="wf-grid" d="M58 18H542 M58 49H542 M58 80H542 M58 111H542 M106.4 18V142 M203.2 18V142 M300 18V142 M396.8 18V142 M493.6 18V142"/>
+              <path class="wf-axis" d="M58 18V142H542"/>
+              <g class="wf-ticks" text-anchor="end">
+                <text x="51" y="23" id="wf-density-tick-4">1</text>
+                <text x="51" y="54" id="wf-density-tick-3">0.75</text>
+                <text x="51" y="85" id="wf-density-tick-2">0.5</text>
+                <text x="51" y="116" id="wf-density-tick-1">0.25</text>
+                <text x="51" y="147">0</text>
+              </g>
+              <g class="wf-ticks" text-anchor="middle">
+                <text x="58" y="162">−5</text><text x="106.4" y="162">−4</text><text x="203.2" y="162">−2</text>
+                <text x="300" y="162">0</text><text x="396.8" y="162">2</text><text x="493.6" y="162">4</text><text x="542" y="162">5</text>
+                <text x="300" y="184">x (nm)</text>
+              </g>
+              <path class="wf-detector-area" id="wf-detector-area"
+                    d="M251.6 112 L263.7 104.66 L275.8 98.34 L287.9 94.05 L300 92.53 L312.1 94.05 L324.2 98.34 L336.3 104.66 L348.4 112 L348.4 142 L251.6 142 Z"/>
+              <g class="wf-histogram" id="wf-histogram" aria-hidden="true"></g>
+              <path class="wf-trace wf-density" id="wf-density-curve"
+                    d="M58 142 L82.2 142 L106.4 141.98 L130.6 141.89 L154.8 141.45 L179 139.83 L203.2 135.31 L227.4 125.94 L251.6 112 L275.8 98.34 L300 92.53 L324.2 98.34 L348.4 112 L372.6 125.94 L396.8 135.31 L421 139.83 L445.2 141.45 L469.4 141.89 L493.6 141.98 L517.8 142 L542 142"/>
+              <line class="wf-edge-line" id="wf-detector-left" x1="251.6" y1="18" x2="251.6" y2="142"/>
+              <line class="wf-edge-line" id="wf-detector-right" x1="348.4" y1="18" x2="348.4" y2="142"/>
+              <line class="wf-probe-line" id="wf-density-probe" x1="300" y1="18" x2="300" y2="142"/>
+            </svg>
+            <p class="wf-note">Bars use 0.25 nm bins. The vertical scale expands if needed to fit the bars.</p>
+          </figure>
+
+          <section class="wf-card" aria-labelledby="wf-readouts-title">
+            <h4 id="wf-readouts-title">Plot readouts</h4>
+            <p class="wf-note" id="wf-plot-summary">Single Gaussian centered at 0.0 nm with σ = 1.00 nm. Probe at 0.0 nm. Detector from −1.0 to 1.0 nm.</p>
+            <dl class="wf-readouts">
+              <div><dt>Real amplitude at probe</dt><dd id="wf-read-re">0.63162 nm⁻¹ᐟ²</dd></div>
+              <div><dt>Imaginary amplitude at probe</dt><dd id="wf-read-im">0.00000 nm⁻¹ᐟ²</dd></div>
+              <div><dt>Density at probe</dt><dd id="wf-read-density">0.39894 nm⁻¹</dd></div>
+              <div><dt>Theoretical detector probability</dt><dd id="wf-read-interval">68.27%</dd></div>
+              <div><dt>Probability on plot [−5, 5] nm</dt><dd id="wf-read-visible">99.99994%</dd></div>
+            </dl>
+            <p class="wf-note">The state is normalized on the full line. The plotted range leaves out the tails beyond ±5 nm.</p>
+          </section>
+        </div>
+      </div>
+
+      <section class="wf-card" aria-labelledby="wf-detections-title">
+        <h4 id="wf-detections-title">Simulated detections</h4>
+        <p>Each detection draws a position from a fresh, identically prepared system using browser pseudorandomness. Try one draw, then a batch. The histogram fluctuates, while larger samples typically come closer to the predicted bin probabilities.</p>
+        <fieldset class="wf-control-group" id="wf-detection-controls" disabled>
+          <legend>Collect positions</legend>
+          <div class="wf-field">
+            <label for="wf-batch-size">Detections per batch</label>
+            <select id="wf-batch-size">
+              <option value="100">100</option>
+              <option value="500" selected>500</option>
+              <option value="1000">1,000</option>
+            </select>
+          </div>
+          <div class="wf-actions">
+            <button type="button" class="wf-primary" id="wf-detect-one">Run one detection</button>
+            <button type="button" id="wf-detect-batch">Run batch</button>
+            <button type="button" id="wf-clear">Clear detections</button>
+            <button type="button" id="wf-reset">Reset lab</button>
+          </div>
+        </fieldset>
+        <dl class="wf-readouts">
+          <div><dt>Total detections</dt><dd id="wf-total">0</dd></div>
+          <div><dt>Hits inside detector</dt><dd id="wf-hits">0</dd></div>
+          <div><dt>Observed hit fraction</dt><dd id="wf-observed">—</dd></div>
+          <div><dt>Detections outside plot</dt><dd id="wf-outside">0</dd></div>
+          <div><dt>Latest position</dt><dd id="wf-last">—</dd></div>
+        </dl>
+        <p class="wf-note">Bar height is the bin count divided by total detections times bin width, including off-plot detections in the total. Compare the observed fraction with the theoretical detector probability in Plot readouts.</p>
+        <p class="wf-note">Clear detections keeps the preparation and detector. Reset lab restores the single Gaussian at μ = 0 nm and σ = 1 nm, probe at 0 nm, detector at [−1, 1] nm, and batch size 500. It clears detections and ends the scanner challenge.</p>
+        <p class="wf-feedback" id="wf-lab-status" role="status" aria-atomic="true"></p>
+      </section>
+    </section>
+
+    <section class="wf-panel" aria-labelledby="wf-model-title">
+      <h3 id="wf-model-title">From amplitude to detector probability</h3>
+      <p>In a discrete basis, the state gives an amplitude for each listed outcome. In the position representation, ψ(<var>x</var>) = ⟨<var>x</var>|ψ⟩ is a complex amplitude at each position <var>x</var>. Its real part <var>u</var> and imaginary part <var>v</var> describe the state at the chosen time. The plotted curves show amplitudes at positions, with detections recorded separately as individual positions.</p>
+      <div class="wf-equation">
+        <p>ψ(x) = u(x) + iv(x), &nbsp; ψ*(x) = u(x) − iv(x)</p>
+        <p>ρ(x) = ψ*(x)ψ(x) = (u − iv)(u + iv) = u² + v²</p>
+      </div>
+      <p>Here <var>i</var> is the imaginary unit and * denotes complex conjugation. The position probability density ρ has units nm⁻¹, so ψ has units nm⁻¹ᐟ². In a narrow bin of width Δ<var>x</var> measured in nm, P(bin) ≈ ρ(<var>x</var>)Δ<var>x</var> when the density varies little within the bin. Probability is dimensionless.</p>
+      <p>Sum over small bins and take the limit as the bin widths approach zero. Write <var>X</var> for the measured random position and <var>x</var> for the coordinate of integration. The resulting integral gives the chance that a detector with edges <var>a</var> and <var>b</var> captures the particle.</p>
+      <div class="wf-equation">
+        <p>P(a ≤ X ≤ b) = ∫<sub>a</sub><sup>b</sup> ρ(x) dx</p>
+        <p>∫<sub>−∞</sub><sup>∞</sup> |ψ(x)|² dx = 1</p>
+      </div>
+      <p>For these continuous states, the integral over an exact point is zero even at the peak of the density. Integrating over all possible positions gives the normalization condition on the second line.</p>
+
+      <h4>A normalized Gaussian</h4>
+      <p>Use a real packet amplitude with center μ and density standard deviation σ &gt; 0, both measured in nm. Choose the amplitude scale <var>A</var> so the integral of the density is 1.</p>
+      <div class="wf-equation">
+        <p>g<sub>μ</sub>(x) = A exp[−(x − μ)²/(4σ²)]</p>
+        <p>A = (2πσ²)<sup>−1/4</sup></p>
+        <p>ρ<sub>μ</sub>(x) = exp[−(x − μ)²/(2σ²)]/(σ√(2π))</p>
+      </div>
+      <details class="wf-card">
+        <summary>Derive the Gaussian normalization</summary>
+        <div class="wf-stack wf-detail">
+          <p>Squaring the amplitude gives |<var>A</var>|² exp[−(<var>x</var> − μ)²/(2σ²)]. Substitute <var>z</var> = (<var>x</var> − μ)/σ, so d<var>x</var> = σ d<var>z</var>. The full-line limits stay −∞ and +∞.</p>
+          <div class="wf-equation">
+            <p>1 = |A|²σ ∫<sub>−∞</sub><sup>∞</sup> exp(−z²/2) dz</p>
+            <p>= |A|²σ√(2π)</p>
+          </div>
+          <p>Solving for the positive real <var>A</var> gives (2πσ²)<sup>−1/4</sup>.</p>
+        </div>
+      </details>
+
+      <div class="wf-card">
+        <h4>Worked example · halve the detector width</h4>
+        <p>For μ = 0 nm and σ = 1 nm, the center density is 1/√(2π) ≈ 0.39894 nm⁻¹. A detector covering [−1, 1] nm has probability <strong>68.27%</strong>. Halving the window to [−0.5, 0.5] nm gives <strong>38.29%</strong>.</p>
+        <p>The two windows have the same center density. The narrower window retains more than half the probability because it keeps the densest part of the packet. If both windows are narrow enough that ρ is nearly constant across them, halving the width gives approximately half the probability.</p>
+      </div>
+
+      <h4>Two coherent packets</h4>
+      <p>Put the same-width Gaussian amplitudes <var>g</var><sub>L</sub> and <var>g</var><sub>R</sub> at −1 and +1 nm. The separation is <var>d</var> = 2 nm. Their real overlap is <var>s</var> = ∫<var>g</var><sub>L</sub><var>g</var><sub>R</sub> d<var>x</var> = exp[−<var>d</var>²/(8σ²)] over the full line. Assign the right term phase φ relative to the left and normalize the sum.</p>
+      <div class="wf-equation">
+        <p>ψ<sub>φ</sub>(x) = [g<sub>L</sub>(x) + exp(iφ)g<sub>R</sub>(x)]/√D</p>
+        <p>D = 1 + 1 + 2s cos φ = 2 + 2s cos φ</p>
+        <p>Re ψ = (g<sub>L</sub> + g<sub>R</sub> cos φ)/√D</p>
+        <p>Im ψ = g<sub>R</sub> sin φ/√D</p>
+        <p>ρ = (g<sub>L</sub>² + g<sub>R</sub>² + 2g<sub>L</sub>g<sub>R</sub> cos φ)/D</p>
+      </div>
+      <p>The two squared terms integrate to 1 each. The cross term integrates to 2<var>s</var> cos φ, which sets the phase-dependent normalization. A fixed prefactor of 1/√2 would give a squared norm of 1 + <var>s</var> cos φ. The packet terms add as coherent amplitudes, and a detection records one position.</p>
+      <p>In the lab, select two coherent packets and place the probe at 0 nm. Try 0°, 90°, and 180°. At 90° the imaginary part is nonzero. At 180° the equal midpoint amplitudes cancel and the density has a node. A window centered there can still collect probability from nearby positions.</p>
+
+      <details class="wf-card">
+        <summary>How the lab integrates an interval</summary>
+        <div class="wf-stack wf-detail">
+          <p>Let Φ be the standard normal cumulative distribution function. For one packet, the interval probability <var>F</var><sub>μ</sub> is obtained by subtracting the cumulative probabilities at the two edges.</p>
+          <div class="wf-equation">
+            <p>F<sub>μ</sub>(a,b) = Φ((b − μ)/σ) − Φ((a − μ)/σ)</p>
+          </div>
+          <p>Multiplying the two offset Gaussian amplitudes combines the exponents into −<var>x</var>²/(2σ²) − <var>d</var>²/(8σ²). Thus <var>g</var><sub>L</sub><var>g</var><sub>R</sub> = <var>s</var><var>g</var><sub>0</sub>². The coherent-state interval is the corresponding sum of three Gaussian intervals.</p>
+          <p class="wf-equation">P(a ≤ X ≤ b) = [F<sub>−1</sub>(a,b) + F<sub>+1</sub>(a,b) + 2s cos φ F<sub>0</sub>(a,b)]/D</p>
+          <p>The lab approximates Φ numerically for the full-line Gaussian. The result depends on the detector edges and the preparation, independent of how many points are drawn in the plots.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="wf-panel" aria-labelledby="wf-scanner-title">
+      <h3 id="wf-scanner-title">Probability Scanner</h3>
+      <p>Choose <strong>New target</strong> to get a reachable percentage for the current preparation. Move either detector edge in 0.1 nm steps and choose <strong>Check capture</strong>. A window within 0.50 percentage points of the target succeeds. The score uses the integrated probability for the window, independent of the detection count.</p>
+      <p>During an attempt, the lab hides the theoretical detector percentage until you check. All other readouts stay available. Changing the preparation ends the challenge. Try again returns the edges to the attempt’s starting window and keeps the same target.</p>
+
+      <fieldset class="wf-card" id="wf-scanner-controls" disabled>
+        <legend>Match the target area</legend>
+        <p class="wf-target">Target <strong id="wf-target-value">—</strong></p>
+        <p class="wf-note" id="wf-scanner-state">Choose New target to begin.</p>
+
+        <div class="wf-stack" id="wf-scanner-window" hidden>
+          <div class="wf-field">
+            <div class="wf-label-row"><label for="wf-scan-a">Scanner left edge a</label><span id="wf-scan-a-value">−1.0 nm</span></div>
+            <input type="range" id="wf-scan-a" min="-5" max="5" step="0.1" value="-1" aria-valuetext="minus 1.0 nanometers">
+          </div>
+          <div class="wf-field">
+            <div class="wf-label-row"><label for="wf-scan-b">Scanner right edge b</label><span id="wf-scan-b-value">1.0 nm</span></div>
+            <input type="range" id="wf-scan-b" min="-5" max="5" step="0.1" value="1" aria-valuetext="1.0 nanometers">
+          </div>
+          <p class="wf-note">These edges move the same detector as the controls in the lab.</p>
+        </div>
+
+        <div class="wf-actions">
+          <button type="button" id="wf-new-target">New target</button>
+          <button type="button" class="wf-primary" id="wf-check" disabled>Check capture</button>
+          <button type="button" id="wf-retry" disabled>Try again</button>
+          <button type="button" id="wf-end" disabled>End challenge</button>
+        </div>
+        <p class="wf-feedback" id="wf-scanner-feedback" role="status" aria-atomic="true"></p>
+      </fieldset>
+    </section>
+
+    <section class="wf-panel" aria-labelledby="wf-quiz-title">
+      <h3 id="wf-quiz-title">Check your understanding</h3>
+      <form id="wf-quiz">
+        <fieldset class="wf-card" id="wf-quiz-controls" disabled>
+          <legend>A detector around a node</legend>
+          <p id="wf-quiz-prompt">The two packets have relative phase 180°. A finite detector window is centered at the node x = 0. Must its hit probability be zero?</p>
+          <div class="wf-stack" role="group" aria-labelledby="wf-quiz-prompt">
+            <label class="wf-choice"><input type="radio" name="wf-quiz-answer" value="zero" required> Yes. The probability density at the center is zero.</label>
+            <label class="wf-choice"><input type="radio" name="wf-quiz-answer" value="nonzero"> No. The window can cover positions where the density is positive.</label>
+          </div>
+          <div class="wf-actions">
+            <button type="submit" class="wf-primary">Check answer</button>
+            <button type="button" id="wf-quiz-retry" hidden>Retry question</button>
+          </div>
+          <p class="wf-feedback" id="wf-quiz-feedback" role="status" aria-atomic="true"></p>
+        </fieldset>
+      </form>
+      <p>Here the wavefunction described amplitudes in position. In Lesson 21, <strong>Continuous Probability and Momentum</strong>, you’ll connect the same state to a continuous distribution of momentum outcomes.</p>
+    </section>
+
+    <nav class="wf-navigation" aria-label="Lesson navigation">
+      <a rel="prev" href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html">
+        <span class="wf-note">← Previous</span>
+        <span>Entanglement and Bell’s Theorem</span>
+      </a>
+      <a rel="next" href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html">
+        <span class="wf-note">Next →</span>
+        <span>Continuous Probability and Momentum</span>
+      </a>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

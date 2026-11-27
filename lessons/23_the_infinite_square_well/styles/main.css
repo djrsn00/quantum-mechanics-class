@@ -1,0 +1,717 @@
+:root {
+  color-scheme: dark;
+  --background: #050906;
+  --panel: #09150e;
+  --ink: #ecfff1;
+  --phosphor: #78f8a6;
+  --muted: #a6c5b0;
+  --line: #234c33;
+  --red: #ff676f;
+  --orange: #ff9f55;
+  --yellow: #ffe16a;
+  --green: #63f59b;
+  --blue: #65b7ff;
+  --violet: #c19bff;
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0;
+  background-color: var(--background);
+  background-image:
+    radial-gradient(ellipse at 50% 35%, rgb(33 123 68 / 15%), transparent 65%),
+    linear-gradient(rgb(120 248 166 / 4%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(120 248 166 / 4%) 1px, transparent 1px);
+  background-size: auto, 32px 32px, 32px 32px;
+  color: var(--ink);
+  font-family: var(--mono);
+}
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+  background-color: #070f0a;
+  box-shadow: 0 1px 18px rgb(93 239 146 / 8%);
+}
+
+.header-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 2rem);
+  width: min(calc(100% - var(--gutter) - var(--gutter)), 84rem);
+  min-height: 7rem;
+  margin-inline: auto;
+  padding-block: 0.75rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.brand-logo {
+  flex: none;
+  width: clamp(2.75rem, 4.5vw, 3.5rem);
+  filter: drop-shadow(0 0 6px rgb(120 248 166 / 24%));
+}
+
+.brand h1 {
+  margin: 0;
+  color: var(--phosphor);
+  font-size: clamp(1rem, 1.5vw, 1.375rem);
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.particle-display {
+  position: relative;
+  grid-column: 2;
+  justify-self: center;
+  width: min(100%, 30rem);
+  aspect-ratio: 480 / 108;
+  overflow: hidden;
+}
+
+.particle-still,
+.particle-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.particle-canvas {
+  visibility: hidden;
+}
+
+.particle-display[data-motion="active"] .particle-still {
+  visibility: hidden;
+}
+
+.particle-display[data-motion="active"] .particle-canvas {
+  visibility: visible;
+}
+
+.particle-guide {
+  stroke: var(--line);
+  stroke-width: 1;
+  stroke-dasharray: 2 7;
+  opacity: 0.65;
+}
+
+.particle-tracks path {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.track-in-a { stroke: #d0ffe3; }
+.track-in-b { stroke: #79d7b2; }
+.track-red { stroke: var(--red); }
+.track-orange { stroke: var(--orange); }
+.track-yellow { stroke: var(--yellow); }
+.track-green { stroke: var(--green); }
+.track-blue { stroke: var(--blue); }
+.track-violet { stroke: var(--violet); }
+
+.collision-halo {
+  fill: none;
+  stroke: var(--phosphor);
+  stroke-width: 1;
+  opacity: 0.25;
+}
+
+.collision-cross {
+  fill: none;
+  stroke: var(--phosphor);
+  stroke-width: 1;
+  opacity: 0.62;
+}
+
+.collision-core {
+  fill: #f2fff5;
+  filter: drop-shadow(0 0 5px var(--phosphor));
+}
+
+.lessons-menu-toggle {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: 44px;
+  padding-inline: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: var(--panel);
+  color: var(--phosphor);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lessons-menu-toggle svg {
+  flex: none;
+}
+
+.lessons-menu-toggle:hover,
+.lessons-menu-toggle[aria-expanded="true"] {
+  border-color: var(--phosphor);
+  background-color: #12271b;
+}
+
+.lessons-menu-toggle[hidden],
+.lessons-menu[hidden] {
+  display: none;
+}
+
+.lessons-menu {
+  inline-size: min(26rem, calc(100% - var(--gutter) - var(--gutter)));
+  max-block-size: clamp(5rem, calc(100vh - 12rem), 24rem);
+  max-block-size: clamp(5rem, calc(100dvh - 12rem), 24rem);
+  margin-inline-start: auto;
+  margin-inline-end: max(var(--gutter), calc((100% - 84rem) / 2));
+  margin-block-end: 0.75rem;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background-color: var(--panel);
+}
+
+.lessons-menu a {
+  display: grid;
+  grid-template-columns: 2ch minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  color: var(--ink);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.lessons-menu a + a {
+  border-block-start: 1px solid var(--line);
+}
+
+.lessons-menu a:hover,
+.lessons-menu a:focus-visible,
+.lessons-menu a[aria-current="page"] {
+  background-color: #12271b;
+}
+
+.lessons-menu-toggle:focus-visible,
+.lessons-menu a:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 2px;
+}
+
+.lessons-menu a:focus-visible {
+  outline-offset: -2px;
+}
+
+.lessons-menu-step {
+  color: var(--phosphor);
+  text-align: end;
+}
+
+.site-footer {
+  padding: 1.25rem var(--gutter);
+  border-top: 1px solid var(--line);
+  background-color: #070f0a;
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+@media (max-width: 56rem) {
+  .header-inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.25rem;
+    min-height: 0;
+    padding-block: 1rem 0.5rem;
+  }
+
+  .brand h1 {
+    overflow-wrap: anywhere;
+  }
+
+  .particle-display {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .lessons-menu-toggle {
+    grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particle-display[data-motion="active"] .particle-still {
+    visibility: visible;
+  }
+
+  .particle-display[data-motion="active"] .particle-canvas {
+    visibility: hidden;
+  }
+}
+
+/* Lesson 23 */
+
+.site-main.infinite-well-lesson {
+  --iw-surface: #0a1610;
+  --iw-well: #070f0c;
+  --iw-control: #5d8e71;
+  --iw-density: #67e5df;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: clamp(1rem, 3vw, 2rem);
+  inline-size: min(calc(100% - var(--gutter) - var(--gutter)), 76rem);
+  margin-inline: auto;
+  padding-block: clamp(1.5rem, 4vw, 3.5rem);
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.infinite-well-lesson :is(h2, h3, h4, p, figure, dl, dd, ul) {
+  margin: 0;
+}
+
+.infinite-well-lesson :is(h2, h3, h4) {
+  line-height: 1.25;
+}
+
+.infinite-well-lesson h2 {
+  font-size: clamp(2rem, 5.5vw, 3.85rem);
+  letter-spacing: -0.05em;
+}
+
+.infinite-well-lesson h3 { font-size: clamp(1.25rem, 3vw, 1.7rem); }
+.infinite-well-lesson :is(h4, figcaption) { font-size: 1rem; font-weight: 700; }
+.infinite-well-lesson .iw-intro { max-inline-size: 78ch; }
+.infinite-well-lesson .iw-kicker { color: var(--phosphor); font-size: 0.875rem; font-weight: 700; }
+.infinite-well-lesson .iw-lead { font-size: clamp(1.05rem, 2.5vw, 1.35rem); }
+.infinite-well-lesson .iw-note { color: var(--muted); font-size: 0.875rem; }
+
+.infinite-well-lesson :is(.iw-stack, .iw-panel, .iw-card, .iw-control-group, .iw-choices) {
+  display: grid;
+  align-content: start;
+  gap: 0.65rem;
+  min-inline-size: 0;
+}
+
+.infinite-well-lesson :is(.iw-panel, .iw-card, .iw-control-group) {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 0.625rem;
+}
+
+.infinite-well-lesson .iw-panel {
+  gap: 1rem;
+  padding: clamp(0.75rem, 3vw, 1.75rem);
+  background: var(--iw-surface);
+}
+
+.infinite-well-lesson .iw-card {
+  padding: clamp(0.6rem, 2vw, 1rem);
+  background: var(--iw-well);
+}
+
+.infinite-well-lesson .iw-control-group { padding: 0.65rem 0.75rem 0.8rem; }
+.infinite-well-lesson fieldset { min-inline-size: 0; }
+
+.infinite-well-lesson legend {
+  max-inline-size: 100%;
+  padding-inline: 0.35rem;
+  color: var(--phosphor);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.infinite-well-lesson :is(.iw-grid, .iw-energy-grid, .iw-camera-grid, .iw-fields) {
+  display: grid;
+  align-items: start;
+  gap: 0.85rem;
+}
+
+.infinite-well-lesson .iw-grid {
+  grid-template-columns: minmax(15rem, 0.72fr) minmax(0, 1.5fr);
+}
+
+.infinite-well-lesson .iw-energy-grid {
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+}
+
+.infinite-well-lesson :is(.iw-fields, .iw-camera-grid) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.infinite-well-lesson :is(.iw-actions, .iw-label-row, .iw-toggles) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.6rem;
+}
+
+.infinite-well-lesson .iw-label-row {
+  justify-content: space-between;
+  font-variant-numeric: tabular-nums;
+}
+
+.infinite-well-lesson .iw-label-row span {
+  color: var(--phosphor);
+}
+
+.infinite-well-lesson label { font-weight: 700; }
+.infinite-well-lesson input { accent-color: var(--phosphor); }
+
+.infinite-well-lesson :is(a, button, input, select, summary, [tabindex="-1"]):focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+.infinite-well-lesson :is(button, select, input[type="number"], .iw-navigation a) {
+  min-block-size: 44px;
+  max-inline-size: 100%;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--iw-control);
+  border-radius: 0.375rem;
+  background: #101e16;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.infinite-well-lesson :is(select, input[type="number"]) { inline-size: min(100%, 24rem); }
+.infinite-well-lesson input[type="range"] { inline-size: 100%; min-block-size: 44px; margin: 0; }
+.infinite-well-lesson button { min-inline-size: 44px; cursor: pointer; }
+.infinite-well-lesson .iw-primary { border-color: var(--phosphor); background: #143623; }
+.infinite-well-lesson :is(button, input, select):disabled { opacity: 0.65; cursor: default; }
+
+.infinite-well-lesson :is(button:not(:disabled), select:not(:disabled), .iw-navigation a):hover {
+  border-color: var(--phosphor);
+  background: #172e20;
+}
+
+.infinite-well-lesson :is(.iw-choices label, .iw-toggle) {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-block-size: 44px;
+  padding: 0.3rem 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: #0d1a12;
+  font-size: 0.875rem;
+}
+
+.infinite-well-lesson :is(.iw-choices label, .iw-toggle) input {
+  flex: none;
+  inline-size: 1rem;
+  block-size: 1rem;
+  margin: 0;
+}
+
+.infinite-well-lesson .iw-readouts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.infinite-well-lesson .iw-readouts > div {
+  min-inline-size: 0;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: #101e16;
+}
+
+.infinite-well-lesson .iw-readouts dt { color: var(--muted); font-size: 0.8125rem; }
+.infinite-well-lesson .iw-readouts dd { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.infinite-well-lesson .iw-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.infinite-well-lesson .iw-table caption {
+  padding-block-end: 0.35rem;
+  color: var(--muted);
+  text-align: start;
+}
+
+.infinite-well-lesson .iw-table :is(th, td) {
+  padding: 0.35rem 0.4rem;
+  border: 1px solid var(--line);
+  text-align: start;
+  vertical-align: top;
+}
+
+.infinite-well-lesson .iw-table thead { background: #112218; }
+
+.infinite-well-lesson .iw-table [data-occupied] th {
+  box-shadow: inset 3px 0 var(--violet);
+  background: #262139;
+  color: var(--ink);
+}
+
+.infinite-well-lesson .iw-plot {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+  background: #060d09;
+}
+
+.infinite-well-lesson .iw-ticks { fill: var(--ink); font: 15px var(--mono); }
+.infinite-well-lesson .iw-unit-text { fill: var(--muted); }
+
+.infinite-well-lesson :is(.iw-axis, .iw-grid-lines, .iw-walls, .iw-real, .iw-imag, .iw-density,
+  .iw-gate, .iw-room, .iw-chamber-grid) {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.infinite-well-lesson .iw-axis { stroke: #91ad9b; stroke-width: 1; }
+.infinite-well-lesson .iw-grid-lines { stroke: #254338; stroke-width: 1; }
+.infinite-well-lesson .iw-walls { stroke: #9dbbc0; stroke-width: 1.5; }
+.infinite-well-lesson .iw-real { stroke: var(--blue); stroke-width: 2; }
+.infinite-well-lesson .iw-imag { stroke: var(--violet); stroke-width: 2; stroke-dasharray: 5 3; }
+.infinite-well-lesson .iw-density { stroke: var(--iw-density); stroke-width: 2.25; stroke-linejoin: round; }
+.infinite-well-lesson .iw-gate { stroke: var(--yellow); stroke-width: 1; stroke-dasharray: 4 3; }
+.infinite-well-lesson .iw-area { fill: var(--yellow); fill-opacity: 0.15; }
+.infinite-well-lesson .iw-tube-area { fill: var(--iw-density); fill-opacity: 0.18; }
+
+.infinite-well-lesson .iw-histogram rect {
+  fill: rgb(255 159 85 / 28%);
+  stroke: var(--orange);
+  stroke-width: 0.7;
+  vector-effect: non-scaling-stroke;
+}
+
+.infinite-well-lesson .iw-bin-theory rect {
+  fill: none;
+  stroke: #c1d8cc;
+  stroke-width: 0.8;
+  stroke-dasharray: 3 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.infinite-well-lesson .iw-nodes circle {
+  fill: #081413;
+  stroke: var(--ink);
+  stroke-width: 1.1;
+  vector-effect: non-scaling-stroke;
+}
+
+.infinite-well-lesson .iw-attempts line {
+  stroke: var(--blue);
+  stroke-width: 2;
+  stroke-dasharray: 3 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.infinite-well-lesson .iw-detections circle {
+  fill: var(--orange);
+  stroke: var(--ink);
+  stroke-width: 0.7;
+  vector-effect: non-scaling-stroke;
+}
+
+.infinite-well-lesson .iw-detections .iw-flash {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: iw-detection-flash 0.5s ease-out both;
+}
+
+@keyframes iw-detection-flash {
+  from { transform: scale(2.2); opacity: 1; }
+  to { transform: scale(1); opacity: 0.8; }
+}
+
+.infinite-well-lesson .iw-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.9rem;
+  padding: 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  list-style: none;
+}
+
+.infinite-well-lesson .iw-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.infinite-well-lesson .iw-key {
+  flex: none;
+  inline-size: 1.25rem;
+  border-block-start: 2px solid;
+}
+
+.infinite-well-lesson .iw-key-real { color: var(--blue); }
+.infinite-well-lesson .iw-key-imag { color: var(--violet); border-block-start-style: dashed; }
+.infinite-well-lesson .iw-key-density { color: var(--iw-density); }
+.infinite-well-lesson .iw-key-detector { color: var(--yellow); border-block-start-style: dashed; }
+.infinite-well-lesson .iw-key-bin { color: #c1d8cc; border-block-start-style: dashed; }
+
+.infinite-well-lesson .iw-key-samples {
+  block-size: 0.6rem;
+  border: 1px solid var(--orange);
+  background: rgb(255 159 85 / 28%);
+}
+
+.infinite-well-lesson :is(.iw-detection-key, .iw-swatch) {
+  flex: none;
+  inline-size: 0.65rem;
+  block-size: 0.65rem;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+}
+
+.infinite-well-lesson .iw-detection-key { background: var(--orange); }
+.infinite-well-lesson .iw-phase-zero { background: hsl(0 80% 65%); }
+.infinite-well-lesson .iw-phase-quarter { background: hsl(90 80% 65%); }
+.infinite-well-lesson .iw-phase-half { background: hsl(180 80% 65%); }
+.infinite-well-lesson .iw-phase-three-quarter { background: hsl(270 80% 65%); }
+
+.infinite-well-lesson .iw-chamber {
+  gap: 1rem;
+  border-color: #426669;
+  background: #081618;
+}
+
+.infinite-well-lesson .iw-chamber-plot { background: #070d16; }
+.infinite-well-lesson .iw-room { stroke: #58737d; stroke-width: 1; }
+.infinite-well-lesson .iw-chamber-grid { stroke: #52727b; stroke-dasharray: 3 5; }
+
+.infinite-well-lesson .iw-viewport {
+  inline-size: 100%;
+  block-size: clamp(12rem, 37vw, 25rem);
+  overflow: hidden;
+  border: 1px solid #426669;
+  border-radius: 0.45rem;
+  background: #070d16;
+}
+
+.infinite-well-lesson .iw-canvas {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.infinite-well-lesson .iw-symbols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 0.6rem;
+}
+
+.infinite-well-lesson details.iw-card { display: block; }
+
+.infinite-well-lesson summary {
+  min-block-size: 44px;
+  padding-block: 0.45rem;
+  color: var(--phosphor);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.infinite-well-lesson :is(details[open] > p, .iw-detail) { margin-block-start: 0.45rem; }
+
+.infinite-well-lesson .iw-equation {
+  padding: 0.65rem 0.75rem;
+  border-inline-start: 3px solid var(--iw-control);
+  border-radius: 0.25rem;
+  background: #0d1a12;
+  font-weight: 700;
+}
+
+.infinite-well-lesson .iw-equation p + p { margin-block-start: 0.3rem; }
+
+.infinite-well-lesson[data-iw-symbol="length"] .iw-wall-readout,
+.infinite-well-lesson[data-iw-symbol="level"] .iw-ladder,
+.infinite-well-lesson[data-iw-symbol="mass"] #iw-mass,
+.infinite-well-lesson[data-iw-symbol="hbar"] #iw-clock-controls {
+  outline: 2px solid var(--yellow);
+  outline-offset: 2px;
+}
+
+.infinite-well-lesson[data-iw-symbol="length"] .iw-dimension { fill: var(--yellow); font-weight: 700; }
+.infinite-well-lesson[data-iw-symbol="level"] .iw-nodes circle { stroke-width: 2.5; }
+.infinite-well-lesson[data-iw-symbol="normalization"] :is(.iw-real, .iw-imag) { stroke-width: 3; }
+
+.infinite-well-lesson .iw-feedback:not(:empty) {
+  padding: 0.55rem 0.7rem;
+  border-inline-start: 3px solid var(--phosphor);
+  border-radius: 0.25rem;
+  background: #102218;
+  font-size: 0.875rem;
+}
+
+.infinite-well-lesson .iw-navigation {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.infinite-well-lesson .iw-navigation a {
+  display: grid;
+  align-content: start;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  text-decoration: none;
+}
+
+.infinite-well-lesson .iw-navigation a[rel="next"] { text-align: end; }
+
+.infinite-well-lesson[data-iw-reduced] .iw-detections .iw-flash { animation: none; }
+.infinite-well-lesson [hidden] { display: none; }
+
+@media (max-width: 55rem) {
+  .infinite-well-lesson :is(.iw-grid, .iw-energy-grid, .iw-camera-grid) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 36rem) {
+  .infinite-well-lesson .iw-readouts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .infinite-well-lesson .iw-symbols { grid-template-columns: minmax(0, 1fr); }
+  .infinite-well-lesson .iw-ticks { font-size: 20px; }
+  .infinite-well-lesson .iw-table :is(th, td) { padding: 0.3rem 0.25rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .infinite-well-lesson .iw-detections .iw-flash { animation: none; }
+}

@@ -1,0 +1,754 @@
+:root {
+  color-scheme: dark;
+  --background: #050906;
+  --panel: #09150e;
+  --ink: #ecfff1;
+  --phosphor: #78f8a6;
+  --muted: #a6c5b0;
+  --line: #234c33;
+  --red: #ff676f;
+  --orange: #ff9f55;
+  --yellow: #ffe16a;
+  --green: #63f59b;
+  --blue: #65b7ff;
+  --violet: #c19bff;
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0;
+  background-color: var(--background);
+  background-image:
+    radial-gradient(ellipse at 50% 35%, rgb(33 123 68 / 15%), transparent 65%),
+    linear-gradient(rgb(120 248 166 / 4%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(120 248 166 / 4%) 1px, transparent 1px);
+  background-size: auto, 32px 32px, 32px 32px;
+  color: var(--ink);
+  font-family: var(--mono);
+}
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+  background-color: #070f0a;
+  box-shadow: 0 1px 18px rgb(93 239 146 / 8%);
+}
+
+.header-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 2rem);
+  width: min(calc(100% - var(--gutter) - var(--gutter)), 84rem);
+  min-height: 7rem;
+  margin-inline: auto;
+  padding-block: 0.75rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.brand-logo {
+  flex: none;
+  width: clamp(2.75rem, 4.5vw, 3.5rem);
+  filter: drop-shadow(0 0 6px rgb(120 248 166 / 24%));
+}
+
+.brand h1 {
+  margin: 0;
+  color: var(--phosphor);
+  font-size: clamp(1rem, 1.5vw, 1.375rem);
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.particle-display {
+  position: relative;
+  grid-column: 2;
+  justify-self: center;
+  width: min(100%, 30rem);
+  aspect-ratio: 480 / 108;
+  overflow: hidden;
+}
+
+.particle-still,
+.particle-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.particle-canvas {
+  visibility: hidden;
+}
+
+.particle-display[data-motion="active"] .particle-still {
+  visibility: hidden;
+}
+
+.particle-display[data-motion="active"] .particle-canvas {
+  visibility: visible;
+}
+
+.particle-guide {
+  stroke: var(--line);
+  stroke-width: 1;
+  stroke-dasharray: 2 7;
+  opacity: 0.65;
+}
+
+.particle-tracks path {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.track-in-a { stroke: #d0ffe3; }
+.track-in-b { stroke: #79d7b2; }
+.track-red { stroke: var(--red); }
+.track-orange { stroke: var(--orange); }
+.track-yellow { stroke: var(--yellow); }
+.track-green { stroke: var(--green); }
+.track-blue { stroke: var(--blue); }
+.track-violet { stroke: var(--violet); }
+
+.collision-halo {
+  fill: none;
+  stroke: var(--phosphor);
+  stroke-width: 1;
+  opacity: 0.25;
+}
+
+.collision-cross {
+  fill: none;
+  stroke: var(--phosphor);
+  stroke-width: 1;
+  opacity: 0.62;
+}
+
+.collision-core {
+  fill: #f2fff5;
+  filter: drop-shadow(0 0 5px var(--phosphor));
+}
+
+.lessons-menu-toggle {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: 44px;
+  padding-inline: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: var(--panel);
+  color: var(--phosphor);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lessons-menu-toggle svg {
+  flex: none;
+}
+
+.lessons-menu-toggle:hover,
+.lessons-menu-toggle[aria-expanded="true"] {
+  border-color: var(--phosphor);
+  background-color: #12271b;
+}
+
+.lessons-menu-toggle[hidden],
+.lessons-menu[hidden] {
+  display: none;
+}
+
+.lessons-menu {
+  inline-size: min(26rem, calc(100% - var(--gutter) - var(--gutter)));
+  max-block-size: clamp(5rem, calc(100vh - 12rem), 24rem);
+  max-block-size: clamp(5rem, calc(100dvh - 12rem), 24rem);
+  margin-inline-start: auto;
+  margin-inline-end: max(var(--gutter), calc((100% - 84rem) / 2));
+  margin-block-end: 0.75rem;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background-color: var(--panel);
+}
+
+.lessons-menu a {
+  display: grid;
+  grid-template-columns: 2ch minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  color: var(--ink);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.lessons-menu a + a {
+  border-block-start: 1px solid var(--line);
+}
+
+.lessons-menu a:hover,
+.lessons-menu a:focus-visible,
+.lessons-menu a[aria-current="page"] {
+  background-color: #12271b;
+}
+
+.lessons-menu-toggle:focus-visible,
+.lessons-menu a:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 2px;
+}
+
+.lessons-menu a:focus-visible {
+  outline-offset: -2px;
+}
+
+.lessons-menu-step {
+  color: var(--phosphor);
+  text-align: end;
+}
+
+.site-footer {
+  padding: 1.25rem var(--gutter);
+  border-top: 1px solid var(--line);
+  background-color: #070f0a;
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+@media (max-width: 56rem) {
+  .header-inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.25rem;
+    min-height: 0;
+    padding-block: 1rem 0.5rem;
+  }
+
+  .brand h1 {
+    overflow-wrap: anywhere;
+  }
+
+  .particle-display {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .lessons-menu-toggle {
+    grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particle-display[data-motion="active"] .particle-still {
+    visibility: visible;
+  }
+
+  .particle-display[data-motion="active"] .particle-canvas {
+    visibility: hidden;
+  }
+}
+
+/* Lesson 21 */
+
+.site-main.momentum-lesson {
+  --mp-surface: #0a1610;
+  --mp-well: #070f0c;
+  --mp-control-line: #5d8e71;
+  --mp-density: var(--green);
+  --mp-gate: var(--yellow);
+  --mp-samples: var(--orange);
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: clamp(1rem, 3vw, 2rem);
+  inline-size: min(calc(100% - var(--gutter) - var(--gutter)), 76rem);
+  margin-inline: auto;
+  padding-block: clamp(1.5rem, 4vw, 3.5rem);
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.momentum-lesson :is(h2, h3, h4, h5, p, figure, dl, dd, ul) {
+  margin: 0;
+}
+
+.momentum-lesson :is(h2, h3, h4, h5) {
+  line-height: 1.25;
+}
+
+.momentum-lesson h2 {
+  font-size: clamp(2rem, 5.5vw, 3.85rem);
+  letter-spacing: -0.05em;
+}
+
+.momentum-lesson h3 {
+  font-size: clamp(1.25rem, 3vw, 1.7rem);
+}
+
+.momentum-lesson :is(h4, h5, figcaption) {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.momentum-lesson .mp-intro {
+  max-inline-size: 78ch;
+}
+
+.momentum-lesson .mp-kicker {
+  color: var(--phosphor);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.momentum-lesson .mp-lead {
+  font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+}
+
+.momentum-lesson .mp-note {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.momentum-lesson :is(.mp-stack, .mp-panel, .mp-card, .mp-field, .mp-control-group, .mp-weather-figure) {
+  display: grid;
+  align-content: start;
+  min-inline-size: 0;
+  gap: 0.75rem;
+}
+
+.momentum-lesson :is(.mp-panel, .mp-card, .mp-control-group) {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 0.625rem;
+}
+
+.momentum-lesson .mp-panel {
+  gap: 1rem;
+  padding: clamp(0.75rem, 3vw, 1.75rem);
+  background: var(--mp-surface);
+}
+
+.momentum-lesson .mp-card {
+  padding: clamp(0.55rem, 2vw, 1rem);
+  background: var(--mp-well);
+}
+
+.momentum-lesson .mp-control-group {
+  padding: 0.65rem 0.75rem 0.8rem;
+}
+
+.momentum-lesson fieldset {
+  min-inline-size: 0;
+}
+
+.momentum-lesson legend {
+  max-inline-size: 100%;
+  padding-inline: 0.35rem;
+  color: var(--phosphor);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.momentum-lesson .mp-lab-grid {
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.8fr) minmax(0, 1.55fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.momentum-lesson .mp-field {
+  gap: 0.25rem;
+}
+
+.momentum-lesson .mp-field label {
+  font-weight: 700;
+}
+
+.momentum-lesson :is(.mp-label-row, .mp-actions) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.55rem;
+}
+
+.momentum-lesson .mp-label-row {
+  justify-content: space-between;
+}
+
+.momentum-lesson .mp-label-row span {
+  color: var(--phosphor);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.momentum-lesson :is(a, button, select, input, summary, h4[tabindex]):focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+.momentum-lesson :is(button, select, input[type="number"], .mp-navigation a) {
+  min-block-size: 44px;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--mp-control-line);
+  border-radius: 0.375rem;
+  background: #101e16;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.momentum-lesson button {
+  min-inline-size: 44px;
+  cursor: pointer;
+}
+
+.momentum-lesson select {
+  inline-size: min(100%, 25rem);
+}
+
+.momentum-lesson input[type="number"] {
+  inline-size: min(100%, 11rem);
+}
+
+.momentum-lesson input {
+  accent-color: var(--phosphor);
+}
+
+.momentum-lesson input[type="range"] {
+  inline-size: 100%;
+  min-block-size: 44px;
+  margin: 0;
+}
+
+.momentum-lesson button.mp-primary {
+  border-color: var(--phosphor);
+  background: #143623;
+}
+
+.momentum-lesson :is(button:not(:disabled), select:not(:disabled), .mp-navigation a):hover {
+  border-color: var(--phosphor);
+  background: #172e20;
+}
+
+.momentum-lesson :is(button, select, input):disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.momentum-lesson .mp-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  padding: 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  list-style: none;
+}
+
+.momentum-lesson .mp-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.momentum-lesson .mp-key {
+  flex: none;
+  inline-size: 1.35rem;
+  border-block-start: 2px solid;
+}
+
+.momentum-lesson .mp-key-density {
+  color: var(--mp-density);
+}
+
+.momentum-lesson .mp-key-gate {
+  block-size: 0.65rem;
+  border: 1px dashed var(--mp-gate);
+  background: rgb(255 225 106 / 16%);
+}
+
+.momentum-lesson .mp-key-samples {
+  block-size: 0.65rem;
+  border: 1px solid var(--mp-samples);
+  background: rgb(255 159 85 / 24%);
+}
+
+.momentum-lesson .mp-key-marks {
+  inline-size: 0.55rem;
+  block-size: 0.55rem;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+.momentum-lesson :is(.mp-plot, .mp-weather-plot) {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+  background: #060d09;
+}
+
+.momentum-lesson .mp-ticks {
+  fill: var(--ink);
+  font: 16px var(--mono);
+}
+
+.momentum-lesson :is(.mp-grid, .mp-axis, .mp-density-line, .mp-gate-line, .mp-weather-guides, .mp-weather-crest) {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.momentum-lesson .mp-grid {
+  stroke: #244333;
+  stroke-width: 1;
+}
+
+.momentum-lesson .mp-axis {
+  stroke: #9ab4a4;
+  stroke-width: 1;
+}
+
+.momentum-lesson .mp-density-line {
+  stroke: var(--mp-density);
+  stroke-width: 2.25;
+  stroke-linejoin: round;
+}
+
+.momentum-lesson .mp-gate-line {
+  stroke: var(--mp-gate);
+  stroke-width: 1;
+  stroke-dasharray: 4 3;
+}
+
+.momentum-lesson .mp-gate-area {
+  fill: var(--mp-gate);
+  fill-opacity: 0.17;
+}
+
+.momentum-lesson .mp-histogram rect {
+  fill: var(--mp-samples);
+  fill-opacity: 0.25;
+  stroke: var(--mp-samples);
+  stroke-width: 0.7;
+  vector-effect: non-scaling-stroke;
+}
+
+.momentum-lesson .mp-station {
+  gap: 1rem;
+  border-color: #46675e;
+  background: #081311;
+}
+
+.momentum-lesson .mp-weather-figure {
+  gap: 0.5rem;
+}
+
+.momentum-lesson .mp-weather-scenery {
+  fill: #d9e6dd;
+}
+
+.momentum-lesson .mp-weather-guides {
+  stroke: #b2cfbd;
+  stroke-opacity: 0.25;
+  stroke-width: 1;
+  stroke-dasharray: 2 5;
+}
+
+.momentum-lesson .mp-weather-gate {
+  fill: var(--mp-gate);
+  fill-opacity: 0.12;
+}
+
+.momentum-lesson .mp-weather-fill {
+  fill: url(#mp-fog-fill);
+}
+
+.momentum-lesson .mp-weather-crest {
+  stroke: var(--mp-density);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 5px rgb(99 245 155 / 62%));
+}
+
+.momentum-lesson .mp-weather-plot[data-view="momentum"] .mp-weather-fill {
+  fill: url(#mp-wind-fill);
+}
+
+.momentum-lesson .mp-weather-plot[data-view="momentum"] .mp-weather-crest {
+  stroke: var(--violet);
+  stroke-dasharray: 6 2;
+  filter: drop-shadow(0 0 5px rgb(193 155 255 / 62%));
+}
+
+.momentum-lesson .mp-weather-marks circle {
+  fill: var(--blue);
+  stroke: var(--ink);
+  stroke-width: 0.8;
+  vector-effect: non-scaling-stroke;
+}
+
+.momentum-lesson .mp-mission-config {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: #111e1c;
+  color: #d2ece9;
+  font-size: 0.875rem;
+}
+
+.momentum-lesson .mp-readouts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.momentum-lesson .mp-readouts > div {
+  min-inline-size: 0;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: #101e16;
+}
+
+.momentum-lesson .mp-readouts dt {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.momentum-lesson .mp-readouts dd {
+  margin-block-start: 0.2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.momentum-lesson .mp-equation {
+  padding: 0.65rem 0.75rem;
+  border-inline-start: 3px solid var(--mp-control-line);
+  border-radius: 0.25rem;
+  background: #0d1a12;
+  font-weight: 700;
+}
+
+.momentum-lesson .mp-equation p + p {
+  margin-block-start: 0.35rem;
+}
+
+.momentum-lesson details.mp-card {
+  display: block;
+}
+
+.momentum-lesson summary {
+  min-block-size: 44px;
+  padding-block: 0.45rem;
+  color: var(--phosphor);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.momentum-lesson .mp-detail {
+  margin-block-start: 0.55rem;
+}
+
+.momentum-lesson .mp-feedback:not(:empty) {
+  padding: 0.55rem 0.7rem;
+  border-inline-start: 3px solid var(--phosphor);
+  border-radius: 0.25rem;
+  background: #102218;
+  font-size: 0.875rem;
+}
+
+.momentum-lesson .mp-choice {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 0.55rem;
+  min-block-size: 44px;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: #0d1a12;
+}
+
+.momentum-lesson .mp-choice input {
+  inline-size: 1rem;
+  block-size: 1rem;
+  margin: 0.3em 0 0;
+}
+
+.momentum-lesson .mp-choice:has(input:checked) {
+  border-color: var(--mp-control-line);
+  background: #13291b;
+}
+
+.momentum-lesson .mp-navigation {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.momentum-lesson .mp-navigation a {
+  display: grid;
+  align-content: start;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  text-decoration: none;
+}
+
+.momentum-lesson .mp-navigation a[rel="next"] {
+  text-align: end;
+}
+
+.momentum-lesson [hidden] {
+  display: none;
+}
+
+@media (max-width: 55rem) {
+  .momentum-lesson .mp-lab-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 35rem) {
+  .momentum-lesson .mp-readouts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .momentum-lesson .mp-ticks {
+    font-size: 20px;
+  }
+}

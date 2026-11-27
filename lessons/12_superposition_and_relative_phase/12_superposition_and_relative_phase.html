@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Explore how relative phase changes quantum measurement predictions and why global phase leaves them unchanged.">
+  <title>Superposition and Relative Phase | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+  <script type="module" src="./scripts/lesson.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)"
+                  stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none"
+                   stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8"
+                stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none"
+                   stroke="url(#logo-spectrum)" stroke-width="1.6"
+                   transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none"
+                stroke="#edffef" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static"
+             viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse"
+                  x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 464 83"/>
+            <path class="track-violet" d="M218 54C265 80 333 97 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M218 46v16m-8-8h16"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button"
+              aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and-coordinates/8_bases_and-coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="./12_superposition_and_relative_phase.html" aria-current="page"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="../22_the_one_dimensional_schrodinger_equation/22_the_one_dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main relative-phase-lesson" aria-labelledby="phase-title">
+    <header class="lesson-intro">
+      <p class="lesson-kicker">Lesson 12 · Phase and interference</p>
+      <h2 id="phase-title">Superposition and Relative Phase</h2>
+      <p class="lesson-lead">Two preparations each give 50/50 predictions when measured in the 0/1 basis. Can another measurement distinguish them with certainty?</p>
+      <p>Start with the normalized state |ψ⟩ = α|0⟩ + β|1⟩. The symbol ψ names the state, and α and β are the complex amplitudes for the two basis kets. A <strong>superposition</strong> is a linear combination of basis states. Which components appear depends on the basis you choose.</p>
+      <p class="phase-equation">|ψ(φ, γ)⟩ = (e<sup>iγ</sup>/√2)(|0⟩ + e<sup>iφ</sup>|1⟩)</p>
+      <p>In the lab, <strong>φ</strong> is the phase of β relative to α, and <strong>γ</strong> is the common phase. Here <em>i</em>² = −1, and e<sup>iθ</sup> turns a complex number through angle θ without changing its magnitude. Both amplitudes have magnitude 1/√2, so their squared magnitudes always add to 1.</p>
+    </header>
+
+    <section class="lesson-panel phase-lab" id="phase-lab" aria-labelledby="phase-lab-title">
+      <div class="phase-section-heading">
+        <h3 id="phase-lab-title">Relative Phase Lab</h3>
+        <p>Change φ to turn β relative to α. Change γ to rotate both arrows together.</p>
+        <p class="lesson-note" id="phase-static-note">The static example shows the starting state in the 0/1 basis. The worked examples below can be opened before the lesson script is added.</p>
+      </div>
+
+      <div class="phase-grid">
+        <div class="phase-stack">
+          <fieldset class="phase-instrument" id="phase-controls" disabled>
+            <legend>Set the phases</legend>
+
+            <div class="phase-control">
+              <label for="phase-relative" class="phase-angle-color">Relative phase φ</label>
+              <output id="phase-relative-value" for="phase-relative">0° · 0 rad</output>
+              <input id="phase-relative" type="range" min="0" max="360" step="1" value="0"
+                     aria-describedby="phase-relative-help">
+              <p class="lesson-note" id="phase-relative-help">Turns β relative to α. One full turn returns to the same phase.</p>
+              <div class="phase-actions" role="group" aria-label="Relative phase presets">
+                <button type="button" data-phase-preset="0" aria-pressed="true">0</button>
+                <button type="button" data-phase-preset="90" aria-pressed="false">π/2</button>
+                <button type="button" data-phase-preset="180" aria-pressed="false">π</button>
+                <button type="button" data-phase-preset="270" aria-pressed="false">3π/2</button>
+              </div>
+            </div>
+
+            <div class="phase-control">
+              <label for="phase-global">Global phase γ</label>
+              <output id="phase-global-value" for="phase-global">0° · 0 rad</output>
+              <input id="phase-global" type="range" min="0" max="360" step="1" value="0"
+                     aria-describedby="phase-global-help">
+              <p class="lesson-note" id="phase-global-help">Turns both arrows together and keeps the angle between them fixed.</p>
+            </div>
+            <div class="phase-actions">
+              <button type="button" id="phase-reset">Reset phases</button>
+            </div>
+          </fieldset>
+
+          <form id="phase-prediction-form">
+            <fieldset class="phase-instrument" id="phase-prediction-controls" disabled>
+              <legend>Predict before comparing</legend>
+              <p>Start with φ = γ = 0. Imagine turning β by 180° while keeping α fixed. What happens to the predictions in each basis?</p>
+
+              <fieldset class="phase-question">
+                <legend>0/1 measurement</legend>
+                <label class="phase-choice">
+                  <input type="radio" name="phase-guess-z" value="same" required>
+                  The predictions stay 50/50.
+                </label>
+                <label class="phase-choice">
+                  <input type="radio" name="phase-guess-z" value="different">
+                  One outcome becomes more likely.
+                </label>
+              </fieldset>
+
+              <fieldset class="phase-question">
+                <legend>+/− measurement</legend>
+                <label class="phase-choice">
+                  <input type="radio" name="phase-guess-x" value="same" required>
+                  The predictions stay the same.
+                </label>
+                <label class="phase-choice">
+                  <input type="radio" name="phase-guess-x" value="swap">
+                  The certain outcome changes from one basis ket to the other.
+                </label>
+                <label class="phase-choice">
+                  <input type="radio" name="phase-guess-x" value="equal">
+                  The two outcomes become equally likely.
+                </label>
+              </fieldset>
+
+              <div class="phase-actions">
+                <button class="phase-primary" type="submit" aria-controls="phase-alternate">
+                  Check prediction and reveal
+                </button>
+              </div>
+              <p class="phase-feedback" id="phase-prediction-feedback" role="status" aria-atomic="true"></p>
+            </fieldset>
+          </form>
+        </div>
+
+        <div class="phase-stack">
+          <figure class="phase-instrument phase-figure" aria-labelledby="phase-plane-caption">
+            <figcaption id="phase-plane-caption">The 0/1 amplitudes on the complex plane</figcaption>
+            <svg class="phase-diagram phase-plane" id="phase-plane" viewBox="0 0 320 280"
+                 role="img" aria-labelledby="phase-plane-title phase-plane-desc"
+                 data-origin-x="152" data-origin-y="136" data-unit="100" data-arc-radius="36">
+              <title id="phase-plane-title">Complex amplitudes alpha and beta</title>
+              <desc id="phase-plane-desc">Both arrows point along the positive real axis and have length one over square root of two. The relative phase is zero.</desc>
+              <defs>
+                <marker id="phase-alpha-tip" markerWidth="10" markerHeight="10"
+                        refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+                  <path class="phase-alpha-fill" d="M0 0 10 5 0 10Z"/>
+                </marker>
+                <marker id="phase-beta-tip" markerWidth="10" markerHeight="10"
+                        refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+                  <path class="phase-beta-open" d="M1 1 9 5 1 9"/>
+                </marker>
+              </defs>
+              <path class="phase-grid-line" d="M52 36H252V236H52Z M102 36V236 M202 36V236 M52 86H252 M52 186H252"/>
+              <circle class="phase-magnitude-guide" cx="152" cy="136" r="70.710678"/>
+              <path class="phase-axis-line" d="M43 136H263m-7-5 7 5-7 5M152 245V25m-5 7 5-7 5 7"/>
+              <g class="phase-svg-label">
+                <text x="270" y="141">Re</text><text x="161" y="24">Im</text>
+                <text x="49" y="158">−1</text><text x="140" y="158">0</text><text x="249" y="158">1</text>
+                <text x="135" y="42">1</text><text x="125" y="241">−1</text>
+              </g>
+              <path class="phase-angle-arc" id="phase-relative-arc" d="M188 136" hidden/>
+              <line class="phase-alpha-line" id="phase-alpha-arrow" x1="152" y1="136" x2="222.710678" y2="136"
+                    marker-end="url(#phase-alpha-tip)"/>
+              <line class="phase-beta-line" id="phase-beta-arrow" x1="152" y1="136" x2="222.710678" y2="136"
+                    marker-end="url(#phase-beta-tip)"/>
+              <circle class="phase-alpha-point" id="phase-alpha-dot" cx="222.710678" cy="136" r="4.5"/>
+              <polygon class="phase-beta-point" id="phase-beta-dot"
+                       points="222.710678,128 230.710678,136 222.710678,144 214.710678,136"/>
+            </svg>
+            <ul class="phase-legend" aria-label="Amplitude diagram legend">
+              <li class="phase-alpha-color">α · solid arrow, circle</li>
+              <li class="phase-beta-color">β · dashed arrow, diamond</li>
+              <li class="phase-angle-color">φ · angle from α to β</li>
+            </ul>
+            <p class="lesson-note" id="phase-angle-note">The arrows coincide. Each has length 1/√2, and their relative angle is 0°.</p>
+            <p class="phase-equation" id="phase-ket">|ψ⟩ = (1/√2)|0⟩ + (1/√2)|1⟩</p>
+            <dl class="phase-readings">
+              <div><dt class="phase-alpha-color">Amplitude α</dt><dd id="phase-alpha">1/√2</dd></div>
+              <div><dt class="phase-beta-color">Amplitude β</dt><dd id="phase-beta">1/√2</dd></div>
+            </dl>
+          </figure>
+
+          <section class="phase-instrument" aria-labelledby="phase-z-title">
+            <h4 id="phase-z-title">0/1 measurement</h4>
+            <p class="lesson-note">Born-rule preview. Square each amplitude’s magnitude in the chosen measurement basis. The bars show model predictions.</p>
+            <div class="phase-bars">
+              <div class="phase-bar phase-alpha-color">
+                <label for="phase-p-zero">Outcome 0 · |α|²</label>
+                <span id="phase-p-zero-text">1/2 · 50%</span>
+                <meter id="phase-p-zero" min="0" max="1" value="0.5">50%</meter>
+              </div>
+              <div class="phase-bar phase-beta-color">
+                <label for="phase-p-one">Outcome 1 · |β|²</label>
+                <span id="phase-p-one-text">1/2 · 50%</span>
+                <meter id="phase-p-one" min="0" max="1" value="0.5">50%</meter>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <p class="phase-feedback" id="phase-announcement" role="status" aria-atomic="true"></p>
+
+      <section class="phase-stack" id="phase-alternate" aria-labelledby="phase-alternate-title" hidden>
+        <div class="phase-instrument">
+          <h4 id="phase-alternate-title">The +/− measurement</h4>
+          <p>These panels compare two alternative measurements on identically prepared systems. The arrows represent complex amplitudes. Squaring their lengths in the selected basis gives the predicted probabilities.</p>
+          <p class="phase-equation">|+⟩ = (|0⟩ + |1⟩)/√2 <span aria-hidden="true">·</span> |−⟩ = (|0⟩ − |1⟩)/√2</p>
+          <p class="lesson-note">The ket |+⟩ has two components in the 0/1 basis. It is itself one of the basis kets in the +/− basis.</p>
+        </div>
+
+        <div class="phase-grid">
+          <section class="phase-instrument" aria-labelledby="phase-x-title">
+            <h4 id="phase-x-title">Born-rule preview</h4>
+            <p class="phase-equation">c<sub>+</sub> = ⟨+|ψ⟩ = (α + β)/√2<br>c<sub>−</sub> = ⟨−|ψ⟩ = (α − β)/√2</p>
+            <dl class="phase-readings">
+              <div><dt class="phase-plus-color">Amplitude c<sub>+</sub></dt><dd id="phase-c-plus">1</dd></div>
+              <div><dt class="phase-minus-color">Amplitude c<sub>−</sub></dt><dd id="phase-c-minus">0 · no phase</dd></div>
+            </dl>
+            <div class="phase-bars">
+              <div class="phase-bar phase-plus-color">
+                <label for="phase-p-plus">Outcome + · |c<sub>+</sub>|²</label>
+                <span id="phase-p-plus-text">1 · 100%</span>
+                <meter id="phase-p-plus" min="0" max="1" value="1">100%</meter>
+              </div>
+              <div class="phase-bar phase-minus-color">
+                <label for="phase-p-minus">Outcome − · |c<sub>−</sub>|²</label>
+                <span id="phase-p-minus-text">0 · 0%</span>
+                <meter id="phase-p-minus" min="0" max="1" value="0">0%</meter>
+              </div>
+            </div>
+            <p class="lesson-note" id="phase-measurement-note">The contributions add in c₊ and cancel in c₋. At the starting phase, + is certain.</p>
+          </section>
+
+          <figure class="phase-instrument phase-figure" aria-labelledby="phase-sum-title">
+            <figcaption id="phase-sum-title">Add the contributions head to tail</figcaption>
+            <label class="phase-select-label" for="phase-sum-branch">Amplitude to construct
+              <select id="phase-sum-branch" disabled>
+                <option value="plus" selected>c₊ · add α and β</option>
+                <option value="minus">c₋ · add α and −β</option>
+              </select>
+            </label>
+            <svg class="phase-diagram phase-plane" id="phase-sum-plane" viewBox="0 0 320 280"
+                 role="img" aria-labelledby="phase-sum-svg-title phase-sum-desc"
+                 data-origin-x="152" data-origin-y="136" data-unit="100">
+              <title id="phase-sum-svg-title">Head-to-tail construction of the selected amplitude</title>
+              <desc id="phase-sum-desc">The first contribution is one half along the real axis. From its tip, the second contribution adds another half. The resultant ends at one.</desc>
+              <defs>
+                <marker id="phase-sum-alpha-tip" markerWidth="10" markerHeight="10"
+                        refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+                  <path class="phase-alpha-fill" d="M0 0 10 5 0 10Z"/>
+                </marker>
+                <marker id="phase-sum-beta-tip" markerWidth="10" markerHeight="10"
+                        refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+                  <path class="phase-beta-open" d="M1 1 9 5 1 9"/>
+                </marker>
+              </defs>
+              <path class="phase-grid-line" d="M52 36H252V236H52Z M102 36V236 M202 36V236 M52 86H252 M52 186H252"/>
+              <path class="phase-axis-line" d="M43 136H263m-7-5 7 5-7 5M152 245V25m-5 7 5-7 5 7"/>
+              <g class="phase-svg-label">
+                <text x="270" y="141">Re</text><text x="161" y="24">Im</text>
+                <text x="49" y="158">−1</text><text x="140" y="158">0</text><text x="249" y="158">1</text>
+                <text x="135" y="42">1</text><text x="125" y="241">−1</text>
+              </g>
+              <g class="phase-result phase-plus-color" id="phase-sum-result">
+                <line x1="152" y1="136" x2="252" y2="136" id="phase-sum-arrow"/>
+                <circle cx="252" cy="136" r="7" id="phase-sum-end"/>
+              </g>
+              <line class="phase-alpha-line" id="phase-sum-alpha" x1="152" y1="136" x2="202" y2="136"
+                    marker-end="url(#phase-sum-alpha-tip)"/>
+              <line class="phase-beta-line" id="phase-sum-beta" x1="202" y1="136" x2="252" y2="136"
+                    marker-end="url(#phase-sum-beta-tip)"/>
+              <circle class="phase-join-point" id="phase-sum-join" cx="202" cy="136" r="3.5"/>
+              <circle class="phase-zero-point" id="phase-sum-zero" cx="152" cy="136" r="8" hidden/>
+            </svg>
+            <ul class="phase-legend" aria-label="Construction legend">
+              <li class="phase-alpha-color">First · α/√2</li>
+              <li class="phase-beta-color" id="phase-sum-beta-label">Second · β/√2</li>
+              <li id="phase-sum-result-label" class="phase-plus-color">Result · c₊</li>
+            </ul>
+            <p class="lesson-note" id="phase-sum-caption">Each contribution is scaled by 1/√2 before plotting. Here 1/2 + 1/2 = 1, so the resultant is c₊ = 1.</p>
+          </figure>
+        </div>
+
+        <figure class="phase-instrument phase-sweep" aria-labelledby="phase-sweep-title">
+          <figcaption id="phase-sweep-title">Predicted probability across one relative-phase turn</figcaption>
+          <svg class="phase-diagram" id="phase-sweep" viewBox="0 0 580 290"
+               role="img" aria-labelledby="phase-sweep-svg-title phase-sweep-desc"
+               data-left="70" data-right="550" data-top="28" data-bottom="228">
+            <title id="phase-sweep-svg-title">Predicted plus and minus probabilities against relative phase</title>
+            <desc id="phase-sweep-desc">At relative phase zero, the plus probability is one and the minus probability is zero. The curves exchange those values at 180 degrees and return to the starting values at 360 degrees.</desc>
+            <path class="phase-grid-line" d="M70 28H550 M70 128H550 M70 228H550 M190 28V228 M310 28V228 M430 28V228 M550 28V228"/>
+            <path class="phase-axis-line" d="M70 26V228H553"/>
+            <g class="phase-svg-label">
+              <text x="60" y="34" text-anchor="end">1</text>
+              <text x="60" y="134" text-anchor="end">0.5</text>
+              <text x="60" y="234" text-anchor="end">0</text>
+              <text y="252" text-anchor="middle">
+                <tspan x="70">0°</tspan><tspan x="190">90°</tspan><tspan x="310">180°</tspan>
+                <tspan x="430">270°</tspan><tspan x="550">360°</tspan>
+              </text>
+              <text x="310" y="278" text-anchor="middle">Relative phase φ</text>
+              <text x="18" y="128" text-anchor="middle" transform="rotate(-90 18 128)">Predicted probability</text>
+            </g>
+            <polyline class="phase-plus-curve" id="phase-plus-curve"
+                      points="70,28 100,35.61 130,57.29 160,89.73 190,128 220,166.27 250,198.71 280,220.39 310,228 340,220.39 370,198.71 400,166.27 430,128 460,89.73 490,57.29 520,35.61 550,28"/>
+            <polyline class="phase-minus-curve" id="phase-minus-curve"
+                      points="70,228 100,220.39 130,198.71 160,166.27 190,128 220,89.73 250,57.29 280,35.61 310,28 340,35.61 370,57.29 400,89.73 430,128 460,166.27 490,198.71 520,220.39 550,228"/>
+            <line class="phase-sweep-cursor" id="phase-sweep-cursor" x1="70" y1="28" x2="70" y2="228"/>
+            <circle class="phase-plus-dot" id="phase-plus-dot" cx="70" cy="28" r="5"/>
+            <polygon class="phase-minus-dot" id="phase-minus-dot" points="70,221 77,228 70,235 63,228"/>
+          </svg>
+          <ul class="phase-legend" aria-label="Phase sweep legend">
+            <li class="phase-plus-color">P(+) · solid curve, circle</li>
+            <li class="phase-minus-color">P(−) · dashed curve, diamond</li>
+            <li class="phase-angle-color">Vertical guide · selected φ</li>
+          </ul>
+          <p class="lesson-note" id="phase-sweep-caption">At 0°, P(+) is 1 and P(−) is 0. The curves give model predictions.</p>
+        </figure>
+      </section>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="phase-worked-title">
+      <h3 id="phase-worked-title">Why the measurement basis matters</h3>
+      <p>In the 0/1 basis, each outcome depends on the magnitude of a single coefficient. In the +/− basis, each outcome depends on a combination of the two coefficients. The phase between the contributions can make them reinforce or cancel.</p>
+      <details>
+        <summary>Work through the amplitudes and probabilities</summary>
+        <div class="phase-disclosure">
+          <p>The basis kets are |+⟩ = (|0⟩ + |1⟩)/√2 and |−⟩ = (|0⟩ − |1⟩)/√2. Taking their inner products with |ψ⟩ gives the amplitudes in that basis. The cross inner products ⟨0|1⟩ and ⟨1|0⟩ vanish.</p>
+          <p class="phase-equation">c<sub>±</sub> = (α ± β)/√2 = e<sup>iγ</sup>(1 ± e<sup>iφ</sup>)/2</p>
+          <p>Combine the complex contributions first. To find the probability, square the magnitude of their sum or difference. Since |e<sup>iγ</sup>| = 1, the common phase drops out.</p>
+          <p class="phase-equation">|1 ± e<sup>iφ</sup>|² = (1 ± e<sup>iφ</sup>)(1 ± e<sup>−iφ</sup>) = 2 ± 2 cos φ</p>
+          <p class="phase-equation">P(+) = (1 + cos φ)/2 = cos²(φ/2)<br>
+            P(−) = (1 − cos φ)/2 = sin²(φ/2)</p>
+
+          <div class="phase-table-wrap">
+            <table class="phase-table">
+              <caption>Worked examples at γ = 0</caption>
+              <thead>
+                <tr><th scope="col">φ</th><th scope="col">c<sub>+</sub></th><th scope="col">c<sub>−</sub></th><th scope="col">P(+)</th><th scope="col">P(−)</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">0</th><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+                <tr><th scope="row">π/2</th><td>(1 + i)/2</td><td>(1 − i)/2</td><td>1/2</td><td>1/2</td></tr>
+                <tr><th scope="row">π</th><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>A zero amplitude has no defined phase. At γ = 0, the states at φ = 0 and φ = π are |+⟩ and |−⟩. Both give equal 0/1 predictions, yet the +/− measurement distinguishes those two preparations with certainty.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="phase-global-title">
+      <h3 id="phase-global-title">Rotate both arrows together</h3>
+      <p>Choose a relative phase and hold it fixed. Move the global-phase slider and watch both complex coefficients rotate together. The angle between them and all probability readouts stay fixed.</p>
+      <p class="phase-equation">|e<sup>iγ</sup>c|² = |e<sup>iγ</sup>|² |c|² = |c|²</p>
+      <p>Here c can be any measurement-basis amplitude. A global phase has no observable effect for this isolated state. A relative phase can change predictions in a suitable basis. Equal predictions in one basis alone are insufficient to identify the physical state.</p>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="phase-mixture-title">
+      <h3 id="phase-mixture-title">Coherent superposition and random preparation</h3>
+      <p>Compare the coherent preparation |+⟩ with a procedure that randomly prepares |0⟩ or |1⟩ with equal chances. The procedures agree on the 0/1 predictions.</p>
+      <div class="phase-table-wrap">
+        <table class="phase-table">
+          <thead>
+            <tr><th scope="col">Preparation</th><th scope="col">P(0), P(1)</th><th scope="col">P(+), P(−)</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Coherent |+⟩</th><td>1/2, 1/2</td><td>1, 0</td></tr>
+            <tr><th scope="row">50/50 random |0⟩ or |1⟩</th><td>1/2, 1/2</td><td>1/2, 1/2</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>In the random procedure, each preparation gives equal +/− probabilities, and averaging those probabilities keeps them equal. In the coherent state the amplitudes combine first. The fixed relative phase makes their contributions cancel for the minus outcome.</p>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="phase-challenge-title">
+      <h3 id="phase-challenge-title">Check your understanding</h3>
+      <form id="phase-challenge">
+        <fieldset class="phase-instrument" id="phase-challenge-controls" disabled>
+          <legend>Phase challenge</legend>
+
+          <div class="phase-question" data-phase-question="setting">
+            <h4 tabindex="-1">1 of 2 · Set the lab so the minus outcome is certain</h4>
+            <p>The 0/1 predictions should stay equal. Use the relative-phase control, then check your current setting.</p>
+            <p><a href="#phase-relative">Go to the relative-phase control</a></p>
+          </div>
+
+          <div class="phase-question" data-phase-question="global" role="radiogroup"
+               aria-labelledby="phase-challenge-global-title" hidden>
+            <h4 tabindex="-1" id="phase-challenge-global-title">2 of 2 · Starting at |+⟩, can rotating both arrows together make the minus outcome certain?</h4>
+            <label class="phase-choice">
+              <input type="radio" name="phase-challenge-global" value="yes">
+              Yes. A half-turn of both arrows makes minus certain.
+            </label>
+            <label class="phase-choice">
+              <input type="radio" name="phase-challenge-global" value="no">
+              No. A shared rotation keeps the relative phase fixed.
+            </label>
+          </div>
+
+          <div class="phase-actions">
+            <button class="phase-primary" id="phase-challenge-check" type="submit">Check my phase</button>
+            <button id="phase-challenge-next" type="button" hidden>Next question</button>
+            <button id="phase-challenge-restart" type="button" hidden>Try the challenge again</button>
+          </div>
+          <p class="phase-feedback" id="phase-challenge-feedback" role="status" aria-atomic="true"></p>
+        </fieldset>
+      </form>
+    </section>
+
+    <nav class="lesson-next" aria-label="Lesson navigation">
+      <a href="../11_quantum_states/11_quantum_states.html"><span aria-hidden="true">←</span> Previous: Quantum States</a>
+      <a class="phase-primary" href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html">
+        Next: Measurement and the Born Rule <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

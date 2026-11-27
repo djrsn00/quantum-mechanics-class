@@ -1,0 +1,1088 @@
+:root {
+  color-scheme: dark;
+
+  --background: #050906;
+  --panel: #09150e;
+  --ink: #ecfff1;
+  --phosphor: #78f8a6;
+  --muted: #a6c5b0;
+  --line: #234c33;
+
+  --red: #ff676f;
+  --orange: #ff9f55;
+  --yellow: #ffe16a;
+  --green: #63f59b;
+  --blue: #65b7ff;
+  --violet: #c19bff;
+
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0;
+  background-color: var(--background);
+  background-image:
+    radial-gradient(ellipse at 50% 35%, rgb(33 123 68 / 15%), transparent 65%),
+    linear-gradient(rgb(120 248 166 / 4%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(120 248 166 / 4%) 1px, transparent 1px);
+  background-size: auto, 32px 32px, 32px 32px;
+  color: var(--ink);
+  font-family: var(--mono);
+}
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+  background-color: #070f0a;
+  box-shadow: 0 1px 18px rgb(93 239 146 / 8%);
+}
+
+.header-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 2rem);
+  width: min(calc(100% - var(--gutter) - var(--gutter)), 84rem);
+  min-height: 7rem;
+  margin-inline: auto;
+  padding-block: 0.75rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.brand-logo {
+  flex: none;
+  width: clamp(2.75rem, 4.5vw, 3.5rem);
+  filter: drop-shadow(0 0 6px rgb(120 248 166 / 24%));
+}
+
+.brand h1 {
+  margin: 0;
+  color: var(--phosphor);
+  font-size: clamp(1rem, 1.5vw, 1.375rem);
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.particle-display {
+  position: relative;
+  grid-column: 2;
+  justify-self: center;
+  width: min(100%, 30rem);
+  aspect-ratio: 480 / 108;
+  overflow: hidden;
+}
+
+.particle-still,
+.particle-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.particle-canvas {
+  visibility: hidden;
+}
+
+.particle-display[data-motion="active"] .particle-still {
+  visibility: hidden;
+}
+
+.particle-display[data-motion="active"] .particle-canvas {
+  visibility: visible;
+}
+
+.particle-guide {
+  stroke: var(--line);
+  stroke-width: 1;
+  stroke-dasharray: 2 7;
+  opacity: 0.65;
+}
+
+.particle-tracks path {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.track-in-a { stroke: #d0ffe3; }
+.track-in-b { stroke: #79d7b2; }
+.track-red { stroke: var(--red); }
+.track-orange { stroke: var(--orange); }
+.track-yellow { stroke: var(--yellow); }
+.track-green { stroke: var(--green); }
+.track-blue { stroke: var(--blue); }
+.track-violet { stroke: var(--violet); }
+
+.collision-halo {
+  fill: none;
+  stroke: var(--phosphor);
+  stroke-width: 1;
+  opacity: 0.25;
+}
+
+.collision-cross {
+  fill: none;
+  stroke: var(--phosphor);
+  stroke-width: 1;
+  opacity: 0.62;
+}
+
+.collision-core {
+  fill: #f2fff5;
+  filter: drop-shadow(0 0 5px var(--phosphor));
+}
+
+.lessons-menu-toggle {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: 44px;
+  padding-inline: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: var(--panel);
+  color: var(--phosphor);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lessons-menu-toggle svg {
+  flex: none;
+}
+
+.lessons-menu-toggle:hover,
+.lessons-menu-toggle[aria-expanded="true"] {
+  border-color: var(--phosphor);
+  background-color: #12271b;
+}
+
+.lessons-menu-toggle[hidden],
+.lessons-menu[hidden] {
+  display: none;
+}
+
+.lessons-menu {
+  inline-size: min(26rem, calc(100% - var(--gutter) - var(--gutter)));
+  max-block-size: clamp(5rem, calc(100vh - 12rem), 24rem);
+  max-block-size: clamp(5rem, calc(100dvh - 12rem), 24rem);
+  margin-inline-start: auto;
+  margin-inline-end: max(var(--gutter), calc((100% - 84rem) / 2));
+  margin-block-end: 0.75rem;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background-color: var(--panel);
+}
+
+.lessons-menu a {
+  display: grid;
+  grid-template-columns: 2ch minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  color: var(--ink);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.lessons-menu a + a {
+  border-block-start: 1px solid var(--line);
+}
+
+.lessons-menu a:hover,
+.lessons-menu a:focus-visible,
+.lessons-menu a[aria-current="page"] {
+  background-color: #12271b;
+}
+
+.lessons-menu-toggle:focus-visible,
+.lessons-menu a:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 2px;
+}
+
+.lessons-menu a:focus-visible {
+  outline-offset: -2px;
+}
+
+.lessons-menu-step {
+  color: var(--phosphor);
+  text-align: end;
+}
+
+.site-footer {
+  padding: 1.25rem var(--gutter);
+  border-top: 1px solid var(--line);
+  background-color: #070f0a;
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+@media (max-width: 56rem) {
+  .header-inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.25rem;
+    min-height: 0;
+    padding-block: 1rem 0.5rem;
+  }
+
+  .brand h1 {
+    overflow-wrap: anywhere;
+  }
+
+  .particle-display {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .lessons-menu-toggle {
+    grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particle-display[data-motion="active"] .particle-still {
+    visibility: visible;
+  }
+
+  .particle-display[data-motion="active"] .particle-canvas {
+    visibility: hidden;
+  }
+}
+
+/* Lesson 7 */
+
+.site-main.vector-lesson {
+  --vector-a: var(--green);
+  --vector-b: var(--violet);
+  --vector-sum: var(--orange);
+  --vector-projection: var(--blue);
+  --vector-angle: var(--yellow);
+  --vector-guide: #8cb8a3;
+
+  display: grid;
+  align-content: start;
+  gap: clamp(1rem, 3vw, 2rem);
+  width: min(calc(100% - var(--gutter) - var(--gutter)), 68rem);
+  margin-inline: auto;
+  padding-block: clamp(1.5rem, 4vw, 3.5rem);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.vector-lesson :is(h2, h3, h4, p, figure, dl) {
+  margin: 0;
+}
+
+.vector-lesson :is(h2, h3, h4) {
+  line-height: 1.25;
+}
+
+.vector-lesson h2 {
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  letter-spacing: -0.06em;
+}
+
+.vector-lesson h3 {
+  font-size: clamp(1.25rem, 3vw, 1.65rem);
+}
+
+.vector-lesson h4 {
+  font-size: 1rem;
+}
+
+.vector-lesson a {
+  color: var(--phosphor);
+  text-underline-offset: 0.2em;
+}
+
+.vector-lesson :is(a, button, input, select, summary):focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 3px;
+}
+
+.vector-lesson :is(.lesson-intro, .lesson-prose) {
+  display: grid;
+  gap: 0.75rem;
+  max-inline-size: 74ch;
+}
+
+.vector-lesson .lesson-kicker {
+  color: var(--phosphor);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.vector-lesson .lesson-lead {
+  max-inline-size: 60ch;
+  color: var(--phosphor);
+  font-size: clamp(1.0625rem, 2.4vw, 1.375rem);
+  font-weight: 700;
+}
+
+.vector-lesson :is(.lesson-panel, .lesson-station) {
+  display: grid;
+  align-content: start;
+  gap: 0.875rem;
+  min-inline-size: 0;
+  padding: clamp(0.875rem, 2.5vw, 1.75rem);
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: linear-gradient(145deg, #0d1b12, var(--panel));
+}
+
+.vector-lesson .lesson-station {
+  gap: 0.75rem;
+  padding: clamp(0.75rem, 2vw, 1.25rem);
+  border-radius: 0.375rem;
+  background: #070e09;
+}
+
+.vector-lesson details.lesson-panel:not([open]) {
+  display: block;
+}
+
+.vector-lesson :is(.lesson-note, figcaption) {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.vector-lesson :is(.vector-console, .vector-figure, .vector-calculations) {
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+  min-inline-size: 0;
+}
+
+.vector-lesson .vector-text-a { color: var(--vector-a); }
+.vector-lesson .vector-text-b { color: var(--vector-b); }
+.vector-lesson .vector-text-sum { color: var(--vector-sum); }
+.vector-lesson .vector-text-projection { color: var(--vector-projection); }
+.vector-lesson .vector-text-angle { color: var(--vector-angle); }
+
+.vector-lesson .vector-viewport {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  background:
+    linear-gradient(#050d09, #050d09) padding-box,
+    linear-gradient(135deg,
+      var(--red), var(--orange), var(--yellow), var(--green), var(--blue), var(--violet)
+    ) border-box;
+}
+
+.vector-lesson :is(.vector-plot, .vector-canvas, .vector-scene-labels) {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.vector-lesson .vector-scene-labels {
+  pointer-events: none;
+}
+
+.vector-lesson .vector-scene-labels [data-vector-label] {
+  position: absolute;
+  padding: 0.0625rem 0.2rem;
+  border-radius: 0.2rem;
+  background: rgb(5 13 9 / 86%);
+  color: var(--ink);
+  font-size: clamp(0.6875rem, 1.5vw, 0.875rem);
+  line-height: 1.2;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+
+.vector-lesson .vector-plot text {
+  fill: var(--muted);
+  font: 600 16px var(--mono);
+  text-anchor: middle;
+}
+
+.vector-lesson .vector-plot .vector-tick-left {
+  text-anchor: end;
+}
+
+.vector-lesson .vector-plot .vector-axis-label {
+  fill: var(--ink);
+}
+
+.vector-lesson :is(.vector-grid-line, .vector-grid-frame, .vector-axis, .vector-guide,
+                  .vector-line-a, .vector-line-b, .vector-line-sum,
+                  .vector-line-projection, .vector-span, .vector-angle-arc) {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.vector-lesson :is(.vector-grid-line, .vector-grid-frame) {
+  stroke: #234c33;
+}
+
+.vector-lesson .vector-axis {
+  stroke: #729783;
+  stroke-width: 1.25;
+}
+
+.vector-lesson .vector-guide {
+  stroke: var(--vector-guide);
+  stroke-width: 1.3;
+  stroke-dasharray: 2 4;
+}
+
+.vector-lesson .vector-span {
+  stroke: var(--vector-projection);
+  stroke-dasharray: 2 5;
+  opacity: 0.55;
+}
+
+.vector-lesson .vector-line-a {
+  stroke: var(--vector-a);
+  stroke-width: 3;
+}
+
+.vector-lesson .vector-line-b {
+  stroke: var(--vector-b);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+
+.vector-lesson .vector-line-sum {
+  stroke: var(--vector-sum);
+  stroke-width: 2.8;
+}
+
+.vector-lesson .vector-line-projection {
+  stroke: var(--vector-projection);
+  stroke-width: 2.7;
+  stroke-dasharray: 7 3 2 3;
+}
+
+.vector-lesson .vector-angle-arc {
+  stroke: var(--vector-angle);
+  stroke-width: 2;
+}
+
+.vector-lesson .vector-origin { fill: var(--ink); }
+
+.vector-lesson :is(.vector-fill-a, .vector-point-a) { fill: var(--vector-a); }
+.vector-lesson .vector-fill-b { fill: var(--vector-b); }
+.vector-lesson .vector-fill-sum { fill: var(--vector-sum); }
+.vector-lesson .vector-fill-projection { fill: var(--vector-projection); }
+
+.vector-lesson .vector-point-b {
+  fill: none;
+  stroke: var(--vector-b);
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
+}
+
+.vector-lesson .vector-plot .vector-label-a { fill: var(--vector-a); }
+.vector-lesson .vector-plot .vector-label-b { fill: var(--vector-b); }
+.vector-lesson .vector-plot .vector-label-sum { fill: var(--vector-sum); }
+.vector-lesson .vector-plot .vector-label-projection { fill: var(--vector-projection); }
+.vector-lesson .vector-plot .vector-label-angle { fill: var(--vector-angle); }
+
+.vector-lesson .vector-scene-labels [data-vector-label="a"] { color: var(--vector-a); }
+.vector-lesson .vector-scene-labels [data-vector-label="b"],
+.vector-lesson .vector-scene-labels [data-vector-label="translated-b"] { color: var(--vector-b); }
+.vector-lesson .vector-scene-labels [data-vector-label="sum"] { color: var(--vector-sum); }
+.vector-lesson .vector-scene-labels [data-vector-label="projection"] { color: var(--vector-projection); }
+.vector-lesson .vector-scene-labels [data-vector-label="angle"] { color: var(--vector-angle); }
+
+.vector-lesson .vector-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem 1rem;
+  margin: 0;
+  padding: 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  list-style: none;
+}
+
+.vector-lesson .vector-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.vector-lesson .vector-key {
+  flex: none;
+  inline-size: 1.25rem;
+  border-block-start: 2px solid currentColor;
+}
+
+.vector-lesson .vector-key-a { color: var(--vector-a); }
+.vector-lesson .vector-key-b { color: var(--vector-b); border-block-start-style: dashed; }
+.vector-lesson .vector-key-sum { color: var(--vector-sum); }
+.vector-lesson .vector-key-projection { color: var(--vector-projection); border-block-start-style: dashed; }
+.vector-lesson .vector-key-guide { color: var(--vector-guide); border-block-start-style: dotted; }
+
+.vector-lesson .vector-key-angle {
+  block-size: 0.65rem;
+  border-inline-end: 2px solid currentColor;
+  border-start-end-radius: 0.65rem;
+  color: var(--vector-angle);
+}
+
+.vector-lesson .vector-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.vector-lesson .vector-metrics > div {
+  padding: 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: var(--panel);
+}
+
+.vector-lesson .vector-metrics dt {
+  font-size: 0.8125rem;
+}
+
+.vector-lesson .vector-metrics dd {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.vector-lesson :is(.vector-actions, .vector-display-heading, .lesson-next) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.vector-lesson .vector-actions {
+  align-items: end;
+}
+
+.vector-lesson :is(.vector-display-heading, .lesson-next) {
+  justify-content: space-between;
+}
+
+.vector-lesson .vector-view-tag {
+  color: var(--phosphor);
+  font-size: 0.8125rem;
+}
+
+.vector-lesson fieldset {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.vector-lesson fieldset > * + * {
+  margin-block-start: 0.75rem;
+}
+
+.vector-lesson legend {
+  margin-block-end: 0.5rem;
+  padding: 0;
+  color: var(--phosphor);
+  font-weight: 700;
+}
+
+.vector-lesson .vector-field {
+  display: grid;
+  gap: 0.375rem;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  font-size: 0.875rem;
+}
+
+.vector-lesson select {
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 44px;
+  padding: 0.375rem 0.5rem;
+  border: 1px solid #517764;
+  border-radius: 0.375rem;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+}
+
+.vector-lesson .vector-component-set {
+  padding: 0.625rem 0.75rem 0.125rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: var(--panel);
+}
+
+.vector-lesson .vector-components {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.375rem, 1vw, 0.75rem);
+  margin-block-start: 0.375rem;
+}
+
+.vector-lesson .vector-slider {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  min-inline-size: 0;
+  gap: 0 0.25rem;
+  font-size: 0.875rem;
+}
+
+.vector-lesson .vector-slider output {
+  color: var(--phosphor);
+  font-variant-numeric: tabular-nums;
+}
+
+.vector-lesson input[type="range"] {
+  grid-column: 1 / -1;
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 44px;
+  margin: 0;
+  accent-color: var(--phosphor);
+}
+
+.vector-lesson input[id^="vector-a"] { accent-color: var(--vector-a); }
+.vector-lesson input[id^="vector-b"] { accent-color: var(--vector-b); }
+
+.vector-lesson .lesson-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-block-size: 44px;
+  max-inline-size: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #517764;
+  border-radius: 0.375rem;
+  background: #0b1a12;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.vector-lesson .lesson-primary {
+  border-color: var(--phosphor);
+  background: var(--phosphor);
+  color: #08130d;
+}
+
+.vector-lesson .lesson-button[aria-pressed="true"] {
+  border-color: var(--phosphor);
+  background: #12271b;
+  color: var(--phosphor);
+}
+
+.vector-lesson :is(button:enabled, a.lesson-button):hover {
+  border-color: var(--ink);
+}
+
+.vector-lesson :is(button, input, select):disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.vector-lesson :is(.vector-equation, .vector-reaction) {
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: #102016;
+  font-variant-numeric: tabular-nums;
+}
+
+.vector-lesson .vector-equation {
+  color: var(--phosphor);
+  font-weight: 700;
+}
+
+.vector-lesson .vector-reaction {
+  border-inline-start: 2px solid var(--phosphor);
+  font-size: 0.875rem;
+}
+
+.vector-lesson summary {
+  display: list-item;
+  inline-size: fit-content;
+  min-block-size: 44px;
+  padding: 0.5rem 0.125rem;
+  color: var(--phosphor);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.vector-lesson details[open] > summary {
+  margin-block-end: 0.375rem;
+}
+
+.vector-lesson .vector-table {
+  inline-size: 100%;
+  max-inline-size: 30rem;
+  margin-block-end: 0.75rem;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.vector-lesson .vector-table caption {
+  padding-block-end: 0.375rem;
+  color: var(--muted);
+  text-align: start;
+}
+
+.vector-lesson .vector-table :is(th, td) {
+  padding: 0.5rem 0.375rem;
+  border-block-end: 1px solid var(--line);
+  text-align: start;
+}
+
+.vector-lesson .vector-answers {
+  display: grid;
+  justify-items: start;
+  gap: 0.5rem;
+}
+
+.vector-lesson [data-vector-question] > * + * {
+  margin-block-start: 0.625rem;
+}
+
+.vector-lesson #vector-next-question {
+  justify-self: start;
+}
+
+.vector-lesson .vector-sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.vector-lesson [hidden] {
+  display: none !important;
+}
+
+@media (min-width: 45rem) {
+  .vector-lesson .vector-metrics {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 50rem) {
+  .vector-lesson .vector-console {
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+    align-items: start;
+  }
+}
+
+/* Vector Arcade */
+
+.site-main.vector-lesson {
+  --va-surface: #0b1911;
+}
+
+.vector-lesson :is(#vector-lab, #vector-result-values, #vector-arcade) {
+  scroll-margin-block-start: 1rem;
+}
+
+.vector-lesson .va-reduced {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-block-size: 44px;
+  color: var(--muted);
+}
+
+.vector-lesson .va-reduced input {
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+  margin: 0;
+  accent-color: var(--phosphor);
+}
+
+.vector-lesson :is(.va-arcade, .va-mission) > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.375rem 0.75rem;
+  inline-size: 100%;
+}
+
+.vector-lesson :is(.va-arcade, .va-mission) > summary::before {
+  content: "+";
+}
+
+.vector-lesson :is(.va-arcade, .va-mission)[open] > summary::before {
+  content: "−";
+}
+
+.vector-lesson .va-arcade > summary strong {
+  font-size: clamp(1rem, 2vw, 1.35rem);
+}
+
+.vector-lesson :is(.va-arcade > summary span, .va-readout) {
+  color: var(--muted);
+}
+
+.vector-lesson :is(.va-toolbar, .va-station, .va-figure, .va-missions, .va-mission-tools) {
+  display: grid;
+  min-inline-size: 0;
+  gap: 0.75rem;
+}
+
+.vector-lesson .va-toolbar {
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) auto;
+  align-items: end;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--va-surface);
+}
+
+.vector-lesson :is(.va-toolbar, .va-fields) label {
+  display: grid;
+  gap: 0.25rem;
+  min-inline-size: 0;
+  font-size: 0.875rem;
+}
+
+.vector-lesson #va-progress {
+  align-self: center;
+  color: var(--phosphor);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.vector-lesson .va-station {
+  --va-accent: var(--phosphor);
+  padding: clamp(0.75rem, 2vw, 1.35rem);
+  border: 1px solid var(--line);
+  border-block-start: 3px solid var(--va-accent);
+  border-radius: 0.6rem;
+  background: var(--va-surface);
+}
+
+.vector-lesson [data-va-accent="blue"] { --va-accent: var(--blue); }
+.vector-lesson [data-va-accent="violet"] { --va-accent: var(--violet); }
+.vector-lesson [data-va-accent="orange"] { --va-accent: var(--orange); }
+.vector-lesson [data-va-accent="green"] { --va-accent: var(--green); }
+.vector-lesson [data-va-accent="yellow"] { --va-accent: var(--yellow); }
+.vector-lesson [data-va-accent="red"] { --va-accent: var(--red); }
+
+.vector-lesson .va-station h4 {
+  color: var(--va-accent);
+  font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+}
+
+.vector-lesson .va-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11.5rem), 1fr));
+  align-items: end;
+  gap: 0.65rem 0.85rem;
+}
+
+.vector-lesson .va-fields input[type="number"] {
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 44px;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid #517764;
+  border-radius: 0.375rem;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+}
+
+.vector-lesson .va-fields input[type="range"] {
+  inline-size: 100%;
+  min-block-size: 44px;
+  margin: 0;
+  accent-color: var(--va-accent);
+}
+
+.vector-lesson .va-fields input[readonly] {
+  border-style: dashed;
+  color: var(--muted);
+}
+
+.vector-lesson .va-station button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-block-size: 44px;
+  max-inline-size: 100%;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid #517764;
+  border-radius: 0.4rem;
+  background: #11241a;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.875rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+.vector-lesson .va-station button.lesson-primary {
+  border-color: var(--va-accent);
+  color: var(--va-accent);
+}
+
+.vector-lesson .va-station button:enabled:hover {
+  border-color: var(--ink);
+}
+
+.vector-lesson .va-figure {
+  padding: 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: #050d09;
+}
+
+.vector-lesson .va-figure figcaption {
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.vector-lesson .va-viewport {
+  position: relative;
+  inline-size: 100%;
+  min-block-size: 11rem;
+  max-block-size: 25rem;
+  aspect-ratio: 560 / 340;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 0.35rem;
+  background: #050d09;
+}
+
+.vector-lesson .va-diagram {
+  position: relative;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  pointer-events: none;
+}
+
+.vector-lesson .va-diagram text {
+  fill: var(--ink);
+  font: 700 15px var(--mono);
+  paint-order: stroke fill;
+  stroke: #050d09;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+.vector-lesson .va-readout {
+  font-variant-numeric: tabular-nums;
+}
+
+.vector-lesson .va-mission {
+  padding-inline: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+}
+
+.vector-lesson .va-mission[open] {
+  padding-block-end: 0.75rem;
+}
+
+.vector-lesson .va-mission[open] > * + * {
+  margin-block-start: 0.65rem;
+}
+
+.vector-lesson [data-va-done] {
+  margin-inline-start: auto;
+  color: var(--phosphor);
+  font-size: 0.8125rem;
+}
+
+.vector-lesson :is(.va-mission-tools, .va-math, .va-work) {
+  border-block-start: 1px solid var(--line);
+}
+
+.vector-lesson .va-mission-tools {
+  justify-items: start;
+  padding-block-start: 0.65rem;
+}
+
+.vector-lesson .va-mission-tools ol {
+  margin: 0;
+  padding-inline-start: 1.75rem;
+  color: var(--muted);
+}
+
+.vector-lesson .va-feedback:not(:empty) {
+  padding: 0.55rem 0.75rem;
+  border-inline-start: 2px solid var(--va-accent);
+  background: #102419;
+}
+
+.vector-lesson .va-work {
+  inline-size: 100%;
+}
+
+@media (max-width: 46rem) {
+  .vector-lesson .va-toolbar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.vector-lesson .va-log {
+  max-block-size: 12rem;
+  margin-block-end: 0;
+  overflow: auto;
+  padding-inline-start: 1.6rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.vector-lesson .va-log:empty {
+  display: none;
+}
+
+.vector-lesson .va-station button[aria-pressed="true"] {
+  border-color: var(--phosphor);
+  color: var(--phosphor);
+}

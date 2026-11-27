@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Derive the infinite square well’s energy levels, measure standing-wave probabilities, and explore exact two-state evolution in the Quantum Resonance Chamber.">
+  <title>The Infinite Square Well | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+  <script type="module" src="./scripts/lesson.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)"
+                  stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none"
+                   stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8"
+                stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none"
+                   stroke="url(#logo-spectrum)" stroke-width="1.6"
+                   transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none"
+                stroke="#edffef" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static" viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 464 83"/>
+            <path class="track-violet" d="M218 54C265 80 333 97 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M218 46v16m-8-8h16"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button"
+              aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and-coordinates/8_bases_and-coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="../22_the_one-dimensional_schrodinger_equation/22_the_one-dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html" aria-current="page"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main infinite-well-lesson" aria-labelledby="iw-title">
+    <header class="iw-intro iw-stack">
+      <p class="iw-kicker">Lesson 23</p>
+      <h2 id="iw-title">The Infinite Square Well</h2>
+      <p class="iw-lead"><strong>A detector covers the middle third of the chamber. Does it catch one third of the particles prepared in the ground state?</strong></p>
+      <p>Predict, inspect the shaded area, and measure a batch. Then choose <var>n</var> = 2 without moving either detector edge. Look for the new zero inside the chamber.</p>
+    </header>
+
+    <section class="iw-panel" aria-labelledby="iw-lab-title">
+      <h3 id="iw-lab-title" tabindex="-1">Infinite Well Lab</h3>
+      <p>The physical model has <var>V</var> = 0 for 0 &lt; <var>x</var> &lt; <var>L</var> and infinitely high walls. The wavefunction is zero at both walls and outside them.</p>
+      <p class="iw-note" id="iw-static-note">The plots and readouts show the opening state. The interactive controls become available when the lesson script loads.</p>
+
+      <form id="iw-prediction">
+        <fieldset class="iw-card" id="iw-prediction-controls" disabled>
+          <legend>Predict the ground-state result</legend>
+          <p id="iw-opening-prompt">How does the chance of a detection in the middle third compare with one third?</p>
+          <div class="iw-choices" role="group" aria-labelledby="iw-opening-prompt">
+            <label><input type="radio" name="iw-opening-answer" value="less" required> Less than one third</label>
+            <label><input type="radio" name="iw-opening-answer" value="equal"> Exactly one third</label>
+            <label><input type="radio" name="iw-opening-answer" value="more"> More than one third</label>
+          </div>
+          <div class="iw-actions">
+            <button type="submit">Check prediction</button>
+            <button type="button" id="iw-prediction-retry" hidden>Try again</button>
+          </div>
+          <p class="iw-feedback" id="iw-prediction-feedback" role="status" aria-atomic="true"></p>
+        </fieldset>
+      </form>
+
+      <div class="iw-grid">
+        <div class="iw-stack">
+          <fieldset class="iw-card" id="iw-prepare-controls" disabled>
+            <legend>Prepare the state</legend>
+            <label for="iw-mode">Preparation</label>
+            <select id="iw-mode">
+              <option value="eigen" selected>Single energy eigenstate</option>
+              <option value="pair">Two-state superposition</option>
+            </select>
+            <div class="iw-fields">
+              <div class="iw-stack">
+                <label for="iw-length">Well width L/L<sub>ref</sub></label>
+                <input id="iw-length" type="number" min="0.5" max="2.5" step="0.05" value="1" aria-describedby="iw-reprepare-help">
+              </div>
+              <div class="iw-stack">
+                <label for="iw-mass">Mass m/m<sub>ref</sub></label>
+                <input id="iw-mass" type="number" min="0.5" max="3" step="0.05" value="1" aria-describedby="iw-reprepare-help">
+              </div>
+            </div>
+            <p class="iw-note" id="iw-reprepare-help">Changing width, mass, or preparation pauses the clock, clears detections, and prepares the chosen state at t = 0 in the new static well. Detector edges retain their fractions of L.</p>
+            <label id="iw-r-label" for="iw-r">Level n</label>
+            <select id="iw-r">
+              <option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+              <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>
+            </select>
+            <div class="iw-stack" id="iw-pair-controls" hidden>
+              <label for="iw-s">Second level s</label>
+              <select id="iw-s">
+                <option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option>
+                <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>
+              </select>
+              <p class="iw-note">The two levels must differ. The mathematical energy ladder continues above 8.</p>
+              <div class="iw-label-row"><label for="iw-alpha">Mixing angle α</label><span id="iw-alpha-value">45°</span></div>
+              <input id="iw-alpha" type="range" min="0" max="90" step="1" value="45" aria-valuetext="45 degrees">
+              <div class="iw-label-row"><label for="iw-phi">Initial relative phase φ</label><span id="iw-phi-value">0°</span></div>
+              <input id="iw-phi" type="range" min="0" max="360" step="1" value="0" aria-valuetext="0 degrees">
+            </div>
+          </fieldset>
+
+          <fieldset class="iw-card" id="iw-detector-controls" disabled>
+            <legend>Detector interval</legend>
+            <div class="iw-label-row"><label for="iw-a">Left edge a</label><span id="iw-a-value">0.3333 Lref</span></div>
+            <input id="iw-a" type="range" min="0" max="60" step="1" value="20"
+                   aria-valuetext="one third of L" aria-describedby="iw-detector-help">
+            <div class="iw-label-row"><label for="iw-b">Right edge b</label><span id="iw-b-value">0.6667 Lref</span></div>
+            <input id="iw-b" type="range" min="0" max="60" step="1" value="40"
+                   aria-valuetext="two thirds of L" aria-describedby="iw-detector-help">
+            <div class="iw-actions">
+              <button type="button" id="iw-middle">Middle third</button>
+              <button type="button" id="iw-left-half">Left half</button>
+            </div>
+            <p class="iw-note" id="iw-detector-help">Edges move in steps of L/60 and can meet. The shaded area integrates the density between the dashed gate markers. Moving the gate reclassifies existing detections.</p>
+          </fieldset>
+        </div>
+
+        <div class="iw-stack">
+          <fieldset class="iw-card" id="iw-clock-controls" disabled>
+            <legend>Clock and beat snapshots</legend>
+            <div class="iw-actions">
+              <button class="iw-primary" type="button" id="iw-play">Play</button>
+              <button type="button" id="iw-pause" disabled>Pause</button>
+              <button type="button" id="iw-step">Step</button>
+              <button type="button" id="iw-reset-time">Reset time</button>
+            </div>
+            <div class="iw-actions">
+              <button type="button" id="iw-quarter" disabled>Go to T/4</button>
+              <button type="button" id="iw-half" disabled>Go to T/2</button>
+            </div>
+            <p class="iw-note" id="iw-clock-note">Paused. Step advances 1/24 of the phase cycle, or 1/24 of the beat when both levels are occupied. The beat shortcuts go to times measured from t = 0.</p>
+            <p class="iw-note" id="iw-step-size">Step duration ≈ 0.2618 tref.</p>
+          </fieldset>
+
+          <figure class="iw-card">
+            <figcaption id="iw-plot-title">Amplitude and density · shared position axis</figcaption>
+            <ul class="iw-legend">
+              <li><span class="iw-key iw-key-real" aria-hidden="true"></span> Re Ψ</li>
+              <li><span class="iw-key iw-key-imag" aria-hidden="true"></span> Im Ψ</li>
+              <li><span class="iw-key iw-key-density" aria-hidden="true"></span> |Ψ|²</li>
+              <li><span class="iw-key iw-key-detector" aria-hidden="true"></span> Detector area</li>
+              <li><span class="iw-key iw-key-samples" aria-hidden="true"></span> Sample density</li>
+              <li><span class="iw-key iw-key-bin" aria-hidden="true"></span> Predicted bin average</li>
+            </ul>
+            <svg class="iw-plot" id="iw-core-plot" viewBox="0 0 640 354" role="img"
+                 aria-labelledby="iw-plot-title" aria-describedby="iw-plot-description" focusable="false">
+              <desc id="iw-plot-description">At launch the real amplitude is one positive half-wave, and the imaginary amplitude is zero. The density peaks in the center. The middle third of the density is shaded.</desc>
+              <path class="iw-grid-lines" d="M60 25H600 M60 153H600 M60 185H600 M60 245H600 M195 25V153 M330 25V153 M465 25V153 M195 185V305 M330 185V305 M465 185V305"/>
+              <path class="iw-axis" d="M60 25V153H600 M60 89H600 M60 185V305H600"/>
+              <path class="iw-walls" d="M60 25V153 M600 25V153 M60 185V305 M600 185V305"/>
+              <g class="iw-ticks" text-anchor="end">
+                <text x="54" y="30" id="iw-amp-top">+2.0</text><text x="54" y="94">0</text><text x="54" y="158" id="iw-amp-bottom">−2.0</text>
+                <text x="54" y="190" id="iw-density-top">2.50</text><text x="54" y="250" id="iw-density-mid">1.25</text><text x="54" y="310">0</text>
+              </g>
+              <g class="iw-ticks" text-anchor="middle">
+                <text x="60" y="327">0</text><text x="195" y="327">¼</text><text x="330" y="327">½</text>
+                <text x="465" y="327">¾</text><text x="600" y="327">1</text>
+                <text class="iw-dimension" x="330" y="348">Position fraction x/L</text>
+              </g>
+              <g class="iw-ticks iw-unit-text">
+                <text x="68" y="18">Amplitude (Lref⁻¹ᐟ²)</text>
+                <text x="68" y="178">Density (Lref⁻¹)</text>
+              </g>
+              <path class="iw-real" id="iw-plot-real" d="M60 89 L93.75 80.17 L127.5 71.68 L161.25 63.86 L195 57 L228.75 51.37 L262.5 47.19 L296.25 44.61 L330 43.75 L363.75 44.61 L397.5 47.19 L431.25 51.37 L465 57 L498.75 63.86 L532.5 71.68 L566.25 80.17 L600 89"/>
+              <path class="iw-imag" id="iw-plot-imag" d="M60 89H600"/>
+              <path class="iw-area" id="iw-plot-area" d="M240 233 L262.5 223.06 L285 215.43 L307.5 210.64 L330 209 L352.5 210.64 L375 215.43 L397.5 223.06 L420 233 V305 H240 Z"/>
+              <g class="iw-histogram" id="iw-histogram" aria-hidden="true"></g>
+              <g class="iw-bin-theory" id="iw-hist-prediction" aria-hidden="true"></g>
+              <path class="iw-density" id="iw-plot-density" d="M60 305 L93.75 301.35 L127.5 290.94 L161.25 275.37 L195 257 L228.75 238.63 L262.5 223.06 L296.25 212.65 L330 209 L363.75 212.65 L397.5 223.06 L431.25 238.63 L465 257 L498.75 275.37 L532.5 290.94 L566.25 301.35 L600 305"/>
+              <line class="iw-gate" id="iw-plot-a" x1="240" x2="240" y1="185" y2="305"/>
+              <line class="iw-gate" id="iw-plot-b" x1="420" x2="420" y1="185" y2="305"/>
+              <g class="iw-nodes" id="iw-plot-nodes" aria-hidden="true"></g>
+              <g class="iw-attempts" id="iw-plot-attempts" aria-hidden="true"></g>
+              <g class="iw-detections" id="iw-plot-detections" aria-hidden="true"></g>
+            </svg>
+            <p class="iw-note" id="iw-plot-summary">The walls are at 0 and 1.0000 Lref. The detector spans 0.3333 to 0.6667 Lref. The opening density has one central lobe.</p>
+            <p class="iw-note" id="iw-evidence">No internal node in the opening eigenstate.</p>
+          </figure>
+        </div>
+      </div>
+
+      <section class="iw-card" aria-labelledby="iw-readout-title">
+        <h4 id="iw-readout-title">State and detector readouts</h4>
+        <dl class="iw-readouts">
+          <div><dt>Time</dt><dd id="iw-time">0.0000 tref</dd></div>
+          <div class="iw-wall-readout"><dt>Wall positions</dt><dd id="iw-wall-values">0 and 1.0000 Lref</dd></div>
+          <div><dt>Detector probability</dt><dd id="iw-probability">60.90%</dd></div>
+          <div id="iw-node-cell"><dt>Internal nodes of the eigenstate</dt><dd id="iw-node-count">0</dd></div>
+          <div id="iw-period-cell" hidden><dt>Density beat period</dt><dd id="iw-period">—</dd></div>
+          <div id="iw-phase-cell"><dt id="iw-evolution-phase-label">Global phase</dt><dd id="iw-evolution-phase">0.0°</dd></div>
+        </dl>
+      </section>
+
+      <section class="iw-card" id="iw-energy-panel" aria-labelledby="iw-energy-title">
+        <h4 id="iw-energy-title">Energy ladder and occupied components</h4>
+        <div class="iw-energy-grid">
+          <table class="iw-table iw-ladder">
+            <caption>Energy levels for the current static well</caption>
+            <thead><tr><th scope="col">Level n</th><th scope="col">Eₙ/E₁</th><th scope="col">Energy (Eref)</th></tr></thead>
+            <tbody id="iw-energy-rows">
+              <tr data-iw-energy="1" data-occupied><th scope="row">1</th><td>1</td><td class="iw-energy-value">1.0000</td></tr>
+              <tr data-iw-energy="2"><th scope="row">2</th><td>4</td><td class="iw-energy-value">4.0000</td></tr>
+              <tr data-iw-energy="3"><th scope="row">3</th><td>9</td><td class="iw-energy-value">9.0000</td></tr>
+              <tr data-iw-energy="4"><th scope="row">4</th><td>16</td><td class="iw-energy-value">16.0000</td></tr>
+              <tr data-iw-energy="5"><th scope="row">5</th><td>25</td><td class="iw-energy-value">25.0000</td></tr>
+              <tr data-iw-energy="6"><th scope="row">6</th><td>36</td><td class="iw-energy-value">36.0000</td></tr>
+              <tr data-iw-energy="7"><th scope="row">7</th><td>49</td><td class="iw-energy-value">49.0000</td></tr>
+              <tr data-iw-energy="8"><th scope="row">8</th><td>64</td><td class="iw-energy-value">64.0000</td></tr>
+            </tbody>
+          </table>
+          <div class="iw-stack">
+            <table class="iw-table">
+              <caption>Component magnitudes and energy measurement probabilities</caption>
+              <thead>
+                <tr><th scope="col">Level</th><th scope="col">Energy (Eref)</th><th scope="col">Amplitude magnitude</th><th scope="col">Probability</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row" id="iw-r-name">1</th><td id="iw-r-energy">1.0000</td><td id="iw-r-amplitude">1.0000</td><td id="iw-r-weight">100.00%</td></tr>
+                <tr id="iw-s-row" hidden><th scope="row" id="iw-s-name">2</th><td id="iw-s-energy">4.0000</td><td id="iw-s-amplitude">0.7071</td><td id="iw-s-weight">50.00%</td></tr>
+              </tbody>
+            </table>
+            <p>Energy expectation ⟨E⟩ = <strong id="iw-mean-energy">1.0000 Eref</strong></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="iw-card" aria-labelledby="iw-sample-title">
+        <h4 id="iw-sample-title">Position measurements at one snapshot</h4>
+        <p>Every draw uses a fresh copy prepared and evolved to the same time. Measurements pause the clock. Changing the snapshot time clears old samples; changing only the detector keeps them. Bar heights divide counts by the total draws and the physical bin width.</p>
+        <fieldset class="iw-control-group" id="iw-sample-controls" disabled>
+          <legend>Measure the active state</legend>
+          <div class="iw-actions">
+            <button type="button" class="iw-primary" id="iw-measure">Measure one position</button>
+            <button type="button" id="iw-measure-batch">Measure 240 positions</button>
+            <button type="button" id="iw-clear">Clear detections</button>
+          </div>
+        </fieldset>
+        <dl class="iw-readouts">
+          <div><dt>Sample time</dt><dd id="iw-sample-time">—</dd></div>
+          <div><dt>Total trials</dt><dd id="iw-sample-count">0</dd></div>
+          <div><dt>Detector hits</dt><dd id="iw-sample-hits">0</dd></div>
+          <div><dt>Observed hit fraction</dt><dd id="iw-sample-fraction">—</dd></div>
+          <div><dt>Latest position</dt><dd id="iw-sample-latest">—</dd></div>
+        </dl>
+        <div class="iw-actions">
+          <button type="button" id="iw-enter" aria-controls="iw-chamber" aria-expanded="false" disabled>Enter the Quantum Resonance Chamber</button>
+        </div>
+        <p class="iw-feedback" id="iw-lab-status" role="status" aria-atomic="true"></p>
+      </section>
+
+      <section class="iw-card iw-chamber" id="iw-chamber" aria-labelledby="iw-chamber-title" hidden>
+        <h4 id="iw-chamber-title" tabindex="-1">The Quantum Resonance Chamber</h4>
+        <p>The tube spans the physical interval from 0 to L. Its depth and equipment give the scene context. The state has one position coordinate, and the traces and detections share that coordinate with the lab.</p>
+        <div class="iw-camera-grid">
+          <fieldset class="iw-control-group" id="iw-camera-controls" disabled>
+            <legend>Camera and graphics</legend>
+            <label for="iw-camera">Camera view</label>
+            <select id="iw-camera">
+              <option value="side" selected>Full side view</option>
+              <option value="close">Tube close-up</option>
+            </select>
+            <div class="iw-label-row"><label for="iw-pan">Close-up center</label><span id="iw-pan-value">50% of L</span></div>
+            <input id="iw-pan" type="range" min="0" max="100" step="1" value="50" aria-valuetext="50 percent across the well">
+            <div class="iw-actions"><button type="button" id="iw-reset-camera">Reset camera / Side view</button></div>
+            <label class="iw-toggle"><input type="checkbox" id="iw-effects"> Reduced effects</label>
+            <p class="iw-note" id="iw-camera-summary">Full side view covers the entire well.</p>
+            <p class="iw-note" id="iw-renderer-status">Calibrated side view is available.</p>
+          </fieldset>
+
+          <fieldset class="iw-control-group" id="iw-layer-controls" disabled>
+            <legend>Visible layers</legend>
+            <div class="iw-toggles">
+              <label class="iw-toggle"><input type="checkbox" id="iw-layer-density" checked> Density</label>
+              <label class="iw-toggle"><input type="checkbox" id="iw-layer-real" checked> Real wavefunction</label>
+              <label class="iw-toggle"><input type="checkbox" id="iw-layer-imag"> Imaginary wavefunction</label>
+              <label class="iw-toggle"><input type="checkbox" id="iw-layer-phase"> Phase</label>
+              <label class="iw-toggle"><input type="checkbox" id="iw-layer-detections" checked> Detections</label>
+            </div>
+            <div class="iw-stack" id="iw-phase-tools" hidden>
+              <div class="iw-label-row"><label for="iw-phase-probe">Phase probe position</label><span id="iw-probe-position">0.50 L</span></div>
+              <input id="iw-phase-probe" type="range" min="0" max="100" step="1" value="50" aria-valuetext="50 percent across the well">
+              <p>Phase at probe <strong id="iw-probe-phase">0.0°</strong></p>
+              <ul class="iw-legend" aria-label="Phase color cycle">
+                <li><span class="iw-swatch iw-phase-zero" aria-hidden="true"></span> 0° / 360°</li>
+                <li><span class="iw-swatch iw-phase-quarter" aria-hidden="true"></span> 90°</li>
+                <li><span class="iw-swatch iw-phase-half" aria-hidden="true"></span> 180°</li>
+                <li><span class="iw-swatch iw-phase-three-quarter" aria-hidden="true"></span> 270°</li>
+              </ul>
+              <p class="iw-note">Gaps mark undefined phase at nodes or points too close to a node to color reliably. The display threshold leaves the density and samples intact.</p>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="iw-viewport" id="iw-chamber-viewport" hidden>
+          <canvas id="iw-chamber-canvas" class="iw-canvas" aria-label="Perspective view of the containment tube"></canvas>
+        </div>
+        <figure class="iw-stack">
+          <figcaption id="iw-chamber-caption">Calibrated tube view</figcaption>
+          <svg class="iw-plot iw-chamber-plot" id="iw-chamber-plot" viewBox="0 0 640 300" role="img"
+               aria-labelledby="iw-chamber-caption" aria-describedby="iw-chamber-description" focusable="false">
+            <desc id="iw-chamber-description">The tube runs from the left wall at zero to the right wall at L. A density crest and real amplitude show the opening state. The lower rail marks detections.</desc>
+            <defs>
+              <linearGradient id="iw-tube-fill" x2="0" y2="1">
+                <stop offset="0" stop-color="#162635"/>
+                <stop offset="0.48" stop-color="#0b151b"/>
+                <stop offset="1" stop-color="#17282b"/>
+              </linearGradient>
+            </defs>
+            <path class="iw-room" d="M15 18H625V280H15Z M15 18L60 46 M625 18L600 46 M15 280L60 249 M625 280L600 249"/>
+            <rect x="60" y="44" width="540" height="205" rx="4" fill="url(#iw-tube-fill)"/>
+            <path class="iw-walls" d="M60 40V253 M600 40V253"/>
+            <path class="iw-chamber-grid" d="M60 112H600 M60 155H600 M60 219H600 M195 44V249 M330 44V249 M465 44V249"/>
+            <path class="iw-axis" d="M60 245H600 M60 241V250 M195 241V250 M330 241V250 M465 241V250 M600 241V250"/>
+            <line class="iw-gate" id="iw-chamber-a" x1="240" x2="240" y1="46" y2="245"/>
+            <line class="iw-gate" id="iw-chamber-b" x1="420" x2="420" y1="46" y2="245"/>
+            <g id="iw-chamber-density-layer">
+              <text class="iw-ticks" x="67" y="62">Density |Ψ|²</text>
+              <path class="iw-tube-area" id="iw-chamber-area" d="M60 112 L127.5 104 L195 84 L262.5 64 L330 56 L397.5 64 L465 84 L532.5 104 L600 112 Z"/>
+              <path class="iw-density" id="iw-chamber-density" d="M60 112 L127.5 104 L195 84 L262.5 64 L330 56 L397.5 64 L465 84 L532.5 104 L600 112"/>
+            </g>
+            <g id="iw-chamber-wave-layer">
+              <text class="iw-ticks" x="67" y="146">Signed amplitude · 0 line</text>
+              <path class="iw-real" id="iw-chamber-real" d="M60 155 L127.5 146 L195 138 L262.5 133 L330 131 L397.5 133 L465 138 L532.5 146 L600 155"/>
+              <path class="iw-imag" id="iw-chamber-imag" d="M60 155H600" hidden/>
+            </g>
+            <g id="iw-chamber-phase-layer" hidden>
+              <text class="iw-ticks" x="67" y="204">Phase arg Ψ</text>
+              <g id="iw-phase-segments" aria-hidden="true"></g>
+            </g>
+            <g class="iw-nodes" id="iw-chamber-nodes" aria-hidden="true"></g>
+            <g class="iw-attempts" id="iw-chamber-attempts" aria-hidden="true"></g>
+            <g class="iw-detections" id="iw-chamber-detections" aria-hidden="true"></g>
+            <g class="iw-ticks" text-anchor="middle">
+              <text x="60" y="269">0</text><text x="195" y="269">¼</text><text x="330" y="269">½</text>
+              <text x="465" y="269">¾</text><text x="600" y="269">1</text>
+              <text class="iw-dimension" x="330" y="289">Position fraction x/L</text>
+            </g>
+          </svg>
+          <ul class="iw-legend">
+            <li><span class="iw-key iw-key-density" aria-hidden="true"></span> Density crest</li>
+            <li><span class="iw-key iw-key-real" aria-hidden="true"></span> Real amplitude</li>
+            <li><span class="iw-key iw-key-imag" aria-hidden="true"></span> Imaginary amplitude</li>
+            <li><span class="iw-key iw-key-detector" aria-hidden="true"></span> Detector gates</li>
+            <li><span class="iw-detection-key" aria-hidden="true"></span> Measured positions</li>
+          </ul>
+          <p class="iw-note" id="iw-chamber-summary">The axes and lab readouts give physical quantities. Tube height and depth are display features.</p>
+        </figure>
+
+        <fieldset class="iw-control-group" id="iw-mission-controls" disabled>
+          <legend>Containment missions</legend>
+          <label for="iw-mission-select">Assignment</label>
+          <select id="iw-mission-select">
+            <option value="containment">Establish Containment</option>
+            <option value="nodes">Find the Forbidden Points</option>
+            <option value="tune">Tune the Chamber</option>
+            <option value="moving">Create a Moving Pattern</option>
+            <option value="mystery">Identify the Mystery State</option>
+            <option value="zero">The Zero-Energy Problem</option>
+          </select>
+          <div class="iw-actions">
+            <button type="button" class="iw-primary" id="iw-load-mission">Load mission</button>
+            <button type="button" id="iw-retry-mission" disabled>Retry mission</button>
+            <button type="button" id="iw-end-mission" disabled>End mission / Free exploration</button>
+            <button type="button" id="iw-return">Return to core lab</button>
+          </div>
+          <p id="iw-mission-goal">Free exploration is active. Load a mission to try a specific experiment.</p>
+          <p class="iw-note" id="iw-mission-hint"></p>
+
+          <div class="iw-stack" id="iw-containment-pane" hidden>
+            <label for="iw-region-answer">Which third should receive the most hits?</label>
+            <select id="iw-region-answer">
+              <option value="" selected>Choose a third</option>
+              <option value="left">Left third</option>
+              <option value="middle">Middle third</option>
+              <option value="right">Right third</option>
+            </select>
+            <p class="iw-note">Check commits your prediction and measures a batch.</p>
+          </div>
+
+          <div class="iw-stack" id="iw-nodes-pane" hidden>
+            <p>Mark the internal zeros of the eigenstate. Each marker must lie within 0.015 in x/L of a different internal node.</p>
+            <label for="iw-node-entry">Node position x/L</label>
+            <div class="iw-actions">
+              <input id="iw-node-entry" type="number" min="0" max="1" step="0.001" inputmode="decimal">
+              <button type="button" id="iw-add-node">Place marker</button>
+              <button type="button" id="iw-clear-nodes">Clear markers</button>
+            </div>
+            <p id="iw-node-positions">Markers placed · none</p>
+          </div>
+
+          <div class="iw-stack" id="iw-mystery-pane" hidden>
+            <label for="iw-mystery-guess">Your inferred level n</label>
+            <input id="iw-mystery-guess" type="number" min="1" max="8" step="1" inputmode="numeric">
+          </div>
+
+          <div class="iw-stack" id="iw-zero-pane" hidden>
+            <div class="iw-actions"><button type="button" id="iw-zero-request">Request n = 0 diagnostic</button></div>
+            <p class="iw-note" id="iw-zero-diagnostic">The diagnostic keeps the live preparation in the tube.</p>
+            <label for="iw-zero-answer">Why does the requested state fail normalization?</label>
+            <select id="iw-zero-answer" disabled>
+              <option value="" selected>Choose an explanation</option>
+              <option value="walls">Both walls force the zero-energy solution to vanish everywhere.</option>
+              <option value="constant">The solution is a nonzero constant, so its norm is infinite.</option>
+              <option value="negative">All zero-energy states must have negative probability.</option>
+            </select>
+          </div>
+
+          <div class="iw-actions"><button type="button" class="iw-primary" id="iw-check-mission" disabled>Check mission</button></div>
+          <p class="iw-feedback" id="iw-mission-feedback" role="status" aria-atomic="true"></p>
+
+          <table class="iw-table" id="iw-region-report" hidden>
+            <caption>Expected areas and 240 measured detections</caption>
+            <thead><tr><th scope="col">Region</th><th scope="col">Predicted probability</th><th scope="col">Measured count</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Left third</th><td id="iw-left-theory">—</td><td id="iw-left-count">—</td></tr>
+              <tr><th scope="row">Middle third</th><td id="iw-middle-theory">—</td><td id="iw-middle-count">—</td></tr>
+              <tr><th scope="row">Right third</th><td id="iw-right-theory">—</td><td id="iw-right-count">—</td></tr>
+            </tbody>
+          </table>
+        </fieldset>
+      </section>
+    </section>
+
+    <section class="iw-panel" aria-labelledby="iw-model-title">
+      <h3 id="iw-model-title">What fits between two infinite walls?</h3>
+      <p>Lesson 22 used the Schrödinger equation to evolve a state. Here the physical walls give us exact standing-wave solutions. The integer <var>n</var> counts how many half-wavelengths fit across the well. Its internal nodes are the positions where the corresponding eigenfunction vanishes.</p>
+      <div class="iw-equation">
+        <p>u<sub>n</sub>(x) = √(2/L) sin(nπx/L)</p>
+        <p>E<sub>n</sub> = n²π²ℏ²/(2mL²), &nbsp; n = 1, 2, 3, …</p>
+      </div>
+      <div class="iw-symbols">
+        <details class="iw-card" data-iw-symbol="length">
+          <summary>L · Width</summary>
+          <p>The walls are at x = 0 and x = L. At fixed n and m, doubling L quarters E<sub>n</sub>.</p>
+        </details>
+        <details class="iw-card" data-iw-symbol="level">
+          <summary>n · Level and nodes</summary>
+          <p>The wave fits n half-wavelengths. An eigenstate has n − 1 internal nodes at x = jL/n, for j = 1 through n − 1.</p>
+        </details>
+        <details class="iw-card" data-iw-symbol="normalization">
+          <summary>√(2/L) · Normalization</summary>
+          <p>The sine squared integrates to L/2. The amplitude multiplier √(2/L) gives ∫|u<sub>n</sub>|² dx = 1.</p>
+        </details>
+        <details class="iw-card" data-iw-symbol="mass">
+          <summary>m · Mass</summary>
+          <p>The kinetic operator is −(ℏ²/2m)d²/dx². At fixed n and L, doubling m halves the energy.</p>
+        </details>
+        <details class="iw-card" data-iw-symbol="hbar">
+          <summary>ℏ · Reduced Planck constant</summary>
+          <p>ℏ = h/(2π). It sets the energy scale and converts energy to angular frequency through E/ℏ.</p>
+        </details>
+      </div>
+
+      <details class="iw-card">
+        <summary>Show Me Why · derive the states and detector probability</summary>
+        <div class="iw-stack iw-detail">
+          <p><strong>1. Solve inside the well.</strong> With V = 0, the stationary equation is −(ℏ²/2m)ψ″ = Eψ. For E &gt; 0 set k² = 2mE/ℏ². The general solution is ψ(x) = A sin(kx) + B cos(kx), where A and B are constants.</p>
+          <p><strong>2. Apply both walls.</strong> At x = 0, ψ = B = 0. At x = L a nonzero A requires sin(kL) = 0. Thus kL = nπ, and the wavelength is 2L/n.</p>
+          <p><strong>3. Test zero energy.</strong> At E = 0 the equation gives ψ″ = 0 and ψ = Ax + B. The first wall gives B = 0 and the second gives AL = 0, so A = 0 as well. The zero function has squared norm zero. For this kinetic Hamiltonian, integration by parts with ψ = 0 at both walls gives E = (ℏ²/2m)∫|ψ′|² dx for a normalized eigenstate. This is positive for every physical state here, so the ladder starts at n = 1.</p>
+          <p><strong>4. Normalize the wave.</strong> Using sin²z = (1 − cos 2z)/2 gives ∫<sub>0</sub><sup>L</sup> sin²(nπx/L) dx = L/2. Take the real phase convention A = √(2/L). Amplitude has units length<sup>−1/2</sup>, and density has units length<sup>−1</sup>.</p>
+          <p><strong>5. Read off energy and nodes.</strong> Substitute k = nπ/L into E = ℏ²k²/(2m). The walls and the internal positions jL/n have zero amplitude. A zero of the real trace alone at one time does not imply a node, because the imaginary part can be nonzero.</p>
+          <p><strong>6. Integrate the detector area.</strong> Put y = x/L. Then |u<sub>n</sub>(x)|² dx = 2 sin²(nπy) dy. Integrating from 0 to y gives the cumulative probability F<sub>n</sub>(y).</p>
+          <div class="iw-equation">
+            <p>F<sub>n</sub>(y) = y − sin(2nπy)/(2nπ)</p>
+            <p>P(a ≤ X ≤ b) = F<sub>n</sub>(b/L) − F<sub>n</sub>(a/L)</p>
+          </div>
+        </div>
+      </details>
+
+      <div class="iw-card">
+        <h4>Worked example · the middle third</h4>
+        <p>Subtract F<sub>n</sub>(1/3) from F<sub>n</sub>(2/3). For n = 1, the result is 1/3 + √3/(2π) ≈ <strong>60.90%</strong>. For n = 2, it is 1/3 − √3/(4π) ≈ <strong>19.55%</strong>.</p>
+        <p>The first detector covers the tallest part of the ground-state density. The second straddles the node at L/2. The node has zero density, while a finite-width bin around it can include nearby positions with positive density.</p>
+      </div>
+    </section>
+
+    <section class="iw-panel" aria-labelledby="iw-evolution-title">
+      <h3 id="iw-evolution-title">Stationary density and moving interference</h3>
+      <p>One eigenstate evolves as Ψ<sub>n</sub>(x,t) = u<sub>n</sub>(x) exp(−iE<sub>n</sub>t/ℏ). Its phase factor has magnitude one, so its density stays |u<sub>n</sub>|² while Re Ψ and Im Ψ change. Positive and negative lobes differ by π and share a single global rotation.</p>
+      <div class="iw-equation">
+        <p>Ψ(x,t) = cos α u<sub>r</sub>(x) exp(−iE<sub>r</sub>t/ℏ)</p>
+        <p>    + sin α u<sub>s</sub>(x) exp(iφ−iE<sub>s</sub>t/ℏ)</p>
+        <p>δ(t) = φ − (E<sub>s</sub>−E<sub>r</sub>)t/ℏ</p>
+      </div>
+      <p>Here 0 ≤ α ≤ π/2 sets the two amplitude magnitudes, φ is the initial phase of the second component relative to the first, and r and s are distinct. Orthonormality eliminates the integrated cross term over the full well. The norm and the sum of the two energy probabilities both equal cos²α + sin²α = 1.</p>
+      <div class="iw-equation">
+        <p>|Ψ|² = cos²α u<sub>r</sub>² + sin²α u<sub>s</sub>² + 2 cos α sin α u<sub>r</sub>u<sub>s</sub> cos δ(t)</p>
+        <p>T = 2πℏ / |E<sub>s</sub>−E<sub>r</sub>|</p>
+      </div>
+      <p>The interference term varies across the well and in time. With both components occupied, the relative phase advances through a full cycle in the beat period T. For equal positive components with r = 1 and s = 2, the left-half probability goes from 1/2 + 4/(3π) at t = 0 to 1/2 at T/4 and 1/2 − 4/(3π) at T/2.</p>
+
+      <details class="iw-card">
+        <summary>How the lab integrates and samples a superposition</summary>
+        <div class="iw-stack iw-detail">
+          <p>The cumulative cross term is the integral of 2 sin(rπy) sin(sπy) from 0 to y. The product-to-sum identity gives</p>
+          <p class="iw-equation">J<sub>rs</sub>(y) = sin[(r−s)πy]/[(r−s)π] − sin[(r+s)πy]/[(r+s)π]</p>
+          <p>Combine cos²α F<sub>r</sub>(y), sin²α F<sub>s</sub>(y), and 2 cos α sin α cos δ J<sub>rs</sub>(y). Differences give detector and histogram-bin probabilities. To sample a position, draw a uniform cumulative probability and invert the cumulative function by bisection. The answer is independent of plot resolution.</p>
+        </div>
+      </details>
+
+      <p class="iw-note">The reference units stay fixed. Lref and mref set Eref = π²ℏ²/(2mref Lref²) and tref = ℏ/Eref. The numerical energy is Eₙ/Eref = n²/[(m/mref)(L/Lref)²]. The ladder’s ratio to its current first level stays n² even as the absolute energies change.</p>
+      <p>Lesson 24 replaces the infinite walls with finite barriers. That changes the boundary conditions and allows amplitude outside the nominal well.</p>
+    </section>
+
+    <nav class="iw-navigation" aria-label="Lesson navigation">
+      <a rel="prev" href="../22_the_one-dimensional_schrodinger_equation/22_the_one-dimensional_schrodinger_equation.html">
+        <span class="iw-note">← Previous</span>
+        <span>The One-Dimensional Schrödinger Equation</span>
+      </a>
+      <a rel="next" href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html">
+        <span class="iw-note">Next →</span>
+        <span>Finite Wells and Tunneling</span>
+      </a>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

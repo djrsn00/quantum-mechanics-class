@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Rotate spin detectors, trace selected particles through successive measurements, and explore angular momentum in the Quantum Gyroscope Observatory.">
+  <title>Angular Momentum | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+  <script type="module" src="./scripts/lesson.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)"
+                  stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none"
+                   stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8"
+                stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none"
+                   stroke="url(#logo-spectrum)" stroke-width="1.6"
+                   transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none"
+                stroke="#edffef" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static"
+             viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse"
+                  x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 464 83"/>
+            <path class="track-violet" d="M218 54C265 80 353 96 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M218 46v16m-8 8h16"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button"
+              aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and_coordinates/8_bases_and_coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="../22_the_one-dimensional_schrodinger_equation/22_the_one-dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="./26_angular_momentum.html" aria-current="page"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main angular-momentum-lesson" aria-labelledby="am-title">
+    <header class="am-intro am-stack">
+      <p class="am-kicker">Lesson 26</p>
+      <h2 id="am-title">Angular Momentum</h2>
+      <p class="am-lead"><strong>Your source prepares every particle in +z. If you rotate only the detector by 60°, what fraction reaches its positive channel?</strong></p>
+      <p>Predict the split, measure independent copies, then insert an intermediate detector and follow the branch it selects.</p>
+    </header>
+
+    <section class="am-panel" aria-labelledby="am-lab-title">
+      <h3 id="am-lab-title" tabindex="-1">Angular Momentum Lab</h3>
+      <p class="am-note" id="am-static-note">The diagrams, probabilities, and worked examples show the opening setups. Controls become available when the lesson script initializes.</p>
+
+      <fieldset id="am-station-controls" class="am-card" disabled>
+        <legend>Choose a station</legend>
+        <div class="am-actions">
+          <label for="am-station">Station</label>
+          <select id="am-station">
+            <option value="rig" selected>Detector Rotation Rig</option>
+            <option value="deck">Angular Momentum State Deck</option>
+            <option value="sequence">Sequential Measurement Track</option>
+            <option value="orbital">Orbital Shapes Gallery</option>
+            <option value="ladder">Ladder-Operator Console</option>
+          </select>
+          <button id="am-enter" class="am-primary" type="button" aria-expanded="false" aria-controls="am-observatory">Enter the Observatory</button>
+          <a href="#am-missions">Observatory missions</a>
+        </div>
+      </fieldset>
+
+      <section class="am-card am-observatory" id="am-observatory" aria-labelledby="am-observatory-title" hidden>
+        <h4 id="am-observatory-title" tabindex="-1">The Quantum Gyroscope Observatory</h4>
+        <p>The rings represent the preparation and measurement instruments. A marked channel records a sampled outcome. Use the same station controls here or in the core lab.</p>
+        <fieldset id="am-camera-controls" class="am-card" disabled>
+          <legend>Chamber camera</legend>
+          <div class="am-actions">
+            <label for="am-camera">View</label>
+            <select id="am-camera">
+              <option value="overview" selected>Observatory overview</option>
+              <option value="inside">Inside the chamber</option>
+            </select>
+            <label class="am-orbit" for="am-orbit">Camera orbit <span id="am-orbit-value">0°</span>
+              <input id="am-orbit" type="range" min="-90" max="90" step="1" value="0">
+            </label>
+            <button type="button" id="am-camera-reset">Reset camera</button>
+            <label class="am-check"><input type="checkbox" id="am-effects"> Reduced effects</label>
+            <button type="button" id="am-return">Return to core lab</button>
+          </div>
+        </fieldset>
+        <div class="am-viewport" id="am-viewport" hidden><canvas id="am-canvas" aria-hidden="true"></canvas></div>
+        <p class="am-note" id="am-renderer">The calibrated diagrams and instruments are below.</p>
+        <div class="am-monitor">
+          <p id="am-observatory-axes">Preparation axis +z. Detector axis 60° from +z toward +x.</p>
+          <p id="am-observatory-result">No detection recorded.</p>
+        </div>
+      </section>
+
+      <section class="am-stack" id="am-panel-rig" aria-labelledby="am-rig-title">
+        <h4 id="am-rig-title">Detector Rotation Rig</h4>
+        <p>A spin-½ source prepares either eigenstate along its axis. The independent detector reads <var>S</var><sub>v</sub> along its own positive axis. Each trial starts from the same source preparation.</p>
+
+        <form id="am-opening">
+          <fieldset class="am-card" id="am-opening-controls" disabled>
+            <legend>Predict the positive-channel fraction at 60°</legend>
+            <div class="am-actions">
+              <label for="am-opening-answer">Positive-channel prediction</label>
+              <select id="am-opening-answer" required>
+                <option value="">Choose a prediction</option>
+                <option value="25">25%</option>
+                <option value="50">50%</option>
+                <option value="75">75%</option>
+                <option value="100">100%</option>
+              </select>
+              <button type="submit">Commit prediction</button>
+              <button type="button" id="am-opening-retry" hidden>Try again</button>
+            </div>
+            <p id="am-opening-feedback" class="am-feedback" role="status" aria-atomic="true"></p>
+          </fieldset>
+        </form>
+
+        <div class="am-grid">
+          <div class="am-stack">
+            <fieldset class="am-card" id="am-rig-controls" disabled>
+              <legend>Prepare and aim</legend>
+              <div class="am-fields">
+                <label>Preparation axis
+                  <select id="am-rig-axis">
+                    <option value="0" selected>+z</option><option value="90">+x</option>
+                    <option value="180">−z</option><option value="270">−x</option>
+                  </select>
+                </label>
+                <label>Source sign on that axis
+                  <select id="am-rig-sign"><option value="1" selected>Positive</option><option value="-1">Negative</option></select>
+                </label>
+                <label>Detector preset
+                  <select id="am-rig-preset">
+                    <option value="60" selected>60° from +z</option><option value="0">+z</option>
+                    <option value="90">+x</option><option value="opposite">Opposite the preparation axis</option>
+                    <option value="custom">Custom angle</option>
+                  </select>
+                </label>
+              </div>
+              <label for="am-rig-angle">Detector angle from +z toward +x <strong id="am-rig-angle-value">60°</strong></label>
+              <input id="am-rig-angle" type="range" min="0" max="359" step="1" value="60">
+              <p class="am-note">Changing the source or detector starts a fresh tally.</p>
+            </fieldset>
+
+            <figure class="am-card" aria-labelledby="am-axis-caption">
+              <figcaption id="am-axis-caption">The two apparatus axes</figcaption>
+              <svg class="am-diagram" viewBox="0 0 360 236" role="img" aria-labelledby="am-axis-caption" aria-describedby="am-rig-desc">
+                <desc id="am-rig-desc">The solid preparation axis points along +z. The dashed detector axis is 60 degrees from +z toward +x. The source sign is positive.</desc>
+                <defs>
+                  <marker id="am-prep-arrow" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#65b7ff"/></marker>
+                  <marker id="am-detector-arrow" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#ffe16a"/></marker>
+                </defs>
+                <circle class="am-frame" cx="180" cy="116" r="83"/>
+                <path class="am-reference" d="M85 116H280 M180 21V211"/>
+                <circle cx="180" cy="116" r="3" fill="#ecfff1"/>
+                <text x="187" y="23">+z</text><text x="282" y="121">+x</text>
+                <path id="am-rig-prep-line" class="am-prep-line" d="M180 116L180 48" marker-end="url(#am-prep-arrow)"/>
+                <path id="am-rig-det-line" class="am-det-line" d="M180 116L247.55 77" marker-end="url(#am-detector-arrow)"/>
+                <path id="am-rig-arc" class="am-angle-line" d="M180 82A34 34 0 0 1 209.44 99"/>
+              </svg>
+              <ul class="am-legend">
+                <li class="am-key-prep">Solid · Preparation axis</li>
+                <li class="am-key-det">Dashed · Detector axis</li>
+              </ul>
+              <p id="am-rig-axis-text">Preparation +z with positive sign. Detector 60° from +z. Axis separation 60°.</p>
+            </figure>
+          </div>
+
+          <section class="am-card" aria-labelledby="am-rig-results-title">
+            <h5 id="am-rig-results-title">Detector channels</h5>
+            <p class="am-note" id="am-rig-hidden-note" hidden>Commit a prediction to display the theoretical split and enable sampling.</p>
+            <div class="am-stack" id="am-rig-theory">
+              <div class="am-meter-pair">
+                <label for="am-rig-plus-meter">Theory · +ℏ/2 <strong id="am-rig-p-plus">75.00%</strong></label>
+                <meter id="am-rig-plus-meter" min="0" max="1" value="0.75">75%</meter>
+                <label for="am-rig-minus-meter">Theory · −ℏ/2 <strong id="am-rig-p-minus">25.00%</strong></label>
+                <meter id="am-rig-minus-meter" min="0" max="1" value="0.25">25%</meter>
+              </div>
+            </div>
+
+            <fieldset id="am-rig-sample-controls" disabled>
+              <legend>Sample fresh preparations</legend>
+              <div class="am-actions">
+                <button type="button" id="am-rig-one">Measure one</button>
+                <button type="button" id="am-rig-batch">Measure 100</button>
+                <button type="button" id="am-rig-clear" disabled>Clear counts</button>
+              </div>
+            </fieldset>
+
+            <div class="am-actions">
+              <button type="button" id="am-rig-restore" disabled>Restore opening setup</button>
+            </div>
+
+            <div class="am-table-wrap">
+              <table>
+                <caption>Observed histogram · <span id="am-rig-sent">0</span> trials</caption>
+                <thead><tr><th scope="col">Channel</th><th scope="col">Count</th><th scope="col">Frequency and bar</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">Positive</th><td id="am-rig-n-plus">0</td><td><span id="am-rig-f-plus">—</span><meter min="0" max="1" value="0" id="am-rig-bar-plus" aria-label="Observed positive frequency" hidden></meter></td></tr>
+                  <tr><th scope="row">Negative</th><td id="am-rig-n-minus">0</td><td><span id="am-rig-f-minus">—</span><meter min="0" max="1" value="0" id="am-rig-bar-minus" aria-label="Observed negative frequency" hidden></meter></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p id="am-rig-latest">No detector event yet.</p>
+            <p class="am-note">Theory gives probabilities for repeated preparations. Sample frequencies fluctuate, especially in small batches.</p>
+          </section>
+        </div>
+      </section>
+
+      <section class="am-stack" id="am-panel-deck" aria-labelledby="am-deck-title">
+        <h4 id="am-deck-title">Angular Momentum State Deck</h4>
+        <p>Prepare a simultaneous eigenstate of <var>J</var>² and <var>J</var><sub>z</sub>. This deck and the Ladder Console support integer and half-integer <var>j</var>. The two detector experiments use their own spin-½ sources.</p>
+        <fieldset id="am-deck-controls" class="am-card" disabled>
+          <legend>State in the z basis</legend>
+          <div class="am-fields">
+            <label>j
+              <select id="am-deck-j">
+                <option value="0">0</option><option value="1" selected>½</option><option value="2">1</option>
+                <option value="3">3/2</option><option value="4">2</option>
+              </select>
+            </label>
+            <label>m
+              <select id="am-deck-m"><option value="-1">−½</option><option value="1" selected>+½</option></select>
+            </label>
+          </div>
+        </fieldset>
+        <dl class="am-readouts am-card">
+          <div><dt>Prepared ket</dt><dd id="am-deck-ket">|½,+½⟩ along z</dd></div>
+          <div><dt>Allowed projections in units of ℏ</dt><dd id="am-deck-allowed">−½, +½</dd></div>
+          <div id="am-deck-square-row"><dt>J² eigenvalue</dt><dd id="am-deck-square">¾ ℏ²</dd></div>
+          <div id="am-deck-magnitude-row"><dt>Magnitude</dt><dd id="am-deck-magnitude">√3 ℏ/2</dd></div>
+          <div id="am-deck-projection-row"><dt>J<sub>z</sub> eigenvalue</dt><dd id="am-deck-projection">+½ ℏ</dd></div>
+          <div id="am-deck-uncertainty-row"><dt>Transverse spread ΔJ<sub>x</sub> = ΔJ<sub>y</sub></dt><dd id="am-deck-uncertainty">½ ℏ</dd></div>
+        </dl>
+        <p class="am-note" id="am-deck-note">The magnitude and the z projection are definite. Each transverse component has a nonzero spread for this state.</p>
+      </section>
+
+      <section class="am-stack" id="am-panel-sequence" aria-labelledby="am-sequence-title">
+        <h4 id="am-sequence-title">Sequential Measurement Track</h4>
+        <p>The middle detector samples an outcome first. The selected branch prepares the eigenstate sent to the final detector. Rejected particles stop at the selector.</p>
+
+        <fieldset class="am-card" id="am-seq-controls" disabled>
+          <legend>Configure the spin-½ track</legend>
+          <div class="am-fields">
+            <label>Route
+              <select id="am-seq-route">
+                <option value="filtered" selected>Measure and select a middle branch</option>
+                <option value="direct">Skip the middle detector</option>
+              </select>
+            </label>
+            <label>Source axis
+              <select id="am-seq-source">
+                <option value="z" selected>+z</option><option value="x">+x</option><option value="y">+y</option>
+                <option value="-z">−z</option><option value="-x">−x</option><option value="-y">−y</option>
+              </select>
+            </label>
+            <label>Source sign
+              <select id="am-seq-sign"><option value="1" selected>Positive</option><option value="-1">Negative</option></select>
+            </label>
+            <label>Middle axis
+              <select id="am-seq-middle">
+                <option value="z">+z</option><option value="x" selected>+x</option><option value="y">+y</option>
+                <option value="-z">−z</option><option value="-x">−x</option><option value="-y">−y</option>
+              </select>
+            </label>
+            <label>Middle sign that passes
+              <select id="am-seq-pass"><option value="1" selected>Positive</option><option value="-1">Negative</option></select>
+            </label>
+            <label>Final detector axis
+              <select id="am-seq-final">
+                <option value="z" selected>+z</option><option value="x">+x</option><option value="y">+y</option>
+                <option value="-z">−z</option><option value="-x">−x</option><option value="-y">−y</option>
+              </select>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="am-track" aria-label="Track layout">
+          <div><strong>Source</strong><span id="am-seq-source-label">Positive on +z</span></div>
+          <div><strong>Middle selector</strong><span id="am-seq-middle-label">Measure +x axis, pass positive</span></div>
+          <div><strong>Final detector</strong><span id="am-seq-final-label">Measure +z axis</span></div>
+        </div>
+
+        <section class="am-card" aria-labelledby="am-seq-results-title">
+          <h5 id="am-seq-results-title">Track accounting</h5>
+          <p id="am-seq-hidden-note" class="am-note" hidden>Commit both predictions to reveal the ledger and sample the track.</p>
+          <div id="am-seq-theory" class="am-stack">
+            <p class="am-equation" id="am-seq-equation">P(pass and final ±) = P(pass) × P(final ± | pass) = 0.50 × 0.50 = 0.25 for each final sign.</p>
+            <p id="am-seq-direct">Direct-Z comparison for the same source gives 100% positive and 0% negative.</p>
+            <div class="am-table-wrap">
+              <table>
+                <caption>Sent <span id="am-seq-sent">0</span> · Passed <span id="am-seq-passed">0</span></caption>
+                <thead><tr><th scope="col">Outcome</th><th scope="col">Theory / sent</th><th scope="col">Theory / passed</th><th scope="col">Count</th><th scope="col">Observed / sent</th><th scope="col">Observed / passed</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">Rejected</th><td id="am-seq-p-reject">50.00%</td><td>—</td><td id="am-seq-n-reject">0</td><td id="am-seq-f-reject">—</td><td>—</td></tr>
+                  <tr><th scope="row">Final +ℏ/2</th><td id="am-seq-p-plus">25.00%</td><td id="am-seq-c-plus">50.00%</td><td id="am-seq-n-plus">0</td><td id="am-seq-f-plus">—</td><td id="am-seq-q-plus">—</td></tr>
+                  <tr><th scope="row">Final −ℏ/2</th><td id="am-seq-p-minus">25.00%</td><td id="am-seq-c-minus">50.00%</td><td id="am-seq-n-minus">0</td><td id="am-seq-f-minus">—</td><td id="am-seq-q-minus">—</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <fieldset id="am-seq-sample-controls" disabled>
+            <legend>Send fresh preparations</legend>
+            <div class="am-actions">
+              <button type="button" id="am-seq-one">Send one particle</button>
+              <button type="button" id="am-seq-batch">Send 100</button>
+              <button type="button" id="am-seq-clear" disabled>Clear track counts</button>
+            </div>
+          </fieldset>
+          <div class="am-actions"><button type="button" id="am-seq-restore" disabled>Restore opening track</button></div>
+          <p id="am-seq-latest">No particle sent yet.</p>
+          <p class="am-note">On the direct route, all sent particles proceed. Review the branch selection in <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html">Spin and Stern–Gerlach</a>.</p>
+        </section>
+      </section>
+
+      <section class="am-stack" id="am-panel-orbital" aria-labelledby="am-orbital-title">
+        <h4 id="am-orbital-title">Orbital Shapes Gallery</h4>
+        <p>The distribution is the normalized angular part of a spatial wavefunction, in the Condon–Shortley convention. A direction patch has probability ∫<sub>patch</sub> |Y<sub>ℓ</sub><sup>m</sup>|² dΩ.</p>
+        <fieldset id="am-orb-controls" class="am-card" disabled>
+          <legend>Choose an orbital angular state</legend>
+          <div class="am-fields">
+            <label>Orbital level ℓ
+              <select id="am-orb-l"><option value="0" selected>0</option><option value="1">1</option><option value="2">2</option></select>
+            </label>
+            <label>Projection m
+              <select id="am-orb-m"><option value="0" selected>0</option></select>
+            </label>
+          </div>
+        </fieldset>
+        <div class="am-grid">
+          <figure class="am-card" aria-labelledby="am-orb-caption">
+            <figcaption id="am-orb-caption">Angular density in a meridian</figcaption>
+            <svg class="am-diagram" viewBox="0 0 360 242" role="img" aria-labelledby="am-orb-caption" aria-describedby="am-orb-desc">
+              <desc id="am-orb-desc">The opening angular density is 1 over 4π per steradian in every direction, so the meridian is a circle.</desc>
+              <circle cx="180" cy="120" r="85" class="am-frame"/>
+              <circle cx="180" cy="120" r="42.5" class="am-frame am-dashed"/>
+              <path class="am-reference" d="M83 120H277 M180 24V218"/>
+              <text x="186" y="24">+z · θ = 0°</text>
+              <text x="185" y="232">θ = 180°</text>
+              <path id="am-orb-profile" class="am-profile" d="M180 35A85 85 0 1 1 180 205A85 85 0 1 1 180 35Z"/>
+              <path id="am-orb-probe-line" class="am-det-line" d="M180 120L265 120"/>
+            </svg>
+            <p class="am-note">Radius on this chart is proportional to density per steradian. The outer ring is the peak and the dashed ring is half the peak. Neither radius is a physical distance from a nucleus.</p>
+            <dl class="am-readouts">
+              <div><dt>Peak density</dt><dd id="am-orb-max">0.07958 sr⁻¹</dd></div>
+              <div><dt>Half-peak density</dt><dd id="am-orb-half">0.03979 sr⁻¹</dd></div>
+              <div id="am-orb-l2-row"><dt>L²</dt><dd id="am-orb-l2">0 ℏ²</dd></div>
+              <div id="am-orb-lz-row"><dt>L<sub>z</sub></dt><dd id="am-orb-lz">0 ℏ</dd></div>
+            </dl>
+          </figure>
+          <section class="am-card" aria-labelledby="am-orb-probe-title">
+            <h5 id="am-orb-probe-title">Probe a direction</h5>
+            <fieldset id="am-orb-probe-controls" disabled>
+              <legend>Angles</legend>
+              <label for="am-orb-theta">Polar angle θ from +z <strong id="am-orb-theta-value">90°</strong></label>
+              <input id="am-orb-theta" type="range" min="0" max="180" step="1" value="90">
+              <label for="am-orb-phi">Azimuth φ around z <strong id="am-orb-phi-value">0°</strong></label>
+              <input id="am-orb-phi" type="range" min="0" max="359" step="1" value="0">
+            </fieldset>
+            <dl class="am-readouts">
+              <div><dt>Density at probe</dt><dd id="am-orb-density">0.07958 sr⁻¹</dd></div>
+              <div id="am-orb-phase-row"><dt>Phase arg Y (0°–360°)</dt><dd id="am-orb-phase">0°</dd></div>
+            </dl>
+            <p id="am-orb-pattern">Uniform over the sphere. A change of azimuth leaves the density for definite m unchanged.</p>
+            <p class="am-note">Phase is undefined where the amplitude vanishes. The observatory camera rotates the display independently of the probe.</p>
+          </section>
+        </div>
+      </section>
+
+      <section class="am-stack" id="am-panel-ladder" aria-labelledby="am-ladder-title">
+        <h4 id="am-ladder-title">Ladder-Operator Console</h4>
+        <p>Apply an operator to a ket in one fixed-<var>j</var> multiplet. A nonzero output is shown with its coefficient, and the next application starts from the normalized output ket. These are algebraic operations.</p>
+        <fieldset id="am-ladder-controls" class="am-card" disabled>
+          <legend>Prepare a starting rung</legend>
+          <div class="am-fields">
+            <label>j
+              <select id="am-ladder-j">
+                <option value="0">0</option><option value="1">½</option><option value="2" selected>1</option>
+                <option value="3">3/2</option><option value="4">2</option>
+              </select>
+            </label>
+            <label>Starting m
+              <select id="am-ladder-m"><option value="-2">−1</option><option value="0" selected>0</option><option value="2">+1</option></select>
+            </label>
+          </div>
+          <div class="am-actions">
+            <button type="button" id="am-raise">Apply J₊</button>
+            <button type="button" id="am-lower">Apply J₋</button>
+            <button type="button" id="am-ladder-reset">Reset ladder</button>
+          </div>
+        </fieldset>
+        <section class="am-card" aria-labelledby="am-rungs-title">
+          <h5 id="am-rungs-title">Projection rungs · m in units of ℏ</h5>
+          <ul class="am-rungs" id="am-rungs"><li>−1</li><li data-current>0 · Current</li><li>+1</li></ul>
+          <p id="am-ladder-ket">Current state |1,0⟩ along z.</p>
+          <p class="am-equation" id="am-ladder-result">J₊|1,0⟩ = √2 ℏ |1,1⟩.</p>
+          <p class="am-note" id="am-ladder-note">Worked example. Apply an operator to see its coefficient and the resulting ket here.</p>
+        </section>
+      </section>
+
+      <p class="am-feedback" id="am-lab-status" role="status" aria-atomic="true"></p>
+
+      <section id="am-missions" class="am-card" aria-labelledby="am-mission-title">
+        <h4 id="am-mission-title">Observatory missions</h4>
+        <fieldset id="am-mission-controls" disabled>
+          <legend>Choose an investigation</legend>
+          <div class="am-actions">
+            <label for="am-mission">Mission</label>
+            <select id="am-mission">
+              <option value="free" selected>Free exploration</option>
+              <option value="align">Align the Instrument</option>
+              <option value="turn">Turn the Question</option>
+              <option value="track">The Three-Detector Puzzle</option>
+              <option value="missing">Find the Missing Component</option>
+              <option value="lobes">Map the Lobes</option>
+              <option value="climb">Climb the Ladder</option>
+              <option value="predict">Predict Before You Measure</option>
+            </select>
+            <button type="button" id="am-mission-load">Load mission</button>
+            <button type="button" id="am-mission-retry" disabled>Retry</button>
+            <button type="button" id="am-mission-exit" disabled>Return to free exploration</button>
+          </div>
+          <p id="am-mission-goal">Free exploration is active.</p>
+          <p class="am-note" id="am-mission-hint"></p>
+
+          <div class="am-stack" data-am-mission="align" hidden>
+            <button type="button" id="am-align-check">Check positive-channel certainty</button>
+          </div>
+
+          <div class="am-stack" data-am-mission="turn" hidden>
+            <div class="am-fields">
+              <label>Positive channel at 60° (%)
+                <input id="am-turn-60" type="number" min="0" max="100" step="any">
+              </label>
+              <label>Positive channel at 120° (%)
+                <input id="am-turn-120" type="number" min="0" max="100" step="any">
+              </label>
+            </div>
+            <button type="button" id="am-turn-check">Commit both predictions</button>
+            <div class="am-actions">
+              <button type="button" id="am-turn-sample-60" disabled>Measure 100 at 60°</button>
+              <button type="button" id="am-turn-sample-120" disabled>Measure 100 at 120°</button>
+            </div>
+            <p id="am-turn-report" class="am-note"></p>
+          </div>
+
+          <div class="am-stack" data-am-mission="track" hidden>
+            <div class="am-fields">
+              <label>Final negative among passed (%)
+                <input id="am-track-passed" type="number" min="0" max="100" step="any">
+              </label>
+              <label>Final negative among all sent (%)
+                <input id="am-track-sent" type="number" min="0" max="100" step="any">
+              </label>
+            </div>
+            <button type="button" id="am-track-check">Commit both denominators</button>
+          </div>
+
+          <div class="am-stack" data-am-mission="missing" hidden>
+            <label>Which quantities are definite for |1,0⟩ in the z basis?
+              <select id="am-missing-answer">
+                <option value="">Choose an answer</option>
+                <option value="pair">J² and Jz</option>
+                <option value="all">J² and all three components</option>
+                <option value="zero">All components and the magnitude are zero</option>
+              </select>
+            </label>
+            <button type="button" id="am-missing-check">Check the state</button>
+          </div>
+
+          <div class="am-stack" data-am-mission="lobes" hidden>
+            <div class="am-fields">
+              <label>Infer ℓ <input id="am-lobes-l" type="number" min="0" max="2" step="1"></label>
+              <label>Infer |m| <input id="am-lobes-m" type="number" min="0" max="2" step="1"></label>
+            </div>
+            <button type="button" id="am-lobes-check">Commit the shape match</button>
+          </div>
+
+          <div class="am-stack" data-am-mission="climb" hidden>
+            <label>Predict the first raising coefficient from |1,−1⟩, in units of ℏ
+              <input id="am-climb-coefficient" type="number" min="0" max="5" step="any">
+            </label>
+            <button type="button" id="am-climb-predict">Commit the coefficient</button>
+            <label>Why does one more raising operation at the top give zero?
+              <select id="am-climb-endpoint">
+                <option value="">Choose an explanation</option>
+                <option value="coefficient">The ladder coefficient vanishes at m = j</option>
+                <option value="energy">The level has run out of energy</option>
+                <option value="wrap">The result wraps to the bottom rung</option>
+              </select>
+            </label>
+            <button type="button" id="am-climb-check">Check the climb and endpoint</button>
+          </div>
+
+          <div class="am-stack" data-am-mission="predict" hidden>
+            <div class="am-fields">
+              <label>Possible outcomes
+                <select id="am-predict-outcomes">
+                  <option value="">Choose a prediction</option>
+                  <option value="both">Both signs</option><option value="plus">Positive only</option>
+                  <option value="minus">Negative only</option>
+                </select>
+              </label>
+              <label>Positive probability (%) <input id="am-predict-plus" type="number" min="0" max="100" step="any"></label>
+              <label>Negative probability (%) <input id="am-predict-minus" type="number" min="0" max="100" step="any"></label>
+            </div>
+            <button type="button" id="am-predict-check">Commit the two probabilities</button>
+          </div>
+        </fieldset>
+        <p class="am-feedback" id="am-mission-feedback" role="status" aria-atomic="true"></p>
+      </section>
+    </section>
+
+    <section class="am-panel" aria-labelledby="am-math-title">
+      <h3 id="am-math-title">Show Me Why</h3>
+      <div class="am-symbols" aria-label="Equation symbols">
+        <details class="am-card" data-am-symbol="j"><summary>j · Total quantum number</summary><p>j sets the magnitude through ℏ√[j(j+1)] and the number of projections through 2j+1. Change it in the State Deck.</p></details>
+        <details class="am-card" data-am-symbol="m"><summary>m · Projection label</summary><p>m gives the component eigenvalue in units of ℏ along the chosen quantization axis. Compare the projection readout and ladder rungs.</p></details>
+        <details class="am-card" data-am-symbol="square"><summary>J² · Magnitude squared</summary><p>The sum of the squares of the three component operators. It has eigenvalue ℏ²j(j+1) throughout a fixed-j multiplet.</p></details>
+        <details class="am-card" data-am-symbol="z"><summary>Jz · z component</summary><p>J<sub>z</sub> measures along the fixed z reference. A tilted detector instead measures the component along its own axis. Look for the +z reference line behind both arrows.</p></details>
+        <details class="am-card" data-am-symbol="hbar"><summary>ℏ · Reduced Planck constant</summary><p>ℏ = h/(2π) sets the unit of angular momentum. Component readings use ℏ and squared magnitude uses ℏ².</p></details>
+        <details class="am-card" data-am-symbol="commutator"><summary>[A,B] · Commutator</summary><p>[A,B] = AB − BA compares the two orders of operator multiplication. See the axis choices and the middle selection on the measurement track.</p></details>
+        <details class="am-card" data-am-symbol="ladder"><summary>J± · Ladder operators</summary><p>J₊ and J₋ change the projection label by one within a fixed j. The coefficient determines the norm of the output.</p></details>
+      </div>
+
+      <details class="am-card">
+        <summary>1. Separate the total from a projection</summary>
+        <div class="am-stack am-detail">
+          <p class="am-equation">J² = Jₓ² + Jᵧ² + J<sub>z</sub>²<br>J<sub>n</sub> = nₓJₓ + nᵧJᵧ + n<sub>z</sub>J<sub>z</sub>, with |<b>n</b>| = 1</p>
+          <p>The component operators obey [Jₓ,Jᵧ] = iℏJ<sub>z</sub>, [Jᵧ,J<sub>z</sub>] = iℏJₓ, and [J<sub>z</sub>,Jₓ] = iℏJᵧ. Meanwhile, [J²,J<sub>n</sub>] = 0 for every axis. For example, using [A²,B] = A[A,B] + [A,B]A, the terms from Jₓ² and Jᵧ² in [J²,J<sub>z</sub>] are equal and opposite. The other axes follow by cycling the labels.</p>
+          <p>Commuting J² and J<sub>z</sub> have simultaneous eigenstates. In |1,0⟩ along z, J<sub>z</sub> is exactly zero and J² is exactly 2ℏ². Here the transverse components have spread ℏ. The j = 0 state is a special case with all three components zero.</p>
+        </div>
+      </details>
+
+      <details class="am-card">
+        <summary>2. Count the allowed values</summary>
+        <div class="am-stack am-detail">
+          <p class="am-equation">J²|j,m⟩ = ℏ²j(j+1)|j,m⟩<br>J<sub>z</sub>|j,m⟩ = ℏm|j,m⟩</p>
+          <p>The magnitude is ℏ√[j(j+1)]. A chosen component has 2j+1 possible outcomes, with m = −j, −j+1, …, j. General j can be zero, a positive integer, or a positive half-integer. For spin-½, the magnitude is √3 ℏ/2 and the component readings are ±ℏ/2. These readouts specify a total and one projection.</p>
+        </div>
+      </details>
+
+      <details class="am-card">
+        <summary>3. Rotate the spin-½ detector and square the overlap</summary>
+        <div class="am-stack am-detail">
+          <p>In the x–z plane, a detector whose positive axis is tilted by β from +z has a positive eigenstate |+<b>n</b>⟩ = cos(β/2)|+z⟩ + sin(β/2)|−z⟩. Its orthogonal negative eigenstate may be chosen as |−<b>n</b>⟩ = −sin(β/2)|+z⟩ + cos(β/2)|−z⟩.</p>
+          <p>Taking overlaps with |+z⟩ gives amplitudes cos(β/2) and −sin(β/2). Squaring their magnitudes gives P(+) = cos²(β/2) = (1+cos β)/2 and P(−) = sin²(β/2). For β = 60°, the positive amplitude is √3/2, and the probabilities are 75% and 25%.</p>
+          <p class="am-equation">P(r | s,<b>u</b>,<b>v</b>) = [1 + r s (<b>u</b>·<b>v</b>)]/2</p>
+          <p>The general rule uses preparation sign s on unit axis <b>u</b>, detector outcome sign r on unit axis <b>v</b>, and the dot product of the two directions. Reversing the source sign swaps the channel probabilities while leaving the axes as drawn.</p>
+        </div>
+      </details>
+
+      <details class="am-card">
+        <summary>4. Follow a selected intermediate branch</summary>
+        <div class="am-stack am-detail">
+          <p>From positive on +z, a direct measurement on +z is certain to give +ℏ/2. Insert a measurement on +x and pass only its positive output. Half pass, and the survivors reach the final detector in the positive eigenstate on +x.</p>
+          <p class="am-equation">P(pass and final r) = P(pass) P(final r | pass)</p>
+          <p>Each final z sign is 50% of those passed. Each is (1/2)(1/2) = 25% of those sent, and the other 50% of source particles stop at the middle selector. The sequence demonstrates the consequences of choosing different axes. The commutator identity follows from the operator algebra.</p>
+        </div>
+      </details>
+
+      <details class="am-card">
+        <summary>5. Derive the ladder coefficient</summary>
+        <div class="am-stack am-detail">
+          <p>Define J± = Jₓ ± iJᵧ. Using the cyclic commutators gives [J<sub>z</sub>,J±] = ±ℏJ±. Acting on |j,m⟩ gives J<sub>z</sub>(J±|j,m⟩) = ℏ(m±1)J±|j,m⟩. Since J² commutes with J±, any nonzero result stays in the same j multiplet.</p>
+          <p>Because J±† = J∓, the squared norm is ⟨j,m|J∓J±|j,m⟩. Expanding the product gives J∓J± = J² − J<sub>z</sub>² ∓ ℏJ<sub>z</sub>. Substituting the eigenvalues yields</p>
+          <p class="am-equation">‖J±|j,m⟩‖² = ℏ²[j(j+1) − m(m±1)]<br>J±|j,m⟩ = ℏ√[j(j+1) − m(m±1)] |j,m±1⟩</p>
+          <p>The zero at the top occurs at m = j for J₊, and the zero at the bottom occurs at m = −j for J₋. Since a ladder from −j to j takes steps of one, 2j is an integer. Here the rungs encode projections at fixed j. In Lesson 25, the rungs were oscillator energies. This algebra by itself gives no energy change or interaction that could drive a transition.</p>
+        </div>
+      </details>
+
+      <details class="am-card">
+        <summary>6. Read an orbital angular distribution</summary>
+        <div class="am-stack am-detail">
+          <p>Orbital angular momentum L = r × p concerns spatial coordinates. Intrinsic spin S has its own angular momentum operators. For orbital motion, ℓ = 0,1,2,… and integer m runs from −ℓ to +ℓ. The eigenvalues are ℏ²ℓ(ℓ+1) for L² and ℏm for L<sub>z</sub>.</p>
+          <p class="am-equation">Y<sub>ℓ</sub><sup>m</sup>(θ,φ) = √[(2ℓ+1)(ℓ−m)!/(4π(ℓ+m)!)] P<sub>ℓ</sub><sup>m</sup>(cos θ)e<sup>imφ</sup> &nbsp; (m ≥ 0)</p>
+          <p>Here P<sub>ℓ</sub><sup>m</sup> includes the Condon–Shortley factor (−1)<sup>m</sup>, and Y<sub>ℓ</sub><sup>−m</sup> = (−1)<sup>m</sup>(Y<sub>ℓ</sub><sup>m</sup>)*. Write θ from +z and φ around z. Since dΩ = sin θ dθ dφ, the total density integrates to one with that measure. The phase can vary with φ while the density stays independent of it.</p>
+          <p>For ℓ = 0 the density is 1/(4π). For ℓ = 1, m = 0 it is 3cos²θ/(4π), which vanishes at the equator. For either m = ±1 it is 3sin²θ/(8π), which vanishes at the poles. The real pₓ and pᵧ angular shapes are linear combinations of the two complex m = ±1 states.</p>
+        </div>
+      </details>
+
+      <p><strong>Revisit the opening experiment.</strong> The source remained positive on +z as the rotated detector changed the measured component. In the sequential experiment, selecting the middle outcome changed which state arrived at the final detector.</p>
+      <p>In Lesson 27, combine the angular function Y<sub>ℓ</sub><sup>m</sup> with a radial function to describe a hydrogen orbital.</p>
+    </section>
+
+    <nav class="am-navigation" aria-label="Lesson navigation">
+      <a rel="prev" href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="am-note">← Previous</span> The Harmonic Oscillator</a>
+      <a rel="next" href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="am-note">Next →</span> The Hydrogen Atom</a>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

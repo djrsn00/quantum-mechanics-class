@@ -1,0 +1,653 @@
+:root {
+  color-scheme: dark;
+  --background: #050906;
+  --panel: #09150e;
+  --ink: #ecfff1;
+  --phosphor: #78f8a6;
+  --muted: #a6c5b0;
+  --line: #234c33;
+  --red: #ff676f;
+  --orange: #ff9f55;
+  --yellow: #ffe16a;
+  --green: #63f59b;
+  --blue: #65b7ff;
+  --violet: #c19bff;
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0;
+  background-color: var(--background);
+  background-image:
+    radial-gradient(ellipse at 50% 35%, rgb(33 123 68 / 15%), transparent 65%),
+    linear-gradient(rgb(120 248 166 / 4%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(120 248 166 / 4%) 1px, transparent 1px);
+  background-size: auto, 32px 32px, 32px 32px;
+  color: var(--ink);
+  font-family: var(--mono);
+}
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+  background-color: #070f0a;
+  box-shadow: 0 1px 18px rgb(93 239 146 / 8%);
+}
+
+.header-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 2rem);
+  width: min(calc(100% - var(--gutter) - var(--gutter)), 84rem);
+  min-height: 7rem;
+  margin-inline: auto;
+  padding-block: 0.75rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.brand-logo {
+  flex: none;
+  width: clamp(2.75rem, 4.5vw, 3.5rem);
+  filter: drop-shadow(0 0 6px rgb(120 248 166 / 24%));
+}
+
+.brand h1 {
+  margin: 0;
+  color: var(--phosphor);
+  font-size: clamp(1rem, 1.5vw, 1.375rem);
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.particle-display {
+  position: relative;
+  grid-column: 2;
+  justify-self: center;
+  width: min(100%, 30rem);
+  aspect-ratio: 480 / 108;
+  overflow: hidden;
+}
+
+.particle-still,
+.particle-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.particle-canvas {
+  visibility: hidden;
+}
+
+.particle-display[data-motion="active"] .particle-still {
+  visibility: hidden;
+}
+
+.particle-display[data-motion="active"] .particle-canvas {
+  visibility: visible;
+}
+
+.particle-guide {
+  stroke: var(--line);
+  stroke-width: 1;
+  stroke-dasharray: 2 7;
+  opacity: 0.65;
+}
+
+.particle-tracks path {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.track-in-a { stroke: #d0ffe3; }
+.track-in-b { stroke: #79d7b2; }
+.track-red { stroke: var(--red); }
+.track-orange { stroke: var(--orange); }
+.track-yellow { stroke: var(--yellow); }
+.track-green { stroke: var(--green); }
+.track-blue { stroke: var(--blue); }
+.track-violet { stroke: var(--violet); }
+
+.collision-halo {
+  fill: none;
+  stroke: var(--phosphor);
+  stroke-width: 1;
+  opacity: 0.25;
+}
+
+.collision-cross {
+  fill: none;
+  stroke: var(--phosphor);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  opacity: 0.62;
+}
+
+.collision-core {
+  fill: #f2fff5;
+  filter: drop-shadow(0 0 5px var(--phosphor));
+}
+
+.lessons-menu-toggle {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: 44px;
+  padding-inline: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: var(--panel);
+  color: var(--phosphor);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lessons-menu-toggle svg {
+  flex: none;
+}
+
+.lessons-menu-toggle:hover,
+.lessons-menu-toggle[aria-expanded="true"] {
+  border-color: var(--phosphor);
+  background-color: #12271b;
+}
+
+.lessons-menu-toggle[hidden], .lessons-menu[hidden] {
+  display: none;
+}
+
+.lessons-menu {
+  inline-size: min(26rem, calc(100% - var(--gutter) - var(--gutter)));
+  max-block-size: clamp(5rem, calc(100vh - 12rem), 24rem);
+  max-block-size: clamp(5rem, calc(100dvh - 12rem), 24rem);
+  margin-inline-start: auto;
+  margin-inline-end: max(var(--gutter), calc((100% - 84rem) / 2));
+  margin-block-end: 0.75rem;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background-color: var(--panel);
+}
+
+.lessons-menu a {
+  display: grid;
+  grid-template-columns: 2ch minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  color: var(--ink);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.lessons-menu a + a {
+  border-block-start: 1px solid var(--line);
+}
+
+.lessons-menu a:hover,
+.lessons-menu a:focus-visible,
+.lessons-menu a[aria-current="page"] {
+  background-color: #12271b;
+}
+
+.lessons-menu-toggle:focus-visible,
+.lessons-menu a:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 2px;
+}
+
+.lessons-menu a:focus-visible {
+  outline-offset: -2px;
+}
+
+.lessons-menu-step {
+  color: var(--phosphor);
+  text-align: end;
+}
+
+.site-footer {
+  padding: 1.25rem var(--gutter);
+  border-top: 1px solid var(--line);
+  background-color: #070f0a;
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+@media (max-width: 56rem) {
+  .header-inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.25rem;
+    min-height: 0;
+    padding-block: 1rem 0.5rem;
+  }
+
+  .brand h1 {
+    overflow-wrap: anywhere;
+  }
+
+  .particle-display {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .lessons-menu-toggle {
+    grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particle-display[data-motion="active"] .particle-still {
+    visibility: visible;
+  }
+
+  .particle-display[data-motion="active"] .particle-canvas {
+    visibility: hidden;
+  }
+}
+
+/* Lesson 25 */
+
+.oscillator-lesson {
+  --oh-surface: #0a1514;
+  --oh-edge: #486759;
+  --oh-density: #69e3d8;
+  --oh-reference: #bad0c5;
+  display: grid;
+  align-content: start;
+  gap: clamp(1rem, 3vw, 2rem);
+  inline-size: min(calc(100% - var(--gutter) - var(--gutter)), 84rem);
+  min-inline-size: 0;
+  margin-inline: auto;
+  padding-block: clamp(1.75rem, 5vw, 4rem);
+  line-height: 1.58;
+  overflow-wrap: break-word;
+}
+
+.oscillator-lesson :is(h2, h3, h4, p, figure, dl, dd, ul) { margin: 0; }
+
+.oscillator-lesson :is(h2, h3, h4, figcaption) { line-height: 1.24; }
+
+.oscillator-lesson h2 {
+  font-size: clamp(1.8rem, 5vw, 3.5rem);
+  letter-spacing: -0.055em;
+}
+
+.oscillator-lesson h3 { font-size: clamp(1.3rem, 3vw, 1.85rem); }
+.oscillator-lesson :is(h4, figcaption) { font-size: clamp(1rem, 2vw, 1.2rem); font-weight: 700; }
+.oscillator-lesson .oh-intro { max-inline-size: 80ch; }
+.oscillator-lesson .oh-kicker { color: var(--phosphor); font-size: 0.875rem; font-weight: 700; }
+.oscillator-lesson .oh-lead { font-size: clamp(1rem, 2.4vw, 1.23rem); }
+.oscillator-lesson .oh-note { color: var(--muted); font-size: 0.875rem; }
+
+.oscillator-lesson :is(.oh-stack, .oh-panel, .oh-card, .oh-detail, .oh-options) {
+  display: grid;
+  align-content: start;
+  gap: 0.7rem;
+  min-inline-size: 0;
+}
+
+.oscillator-lesson .oh-panel {
+  gap: 1rem;
+  padding: clamp(0.75rem, 2.5vw, 1.5rem);
+  border: 1px solid var(--line);
+  border-radius: 0.625rem;
+  background: rgb(9 21 14 / 92%);
+}
+
+.oscillator-lesson .oh-card {
+  padding: clamp(0.6rem, 2vw, 1rem);
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+  background: var(--oh-surface);
+}
+
+.oscillator-lesson .oh-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.64fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 0.85rem;
+}
+
+.oscillator-lesson :is(.oh-fields, .oh-symbols) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: 0.65rem;
+}
+
+.oscillator-lesson .oh-fields label {
+  display: grid;
+  align-content: start;
+  gap: 0.25rem;
+}
+
+.oscillator-lesson .oh-faders {
+  padding: 0.65rem;
+  border: 1px solid #484469;
+  border-radius: 0.35rem;
+  background: #121525;
+}
+
+.oscillator-lesson .oh-faders span { color: var(--violet); }
+
+.oscillator-lesson .oh-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.oscillator-lesson fieldset { min-inline-size: 0; margin: 0; }
+.oscillator-lesson fieldset:not(.oh-card) { padding: 0; border: 0; }
+
+.oscillator-lesson legend {
+  max-inline-size: 100%;
+  padding-inline: 0.3rem;
+  color: var(--phosphor);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.oscillator-lesson fieldset:not(.oh-card) legend { padding: 0 0 0.35rem; }
+
+.oscillator-lesson :is(button, input[type="number"], select, .oh-navigation a) {
+  min-block-size: 44px;
+  max-inline-size: 100%;
+  padding: 0.42rem 0.65rem;
+  border: 1px solid var(--oh-edge);
+  border-radius: 0.35rem;
+  background: #101f18;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.875rem;
+}
+
+.oscillator-lesson :is(select, input[type="number"]) { inline-size: min(100%, 22rem); }
+.oscillator-lesson .oh-fields :is(select, input[type="number"]) { inline-size: 100%; }
+.oscillator-lesson button { justify-self: start; cursor: pointer; }
+.oscillator-lesson a { color: var(--phosphor); }
+.oscillator-lesson .oh-primary { border-color: var(--phosphor); background: #143424; }
+
+.oscillator-lesson :is(button, select):enabled:hover,
+.oscillator-lesson .oh-navigation a:hover {
+  border-color: var(--phosphor);
+  background: #183325;
+}
+
+.oscillator-lesson :is(button, input, select):disabled { opacity: 0.65; cursor: default; }
+
+.oscillator-lesson :is(a, button, input, select, summary, [tabindex="-1"]):focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+.oscillator-lesson :is(.oh-check, .oh-options label) {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  min-block-size: 44px;
+  font-size: 0.875rem;
+}
+
+.oscillator-lesson input { accent-color: var(--phosphor); }
+
+.oscillator-lesson :is(input[type="checkbox"], input[type="radio"]) {
+  flex: none;
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+  margin: 0;
+}
+
+.oscillator-lesson input[type="range"] { inline-size: 100%; min-block-size: 44px; margin: 0; }
+
+.oscillator-lesson .oh-readouts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.38rem;
+}
+
+.oscillator-lesson .oh-readouts > div {
+  padding: 0.45rem 0.5rem;
+  border: 1px solid #30443a;
+  border-radius: 0.3rem;
+  background: #0c1a17;
+}
+
+.oscillator-lesson .oh-readouts dt { color: var(--muted); font-size: 0.78rem; }
+
+.oscillator-lesson .oh-readouts dd {
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.oscillator-lesson table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.oscillator-lesson caption { padding-block: 0.25rem; color: var(--muted); text-align: start; }
+.oscillator-lesson :is(th, td) { padding: 0.35rem 0.45rem; border: 1px solid #30443a; text-align: start; }
+.oscillator-lesson thead { background: #11231a; }
+.oscillator-lesson tr[data-occupied] { background: #282719; color: var(--yellow); }
+.oscillator-lesson tr[data-occupied] th { box-shadow: inset 3px 0 var(--yellow); }
+
+.oscillator-lesson .oh-plot {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  border: 1px solid #455971;
+  border-radius: 0.35rem;
+  background: #070f19;
+}
+
+.oscillator-lesson .oh-ticks { fill: var(--ink); font: 15px var(--mono); }
+
+.oscillator-lesson .oh-plot :is(path, line, circle, rect) { vector-effect: non-scaling-stroke; }
+
+.oscillator-lesson .oh-plot :is(path, line) {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.oscillator-lesson .oh-axis { stroke: #a8bbb2; }
+.oscillator-lesson .oh-grid-line { stroke: #304450; }
+.oscillator-lesson .oh-rungs :is(path, line) { stroke: #809192; stroke-width: 0.75; opacity: 0.56; }
+.oscillator-lesson .oh-turn { stroke: var(--yellow); stroke-dasharray: 2 5; opacity: 0.85; }
+.oscillator-lesson .oh-potential { stroke: var(--orange); stroke-width: 2.25; }
+.oscillator-lesson .oh-energy { stroke: var(--yellow); stroke-width: 1.8; }
+.oscillator-lesson .oh-real { stroke: var(--blue); stroke-width: 1.7; }
+.oscillator-lesson .oh-imag { stroke: var(--violet); stroke-width: 1.7; stroke-dasharray: 4 3; }
+.oscillator-lesson .oh-density { stroke: var(--oh-density); stroke-width: 2.2; }
+.oscillator-lesson .oh-reference { stroke: var(--oh-reference); stroke-width: 1.45; stroke-dasharray: 5 4; }
+.oscillator-lesson .oh-target { stroke: var(--orange); stroke-width: 1.8; stroke-dasharray: 2 4; }
+.oscillator-lesson .oh-mean { stroke: var(--green); stroke-width: 1.9; }
+.oscillator-lesson .oh-classical { stroke: var(--orange); stroke-width: 1.9; stroke-dasharray: 4 3; }
+.oscillator-lesson .oh-node-marks circle { fill: #0c131d; stroke: var(--yellow); stroke-width: 1.5; }
+.oscillator-lesson .oh-sample-marks circle { fill: var(--red); stroke: #ffe8e8; stroke-width: 0.8; }
+
+.oscillator-lesson .oh-histogram rect {
+  fill: #db83ac;
+  fill-opacity: 0.24;
+  stroke: #e6adc7;
+  stroke-width: 0.7;
+}
+
+.oscillator-lesson .oh-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.85rem;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8rem;
+}
+
+.oscillator-lesson .oh-legend li { display: flex; align-items: center; gap: 0.35rem; }
+
+.oscillator-lesson .oh-legend li::before {
+  inline-size: 1.05rem;
+  border-block-start: 2px solid var(--oh-key, currentColor);
+  content: "";
+}
+
+.oscillator-lesson .oh-key-potential,
+.oscillator-lesson .oh-key-target,
+.oscillator-lesson .oh-key-classical { --oh-key: var(--orange); }
+.oscillator-lesson .oh-key-energy { --oh-key: var(--yellow); }
+.oscillator-lesson .oh-key-real { --oh-key: var(--blue); }
+.oscillator-lesson .oh-key-imag { --oh-key: var(--violet); }
+.oscillator-lesson .oh-key-density { --oh-key: var(--oh-density); }
+.oscillator-lesson .oh-key-reference { --oh-key: var(--oh-reference); }
+.oscillator-lesson .oh-key-mean { --oh-key: var(--green); }
+
+.oscillator-lesson :is(.oh-key-imag, .oh-key-reference, .oh-key-target, .oh-key-classical)::before {
+  border-block-start-style: dashed;
+}
+
+.oscillator-lesson .oh-key-histogram::before {
+  block-size: 0.52rem;
+  border: 1px solid #e6adc7;
+  background: rgb(219 131 172 / 24%);
+}
+
+.oscillator-lesson .oh-studio { border-color: #4b5577; background: #0d1320; }
+
+.oscillator-lesson .oh-monitor {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 0.55rem;
+}
+
+.oscillator-lesson .oh-monitor p {
+  padding: 0.55rem 0.65rem;
+  border: 1px solid #414d67;
+  border-radius: 0.35rem;
+  background: #0a101a;
+}
+
+.oscillator-lesson .oh-monitor strong {
+  display: block;
+  color: var(--violet);
+  font-size: 0.8rem;
+}
+
+.oscillator-lesson #oh-studio-detector[data-detected] { border-color: var(--red); }
+
+.oscillator-lesson .oh-viewport {
+  overflow: hidden;
+  block-size: clamp(13rem, 40vw, 29rem);
+  border: 1px solid #495470;
+  border-radius: 0.35rem;
+  background: #070f19;
+}
+
+.oscillator-lesson .oh-viewport canvas { display: block; inline-size: 100%; block-size: 100%; }
+.oscillator-lesson details.oh-card { display: block; }
+
+.oscillator-lesson summary {
+  display: list-item;
+  min-block-size: 44px;
+  padding-block: 0.42rem;
+  color: var(--phosphor);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.oscillator-lesson .oh-detail { padding-block: 0.2rem; }
+.oscillator-lesson details[data-oh-symbol][open] > p { margin-block-start: 0.35rem; }
+
+.oscillator-lesson .oh-equation {
+  padding: 0.55rem 0.65rem;
+  border-inline-start: 2px solid var(--blue);
+  background: #101d26;
+  overflow-wrap: anywhere;
+}
+
+.oscillator-lesson[data-oh-symbol="mass"] #oh-mass,
+.oscillator-lesson[data-oh-symbol="omega"] #oh-omega,
+.oscillator-lesson[data-oh-symbol="n"] :is(#oh-n, #oh-nodes-row, #oh-ladder-card),
+.oscillator-lesson[data-oh-symbol="haniltonian"] #oh-hamiltonian,
+.oscillator-lesson[data-oh-symbol="hamiltonian"] :is(#oh-hamiltonian, #oh-energy-row),
+.oscillator-lesson[data-oh-symbol="hbar"] #oh-units {
+  outline: 2px solid var(--yellow);
+  outline-offset: 2px;
+}
+
+.oscillator-lesson[data-oh-symbol="potential"] .oh-potential { stroke-width: 3.6; }
+
+.oscillator-lesson[data-oh-symbol="omega"] #oh-gap,
+.oscillator-lesson[data-oh-symbol="hbar"] #oh-phase { color: var(--yellow); }
+
+.oscillator-lesson .oh-feedback:not(:empty) {
+  padding: 0.55rem 0.7rem;
+  border-inline-start: 3px solid var(--violet);
+  background: #1b1628;
+}
+
+.oscillator-lesson #oh-mission-controls > :not(legend) + * { margin-block-start: 0.58rem; }
+
+.oscillator-lesson [data-oh-mission] {
+  padding: 0.65rem;
+  border: 1px solid var(--oh-edge);
+  border-radius: 0.35rem;
+}
+
+.oscillator-lesson .oh-navigation {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.oscillator-lesson .oh-navigation a {
+  display: grid;
+  align-content: start;
+  gap: 0.2rem;
+  text-decoration: none;
+}
+
+.oscillator-lesson .oh-navigation a[rel="next"] { text-align: end; }
+.oscillator-lesson [hidden] { display: none; }
+
+@media (max-width: 61rem) {
+  .oscillator-lesson .oh-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 36rem) {
+  .oscillator-lesson .oh-ticks { font-size: 19px; }
+  .oscillator-lesson :is(th, td) { padding: 0.3rem 0.25rem; }
+}

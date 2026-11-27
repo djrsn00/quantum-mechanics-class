@@ -1,0 +1,724 @@
+:root {
+  color-scheme: dark;
+  --background: #050906;
+  --panel: #09150e;
+  --ink: #ecfff1;
+  --phosphor: #78f8a6;
+  --muted: #a6c5b0;
+  --line: #234c33;
+  --red: #ff676f;
+  --orange: #ff9f55;
+  --yellow: #ffe16a;
+  --green: #63f59b;
+  --blue: #65b7ff;
+  --violet: #c19bff;
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0;
+  background-color: var(--background);
+  background-image:
+    radial-gradient(ellipse at 50% 35%, rgb(33 123 68 / 15%), transparent 65%),
+    linear-gradient(rgb(120 248 166 / 4%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(120 248 166 / 4%) 1px, transparent 1px);
+  background-size: auto, 32px 32px, 32px 32px;
+  color: var(--ink);
+  font-family: var(--mono);
+}
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+  background-color: #070f0a;
+  box-shadow: 0 1px 18px rgb(93 239 146 / 8%);
+}
+
+.header-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 2rem);
+  width: min(calc(100% - var(--gutter) - var(--gutter)), 84rem);
+  min-height: 7rem;
+  margin-inline: auto;
+  padding-block: 0.75rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.brand-logo {
+  flex: none;
+  width: clamp(2.75rem, 4.5vw, 3.5rem);
+  filter: drop-shadow(0 0 6px rgb(120 248 166 / 24%));
+}
+
+.brand h1 {
+  margin: 0;
+  color: var(--phosphor);
+  font-size: clamp(1rem, 1.5vw, 1.375rem);
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.particle-display {
+  position: relative;
+  grid-column: 2;
+  justify-self: center;
+  width: min(100%, 30rem);
+  aspect-ratio: 480 / 108;
+  overflow: hidden;
+}
+
+.particle-still,
+.particle-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.particle-canvas {
+  visibility: hidden;
+}
+
+.particle-display[data-motion="active"] .particle-still {
+  visibility: hidden;
+}
+
+.particle-display[data-motion="active"] .particle-canvas {
+  visibility: visible;
+}
+
+.particle-guide {
+  stroke: var(--line);
+  stroke-width: 1;
+  stroke-dasharray: 2 7;
+  opacity: 0.65;
+}
+
+.particle-tracks path {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.track-in-a { stroke: #d0ffe3; }
+.track-in-b { stroke: #79d7b2; }
+.track-red { stroke: var(--red); }
+.track-orange { stroke: var(--orange); }
+.track-yellow { stroke: var(--yellow); }
+.track-green { stroke: var(--green); }
+.track-blue { stroke: var(--blue); }
+.track-violet { stroke: var(--violet); }
+
+.collision-halo {
+  fill: none;
+  stroke: var(--phosphor);
+  stroke-width: 1;
+  opacity: 0.25;
+}
+
+.collision-cross {
+  fill: none;
+  stroke: var(--phosphor);
+  stroke-width: 1.5;
+  opacity: 0.62;
+}
+
+.collision-core {
+  fill: #f2fff5;
+  filter: drop-shadow(0 0 5px var(--phosphor));
+}
+
+.lessons-menu-toggle {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: 44px;
+  padding-inline: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: var(--panel);
+  color: var(--phosphor);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lessons-menu-toggle svg {
+  flex: none;
+}
+
+.lessons-menu-toggle:hover,
+.lessons-menu-toggle[aria-expanded="true"] {
+  border-color: var(--phosphor);
+  background-color: #12271b;
+}
+
+.lessons-menu-toggle[hidden], .lessons-menu[hidden] {
+  display: none;
+}
+
+.lessons-menu {
+  inline-size: min(26rem, calc(100% - var(--gutter) - var(--gutter)));
+  max-block-size: clamp(5rem, calc(100vh - 12rem), 24rem);
+  max-block-size: clamp(5rem, calc(100dvh - 12rem), 24rem);
+  margin-inline-start: auto;
+  margin-inline-end: max(var(--gutter), calc((100% - 84rem) / 2));
+  margin-block-end: 0.75rem;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background-color: var(--panel);
+}
+
+.lessons-menu a {
+  display: grid;
+  grid-template-columns: 2ch minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  color: var(--ink);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.lessons-menu a + a {
+  border-block-start: 1px solid var(--line);
+}
+
+.lessons-menu a:hover,
+.lessons-menu a:focus-visible,
+.lessons-menu a[aria-current="page"] {
+  background-color: #12271b;
+}
+
+.lessons-menu-toggle:focus-visible,
+.lessons-menu a:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 2px;
+}
+
+.lessons-menu a:focus-visible {
+  outline-offset: -2px;
+}
+
+.lessons-menu-step {
+  color: var(--phosphor);
+  text-align: end;
+}
+
+.site-footer {
+  padding: 1.25rem var(--gutter);
+  border-top: 1px solid var(--line);
+  background-color: #070f0a;
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+@media (max-width: 56rem) {
+  .header-inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.25rem;
+    min-height: 0;
+    padding-block: 1rem 0.5rem;
+  }
+
+  .brand h1 {
+    overflow-wrap: anywhere;
+  }
+
+  .particle-display {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .lessons-menu-toggle {
+    grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particle-display[data-motion="active"] .particle-still {
+    visibility: visible;
+  }
+
+  .particle-display[data-motion="active"] .particle-canvas {
+    visibility: hidden;
+  }
+}
+
+/* Lesson 26 */
+
+.angular-momentum-lesson {
+  --am-surface: #0a1514;
+  --am-edge: #456859;
+  --am-density: #71e3d8;
+  display: grid;
+  align-content: start;
+  gap: clamp(1rem, 3vw, 2rem);
+  inline-size: min(calc(100% - var(--gutter) - var(--gutter)), 84rem);
+  min-inline-size: 0;
+  margin-inline: auto;
+  padding-block: clamp(1.75rem, 5vw, 4rem);
+  line-height: 1.58;
+  overflow-wrap: break-word;
+}
+
+.angular-momentum-lesson :is(h2, h3, h4, h5, p, figure, dl, dd, ul) {
+  margin: 0;
+}
+
+.angular-momentum-lesson :is(h2, h3, h4, h5, figcaption) {
+  line-height: 1.24;
+}
+
+.angular-momentum-lesson h2 {
+  font-size: clamp(1.85rem, 5vw, 3.5rem);
+  letter-spacing: -0.055em;
+}
+
+.angular-momentum-lesson h3 { font-size: clamp(1.3rem, 3vw, 1.8rem); }
+.angular-momentum-lesson h4 { font-size: clamp(1.08rem, 2.25vw, 1.35rem); }
+.angular-momentum-lesson :is(h5, figcaption) { font-size: 1rem; font-weight: 700; }
+.angular-momentum-lesson .am-intro { max-inline-size: 80ch; }
+.angular-momentum-lesson .am-kicker { color: var(--phosphor); font-size: 0.875rem; font-weight: 700; }
+.angular-momentum-lesson .am-lead { font-size: clamp(1rem, 2.4vw, 1.24rem); }
+.angular-momentum-lesson .am-note { color: var(--muted); font-size: 0.875rem; }
+
+.angular-momentum-lesson :is(.am-stack, .am-panel, .am-card) {
+  display: grid;
+  align-content: start;
+  gap: 0.7rem;
+  min-inline-size: 0;
+}
+
+.angular-momentum-lesson .am-panel {
+  gap: 1rem;
+  padding: clamp(0.75rem, 2.5vw, 1.5rem);
+  border: 1px solid var(--line);
+  border-radius: 0.625rem;
+  background: rgb(9 21 14 / 92%);
+}
+
+.angular-momentum-lesson .am-card {
+  padding: clamp(0.65rem, 2vw, 1rem);
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+  background: var(--am-surface);
+}
+
+.angular-momentum-lesson .am-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 0.85rem;
+}
+
+.angular-momentum-lesson :is(.am-fields, .am-symbols, .am-track, .am-monitor) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: 0.6rem;
+}
+
+.angular-momentum-lesson .am-fields label {
+  display: grid;
+  align-content: start;
+  gap: 0.25rem;
+}
+
+.angular-momentum-lesson .am-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.angular-momentum-lesson .am-orbit {
+  display: grid;
+  min-inline-size: min(100%, 12rem);
+  flex: 1 1 12rem;
+}
+
+.angular-momentum-lesson fieldset { min-inline-size: 0; margin: 0; }
+.angular-momentum-lesson fieldset:not(.am-card) { padding: 0; border: 0; }
+
+.angular-momentum-lesson legend {
+  max-inline-size: 100%;
+  padding-inline: 0.3rem;
+  color: var(--phosphor);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.angular-momentum-lesson fieldset:not(.am-card) legend {
+  padding: 0 0 0.35rem;
+}
+
+.angular-momentum-lesson :is(button, select, input[type="number"], .am-navigation a) {
+  min-block-size: 44px;
+  max-inline-size: 100%;
+  padding: 0.42rem 0.65rem;
+  border: 1px solid var(--am-edge);
+  border-radius: 0.35rem;
+  background: #10201a;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.875rem;
+}
+
+.angular-momentum-lesson :is(select, input[type="number"]) {
+  inline-size: min(100%, 24rem);
+}
+
+.angular-momentum-lesson .am-fields :is(select, input[type="number"]) {
+  inline-size: 100%;
+}
+
+.angular-momentum-lesson button { justify-self: start; cursor: pointer; }
+.angular-momentum-lesson a { color: var(--phosphor); }
+.angular-momentum-lesson .am-primary { border-color: var(--phosphor); background: #143424; }
+
+.angular-momentum-lesson :is(button, select):enabled:hover,
+.angular-momentum-lesson .am-navigation a:hover {
+  border-color: var(--phosphor);
+  background: #183325;
+}
+
+.angular-momentum-lesson :is(button, input, select):disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.angular-momentum-lesson :is(a, button, input, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+.angular-momentum-lesson .am-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: 44px;
+  font-size: 0.875rem;
+}
+
+.angular-momentum-lesson input { accent-color: var(--phosphor); }
+
+.angular-momentum-lesson input[type="checkbox"] {
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+  margin: 0;
+}
+
+.angular-momentum-lesson input[type="range"] {
+  display: block;
+  inline-size: 100%;
+  min-block-size: 44px;
+  margin: 0;
+}
+
+.angular-momentum-lesson .am-readouts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  gap: 0.4rem;
+}
+
+.angular-momentum-lesson :is(.am-readouts > div, .am-track > div, .am-monitor > p) {
+  padding: 0.55rem 0.65rem;
+  border: 1px solid #30483e;
+  border-radius: 0.35rem;
+  background: #0c1a17;
+}
+
+.angular-momentum-lesson .am-readouts dt {
+  color: var(--muted);
+  font-size: 0.79rem;
+}
+
+.angular-momentum-lesson .am-readouts dd {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.angular-momentum-lesson .am-track > div {
+  display: grid;
+  gap: 0.18rem;
+}
+
+.angular-momentum-lesson .am-track strong { color: var(--blue); }
+.angular-momentum-lesson .am-track > div:nth-child(2) strong { color: var(--violet); }
+.angular-momentum-lesson .am-track > div:nth-child(3) strong { color: var(--yellow); }
+
+.angular-momentum-lesson .am-diagram {
+  display: block;
+  inline-size: 100%;
+  max-block-size: 25rem;
+  border: 1px solid #43586d;
+  border-radius: 0.35rem;
+  background: #0a1220;
+}
+
+.angular-momentum-lesson .am-diagram text { fill: var(--ink); font: 13px var(--mono); }
+
+.angular-momentum-lesson .am-diagram :is(path, line, circle) {
+  vector-effect: non-scaling-stroke;
+}
+
+.angular-momentum-lesson .am-frame {
+  fill: none;
+  stroke: #46616b;
+  stroke-width: 1;
+}
+
+.angular-momentum-lesson .am-dashed { stroke-dasharray: 3 4; }
+
+.angular-momentum-lesson .am-reference {
+  fill: none;
+  stroke: #8c9fa6;
+  stroke-width: 1;
+  opacity: 0.75;
+}
+
+.angular-momentum-lesson :is(.am-prep-line, .am-det-line, .am-angle-line, .am-profile) {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.angular-momentum-lesson .am-prep-line { stroke: var(--blue); stroke-width: 3; }
+.angular-momentum-lesson .am-det-line { stroke: var(--yellow); stroke-width: 2.3; stroke-dasharray: 5 3; }
+.angular-momentum-lesson .am-angle-line { stroke: var(--violet); stroke-width: 1.5; }
+.angular-momentum-lesson .am-profile { stroke: var(--am-density); stroke-width: 2.5; }
+
+.angular-momentum-lesson .am-legend {
+  display: flex;
+  gap: 0.4rem 1rem;
+  flex-wrap: wrap;
+  padding: 0;
+  list-style: none;
+  font-size: 0.84rem;
+}
+
+.angular-momentum-lesson .am-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.angular-momentum-lesson .am-legend li::before {
+  inline-size: 1.2rem;
+  border-block-start: 2px solid var(--am-key);
+  content: "";
+}
+
+.angular-momentum-lesson .am-key-prep { --am-key: var(--blue); }
+.angular-momentum-lesson .am-key-det { --am-key: var(--yellow); }
+.angular-momentum-lesson .am-key-det::before { border-block-start-style: dashed; }
+
+.angular-momentum-lesson .am-meter-pair {
+  display: grid;
+  gap: 0.22rem;
+}
+
+.angular-momentum-lesson .am-meter-pair label {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.6rem;
+}
+
+.angular-momentum-lesson meter {
+  display: block;
+  inline-size: 100%;
+  min-block-size: 0.9rem;
+}
+
+.angular-momentum-lesson meter::-webkit-meter-optimum-value { background: var(--am-meter, #65b7ff); }
+.angular-momentum-lesson meter::-moz-meter-bar { background: var(--am-meter, #65b7ff); }
+.angular-momentum-lesson #am-rig-minus-meter { --am-meter: #ffe16a; }
+.angular-momentum-lesson td meter { --am-meter: #a782d1; }
+
+.angular-momentum-lesson .am-table-wrap { overflow-x: auto; }
+
+.angular-momentum-lesson table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.angular-momentum-lesson caption {
+  padding-block: 0.3rem;
+  color: var(--muted);
+  text-align: start;
+}
+
+.angular-momentum-lesson :is(th, td) {
+  padding: 0.38rem 0.45rem;
+  border: 1px solid #30483e;
+  text-align: start;
+}
+
+.angular-momentum-lesson thead { background: #12241b; }
+
+.angular-momentum-lesson .am-rungs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  padding: 0;
+  list-style: none;
+}
+
+.angular-momentum-lesson .am-rungs li {
+  padding: 0.38rem 0.55rem;
+  border: 1px solid #50647c;
+  border-radius: 0.35rem;
+  background: #101829;
+}
+
+.angular-momentum-lesson .am-rungs li[data-current] {
+  border-color: var(--yellow);
+  background: #272515;
+  color: var(--yellow);
+  font-weight: 700;
+}
+
+.angular-momentum-lesson .am-rungs li[data-previous] {
+  border-style: dashed;
+  color: var(--blue);
+}
+
+.angular-momentum-lesson .am-observatory {
+  border-color: #4a5571;
+  background: #0d1321;
+}
+
+.angular-momentum-lesson .am-monitor > p {
+  border-color: #404d69;
+  background: #0a101b;
+}
+
+.angular-momentum-lesson #am-observatory-result[data-detected] {
+  border-color: var(--orange);
+}
+
+.angular-momentum-lesson .am-viewport {
+  overflow: hidden;
+  block-size: clamp(14rem, 42vw, 30rem);
+  border: 1px solid #485773;
+  border-radius: 0.35rem;
+  background: #080d18;
+}
+
+.angular-momentum-lesson .am-viewport canvas {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.angular-momentum-lesson details.am-card { display: block; }
+
+.angular-momentum-lesson summary {
+  display: list-item;
+  min-block-size: 44px;
+  padding-block: 0.4rem;
+  color: var(--phosphor);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.angular-momentum-lesson :is(.am-detail, details[data-am-symbol][open] > p) {
+  padding-block: 0.2rem;
+}
+
+.angular-momentum-lesson .am-equation {
+  padding: 0.55rem 0.65rem;
+  border-inline-start: 2px solid var(--blue);
+  background: #101e27;
+  overflow-wrap: anywhere;
+}
+
+.angular-momentum-lesson .am-feedback:not(:empty) {
+  padding: 0.55rem 0.7rem;
+  border-inline-start: 3px solid var(--violet);
+  background: #1b1729;
+}
+
+.angular-momentum-lesson #am-mission-controls > :not(legend) + * {
+  margin-block-start: 0.6rem;
+}
+
+.angular-momentum-lesson [data-am-mission] {
+  padding: 0.65rem;
+  border: 1px solid var(--am-edge);
+  border-radius: 0.35rem;
+}
+
+.angular-momentum-lesson[data-am-symbol="j"] #am-deck-j,
+.angular-momentum-lesson[data-am-symbol="m"] :is(#am-deck-m, #am-deck-projection-row, #am-rungs),
+.angular-momentum-lesson[data-am-symbol="square"] #am-deck-square-row,
+.angular-momentum-lesson[data-am-symbol="hbar"] :is(#am-rig-theory, #am-deck-magnitude-row),
+.angular-momentum-lesson[data-am-symbol="commutator"] .am-track,
+.angular-momentum-lesson[data-am-symbol="ladder"] :is(#am-raise, #am-lower, #am-ladder-result) {
+  outline: 2px solid var(--yellow);
+  outline-offset: 2px;
+}
+
+.angular-momentum-lesson[data-am-symbol="z"] .am-reference {
+  stroke: var(--yellow);
+  stroke-width: 2;
+}
+
+.angular-momentum-lesson .am-navigation {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.angular-momentum-lesson .am-navigation a {
+  display: grid;
+  align-content: start;
+  gap: 0.2rem;
+  text-decoration: none;
+}
+
+.angular-momentum-lesson .am-navigation a[rel="next"] { text-align: end; }
+.angular-momentum-lesson [hidden] { display: none; }
+
+@media (max-width: 58rem) {
+  .angular-momentum-lesson .am-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 36rem) {
+  .angular-momentum-lesson :is(th, td) { padding: 0.3rem 0.25rem; }
+  .angular-momentum-lesson .am-diagram text { font-size: 14px; }
+}

@@ -1,0 +1,1043 @@
+:root {
+  color-scheme: dark;
+  --background: #050906;
+  --panel: #09150e;
+  --ink: #ecfff1;
+  --phosphor: #78f8a6;
+  --muted: #a6c5b0;
+  --line: #234c33;
+  --red: #ff676f;
+  --orange: #ff9f55;
+  --yellow: #ffe16a;
+  --green: #63f59b;
+  --blue: #65b7ff;
+  --violet: #c19bff;
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0;
+  background-color: var(--background);
+  background-image:
+    radial-gradient(ellipse at 50% 35%, rgb(33 123 68 / 15%), transparent 65%),
+    linear-gradient(rgb(120 248 166 / 4%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(120 248 166 / 4%) 1px, transparent 1px);
+  background-size: auto, 32px 32px, 32px 32px;
+  color: var(--ink);
+  font-family: var(--mono);
+}
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+  background-color: #070f0a;
+  box-shadow: 0 1px 18px rgb(93 239 146 / 8%);
+}
+
+.header-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 2rem);
+  width: min(calc(100% - var(--gutter) - var(--gutter)), 84rem);
+  min-height: 7rem;
+  margin-inline: auto;
+  padding-block: 0.75rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.brand-logo {
+  flex: none;
+  width: clamp(2.75rem, 4.5vw, 3.5rem);
+  filter: drop-shadow(0 0 6px rgb(120 248 166 / 24%));
+}
+
+.brand h1 {
+  margin: 0;
+  color: var(--phosphor);
+  font-size: clamp(1rem, 1.5vw, 1.375rem);
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.particle-display {
+  position: relative;
+  grid-column: 2;
+  justify-self: center;
+  width: min(100%, 30rem);
+  aspect-ratio: 480 / 108;
+  overflow: hidden;
+}
+
+.particle-still,
+.particle-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.particle-canvas {
+  visibility: hidden;
+}
+
+.particle-display[data-motion="active"] .particle-still {
+  visibility: hidden;
+}
+
+.particle-display[data-motion="active"] .particle-canvas {
+  visibility: visible;
+}
+
+.particle-guide {
+  stroke: var(--line);
+  stroke-width: 1;
+  stroke-dasharray: 2 7;
+  opacity: 0.65;
+}
+
+.particle-tracks path {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.track-in-a { stroke: #d0ffe3; }
+.track-in-b { stroke: #79d7b2; }
+.track-red { stroke: var(--red); }
+.track-orange { stroke: var(--orange); }
+.track-yellow { stroke: var(--yellow); }
+.track-green { stroke: var(--green); }
+.track-blue { stroke: var(--blue); }
+.track-violet { stroke: var(--violet); }
+
+.collision-halo {
+  fill: none;
+  stroke: var(--phosphor);
+  stroke-width: 1;
+  opacity: 0.25;
+}
+
+.collision-cross {
+  fill: none;
+  stroke: var(--phosphor);
+  stroke-width: 1;
+  opacity: 0.62;
+}
+
+.collision-core {
+  fill: #f2fff5;
+  filter: drop-shadow(0 0 5px var(--phosphor));
+}
+
+.lessons-menu-toggle {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: 44px;
+  padding-inline: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: var(--panel);
+  color: var(--phosphor);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lessons-menu-toggle svg {
+  flex: none;
+}
+
+.lessons-menu-toggle:hover,
+.lessons-menu-toggle[aria-expanded="true"] {
+  border-color: var(--phosphor);
+  background-color: #12271b;
+}
+
+.lessons-menu-toggle[hidden],
+.lessons-menu[hidden] {
+  display: none;
+}
+
+.lessons-menu {
+  inline-size: min(26rem, calc(100% - var(--gutter) - var(--gutter)));
+  max-block-size: clamp(5rem, calc(100vh - 12rem), 24rem);
+  max-block-size: clamp(5rem, calc(100dvh - 12rem), 24rem);
+  margin-inline-start: auto;
+  margin-inline-end: max(var(--gutter), calc((100% - 84rem) / 2));
+  margin-block-end: 0.75rem;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background-color: var(--panel);
+}
+
+.lessons-menu a {
+  display: grid;
+  grid-template-columns: 2ch minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  color: var(--ink);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.lessons-menu a + a {
+  border-block-start: 1px solid var(--line);
+}
+
+.lessons-menu a:hover,
+.lessons-menu a:focus-visible,
+.lessons-menu a[aria-current="page"] {
+  background-color: #12271b;
+}
+
+.lessons-menu-toggle:focus-visible,
+.lessons-menu a:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 2px;
+}
+
+.lessons-menu a:focus-visible {
+  outline-offset: -2px;
+}
+
+.lessons-menu-step {
+  color: var(--phosphor);
+  text-align: end;
+}
+
+.site-footer {
+  padding: 1.25rem var(--gutter);
+  border-top: 1px solid var(--line);
+  background-color: #070f0a;
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+@media (max-width: 56rem) {
+  .header-inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.25rem;
+    min-height: 0;
+    padding-block: 1rem 0.5rem;
+  }
+
+  .brand h1 {
+    overflow-wrap: anywhere;
+  }
+
+  .particle-display {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .lessons-menu-toggle {
+    grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particle-display[data-motion="active"] .particle-still {
+    visibility: visible;
+  }
+
+  .particle-display[data-motion="active"] .particle-canvas {
+    visibility: hidden;
+  }
+}
+
+/* Lesson 10 */
+
+.site-main.calculus-lesson {
+  --calc-plot: #080f1a;
+  --calc-grid: #34465b;
+  --calc-axis: #b6c5d5;
+  --calc-curve: var(--blue);
+  --calc-secant: var(--orange);
+  --calc-tangent: var(--green);
+  --calc-rect: var(--violet);
+  --calc-area: var(--red);
+  --calc-point: var(--yellow);
+  --calc-strip: #ff9ed0;
+
+  display: grid;
+  align-content: start;
+  gap: clamp(1rem, 3vw, 2rem);
+  width: min(calc(100% - var(--gutter) - var(--gutter)), 74rem);
+  margin-inline: auto;
+  padding-block: clamp(1.5rem, 4vw, 3.5rem);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.calculus-lesson [hidden] {
+  display: none !important;
+}
+
+.calculus-lesson :is(h2, h3, h4, p, figure, dl, dd) {
+  margin: 0;
+}
+
+.calculus-lesson :is(h2, h3, h4) {
+  line-height: 1.25;
+}
+
+.calculus-lesson h2 {
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  letter-spacing: -0.06em;
+}
+
+.calculus-lesson h3 {
+  font-size: clamp(1.25rem, 3vw, 1.65rem);
+}
+
+.calculus-lesson h4 {
+  font-size: 1rem;
+}
+
+.calculus-lesson a {
+  color: var(--phosphor);
+  text-underline-offset: 0.2em;
+}
+
+.calculus-lesson :is(a, button, input, select, summary, h4):focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 3px;
+}
+
+.calculus-lesson .lesson-intro {
+  display: grid;
+  gap: 0.75rem;
+  max-inline-size: 76ch;
+}
+
+.calculus-lesson .lesson-kicker {
+  color: var(--phosphor);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.calculus-lesson .lesson-lead {
+  color: var(--phosphor);
+  font-size: clamp(1.0625rem, 2.4vw, 1.375rem);
+  font-weight: 700;
+}
+
+.calculus-lesson .lesson-panel {
+  display: grid;
+  gap: 0.875rem;
+  min-inline-size: 0;
+  padding: clamp(0.875rem, 2.5vw, 1.75rem);
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: linear-gradient(145deg, #0d1b12, var(--panel));
+}
+
+.calculus-lesson .calc-lab {
+  border-block-start: 3px solid transparent;
+  background:
+    linear-gradient(145deg, #0d231d, #111324 75%) padding-box,
+    linear-gradient(90deg, var(--red), var(--orange), var(--yellow),
+      var(--green), var(--blue), var(--violet)) border-box;
+}
+
+.calculus-lesson :is(.lesson-note, figcaption) {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.calculus-lesson .calc-layout {
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.85fr) minmax(0, 1.35fr);
+  align-items: start;
+  gap: clamp(0.875rem, 2.5vw, 1.5rem);
+}
+
+.calculus-lesson :is(
+  .calc-console, .calc-display, .calc-figure, .calc-control-group, .calc-disclosure,
+  .calc-question, .calc-result
+) {
+  display: grid;
+  gap: 0.75rem;
+  min-inline-size: 0;
+}
+
+.calculus-lesson :is(.calc-controls, .calc-readout-panel) {
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: #091410;
+}
+
+.calculus-lesson legend {
+  padding-inline: 0.375rem;
+  color: var(--phosphor);
+  font-weight: 700;
+}
+
+.calculus-lesson .calc-control-grid,
+.calculus-lesson .calc-readouts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.calculus-lesson .calc-controls label:not(.calc-choice) {
+  display: grid;
+  gap: 0.25rem;
+  min-inline-size: 0;
+  font-size: 0.9rem;
+}
+
+.calculus-lesson :is(button, input[type="number"], select, .lesson-next a) {
+  min-block-size: 44px;
+  min-inline-size: 0;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid #4b6c5b;
+  border-radius: 0.375rem;
+  background: #101e18;
+  color: var(--ink);
+  font: inherit;
+}
+
+.calculus-lesson :is(input[type="number"], select) {
+  inline-size: 100%;
+}
+
+.calculus-lesson button {
+  cursor: pointer;
+}
+
+.calculus-lesson :is(button, input, select):disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.calculus-lesson :is(button:not(:disabled), .lesson-next a):hover {
+  border-color: var(--phosphor);
+}
+
+.calculus-lesson input[aria-invalid="true"] {
+  border-color: var(--red);
+}
+
+.calculus-lesson :is(button, a).calc-primary {
+  border-color: #527d63;
+  background: #142d20;
+  color: var(--phosphor);
+  font-weight: 700;
+}
+
+.calculus-lesson :is(.calc-actions, .lesson-next) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.calculus-lesson .lesson-next a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.calculus-lesson .calc-axis-color { color: var(--calc-axis); }
+.calculus-lesson .calc-curve-color { color: var(--calc-curve); }
+.calculus-lesson .calc-secant-color { color: var(--calc-secant); }
+.calculus-lesson .calc-tangent-color { color: var(--calc-tangent); }
+.calculus-lesson .calc-rect-color { color: var(--calc-rect); }
+.calculus-lesson .calc-area-color { color: var(--calc-area); }
+.calculus-lesson .calc-point-color { color: var(--calc-point); }
+.calculus-lesson .calc-strip-color { color: var(--calc-strip); }
+
+.calculus-lesson .calc-viewport {
+  position: relative;
+  isolation: isolate;
+  inline-size: 100%;
+  aspect-ratio: 600 / 440;
+  overflow: hidden;
+  border: 1px solid #66547f;
+  border-radius: 0.5rem;
+  background: var(--calc-plot);
+}
+
+.calculus-lesson :is(.calc-canvas, .calc-graph) {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.calculus-lesson .calc-viewport[data-renderer="webgl"] #calc-geometry {
+  visibility: hidden;
+}
+
+.calculus-lesson .calc-graph text {
+  fill: currentColor;
+  paint-order: stroke;
+  stroke: var(--calc-plot);
+  stroke-width: 3.5;
+  stroke-linejoin: round;
+  font: 700 18px var(--mono);
+}
+
+.calculus-lesson :is(
+  .calc-grid-line, .calc-axis-line, .calc-curve-line, .calc-secant-line, .calc-rise-run-line
+) {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.calculus-lesson .calc-grid-line {
+  stroke: var(--calc-grid);
+  stroke-width: 1;
+}
+
+.calculus-lesson .calc-axis-line {
+  stroke: var(--calc-axis);
+  stroke-width: 1.6;
+}
+
+.calculus-lesson .calc-curve-line {
+  stroke: var(--calc-curve);
+  stroke-width: 3.5;
+}
+
+.calculus-lesson .calc-secant-line {
+  stroke: var(--calc-secant);
+  stroke-width: 2.6;
+}
+
+.calculus-lesson .calc-rise-run-line {
+  stroke: var(--calc-secant);
+  stroke-width: 1.9;
+  stroke-dasharray: 6 4;
+}
+
+.calculus-lesson .calc-point-mark {
+  fill: var(--calc-point);
+  stroke: var(--calc-plot);
+  stroke-width: 1.6;
+}
+
+.calculus-lesson .calc-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.875rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.calculus-lesson .calc-key {
+  display: inline-block;
+  inline-size: 1.15rem;
+  margin-inline-end: 0.125rem;
+  border-block-start: 3px solid currentColor;
+  vertical-align: middle;
+}
+
+.calculus-lesson .calc-key-dashed {
+  border-block-start-style: dashed;
+}
+
+.calculus-lesson :is(.calc-key-outline, .calc-key-fill, .calc-key-point) {
+  block-size: 0.6rem;
+  border: 1px solid currentColor;
+}
+
+.calculus-lesson .calc-key-fill {
+  background-color: currentColor;
+}
+
+.calculus-lesson .calc-key-point {
+  inline-size: 0.6rem;
+  background-color: currentColor;
+  transform: rotate(45deg);
+  margin-inline: 0.2rem 0.35rem;
+}
+
+.calculus-lesson .calc-readouts > div {
+  padding: 0.55rem 0.625rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: #080e0c;
+}
+
+.calculus-lesson .calc-wide {
+  grid-column: 1 / -1;
+}
+
+.calculus-lesson .calc-readouts dt {
+  font-size: 0.8125rem;
+}
+
+.calculus-lesson .calc-readouts dd {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.calculus-lesson .calc-result {
+  padding-block-start: 0.75rem;
+  border-block-start: 1px solid var(--line);
+}
+
+.calculus-lesson summary {
+  min-block-size: 44px;
+  align-content: center;
+  color: var(--phosphor);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.calculus-lesson .calc-disclosure {
+  padding-block-start: 0.75rem;
+}
+
+.calculus-lesson .calc-equation {
+  padding: 0.55rem 0.7rem;
+  border-inline-start: 3px solid var(--line);
+  background: #07110d;
+  font-weight: 700;
+}
+
+.calculus-lesson .calc-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding-inline-start: 1.5rem;
+}
+
+.calculus-lesson .calc-choice {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-block-size: 44px;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.25rem;
+  background: #102018;
+}
+
+.calculus-lesson .calc-choice input {
+  flex: none;
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+  margin: 0;
+  accent-color: var(--phosphor);
+}
+
+.calculus-lesson .calc-feedback:empty {
+  display: none;
+}
+
+.calculus-lesson .calc-feedback:not(:empty) {
+  padding: 0.55rem 0.7rem;
+  border-inline-start: 3px solid var(--phosphor);
+  background: #11241a;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 44rem) {
+  .calculus-lesson .calc-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 25rem) {
+  .calculus-lesson .calc-readouts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* Calculus Arcade */
+
+.site-main.calculus-lesson {
+  --cb-surface: #0b1612;
+}
+
+.calculus-lesson #calculus-arcade {
+  scroll-margin-block-start: 1rem;
+}
+
+.calculus-lesson :is(.cb-body, .cb-station, .cb-figure, .cb-missions, .cb-mission-tools, .cb-station > fieldset) {
+  display: grid;
+  gap: 0.75rem;
+  min-inline-size: 0;
+}
+
+.calculus-lesson .cb-body {
+  padding-block-start: 0.75rem;
+}
+
+.calculus-lesson :is(.cb-arcade, .cb-mission, .cb-math, .cb-mission-tools details) > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem 0.75rem;
+  list-style: none;
+}
+
+.calculus-lesson :is(.cb-arcade, .cb-mission, .cb-math, .cb-mission-tools details) > summary::-webkit-details-marker {
+  display: none;
+}
+
+.calculus-lesson :is(.cb-arcade, .cb-mission, .cb-math, .cb-mission-tools details) > summary::before {
+  content: "+";
+  inline-size: 1ch;
+}
+
+.calculus-lesson :is(.cb-arcade, .cb-mission, .cb-math, .cb-mission-tools details)[open] > summary::before {
+  content: "−";
+}
+
+/* Long mission titles wrap beside the +/− marker instead of dropping below it. */
+.calculus-lesson details.cb-mission > summary {
+  flex-wrap: nowrap;
+}
+
+.calculus-lesson .cb-arcade > summary strong {
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+}
+
+.calculus-lesson .cb-arcade > summary span {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.calculus-lesson .cb-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto auto;
+  align-items: end;
+  gap: 0.75rem;
+  min-inline-size: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--cb-surface);
+}
+
+.calculus-lesson .cb-toolbar label {
+  display: grid;
+  gap: 0.25rem;
+  min-inline-size: 0;
+  font-size: 0.875rem;
+}
+
+/* Keep label text on one line, with the control below it. */
+.calculus-lesson :is(.cb-fields, .cb-matrix) label:not(.cb-check-row) {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: end;
+  gap: 0.25rem 0.3em;
+  min-inline-size: 0;
+  font-size: 0.875rem;
+}
+
+.calculus-lesson :is(.cb-fields, .cb-matrix) label > :is(input, select) {
+  flex: 1 0 100%;
+}
+
+.calculus-lesson :is(.cb-fields, .cb-matrix) label > output {
+  color: var(--cb-accent);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.calculus-lesson #cb-progress {
+  align-self: center;
+  color: var(--phosphor);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.calculus-lesson .cb-toolbar .cb-reduced {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-block-size: 44px;
+  color: var(--muted);
+}
+
+.calculus-lesson :is(.cb-reduced, .cb-check-row) input {
+  flex: none;
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+  margin: 0;
+  accent-color: var(--phosphor);
+}
+
+.calculus-lesson .cb-station {
+  --cb-accent: var(--phosphor);
+  padding: clamp(0.75rem, 2vw, 1.35rem);
+  border: 1px solid var(--line);
+  border-block-start: 3px solid var(--cb-accent);
+  border-radius: 0.6rem;
+  background: var(--cb-surface);
+}
+
+.calculus-lesson [data-cb-accent="blue"] { --cb-accent: var(--blue); }
+.calculus-lesson [data-cb-accent="violet"] { --cb-accent: var(--violet); }
+.calculus-lesson [data-cb-accent="orange"] { --cb-accent: var(--orange); }
+.calculus-lesson [data-cb-accent="green"] { --cb-accent: var(--green); }
+.calculus-lesson [data-cb-accent="yellow"] { --cb-accent: var(--yellow); }
+.calculus-lesson [data-cb-accent="red"] { --cb-accent: var(--red); }
+
+.calculus-lesson .cb-station h4 {
+  color: var(--cb-accent);
+  font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+}
+
+.calculus-lesson .cb-station > fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.calculus-lesson .cb-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+  align-items: end;
+  gap: 0.65rem 0.85rem;
+}
+
+.calculus-lesson .cb-matrix {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 7rem), 1fr));
+  align-items: end;
+  gap: 0.5rem 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-inline: 3px solid var(--cb-accent);
+  border-radius: 0.5rem;
+}
+
+.calculus-lesson .cb-matrix label {
+  color: var(--muted);
+}
+
+.calculus-lesson .cb-button-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.calculus-lesson input.cb-answer {
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 44px;
+  padding: 0.45rem 0.625rem;
+  border: 1px solid #4b6c5b;
+  border-radius: 0.375rem;
+  background: #101e18;
+  color: var(--ink);
+  font: inherit;
+}
+
+.calculus-lesson input.cb-answer:user-invalid {
+  border-color: var(--red);
+}
+
+.calculus-lesson .cb-station input[type="range"] {
+  inline-size: 100%;
+  min-block-size: 44px;
+  margin: 0;
+  accent-color: var(--cb-accent);
+}
+
+.calculus-lesson .cb-check-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-block-size: 44px;
+  font-size: 0.875rem;
+}
+
+.calculus-lesson .cb-readout {
+  padding: 0.5rem 0.7rem;
+  border-inline-start: 3px solid var(--cb-accent);
+  background: #081310;
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.calculus-lesson .cb-readout:empty {
+  display: none;
+}
+
+.calculus-lesson .cb-log {
+  max-block-size: 10rem;
+  margin: 0;
+  overflow: auto;
+  padding-inline-start: 2.2rem;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.calculus-lesson .cb-log:empty {
+  display: none;
+}
+
+.calculus-lesson .cb-worked {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0.6rem 0.75rem 0.6rem 2.2rem;
+  border-inline-start: 3px solid var(--cb-accent);
+  background: #07110d;
+  font-variant-numeric: tabular-nums;
+}
+
+.calculus-lesson .cb-mission {
+  padding: 0.15rem 0.75rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+  background: #0a1410;
+}
+
+.calculus-lesson .cb-mission[open] {
+  border-color: color-mix(in srgb, var(--cb-accent) 55%, var(--line));
+}
+
+.calculus-lesson .cb-mission > :not(summary) {
+  margin-block-start: 0.65rem;
+}
+
+.calculus-lesson .cb-mission [data-cb-done] {
+  margin-inline-start: auto;
+  color: var(--green);
+  font-size: 0.875rem;
+}
+
+.calculus-lesson .cb-mission-tools > button {
+  justify-self: start;
+}
+
+.calculus-lesson .cb-mission-tools ol {
+  margin: 0;
+  padding-inline-start: 1.25rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.calculus-lesson .cb-mission-tools details > summary {
+  font-size: 0.875rem;
+}
+
+.calculus-lesson .cb-mission-tools details p {
+  margin-block-start: 0.4rem;
+  padding: 0.5rem 0.7rem;
+  border-inline-start: 3px solid var(--line);
+  background: #07110d;
+  font-size: 0.875rem;
+}
+
+.calculus-lesson .cb-math > p {
+  margin-block-start: 0.5rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.calculus-lesson .cb-figure figcaption {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.calculus-lesson .cb-viewport {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  inline-size: 100%;
+  aspect-ratio: 14 / 9;
+  border: 1px solid #66547f;
+  border-radius: 0.5rem;
+  background: var(--calc-plot);
+  touch-action: pan-y;
+}
+
+.calculus-lesson .cb-viewport[data-space="true"] {
+  cursor: grab;
+}
+
+.calculus-lesson :is(.cb-canvas, .cb-diagram) {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.calculus-lesson .cb-viewport[data-renderer="webgl"] [data-cb-geometry] {
+  visibility: hidden;
+}
+
+.calculus-lesson .cb-diagram text {
+  paint-order: stroke;
+  stroke: var(--calc-plot);
+  stroke-width: 3.5;
+  stroke-linejoin: round;
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.calculus-lesson .cb-diagram text.cb-label-small {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.calculus-lesson .cb-sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 42rem) {
+  .calculus-lesson .cb-toolbar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

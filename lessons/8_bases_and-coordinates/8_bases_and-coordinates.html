@@ -1,0 +1,1397 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Keep a vector fixed, change its basis, and reconstruct the same arrow in the Basis Translator.">
+  <title>Bases and Coordinates | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css?v=8-basis-arcade">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+  <script type="module" src="./scripts/lesson.js?v=8-basis-arcade"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)"
+                  stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none"
+                   stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8"
+                stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none"
+                   stroke="url(#logo-spectrum)" stroke-width="1.6"
+                   transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none"
+                stroke="#edffef" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static"
+             viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse"
+                  x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 464 83"/>
+            <path class="track-violet" d="M218 54C265 80 333 97 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M218 46v16m-8-8h16"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button"
+              aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="./8_bases_and-coordinates.html" aria-current="page"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="../22_the_one_dimensional_schrodinger_equation/22_the_one_dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="../25_the_harmonic_oscillator/25_the_harmonic_oscillator.html"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main basis-lesson" aria-labelledby="basis-title">
+    <header class="lesson-intro">
+      <p class="lesson-kicker">Lesson 08 · Change of basis</p>
+      <h2 id="basis-title">Bases and Coordinates</h2>
+      <p class="lesson-lead">How can the same arrow have coordinates (3, 2) in one basis and (1, 2) in another?</p>
+      <p>Picture a target arrow <strong class="basis-target">v</strong> whose tip is three units right and two units up from the origin. The standard basis <var>E</var> is the ordered pair (<b>e</b><sub>1</sub>, <b>e</b><sub>2</sub>), with a one-unit arrow to the right followed by a one-unit arrow up. The label [<b>v</b>]<sub>E</sub> = (3, 2) records how many copies of each standard arrow reach the target. <b>v</b> names the vector. The subscript names the basis used to describe it.</p>
+      <p>Keep the target at (3, 2). Now try steps along a horizontal arrow and a diagonal arrow. How many of each do you need?</p>
+      <p><a id="ba-arcade-link" href="#basis-arcade">Open the optional Basis Arcade</a></p>
+    </header>
+
+    <section class="lesson-panel basis-lab" id="basis-lab" aria-labelledby="basis-lab-title">
+      <h3 id="basis-lab-title">Basis Translator</h3>
+      <p>Try a basis preset first. Predict the coefficients, then reveal the head-to-tail steps. The square reference grid stays visible while the basis changes.</p>
+      <p class="lesson-note" id="basis-static-note">The diagram shows a static worked example. Interactive controls become available when the lesson script is installed.</p>
+
+      <div class="basis-layout">
+        <div class="basis-console">
+          <fieldset class="basis-controls" id="basis-controls" disabled>
+            <legend>Choose the arrows</legend>
+
+            <div class="basis-control-group">
+              <label for="basis-preset">Basis preset</label>
+              <select id="basis-preset">
+                <option value="standard">Standard · right and up</option>
+                <option value="skew" selected>Skew · right and diagonal</option>
+                <option value="rotated">Rotated · up and left</option>
+                <option value="scaled">Scaled · two units right and one up</option>
+                <option value="dependent">Dependent · both horizontal</option>
+                <option value="zero-arrow">Dependent · second arrow is zero</option>
+                <option value="custom" disabled>Custom arrows</option>
+              </select>
+            </div>
+
+            <div class="basis-control-group" role="group" aria-labelledby="basis-target-label">
+              <h4 id="basis-target-label" class="basis-target">Target v in the standard frame</h4>
+              <div class="basis-input-pair">
+                <label for="basis-target-x">Target <var>x</var>
+                  <input id="basis-target-x" type="number" min="-4" max="4" step="0.5" value="3" required>
+                </label>
+                <label for="basis-target-y">Target <var>y</var>
+                  <input id="basis-target-y" type="number" min="-4" max="4" step="0.5" value="2" required>
+                </label>
+              </div>
+              <div class="basis-button-row">
+                <button type="button" data-basis-target="opening">Set (3, 2)</button>
+                <button type="button" data-basis-target="on-line">Set (3, 0)</button>
+                <button type="button" data-basis-target="zero">Set (0, 0)</button>
+              </div>
+            </div>
+
+            <div class="basis-control-group" role="group" aria-labelledby="basis-arrows-label">
+              <h4 id="basis-arrows-label">Basis arrows in the standard frame</h4>
+              <div class="basis-input-pair basis-first">
+                <label for="basis-b1-x">b₁ <var>x</var>
+                  <input id="basis-b1-x" type="number" min="-3" max="3" step="0.5" value="1" required>
+                </label>
+                <label for="basis-b1-y">b₁ <var>y</var>
+                  <input id="basis-b1-y" type="number" min="-3" max="3" step="0.5" value="0" required>
+                </label>
+              </div>
+              <div class="basis-input-pair basis-second">
+                <label for="basis-b2-x">b₂ <var>x</var>
+                  <input id="basis-b2-x" type="number" min="-3" max="3" step="0.5" value="1" required>
+                </label>
+                <label for="basis-b2-y">b₂ <var>y</var>
+                  <input id="basis-b2-y" type="number" min="-3" max="3" step="0.5" value="1" required>
+                </label>
+              </div>
+              <p class="lesson-note" id="basis-input-help">Edit components in half-unit increments. Basis edits leave the target in place.</p>
+              <div class="basis-button-row">
+                <button id="basis-swap" type="button">Swap b₁ and b₂</button>
+                <button id="basis-reset" type="button">Reset lab</button>
+              </div>
+            </div>
+
+            <label class="basis-check" for="basis-grid-toggle">
+              <input id="basis-grid-toggle" type="checkbox" checked>
+              Show the basis-aligned grid
+            </label>
+          </fieldset>
+
+          <form id="basis-prediction">
+            <fieldset class="basis-controls" id="basis-prediction-controls" disabled>
+              <legend>Predict the coefficients</legend>
+              <p class="lesson-note">For a valid basis, how many copies of each arrow reach the target? A negative coefficient reverses the direction of that step.</p>
+              <div class="basis-input-pair">
+                <label class="basis-first" for="basis-guess-c1">c₁ along b₁
+                  <input id="basis-guess-c1" type="number" step="any" inputmode="decimal" required>
+                </label>
+                <label class="basis-second" for="basis-guess-c2">c₂ along b₂
+                  <input id="basis-guess-c2" type="number" step="any" inputmode="decimal" required>
+                </label>
+              </div>
+              <div class="basis-button-row">
+                <button class="basis-primary" type="submit">Check and reveal</button>
+                <button id="basis-reveal" type="button">Reveal steps</button>
+              </div>
+              <p class="lesson-note">For nonterminating decimals, enter at least three decimal places.</p>
+              <p id="basis-prediction-feedback" class="basis-feedback" role="status"></p>
+            </fieldset>
+          </form>
+        </div>
+
+        <div class="basis-display">
+          <figure class="basis-figure" aria-labelledby="basis-figure-caption">
+            <div class="basis-viewport" id="basis-viewport" data-renderer="svg">
+              <canvas id="basis-canvas" class="basis-canvas" aria-hidden="true" hidden></canvas>
+              <svg id="basis-svg" class="basis-svg" viewBox="0 0 420 420" role="img"
+                   aria-labelledby="basis-svg-title basis-svg-desc"
+                   data-origin-x="210" data-origin-y="210" data-unit-px="30">
+                <title id="basis-svg-title">Basis Translator diagram</title>
+                <desc id="basis-svg-desc">The target ends at (3, 2) on the square reference grid. From the origin, one step along b₁ goes right to (1, 0). Two steps along diagonal b₂ reach the target. Its coordinates in the skew basis are (1, 2).</desc>
+                <defs>
+                  <clipPath id="basis-plot-clip">
+                    <rect x="30" y="30" width="360" height="360"/>
+                  </clipPath>
+                  <pattern id="basis-square-pattern" x="210" y="210" width="30" height="30" patternUnits="userSpaceOnUse">
+                    <path class="basis-square-line" d="M0 30V0H30"/>
+                  </pattern>
+                  <pattern id="basis-skew-pattern" width="30" height="30" patternUnits="userSpaceOnUse"
+                           patternTransform="matrix(1 0 -1 1 210 210)">
+                    <path class="basis-oblique-line" d="M0 30V0"/>
+                  </pattern>
+                  <marker id="basis-tip-target" markerWidth="10" markerHeight="10" refX="9" refY="5"
+                          orient="auto" markerUnits="userSpaceOnUse">
+                    <path class="basis-target-tip" d="M0 0 10 5 0 10Z"/>
+                  </marker>
+                  <marker id="basis-tip-first" markerWidth="10" markerHeight="10" refX="9" refY="5"
+                          orient="auto" markerUnits="userSpaceOnUse">
+                    <path class="basis-first-tip" d="M0 0 10 5 0 10Z"/>
+                  </marker>
+                  <marker id="basis-tip-second" markerWidth="10" markerHeight="10" refX="9" refY="5"
+                          orient="auto" markerUnits="userSpaceOnUse">
+                    <path class="basis-second-tip" d="M0 0 10 5 0 10Z"/>
+                  </marker>
+                  <marker id="basis-tip-step-first" markerWidth="12" markerHeight="12" refX="11" refY="6"
+                          orient="auto" markerUnits="userSpaceOnUse">
+                    <path class="basis-step-first" d="M1 1 11 6 1 11"/>
+                  </marker>
+                  <marker id="basis-tip-step-second" markerWidth="12" markerHeight="12" refX="11" refY="6"
+                          orient="auto" markerUnits="userSpaceOnUse">
+                    <path class="basis-step-second" d="M1 1 11 6 1 11"/>
+                  </marker>
+                </defs>
+
+                <g id="basis-svg-geometry">
+                  <rect x="30" y="30" width="360" height="360" fill="url(#basis-square-pattern)"/>
+                  <g id="basis-svg-lattice" clip-path="url(#basis-plot-clip)">
+                    <rect x="30" y="30" width="360" height="360" fill="url(#basis-skew-pattern)"/>
+                  </g>
+                  <path class="basis-axes" d="M25 210H397m-6-5 6 5-6 5M210 395V23m-5 6 5-6 5 6"/>
+                  <g id="basis-svg-arrows">
+                    <path class="basis-arrow-target" d="M210 210 300 150" marker-end="url(#basis-tip-target)"/>
+                    <path class="basis-arrow-first" d="M210 210 240 210" marker-end="url(#basis-tip-first)"/>
+                    <path class="basis-arrow-second" d="M210 210 240 180" marker-end="url(#basis-tip-second)"/>
+                  </g>
+                  <g id="basis-svg-steps">
+                    <path class="basis-step-first basis-step" d="M210 210 240 210" marker-end="url(#basis-tip-step-first)"/>
+                    <path class="basis-step-second basis-step" d="M240 210 300 150" marker-end="url(#basis-tip-step-second)"/>
+                  </g>
+                </g>
+
+                <g id="basis-svg-axes-labels" class="basis-axis-label">
+                  <text x="405" y="214">x</text>
+                  <text x="220" y="24">y</text>
+                  <text x="195" y="229">0</text>
+                  <text y="228" text-anchor="middle">
+                    <tspan x="90">−4</tspan><tspan x="150">−2</tspan><tspan x="270">2</tspan><tspan x="330">4</tspan>
+                  </text>
+                  <text x="199" text-anchor="end">
+                    <tspan x="199" y="94">4</tspan><tspan x="199" y="154">2</tspan>
+                    <tspan x="199" y="274">−2</tspan><tspan x="199" y="334">−4</tspan>
+                  </text>
+                </g>
+
+                <g id="basis-svg-labels">
+                  <circle class="basis-target-point" cx="300" cy="150" r="4"/>
+                  <text class="basis-target" x="309" y="140">[v]ₑ (3, 2)</text>
+                  <text class="basis-target" x="309" y="158">[v]ʙ (1, 2)</text>
+                  <text class="basis-first" x="224" y="247">b₁</text>
+                  <text class="basis-second" x="241" y="173">b₂</text>
+                  <text class="basis-first" x="219" y="202">1b₁</text>
+                  <text class="basis-second" x="276" y="197">2b₂</text>
+                </g>
+              </svg>
+            </div>
+
+            <figcaption id="basis-figure-caption">Front-on view. Both axes use the same standard-unit scale. The gold dot marks the target endpoint.</figcaption>
+            <ul class="basis-legend" aria-label="Diagram legend">
+              <li><span class="basis-key basis-target" aria-hidden="true"></span> Target <b>v</b></li>
+              <li><span class="basis-key basis-first" aria-hidden="true"></span> First arrow <b>b</b><sub>1</sub></li>
+              <li><span class="basis-key basis-second" aria-hidden="true"></span> Second arrow <b>b</b><sub>2</sub></li>
+              <li><span class="basis-key basis-dashed" aria-hidden="true"></span> Scaled steps</li>
+            </ul>
+          </figure>
+
+          <dl class="basis-readouts" aria-label="Basis Translator readings">
+            <div>
+              <dt class="basis-target">Standard coordinates [<b>v</b>]<sub>E</sub></dt>
+              <dd id="basis-standard-readout">(3, 2)</dd>
+            </div>
+            <div>
+              <dt class="basis-first">First arrow [<b>b</b><sub>1</sub>]<sub>E</sub></dt>
+              <dd id="basis-first-readout">(1, 0)</dd>
+            </div>
+            <div>
+              <dt class="basis-second">Second arrow [<b>b</b><sub>2</sub>]<sub>E</sub></dt>
+              <dd id="basis-second-readout">(1, 1)</dd>
+            </div>
+            <div class="basis-result">
+              <dt class="basis-target">Active coordinates [<b>v</b>]<sub>B</sub></dt>
+              <dd id="basis-active-readout">(1, 2)</dd>
+            </div>
+            <div class="basis-result">
+              <dt>Signed area <var>D</var></dt>
+              <dd id="basis-area-readout">1</dd>
+            </div>
+            <div class="basis-result">
+              <dt>Reconstruction in standard units</dt>
+              <dd id="basis-reconstruction-readout"><span class="basis-first">1(1, 0)</span> + <span class="basis-second">2(1, 1)</span> = <span class="basis-target">(3, 2)</span></dd>
+            </div>
+          </dl>
+          <p id="basis-status" class="basis-feedback" role="status">Two non-collinear arrows give one unique coefficient pair.</p>
+        </div>
+      </div>
+    </section>
+
+    <details class="lesson-panel">
+      <summary>Work through the opening example</summary>
+      <div class="basis-disclosure">
+        <p>In the skew basis <var>B</var>, the first arrow <b class="basis-first">b₁</b> is one standard unit to the right. The second arrow <b class="basis-second">b₂</b> is one unit right and one unit up. To gain two units of height, take two copies of <b class="basis-second">b₂</b>. They contribute (2, 2). One copy of <b class="basis-first">b₁</b> supplies the remaining (1, 0).</p>
+        <p class="basis-equation"><span class="basis-target">[v]<sub>E</sub> = (3, 2)</span> · <span class="basis-target">[v]<sub>B</sub> = (1, 2)</span></p>
+        <p class="basis-equation"><span class="basis-target">v</span> = <span class="basis-first">1b₁</span> + <span class="basis-second">2b₂</span></p>
+        <p>The diagram starts with the horizontal step and ends with the diagonal step. Either order of adding the two steps gives the same sum. In the coordinate label, the first slot always belongs to the first arrow of the ordered basis.</p>
+      </div>
+    </details>
+
+    <section class="lesson-panel" aria-labelledby="basis-rules-title">
+      <h3 id="basis-rules-title">What makes two arrows a basis?</h3>
+      <p>Try the Rotated and Scaled presets while keeping the target fixed. With Rotated, the arrows point up and left. The pair (2, −3) means two steps up and three steps opposite the left-pointing arrow. With Scaled, the right-pointing arrow is twice as long, so (1.5, 2) reaches the same target.</p>
+      <dl class="basis-definitions">
+        <div>
+          <dt>Spanning</dt>
+          <dd>By scaling and adding the arrows, you can reach every target on the plane.</dd>
+        </div>
+        <div>
+          <dt>Linear independence</dt>
+          <dd>Only the combination with both coefficients zero gives the zero vector. If two pairs reached the same target, subtracting their combinations would give zero, so the pairs must agree.</dd>
+        </div>
+      </dl>
+      <p>Two arrows form a basis of the plane when they span it and are linearly independent. Here, that means two nonzero arrows that are non-collinear. Their lengths can differ, and they can meet at an oblique angle.</p>
+      <p>Switch back to Skew and follow the slanted grid. The coefficient along <b class="basis-first">b₁</b> is what remains after the diagonal step contributes to both standard components. For this target, the perpendicular projection onto the horizontal arrow has length 3, while the coefficient along that one-unit arrow is 1. The head-to-tail steps show how both arrows contribute.</p>
+    </section>
+
+    <details class="lesson-panel">
+      <summary>Recover the coefficients with two equations</summary>
+      <div class="basis-disclosure">
+        <p class="basis-equation"><span class="basis-target">v</span> = <span class="basis-first">c₁b₁</span> + <span class="basis-second">c₂b₂</span></p>
+        <p><b class="basis-target">v</b> is the target vector. <b class="basis-first">b₁</b> and <b class="basis-second">b₂</b> are the first and second basis arrows. The real numbers <var>c</var><sub>1</sub> and <var>c</var><sub>2</sub> are the unitless multipliers. Write the standard-frame components of the arrows as (<var>b</var><sub>1x</sub>, <var>b</var><sub>1y</sub>) and (<var>b</var><sub>2x</sub>, <var>b</var><sub>2y</sub>), and the target as (<var>v</var><sub>x</sub>, <var>v</var><sub>y</sub>). Each component is measured in standard grid units.</p>
+        <p>When two vectors agree, their standard horizontal components agree and their standard vertical components agree. Equating those components gives</p>
+        <p class="basis-equation">b<sub>1x</sub>c₁ + b<sub>2x</sub>c₂ = v<sub>x</sub><br>
+          b<sub>1y</sub>c₁ + b<sub>2y</sub>c₂ = v<sub>y</sub></p>
+        <p>For the opening example, these equations reduce to <var>c</var><sub>1</sub> + <var>c</var><sub>2</sub> = 3 and <var>c</var><sub>2</sub> = 2. Substituting 2 in the first equation gives <var>c</var><sub>1</sub> = 1. Substituting both back gives 1(1, 0) + 2(1, 1) = (3, 2).</p>
+        <p>In the general case, multiplying the first equation by <var>b</var><sub>2y</sub> and subtracting the second multiplied by <var>b</var><sub>2x</sub> eliminates <var>c</var><sub>2</sub>. The factor multiplying <var>c</var><sub>1</sub> is the signed area of the parallelogram formed by the two arrows.</p>
+        <p class="basis-equation">D = b<sub>1x</sub>b<sub>2y</sub> − b<sub>1y</sub>b<sub>2x</sub></p>
+        <p>Either sign of <var>D</var> gives a valid basis when the area is nonzero. Swapping the arrows reverses the sign. When the area is zero, the arrows cannot span the plane. For <var>D</var> ≠ 0, eliminating each coefficient in turn gives</p>
+        <p class="basis-equation">c₁ = (v<sub>x</sub>b<sub>2y</sub> − v<sub>y</sub>b<sub>2x</sub>) / D<br>
+          c₂ = (b<sub>1x</sub>v<sub>y</sub> − b<sub>1y</sub>v<sub>x</sub>) / D</p>
+      </div>
+    </details>
+
+    <section class="lesson-panel" aria-labelledby="basis-dependent-title">
+      <h3 id="basis-dependent-title">When two arrows fail to form a basis</h3>
+      <p>Choose Dependent with target (3, 2). The two arrows (1, 0) and (2, 0) lie on the horizontal axis. Every combination stays at height zero, so that target is unreachable.</p>
+      <p>Now set the target to (3, 0). The pairs (3, 0) and (1, 1) both work because 3 + 2·0 = 1 + 2·1 = 3. Any real second coefficient <var>c</var><sub>2</sub> works if you choose the first to be 3 − 2<var>c</var><sub>2</sub>. The target is reachable in infinitely many ways, so there is no unique coordinate pair in these arrows.</p>
+      <p>Try the zero-arrow preset. Its second arrow contributes zero at every coefficient. With two zero arrows, only the zero target is reachable, and every pair gives it. With a valid basis, the zero target has exactly one pair, (0, 0).</p>
+    </section>
+
+    <section class="lesson-panel" id="basis-challenge" aria-labelledby="basis-challenge-title">
+      <h3 id="basis-challenge-title">Check your understanding</h3>
+      <p>Give one answer at a time. You can test any of these questions in the lab before trying again.</p>
+      <form id="basis-challenge-form">
+        <fieldset class="basis-controls" id="basis-challenge-controls" disabled>
+          <legend>Basis challenge</legend>
+
+          <div class="basis-question" data-basis-question="swap" role="radiogroup"
+               aria-labelledby="basis-question-swap">
+            <h4 id="basis-question-swap" tabindex="-1">1 of 3 · The skew pair is (1, 2). What happens when you swap b₁ and b₂ while keeping the target fixed?</h4>
+            <label class="basis-check"><input type="radio" name="basis-swap-answer" value="same"> The pair stays (1, 2).</label>
+            <label class="basis-check"><input type="radio" name="basis-swap-answer" value="reverse"> The pair becomes (2, 1).</label>
+            <label class="basis-check"><input type="radio" name="basis-swap-answer" value="negative"> The pair becomes (−1, −2).</label>
+          </div>
+
+          <div class="basis-question" data-basis-question="dependent" role="radiogroup"
+               aria-labelledby="basis-question-dependent" hidden>
+            <h4 id="basis-question-dependent" tabindex="-1">2 of 3 · With arrows (1, 0) and (2, 0), what can you reach?</h4>
+            <label class="basis-check"><input type="radio" name="basis-dependent-answer" value="neither"> Neither (3, 2) nor (3, 0).</label>
+            <label class="basis-check"><input type="radio" name="basis-dependent-answer" value="one"> Only (3, 0), with one coefficient pair.</label>
+            <label class="basis-check"><input type="radio" name="basis-dependent-answer" value="many"> Only (3, 0), with infinitely many coefficient pairs.</label>
+          </div>
+
+          <div class="basis-question" data-basis-question="zero" role="radiogroup"
+               aria-labelledby="basis-question-zero" hidden>
+            <h4 id="basis-question-zero" tabindex="-1">3 of 3 · In a valid basis, which coefficients reach the zero target?</h4>
+            <label class="basis-check"><input type="radio" name="basis-zero-answer" value="only"> Only (0, 0).</label>
+            <label class="basis-check"><input type="radio" name="basis-zero-answer" value="opposite"> Every pair of opposite numbers.</label>
+            <label class="basis-check"><input type="radio" name="basis-zero-answer" value="all"> Every pair of numbers.</label>
+          </div>
+
+          <div class="basis-button-row">
+            <button class="basis-primary" id="basis-challenge-check" type="submit">Check answer</button>
+            <button id="basis-challenge-next" type="button" hidden>Next question</button>
+            <button id="basis-challenge-restart" type="button" hidden>Try the challenge again</button>
+          </div>
+          <p id="basis-challenge-feedback" class="basis-feedback" role="status"></p>
+        </fieldset>
+      </form>
+    </section>
+
+    <section class="lesson-panel" aria-labelledby="basis-bridge-title">
+      <h3 id="basis-bridge-title">From basis arrows to matrices</h3>
+      <p>Put the standard components of <b class="basis-first">b₁</b> in the first column of a matrix and those of <b class="basis-second">b₂</b> in the second. Multiplying that matrix by the column of coefficients gives the target’s standard components. The top row adds the horizontal contributions and the bottom row adds the vertical ones.</p>
+      <p>Later, you’ll describe a quantum state in different bases in a more abstract vector space. The same distinction will matter. The state is the object, and its coordinates tell you how to express it in the basis you chose.</p>
+    </section>
+
+    <details class="lesson-panel ba-arcade" id="basis-arcade">
+      <summary><strong>Basis Arcade</strong><span>Optional practice</span></summary>
+      <div class="ba-body">
+        <p>Pick a station, try its controls, and open a mission when you’re ready. Each mission has two hints. Progress lasts while this page is open.</p>
+        <p class="lesson-note" id="ba-tolerance">Answer boxes accept whole numbers, decimals, fractions such as −2/3, and square roots such as 1/√2 or √2/2. Answers that end as decimals, such as 2 or −1.5, are checked exactly. Answers such as 1/3 or √2 can be typed exactly, or as decimals within 0.002 of the exact value.</p>
+        <div class="ba-toolbar">
+          <label for="ba-station">Station
+            <select id="ba-station" aria-controls="ba-panels" disabled>
+              <option value="decoder">1 · Coordinate Decoder</option>
+              <option value="navigator">2 · Warped Grid Navigator</option>
+              <option value="encoder">3 · Encoder</option>
+              <option value="names">4 · One Arrow, Many Names</option>
+              <option value="inspector">5 · Basis Inspector + Reachability</option>
+              <option value="area">6 · Signed Area + Order Matters</option>
+              <option value="designer">7 · Basis Designer</option>
+              <option value="relay">8 · Basis-to-Basis Relay</option>
+              <option value="ortho">9 · Orthonormal Shortcut</option>
+              <option value="quantum">10 · Quantum Basis Preview</option>
+              <option value="coplanar">11 · 3D Coplanar Trap</option>
+              <option value="lattice">12 · Integer Lattice Challenge</option>
+              <option value="detective">13 · Error Detective</option>
+              <option value="poly">14 · Abstract Vectors Preview</option>
+            </select>
+          </label>
+          <p id="ba-progress" role="status">0 of 57 missions completed this session.</p>
+          <button id="ba-reset" type="button" disabled>Reset this station</button>
+          <label class="ba-reduced" for="ba-reduced"><input id="ba-reduced" type="checkbox" disabled> Reduced effects</label>
+        </div>
+        <p class="lesson-note" id="ba-status" role="status"></p>
+        <p><a href="#basis-lab">Return to the Basis Translator</a></p>
+        <noscript><p class="lesson-note">JavaScript runs the arcade diagrams, controls, and mission checks.</p></noscript>
+
+        <div id="ba-panels">
+          <section class="ba-station" data-ba-station="decoder" data-ba-accent="blue" aria-labelledby="ba-decoder-title">
+            <h4 id="ba-decoder-title">Coordinate Decoder</h4>
+            <p>Each card gives a basis and a target <b>v</b> in the standard frame. Solve the two component equations for <var>c</var><sub>1</sub> and <var>c</var><sub>2</sub>, then draw your combination to see where it lands. This diagram has no basis grid, so you have to work the answer out from the equations.</p>
+            <div data-ba-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ba-sr-only">Coordinate Decoder controls</legend>
+              <p class="ba-readout" data-ba-read="state">b₁ = (2, 1) · b₂ = (1, 1) · [v]<sub>E</sub> = (5, 3)</p>
+              <div class="ba-missions">
+                <details class="ba-mission" data-ba-mission="decoder-skew">
+                  <summary>Decode a skew pair<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>b₁ = (2, 1), b₂ = (1, 1), and [<b>v</b>]<sub>E</sub> = (5, 3). Find [<b>v</b>]<sub>B</sub> = (<var>c</var><sub>1</sub>, <var>c</var><sub>2</sub>).</p>
+                  <div class="ba-fields">
+                    <label>c₁ <input class="ba-answer" type="text" name="skew-c1" autocomplete="off" spellcheck="false" required></label>
+                    <label>c₂ <input class="ba-answer" type="text" name="skew-c2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="ba-button-row">
+                    <button type="button" data-ba-action="draw">Draw my combination</button>
+                    <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                  </div>
+                </details>
+                <details class="ba-mission" data-ba-mission="decoder-negative">
+                  <summary>Decode with a negative area<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>b₁ = (1, 2), b₂ = (3, 1), and [<b>v</b>]<sub>E</sub> = (−1, 3). Here <var>D</var> is negative. Find [<b>v</b>]<sub>B</sub>.</p>
+                  <div class="ba-fields">
+                    <label>c₁ <input class="ba-answer" type="text" name="negative-c1" autocomplete="off" spellcheck="false" required></label>
+                    <label>c₂ <input class="ba-answer" type="text" name="negative-c2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="ba-button-row">
+                    <button type="button" data-ba-action="draw">Draw my combination</button>
+                    <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                  </div>
+                </details>
+                <details class="ba-mission" data-ba-mission="decoder-fraction">
+                  <summary>Decode a fractional pair<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>b₁ = (2, 1), b₂ = (1, 2), and [<b>v</b>]<sub>E</sub> = (1, 1). The coefficients are not whole numbers. Type fractions or decimals.</p>
+                  <div class="ba-fields">
+                    <label>c₁ <input class="ba-answer" type="text" name="fraction-c1" autocomplete="off" spellcheck="false" required></label>
+                    <label>c₂ <input class="ba-answer" type="text" name="fraction-c2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="ba-button-row">
+                    <button type="button" data-ba-action="draw">Draw my combination</button>
+                    <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                  </div>
+                </details>
+                <details class="ba-mission" data-ba-mission="decoder-vertical">
+                  <summary>Decode with a vertical first arrow<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>b₁ = (0, 2), b₂ = (3, 1), and [<b>v</b>]<sub>E</sub> = (6, 4). Find [<b>v</b>]<sub>B</sub>.</p>
+                  <div class="ba-fields">
+                    <label>c₁ <input class="ba-answer" type="text" name="vertical-c1" autocomplete="off" spellcheck="false" required></label>
+                    <label>c₂ <input class="ba-answer" type="text" name="vertical-c2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="ba-button-row">
+                    <button type="button" data-ba-action="draw">Draw my combination</button>
+                    <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                  </div>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ba-math">
+              <summary>Show the math</summary>
+              <p>Equate components: b<sub>1x</sub>c₁ + b<sub>2x</sub>c₂ = v<sub>x</sub> and b<sub>1y</sub>c₁ + b<sub>2y</sub>c₂ = v<sub>y</sub>. With D = b<sub>1x</sub>b<sub>2y</sub> − b<sub>1y</sub>b<sub>2x</sub> ≠ 0, the solution is c₁ = (v<sub>x</sub>b<sub>2y</sub> − v<sub>y</sub>b<sub>2x</sub>) / D and c₂ = (b<sub>1x</sub>v<sub>y</sub> − b<sub>1y</sub>v<sub>x</sub>) / D. Substitute your pair back into c₁b₁ + c₂b₂ to check it.</p>
+            </details>
+          </section>
+
+          <section class="ba-station" data-ba-station="navigator" data-ba-accent="green" aria-labelledby="ba-navigator-title" hidden>
+            <h4 id="ba-navigator-title">Warped Grid Navigator</h4>
+            <p>The lattice is built from b₁ = (2, 1) and b₂ = (−1, 1). Every move is one whole step forward or backward along a basis arrow. Steer the token by eye using the slanted grid.</p>
+            <div data-ba-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ba-sr-only">Warped Grid Navigator controls</legend>
+              <div class="ba-pad" role="group" aria-label="Step along a basis arrow">
+                <button class="ba-first-button" type="button" data-ba-action="step" data-ba-step="b1+">Step +b₁</button>
+                <button class="ba-first-button" type="button" data-ba-action="step" data-ba-step="b1-">Step −b₁</button>
+                <button class="ba-second-button" type="button" data-ba-action="step" data-ba-step="b2+">Step +b₂</button>
+                <button class="ba-second-button" type="button" data-ba-action="step" data-ba-step="b2-">Step −b₂</button>
+              </div>
+              <div class="ba-button-row">
+                <button type="button" data-ba-action="undo">Undo last step</button>
+                <button type="button" data-ba-action="home">Back to the origin</button>
+              </div>
+              <p class="ba-readout" data-ba-read="state" aria-live="polite">Token at (0, 0) · no steps yet.</p>
+              <div class="ba-missions">
+                <details class="ba-mission" data-ba-mission="navigator-star">
+                  <summary>Land on the star<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Steer the token onto the gold star. Use the grid lines rather than coordinates.</p>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="navigator-backward">
+                  <summary>Fly backward<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Reach the ring at (−3, 0). Your route must include at least one −b₁ step.</p>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="navigator-fewest">
+                  <summary>Take the shortest route<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Go back to the origin, then reach the ring at (4, 5) in as few steps as possible.</p>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="navigator-loop">
+                  <summary>Close a loop<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Take at least four steps, using both arrows, and finish back at the origin. Then look at the net step count.</p>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ba-math">
+              <summary>Show the math</summary>
+              <p>After any route, the token sits at n₁b₁ + n₂b₂, where n₁ and n₂ are the net step counts. For a valid basis those net counts are unique, so they are the coordinates [<b>v</b>]<sub>B</sub>. Any route to a node takes at least |n₁| + |n₂| steps, and only the zero net count returns to the origin.</p>
+            </details>
+          </section>
+
+          <section class="ba-station" data-ba-station="encoder" data-ba-accent="orange" aria-labelledby="ba-encoder-title" hidden>
+            <h4 id="ba-encoder-title">Encoder</h4>
+            <p>Run the decoder in reverse. Each card gives a basis and the coordinates [<b>v</b>]<sub>B</sub>. Find the standard coordinates [<b>v</b>]<sub>E</sub>, then plot your point.</p>
+            <div data-ba-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ba-sr-only">Encoder controls</legend>
+              <p class="ba-readout" data-ba-read="state">b₁ = (2, 1) · b₂ = (−1, 3) · [v]<sub>B</sub> = (2, 1)</p>
+              <div class="ba-missions">
+                <details class="ba-mission" data-ba-mission="encoder-basic">
+                  <summary>Encode a pair<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>b₁ = (2, 1), b₂ = (−1, 3), and [<b>v</b>]<sub>B</sub> = (2, 1). Find [<b>v</b>]<sub>E</sub>.</p>
+                  <div class="ba-fields">
+                    <label><var>x</var> <input class="ba-answer" type="text" name="basic-x" autocomplete="off" spellcheck="false" required></label>
+                    <label><var>y</var> <input class="ba-answer" type="text" name="basic-y" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="ba-button-row">
+                    <button type="button" data-ba-action="plot">Plot my answer</button>
+                    <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                  </div>
+                </details>
+                <details class="ba-mission" data-ba-mission="encoder-negative">
+                  <summary>Encode a backward step<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>b₁ = (1, 2), b₂ = (3, −1), and [<b>v</b>]<sub>B</sub> = (−2, 1). Find [<b>v</b>]<sub>E</sub>.</p>
+                  <div class="ba-fields">
+                    <label><var>x</var> <input class="ba-answer" type="text" name="negative-x" autocomplete="off" spellcheck="false" required></label>
+                    <label><var>y</var> <input class="ba-answer" type="text" name="negative-y" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="ba-button-row">
+                    <button type="button" data-ba-action="plot">Plot my answer</button>
+                    <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                  </div>
+                </details>
+                <details class="ba-mission" data-ba-mission="encoder-half">
+                  <summary>Encode half steps<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>b₁ = (4, 2), b₂ = (−2, 6), and [<b>v</b>]<sub>B</sub> = (1/2, −1/2). Find [<b>v</b>]<sub>E</sub>.</p>
+                  <div class="ba-fields">
+                    <label><var>x</var> <input class="ba-answer" type="text" name="half-x" autocomplete="off" spellcheck="false" required></label>
+                    <label><var>y</var> <input class="ba-answer" type="text" name="half-y" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="ba-button-row">
+                    <button type="button" data-ba-action="plot">Plot my answer</button>
+                    <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                  </div>
+                </details>
+                <details class="ba-mission" data-ba-mission="encoder-zero">
+                  <summary>Encode an empty slot<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>b₁ = (5, −2), b₂ = (−1, 2), and [<b>v</b>]<sub>B</sub> = (0, 3). Find [<b>v</b>]<sub>E</sub>.</p>
+                  <div class="ba-fields">
+                    <label><var>x</var> <input class="ba-answer" type="text" name="zero-x" autocomplete="off" spellcheck="false" required></label>
+                    <label><var>y</var> <input class="ba-answer" type="text" name="zero-y" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <div class="ba-button-row">
+                    <button type="button" data-ba-action="plot">Plot my answer</button>
+                    <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                  </div>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ba-math">
+              <summary>Show the math</summary>
+              <p>Encoding needs no equation solving. [<b>v</b>]<sub>E</sub> = c₁[b₁]<sub>E</sub> + c₂[b₂]<sub>E</sub>, so x = c₁b<sub>1x</sub> + c₂b<sub>2x</sub> and y = c₁b<sub>1y</sub> + c₂b<sub>2y</sub>. A zero coefficient means that arrow contributes nothing.</p>
+            </details>
+          </section>
+
+          <section class="ba-station" data-ba-station="names" data-ba-accent="yellow" aria-labelledby="ba-names-title" hidden>
+            <h4 id="ba-names-title">One Arrow, Many Names</h4>
+            <p>The gold arrow <b>v</b> = (4, 2) never moves. Each basis on the deck gives it a different coordinate pair. Collect all of its names.</p>
+            <div data-ba-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ba-sr-only">One Arrow, Many Names controls</legend>
+              <p class="ba-readout" data-ba-read="names" aria-live="polite">Names found for v: none yet.</p>
+              <div class="ba-missions">
+                <details class="ba-mission" data-ba-mission="names-scaled">
+                  <summary>Name it in a stretched basis<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Basis b₁ = (2, 0), b₂ = (0, 1). Find [<b>v</b>]<sub>B</sub>.</p>
+                  <div class="ba-fields">
+                    <label>c₁ <input class="ba-answer" type="text" name="scaled-c1" autocomplete="off" spellcheck="false" required></label>
+                    <label>c₂ <input class="ba-answer" type="text" name="scaled-c2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="names-tilted">
+                  <summary>Name it in a tilted basis<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Basis b₁ = (1, 1), b₂ = (0, 1). Find [<b>v</b>]<sub>B</sub>.</p>
+                  <div class="ba-fields">
+                    <label>c₁ <input class="ba-answer" type="text" name="tilted-c1" autocomplete="off" spellcheck="false" required></label>
+                    <label>c₂ <input class="ba-answer" type="text" name="tilted-c2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="names-rotated">
+                  <summary>Name it in a rotated basis<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Basis b₁ = (0, 1), b₂ = (−1, 0). Find [<b>v</b>]<sub>B</sub>.</p>
+                  <div class="ba-fields">
+                    <label>c₁ <input class="ba-answer" type="text" name="rotated-c1" autocomplete="off" spellcheck="false" required></label>
+                    <label>c₂ <input class="ba-answer" type="text" name="rotated-c2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="names-own">
+                  <summary>Name it in your own basis<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Choose any valid basis that is not already on the deck, and not the standard basis. Then give the coordinates of <b>v</b> in it.</p>
+                  <div class="ba-fields">
+                    <label>b₁ <var>x</var> <input type="number" name="own-b1x" min="-4" max="4" step="0.5" value="1" required></label>
+                    <label>b₁ <var>y</var> <input type="number" name="own-b1y" min="-4" max="4" step="0.5" value="2" required></label>
+                    <label>b₂ <var>x</var> <input type="number" name="own-b2x" min="-4" max="4" step="0.5" value="3" required></label>
+                    <label>b₂ <var>y</var> <input type="number" name="own-b2y" min="-4" max="4" step="0.5" value="1" required></label>
+                  </div>
+                  <div class="ba-fields">
+                    <label>c₁ <input class="ba-answer" type="text" name="own-c1" autocomplete="off" spellcheck="false" required></label>
+                    <label>c₂ <input class="ba-answer" type="text" name="own-c2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ba-math">
+              <summary>Show the math</summary>
+              <p>The arrow <b>v</b> is one object. A coordinate pair is a recipe for building it from a chosen basis: [<b>v</b>]<sub>B</sub> = (c₁, c₂) means <b>v</b> = c₁b₁ + c₂b₂. Different bases give different recipes, and every recipe rebuilds the same (4, 2) in the standard frame.</p>
+            </details>
+          </section>
+
+          <section class="ba-station" data-ba-station="inspector" data-ba-accent="red" aria-labelledby="ba-inspector-title" hidden>
+            <h4 id="ba-inspector-title">Basis Inspector + Reachability</h4>
+            <p>Use the bench to test any pair of arrows. A dependent pair can reach only a line, and a target on that line can be reached in infinitely many ways.</p>
+            <div data-ba-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ba-sr-only">Basis Inspector controls</legend>
+              <div class="ba-fields">
+                <label>Bench b₁ <var>x</var> <input type="number" name="b1x" min="-4" max="4" step="0.5" value="1" required></label>
+                <label>Bench b₁ <var>y</var> <input type="number" name="b1y" min="-4" max="4" step="0.5" value="1" required></label>
+                <label>Bench b₂ <var>x</var> <input type="number" name="b2x" min="-4" max="4" step="0.5" value="2" required></label>
+                <label>Bench b₂ <var>y</var> <input type="number" name="b2y" min="-4" max="4" step="0.5" value="-1" required></label>
+              </div>
+              <p class="ba-readout" data-ba-read="state" aria-live="polite">Bench pair (1, 1) and (2, −1).</p>
+              <div class="ba-missions">
+                <details class="ba-mission" data-ba-mission="inspector-classify">
+                  <summary>Classify five pairs<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Decide whether each pair is a valid basis of the plane or a dependent pair. You can test any pair on the bench first.</p>
+                  <div class="ba-fields">
+                    <label>(2, 1) and (−4, −2) <select name="pair1" required><option value="">Choose</option><option value="valid">Valid basis</option><option value="dependent">Dependent</option></select></label>
+                    <label>(1, 3) and (2, 5) <select name="pair2" required><option value="">Choose</option><option value="valid">Valid basis</option><option value="dependent">Dependent</option></select></label>
+                    <label>(0, 0) and (1, 1) <select name="pair3" required><option value="">Choose</option><option value="valid">Valid basis</option><option value="dependent">Dependent</option></select></label>
+                    <label>(3, −1) and (−1, 3) <select name="pair4" required><option value="">Choose</option><option value="valid">Valid basis</option><option value="dependent">Dependent</option></select></label>
+                    <label>(1.5, 1) and (3, 2) <select name="pair5" required><option value="">Choose</option><option value="valid">Valid basis</option><option value="dependent">Dependent</option></select></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="inspector-break">
+                  <summary>Build a pair that fails<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Set the bench to two <em>nonzero</em> arrows that still fail to form a basis.</p>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="inspector-reach">
+                  <summary>Find the reachable targets<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>The arrows are (1, 2) and (−2, −4). Tick every target that some combination c₁(1, 2) + c₂(−2, −4) reaches.</p>
+                  <div class="ba-choices" role="group" aria-label="Candidate targets">
+                    <label class="basis-check"><input type="checkbox" name="reach-1"> (2, 4)</label>
+                    <label class="basis-check"><input type="checkbox" name="reach-2"> (1, 3)</label>
+                    <label class="basis-check"><input type="checkbox" name="reach-3"> (−3, −6)</label>
+                    <label class="basis-check"><input type="checkbox" name="reach-4"> (4, 2)</label>
+                    <label class="basis-check"><input type="checkbox" name="reach-5"> (0, 0)</label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="inspector-family">
+                  <summary>Describe every working pair<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>With the same arrows (1, 2) and (−2, −4), the target (3, 6) is reachable in infinitely many ways. Write the whole family as c₁ = <var>p</var> + <var>q</var>·c₂.</p>
+                  <div class="ba-fields">
+                    <label><var>p</var> <input class="ba-answer" type="text" name="family-p" autocomplete="off" spellcheck="false" required></label>
+                    <label><var>q</var> <input class="ba-answer" type="text" name="family-q" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ba-math">
+              <summary>Show the math</summary>
+              <p>A pair is a basis exactly when D ≠ 0. When D = 0 and b₁ ≠ 0, every combination is a multiple of b₁, so the reachable targets form the line through the origin along b₁. If b₂ = k·b₁, then c₁b₁ + c₂b₂ = (c₁ + k·c₂)b₁. A target t·b₁ is reached whenever c₁ + k·c₂ = t, which is one equation in two unknowns, so infinitely many pairs work.</p>
+            </details>
+          </section>
+          <section class="ba-station" data-ba-station="area" data-ba-accent="violet" aria-labelledby="ba-area-title" hidden>
+            <h4 id="ba-area-title">Signed Area + Order Matters</h4>
+            <p>The shaded parallelogram has signed area D = b<sub>1x</sub>b<sub>2y</sub> − b<sub>1y</sub>b<sub>2x</sub>. It is green when b₂ is counterclockwise from b₁ (D &gt; 0) and red when it is clockwise (D &lt; 0). The gold point is the fixed target <b>v</b> = (5, 5).</p>
+            <div data-ba-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ba-sr-only">Signed Area controls</legend>
+              <div class="ba-fields">
+                <label>b₁ <var>x</var> <input type="number" name="b1x" min="-4" max="4" step="0.5" value="2" required></label>
+                <label>b₁ <var>y</var> <input type="number" name="b1y" min="-4" max="4" step="0.5" value="1" required></label>
+                <label>b₂ <var>x</var> <input type="number" name="b2x" min="-4" max="4" step="0.5" value="1" required></label>
+                <label>b₂ <var>y</var> <input type="number" name="b2y" min="-4" max="4" step="0.5" value="3" required></label>
+              </div>
+              <div class="ba-button-row">
+                <button type="button" data-ba-action="swap">Swap b₁ and b₂</button>
+                <button type="button" data-ba-action="double">Double b₁</button>
+                <button type="button" data-ba-action="load">Load the starting pair</button>
+              </div>
+              <p class="ba-readout" data-ba-read="state" aria-live="polite">b₁ = (2, 1) · b₂ = (1, 3) · D = 5</p>
+              <div class="ba-missions">
+                <details class="ba-mission" data-ba-mission="area-six">
+                  <summary>Hit an area of 6<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Set the arrows so that D = 6.</p>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="area-negative">
+                  <summary>Turn the area negative<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Set the arrows so that D = −3.</p>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="area-swap">
+                  <summary>Predict a swap<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Load the starting pair b₁ = (2, 1), b₂ = (1, 3). Here D = 5 and [<b>v</b>]<sub>B</sub> = (2, 1). Predict D and [<b>v</b>]<sub>B</sub> after swapping the arrows, then press Swap and check. While this mission is open, the readout hides D and [<b>v</b>]<sub>B</sub> until you check.</p>
+                  <div class="ba-fields">
+                    <label>D after the swap <input class="ba-answer" type="text" name="swap-d" autocomplete="off" spellcheck="false" required></label>
+                    <label>c₁ after the swap <input class="ba-answer" type="text" name="swap-c1" autocomplete="off" spellcheck="false" required></label>
+                    <label>c₂ after the swap <input class="ba-answer" type="text" name="swap-c2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="area-double">
+                  <summary>Predict a doubled arrow<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Load the starting pair, where D = 5 and [<b>v</b>]<sub>B</sub> = (2, 1). Predict D and [<b>v</b>]<sub>B</sub> after doubling b₁, then press Double b₁ and check. The readout hides both values until you check.</p>
+                  <div class="ba-fields">
+                    <label>D after doubling <input class="ba-answer" type="text" name="double-d" autocomplete="off" spellcheck="false" required></label>
+                    <label>c₁ after doubling <input class="ba-answer" type="text" name="double-c1" autocomplete="off" spellcheck="false" required></label>
+                    <label>c₂ after doubling <input class="ba-answer" type="text" name="double-c2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ba-math">
+              <summary>Show the math</summary>
+              <p>Swapping the arrows gives D′ = b<sub>2x</sub>b<sub>1y</sub> − b<sub>2y</sub>b<sub>1x</sub> = −D. Every coefficient stays attached to its own arrow, so [<b>v</b>]<sub>B</sub> = (c₁, c₂) becomes (c₂, c₁). Doubling b₁ doubles D. It also halves c₁, because v = c₁b₁ + c₂b₂ = (c₁/2)(2b₁) + c₂b₂.</p>
+            </details>
+          </section>
+
+          <section class="ba-station" data-ba-station="designer" data-ba-accent="green" aria-labelledby="ba-designer-title" hidden>
+            <h4 id="ba-designer-title">Basis Designer</h4>
+            <p>Here you work the problem the other way round. Each card fixes a target and the coordinates it should have, and you design the basis. Many answers work. The checker tests the basis you actually build.</p>
+            <div data-ba-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ba-sr-only">Basis Designer controls</legend>
+              <div class="ba-fields">
+                <label>b₁ <var>x</var> <input type="number" name="b1x" min="-8" max="8" step="0.25" value="1" required></label>
+                <label>b₁ <var>y</var> <input type="number" name="b1y" min="-8" max="8" step="0.25" value="0" required></label>
+                <label>b₂ <var>x</var> <input type="number" name="b2x" min="-8" max="8" step="0.25" value="0" required></label>
+                <label>b₂ <var>y</var> <input type="number" name="b2y" min="-8" max="8" step="0.25" value="1" required></label>
+              </div>
+              <p class="ba-readout" data-ba-read="state" aria-live="polite">Open a card to load its target.</p>
+              <div class="ba-missions">
+                <details class="ba-mission" data-ba-mission="designer-ones">
+                  <summary>Make (3, 2) read (1, 1)<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Design a valid basis in which the target (3, 2) has coordinates [<b>v</b>]<sub>B</sub> = (1, 1).</p>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="designer-twice">
+                  <summary>Make (4, −2) read (2, 0)<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Design a valid basis in which (4, −2) has coordinates (2, 0).</p>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="designer-negative">
+                  <summary>Make (1, 1) read (−1, 2)<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Design a valid basis in which (1, 1) has coordinates (−1, 2).</p>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="designer-locked">
+                  <summary>Design around a locked arrow<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Keep b₁ = (2, 1). Choose b₂ so that (0, 5) has coordinates (−1, 1).</p>
+                  <button type="button" data-ba-action="lock">Set b₁ = (2, 1)</button>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ba-math">
+              <summary>Show the math</summary>
+              <p>Wanting [<b>v</b>]<sub>B</sub> = (c₁, c₂) means wanting c₁b₁ + c₂b₂ = <b>v</b>. That is two equations in four unknown components, so you can usually choose one arrow freely and solve for the other. Then check D ≠ 0. A pair with D = 0 is not a basis, even if it happens to reach the target.</p>
+            </details>
+          </section>
+
+          <section class="ba-station" data-ba-station="relay" data-ba-accent="orange" aria-labelledby="ba-relay-title" hidden>
+            <h4 id="ba-relay-title">Basis-to-Basis Relay</h4>
+            <p>Translate between two bases by passing through the standard frame. Basis <var>B</var> uses arrows b₁, b₂. Basis <var>C</var> uses arrows f₁, f₂. First encode [<b>v</b>]<sub>B</sub> into [<b>v</b>]<sub>E</sub>, then decode that into [<b>v</b>]<sub>C</sub>.</p>
+            <div data-ba-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ba-sr-only">Basis-to-Basis Relay controls</legend>
+              <p class="ba-readout" data-ba-read="state">B: b₁ = (1, 1), b₂ = (1, −1)</p>
+              <div class="ba-missions">
+                <details class="ba-mission" data-ba-mission="relay-checkpoint">
+                  <summary>Leg 1: reach the checkpoint<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>B: b₁ = (1, 1), b₂ = (1, −1), and [<b>v</b>]<sub>B</sub> = (3, 1). Find the checkpoint [<b>v</b>]<sub>E</sub>.</p>
+                  <div class="ba-fields">
+                    <label>[v]<sub>E</sub> <var>x</var> <input class="ba-answer" type="text" name="checkpoint-x" autocomplete="off" spellcheck="false" required></label>
+                    <label>[v]<sub>E</sub> <var>y</var> <input class="ba-answer" type="text" name="checkpoint-y" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="relay-finish">
+                  <summary>Leg 2: finish in C<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Start from the checkpoint [<b>v</b>]<sub>E</sub> = (4, 2). C: f₁ = (2, 0), f₂ = (1, 1). Find [<b>v</b>]<sub>C</sub>.</p>
+                  <div class="ba-fields">
+                    <label>[v]<sub>C</sub> first slot <input class="ba-answer" type="text" name="finish-k1" autocomplete="off" spellcheck="false" required></label>
+                    <label>[v]<sub>C</sub> second slot <input class="ba-answer" type="text" name="finish-k2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="relay-full">
+                  <summary>Run the full relay<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>B: b₁ = (2, 1), b₂ = (0, 1), and [<b>v</b>]<sub>B</sub> = (1, 3). C: f₁ = (1, 1), f₂ = (−1, 1). Give the checkpoint and the final coordinates.</p>
+                  <div class="ba-fields">
+                    <label>[v]<sub>E</sub> <var>x</var> <input class="ba-answer" type="text" name="full-x" autocomplete="off" spellcheck="false" required></label>
+                    <label>[v]<sub>E</sub> <var>y</var> <input class="ba-answer" type="text" name="full-y" autocomplete="off" spellcheck="false" required></label>
+                    <label>[v]<sub>C</sub> first slot <input class="ba-answer" type="text" name="full-k1" autocomplete="off" spellcheck="false" required></label>
+                    <label>[v]<sub>C</sub> second slot <input class="ba-answer" type="text" name="full-k2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="relay-matrix">
+                  <summary>Build the B matrix<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>With b₁ = (2, 1) and b₂ = (0, 1), fill in the matrix that turns [<b>v</b>]<sub>B</sub> into [<b>v</b>]<sub>E</sub> when it multiplies the coefficient column.</p>
+                  <div class="ba-matrix" role="group" aria-label="Two by two matrix">
+                    <label>Row 1, column 1 <input class="ba-answer" type="text" name="matrix-a" autocomplete="off" spellcheck="false" required></label>
+                    <label>Row 1, column 2 <input class="ba-answer" type="text" name="matrix-b" autocomplete="off" spellcheck="false" required></label>
+                    <label>Row 2, column 1 <input class="ba-answer" type="text" name="matrix-c" autocomplete="off" spellcheck="false" required></label>
+                    <label>Row 2, column 2 <input class="ba-answer" type="text" name="matrix-d" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ba-math">
+              <summary>Show the math</summary>
+              <p>Leg 1 needs no solving: [<b>v</b>]<sub>E</sub> = c₁b₁ + c₂b₂, which is the matrix with columns b₁ and b₂ times the column (c₁, c₂). Leg 2 is a decoding problem in C: solve k₁f₁ + k₂f₂ = [<b>v</b>]<sub>E</sub> for the slots (k₁, k₂) of [<b>v</b>]<sub>C</sub>. The arrow never moves. Only its description changes.</p>
+            </details>
+          </section>
+
+          <section class="ba-station" data-ba-station="ortho" data-ba-accent="blue" aria-labelledby="ba-ortho-title" hidden>
+            <h4 id="ba-ortho-title">Orthonormal Shortcut</h4>
+            <p>When the basis arrows have length 1 and meet at right angles, each coefficient is a single dot product: c₁ = <b>v</b>·b₁ and c₂ = <b>v</b>·b₂. Run the shortcut to see whether rebuilding with those dot products returns <b>v</b>.</p>
+            <div data-ba-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ba-sr-only">Orthonormal Shortcut controls</legend>
+              <div class="ba-fields">
+                <label>Practice frame, used when no card is open
+                  <select name="angle">
+                    <option value="0">Standard frame (0°)</option>
+                    <option value="30" selected>Rotated 30°</option>
+                    <option value="60">Rotated 60°</option>
+                    <option value="90">Rotated 90°</option>
+                    <option value="135">Rotated 135°</option>
+                  </select>
+                </label>
+                <button type="button" data-ba-action="shortcut">Run the dot shortcut</button>
+              </div>
+              <p class="ba-readout" data-ba-read="state" aria-live="polite">Practice frame rotated 30° · v = (1, 3)</p>
+              <div class="ba-missions">
+                <details class="ba-mission" data-ba-mission="ortho-rotated">
+                  <summary>Decode in a 45° frame<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>b₁ = (cos 45°, sin 45°), b₂ = (−sin 45°, cos 45°), and <b>v</b> = (3, 1). Find [<b>v</b>]<sub>B</sub> with dot products. Exact forms such as 2√2 are accepted.</p>
+                  <div class="ba-fields">
+                    <label>c₁ <input class="ba-answer" type="text" name="rotated-c1" autocomplete="off" spellcheck="false" required></label>
+                    <label>c₂ <input class="ba-answer" type="text" name="rotated-c2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="ortho-frame">
+                  <summary>Decode in a 3-4-5 frame<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>b₁ = (0.6, 0.8), b₂ = (−0.8, 0.6), and <b>v</b> = (5, 0). Find [<b>v</b>]<sub>B</sub>.</p>
+                  <div class="ba-fields">
+                    <label>c₁ <input class="ba-answer" type="text" name="frame-c1" autocomplete="off" spellcheck="false" required></label>
+                    <label>c₂ <input class="ba-answer" type="text" name="frame-c2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="ortho-skew">
+                  <summary>Catch the shortcut failing<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>b₁ = (1, 0) and b₂ = (0.6, 0.8) both have length 1, but they are not perpendicular. For <b>v</b> = (3, 4), give the two dot products and the true coordinates.</p>
+                  <div class="ba-fields">
+                    <label><b>v</b>·b₁ <input class="ba-answer" type="text" name="skew-d1" autocomplete="off" spellcheck="false" required></label>
+                    <label><b>v</b>·b₂ <input class="ba-answer" type="text" name="skew-d2" autocomplete="off" spellcheck="false" required></label>
+                    <label>true c₁ <input class="ba-answer" type="text" name="skew-c1" autocomplete="off" spellcheck="false" required></label>
+                    <label>true c₂ <input class="ba-answer" type="text" name="skew-c2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="ortho-scaled">
+                  <summary>Fix the shortcut for long arrows<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>b₁ = (2, 0) and b₂ = (0, 3) are perpendicular but not unit length. For <b>v</b> = (4, 6), find [<b>v</b>]<sub>B</sub>.</p>
+                  <div class="ba-fields">
+                    <label>c₁ <input class="ba-answer" type="text" name="scaled-c1" autocomplete="off" spellcheck="false" required></label>
+                    <label>c₂ <input class="ba-answer" type="text" name="scaled-c2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ba-math">
+              <summary>Show the math</summary>
+              <p>Dot both sides of <b>v</b> = c₁b₁ + c₂b₂ with b₁: <b>v</b>·b₁ = c₁(b₁·b₁) + c₂(b₂·b₁). When b₁·b₁ = 1 and b₂·b₁ = 0, this leaves c₁ = <b>v</b>·b₁. If the arrows are perpendicular but not unit length, divide: c₁ = (<b>v</b>·b₁)/(b₁·b₁). If they are not perpendicular, the cross term b₂·b₁ stays and the shortcut fails. Then you are back to solving two equations.</p>
+            </details>
+          </section>
+
+          <section class="ba-station" data-ba-station="quantum" data-ba-accent="violet" aria-labelledby="ba-quantum-title" hidden>
+            <h4 id="ba-quantum-title">Quantum Basis Preview</h4>
+            <p>This is a preview of quantum notation, coordinates only. A state written |ψ⟩ is a vector. The z basis is |0⟩ = (1, 0), |1⟩ = (0, 1). The x basis is |+⟩ = (|0⟩ + |1⟩)/√2 and |−⟩ = (|0⟩ − |1⟩)/√2. The same state has coordinates in both bases.</p>
+            <div data-ba-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ba-sr-only">Quantum Basis Preview controls</legend>
+              <label class="ba-check-row"><input type="checkbox" name="showx" checked> Show the x-basis axes</label>
+              <p class="ba-readout" data-ba-read="state">|ψ⟩ = |+⟩</p>
+              <div class="ba-missions">
+                <details class="ba-mission" data-ba-mission="quantum-plus">
+                  <summary>Name |+⟩ in the x basis<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>|ψ⟩ = |+⟩. Its z-basis coordinates are (1/√2, 1/√2). Give its x-basis coordinates: the coefficients of |+⟩ and |−⟩.</p>
+                  <div class="ba-fields">
+                    <label>coefficient of |+⟩ <input class="ba-answer" type="text" name="plus-a" autocomplete="off" spellcheck="false" required></label>
+                    <label>coefficient of |−⟩ <input class="ba-answer" type="text" name="plus-b" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="quantum-zero">
+                  <summary>Name |0⟩ in the x basis<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>|ψ⟩ = |0⟩, with z-basis coordinates (1, 0). Give its x-basis coordinates.</p>
+                  <div class="ba-fields">
+                    <label>coefficient of |+⟩ <input class="ba-answer" type="text" name="zero-a" autocomplete="off" spellcheck="false" required></label>
+                    <label>coefficient of |−⟩ <input class="ba-answer" type="text" name="zero-b" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="quantum-convert">
+                  <summary>Convert z to x<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>|ψ⟩ = 0.6|0⟩ + 0.8|1⟩. Give its x-basis coordinates.</p>
+                  <div class="ba-fields">
+                    <label>coefficient of |+⟩ <input class="ba-answer" type="text" name="convert-a" autocomplete="off" spellcheck="false" required></label>
+                    <label>coefficient of |−⟩ <input class="ba-answer" type="text" name="convert-b" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="quantum-reverse">
+                  <summary>Convert x to z<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>|ψ⟩ = 0.8|+⟩ − 0.6|−⟩. Give its z-basis coordinates.</p>
+                  <div class="ba-fields">
+                    <label>coefficient of |0⟩ <input class="ba-answer" type="text" name="reverse-a" autocomplete="off" spellcheck="false" required></label>
+                    <label>coefficient of |1⟩ <input class="ba-answer" type="text" name="reverse-b" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ba-math">
+              <summary>Show the math</summary>
+              <p>Adding and subtracting the definitions gives |0⟩ = (|+⟩ + |−⟩)/√2 and |1⟩ = (|+⟩ − |−⟩)/√2. So a|0⟩ + b|1⟩ = ((a + b)/√2)|+⟩ + ((a − b)/√2)|−⟩. Both x-basis arrows have length 1 and are perpendicular, so the dot-product shortcut also works here. Lesson 13 explains what these coordinates mean for measurement. This station covers only the coordinates.</p>
+            </details>
+          </section>
+          <section class="ba-station" data-ba-station="coplanar" data-ba-accent="blue" aria-labelledby="ba-coplanar-title" hidden>
+            <h4 id="ba-coplanar-title">3D Coplanar Trap</h4>
+            <p>In three dimensions a basis needs three arrows. Three arrows that lie in one plane cannot reach anything off that plane, so they fail. The test is the signed volume D = b₁·(b₂ × b₃): a set is a basis exactly when D ≠ 0. A red sheet appears when the arrows are trapped in a plane.</p>
+            <div data-ba-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ba-sr-only">3D Coplanar Trap controls</legend>
+              <div class="ba-fields">
+                <label>Arrow set
+                  <select name="preset">
+                    <option value="s1">Set 1 · (1, 0, 0), (0, 1, 0), (1, 1, 0)</option>
+                    <option value="s2">Set 2 · (1, 0, 0), (0, 1, 0), (0, 0, 1)</option>
+                    <option value="s3" selected>Set 3 · (1, 2, 3), (4, 5, 6), (7, 8, 9)</option>
+                    <option value="s4">Set 4 · (1, 1, 0), (0, 1, 1), (1, 0, 1)</option>
+                    <option value="custom" disabled>Custom arrows</option>
+                  </select>
+                </label>
+              </div>
+              <div class="ba-fields">
+                <label>b₁ <var>x</var> <input type="number" name="b1x" min="-9" max="9" step="0.5" value="1" required></label>
+                <label>b₁ <var>y</var> <input type="number" name="b1y" min="-9" max="9" step="0.5" value="2" required></label>
+                <label>b₁ <var>z</var> <input type="number" name="b1z" min="-9" max="9" step="0.5" value="3" required></label>
+              </div>
+              <div class="ba-fields">
+                <label>b₂ <var>x</var> <input type="number" name="b2x" min="-9" max="9" step="0.5" value="4" required></label>
+                <label>b₂ <var>y</var> <input type="number" name="b2y" min="-9" max="9" step="0.5" value="5" required></label>
+                <label>b₂ <var>z</var> <input type="number" name="b2z" min="-9" max="9" step="0.5" value="6" required></label>
+              </div>
+              <div class="ba-fields">
+                <label>b₃ <var>x</var> <input type="number" name="b3x" min="-9" max="9" step="0.5" value="7" required></label>
+                <label>b₃ <var>y</var> <input type="number" name="b3y" min="-9" max="9" step="0.5" value="8" required></label>
+                <label>b₃ <var>z</var> <input type="number" name="b3z" min="-9" max="9" step="0.5" value="9" required></label>
+              </div>
+              <div class="ba-fields">
+                <label>Turn the view <input type="range" name="yaw" min="-180" max="180" step="5" value="-60"></label>
+                <label>Tilt the view <input type="range" name="tilt" min="-10" max="80" step="5" value="25"></label>
+              </div>
+              <label class="ba-check-row"><input type="checkbox" name="spin"> Turn the view slowly (paused when Reduced effects is on)</label>
+              <p class="ba-readout" data-ba-read="state" aria-live="polite">D = 0 · coplanar</p>
+              <div class="ba-missions">
+                <details class="ba-mission" data-ba-mission="coplanar-classify">
+                  <summary>Classify four sets<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Decide whether each preset set is a basis of 3D space or is trapped in a plane. Load each one to inspect it.</p>
+                  <div class="ba-fields">
+                    <label>Set 1 <select name="set1" required><option value="">Choose</option><option value="valid">Basis</option><option value="coplanar">Coplanar</option></select></label>
+                    <label>Set 2 <select name="set2" required><option value="">Choose</option><option value="valid">Basis</option><option value="coplanar">Coplanar</option></select></label>
+                    <label>Set 3 <select name="set3" required><option value="">Choose</option><option value="valid">Basis</option><option value="coplanar">Coplanar</option></select></label>
+                    <label>Set 4 <select name="set4" required><option value="">Choose</option><option value="valid">Basis</option><option value="coplanar">Coplanar</option></select></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="coplanar-fix">
+                  <summary>Spring the trap<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Load Set 3. Change only b₃ so that the three arrows become a basis.</p>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="coplanar-build">
+                  <summary>Build your own trap<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Enter three nonzero arrows, no two of them parallel, that still lie in one plane. Set 1 and Set 3 don’t count.</p>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="coplanar-escape">
+                  <summary>Find an unreachable target<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Use Set 1, which is (1, 0, 0), (0, 1, 0) and (1, 1, 0). Give a target that no combination of those three arrows reaches.</p>
+                  <div class="ba-fields">
+                    <label>Target <var>x</var> <input type="number" name="escape-x" min="-6" max="6" step="0.5" value="0" required></label>
+                    <label>Target <var>y</var> <input type="number" name="escape-y" min="-6" max="6" step="0.5" value="0" required></label>
+                    <label>Target <var>z</var> <input type="number" name="escape-z" min="-6" max="6" step="0.5" value="0" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ba-math">
+              <summary>Show the math</summary>
+              <p>D = b₁·(b₂ × b₃) is the signed volume of the box built on the three arrows. It plays the same role as the 2D signed area. If D = 0, the box is flat. One arrow is then a combination of the other two, every combination stays in their plane, and any target off that plane is unreachable. If D ≠ 0, every 3D target has exactly one coordinate triple.</p>
+            </details>
+          </section>
+
+          <section class="ba-station" data-ba-station="lattice" data-ba-accent="yellow" aria-labelledby="ba-lattice-title" hidden>
+            <h4 id="ba-lattice-title">Integer Lattice Challenge</h4>
+            <p>Here you may only use whole-number coefficients. The dots show every point you can reach that way. Turn on the scan to see which whole-number points of the plane are hit and which are missed.</p>
+            <div data-ba-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ba-sr-only">Integer Lattice Challenge controls</legend>
+              <div class="ba-fields">
+                <label>Basis
+                  <select name="basis">
+                    <option value="a">A · (2, 1) and (1, 1)</option>
+                    <option value="b">B · (2, 0) and (0, 1)</option>
+                    <option value="c">C · (3, 1) and (1, 1)</option>
+                    <option value="d">D · (1, 2) and (1, 3)</option>
+                    <option value="own">Your own arrows</option>
+                  </select>
+                </label>
+              </div>
+              <div class="ba-fields">
+                <label>Your b₁ <var>x</var> <input type="number" name="own-b1x" min="-4" max="4" step="1" value="2" required></label>
+                <label>Your b₁ <var>y</var> <input type="number" name="own-b1y" min="-4" max="4" step="1" value="1" required></label>
+                <label>Your b₂ <var>x</var> <input type="number" name="own-b2x" min="-4" max="4" step="1" value="1" required></label>
+                <label>Your b₂ <var>y</var> <input type="number" name="own-b2y" min="-4" max="4" step="1" value="2" required></label>
+              </div>
+              <div class="ba-fields">
+                <label>Whole-number c₁ <input type="number" name="c1" min="-9" max="9" step="1" value="0" required></label>
+                <label>Whole-number c₂ <input type="number" name="c2" min="-9" max="9" step="1" value="0" required></label>
+                <button class="basis-primary" type="button" data-ba-action="fire">Fire this combination</button>
+              </div>
+              <label class="ba-check-row"><input type="checkbox" name="scan"> Scan the whole-number points</label>
+              <p class="ba-readout" data-ba-read="state" aria-live="polite">Basis A · D = 1 · no shots yet.</p>
+              <div class="ba-missions">
+                <details class="ba-mission" data-ba-mission="lattice-reach">
+                  <summary>Hit two targets<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>With basis A, fire whole-number combinations that land on (3, 1) and on (−1, 2).</p>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="lattice-miss">
+                  <summary>Find a gap<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Basis B is (2, 0) and (0, 1). It is a valid basis, yet some whole-number points cannot be hit with whole-number coefficients. Name one.</p>
+                  <div class="ba-fields">
+                    <label>Point <var>x</var> <input type="number" name="miss-x" min="-9" max="9" step="1" value="0" required></label>
+                    <label>Point <var>y</var> <input type="number" name="miss-y" min="-9" max="9" step="1" value="0" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="lattice-which">
+                  <summary>Spot the full-coverage basis<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Which basis reaches every whole-number point using whole-number coefficients? Compare the scans and the values of D.</p>
+                  <div class="ba-fields">
+                    <label>Full coverage
+                      <select name="which" required>
+                        <option value="">Choose</option>
+                        <option value="c">Only C · (3, 1) and (1, 1)</option>
+                        <option value="d">Only D · (1, 2) and (1, 3)</option>
+                        <option value="both">Both C and D</option>
+                        <option value="neither">Neither</option>
+                      </select>
+                    </label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="lattice-design">
+                  <summary>Design a full-coverage basis<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Set your own whole-number arrows so that every whole-number point is reachable with whole-number steps. Plain ±(1, 0) and ±(0, 1) don’t count.</p>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ba-math">
+              <summary>Show the math</summary>
+              <p>For a whole-number target (x, y), the coefficients are c₁ = (x·b<sub>2y</sub> − y·b<sub>2x</sub>) / D and c₂ = (b<sub>1x</sub>·y − b<sub>1y</sub>·x) / D. With whole-number arrows, both numerators are whole numbers. If D = ±1, dividing keeps them whole, so every whole-number point is reached. If |D| &gt; 1, the target (1, 0) or (0, 1) always needs a fraction. A lattice with |D| = 2 hits only every second point.</p>
+            </details>
+          </section>
+
+          <section class="ba-station" data-ba-station="detective" data-ba-accent="red" aria-labelledby="ba-detective-title" hidden>
+            <h4 id="ba-detective-title">Error Detective</h4>
+            <p>Each case file holds a worked solution with exactly one planted mistake. Find the first line that goes wrong, and name the mistake. The diagram shows where the claimed answer actually lands.</p>
+            <div data-ba-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ba-sr-only">Error Detective controls</legend>
+              <p class="ba-readout" data-ba-read="state">Open a case file.</p>
+              <div class="ba-missions">
+                <details class="ba-mission" data-ba-mission="detective-slots">
+                  <summary>Case 1 · The opening example<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>b₁ = (1, 0), b₂ = (1, 1), [<b>v</b>]<sub>E</sub> = (3, 2).</p>
+                  <ol class="ba-worked">
+                    <li>D = 1·1 − 0·1 = 1.</li>
+                    <li>c₁ = (3·1 − 2·1) / 1 = 1.</li>
+                    <li>c₂ = (1·2 − 0·3) / 1 = 2.</li>
+                    <li>So [<b>v</b>]<sub>B</sub> = (2, 1).</li>
+                  </ol>
+                  <div class="ba-fields">
+                    <label>First wrong line <select name="slots-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label>
+                    <label>Mistake <select name="slots-kind" required><option value="">Choose</option><option value="slots">Coordinate slots swapped</option><option value="sign">Sign error in D</option><option value="divide">Divided by D = 0</option><option value="order">Components in the wrong order</option><option value="shortcut">Dot-product shortcut on a skew basis</option></select></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="detective-sign">
+                  <summary>Case 2 · The generous area<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>b₁ = (2, 1), b₂ = (1, 3), [<b>v</b>]<sub>E</sub> = (4, 7).</p>
+                  <ol class="ba-worked">
+                    <li>D = 2·3 + 1·1 = 7.</li>
+                    <li>c₁ = (4·3 − 7·1) / 7 = 5/7.</li>
+                    <li>c₂ = (2·7 − 1·4) / 7 = 10/7.</li>
+                    <li>So [<b>v</b>]<sub>B</sub> = (5/7, 10/7).</li>
+                  </ol>
+                  <div class="ba-fields">
+                    <label>First wrong line <select name="sign-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label>
+                    <label>Mistake <select name="sign-kind" required><option value="">Choose</option><option value="slots">Coordinate slots swapped</option><option value="sign">Sign error in D</option><option value="divide">Divided by D = 0</option><option value="order">Components in the wrong order</option><option value="shortcut">Dot-product shortcut on a skew basis</option></select></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="detective-divide">
+                  <summary>Case 3 · The impossible answer<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>b₁ = (1, 2), b₂ = (2, 4), [<b>v</b>]<sub>E</sub> = (3, 6).</p>
+                  <ol class="ba-worked">
+                    <li>D = 1·4 − 2·2 = 0.</li>
+                    <li>c₁ = (3·4 − 6·2) / D = 0 / 0 = 0.</li>
+                    <li>c₂ = (1·6 − 2·3) / D = 0 / 0 = 0.</li>
+                    <li>So [<b>v</b>]<sub>B</sub> = (0, 0) is the unique pair.</li>
+                  </ol>
+                  <div class="ba-fields">
+                    <label>First wrong line <select name="divide-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label>
+                    <label>Mistake <select name="divide-kind" required><option value="">Choose</option><option value="slots">Coordinate slots swapped</option><option value="sign">Sign error in D</option><option value="divide">Divided by D = 0</option><option value="order">Components in the wrong order</option><option value="shortcut">Dot-product shortcut on a skew basis</option></select></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="detective-order">
+                  <summary>Case 4 · The flipped arrow<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>b₁ = (1, 2), b₂ = (0, 1), [<b>v</b>]<sub>E</sub> = (3, 5).</p>
+                  <ol class="ba-worked">
+                    <li>b₁ = (1, 2), so b<sub>1x</sub> = 2 and b<sub>1y</sub> = 1.</li>
+                    <li>D = 2·1 − 1·0 = 2.</li>
+                    <li>c₁ = (3·1 − 5·0) / 2 = 3/2 and c₂ = (2·5 − 1·3) / 2 = 7/2.</li>
+                    <li>So [<b>v</b>]<sub>B</sub> = (3/2, 7/2).</li>
+                  </ol>
+                  <div class="ba-fields">
+                    <label>First wrong line <select name="order-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label>
+                    <label>Mistake <select name="order-kind" required><option value="">Choose</option><option value="slots">Coordinate slots swapped</option><option value="sign">Sign error in D</option><option value="divide">Divided by D = 0</option><option value="order">Components in the wrong order</option><option value="shortcut">Dot-product shortcut on a skew basis</option></select></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="detective-shortcut">
+                  <summary>Case 5 · The quick projection<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>b₁ = (1, 0), b₂ = (1, 1), [<b>v</b>]<sub>E</sub> = (3, 2).</p>
+                  <ol class="ba-worked">
+                    <li>D = 1·1 − 0·1 = 1, so B is a valid basis.</li>
+                    <li>c₁ = <b>v</b>·b₁ = 3·1 + 2·0 = 3.</li>
+                    <li>c₂ = <b>v</b>·b₂ = 3·1 + 2·1 = 5.</li>
+                    <li>So [<b>v</b>]<sub>B</sub> = (3, 5).</li>
+                  </ol>
+                  <div class="ba-fields">
+                    <label>First wrong line <select name="shortcut-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label>
+                    <label>Mistake <select name="shortcut-kind" required><option value="">Choose</option><option value="slots">Coordinate slots swapped</option><option value="sign">Sign error in D</option><option value="divide">Divided by D = 0</option><option value="order">Components in the wrong order</option><option value="shortcut">Dot-product shortcut on a skew basis</option></select></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ba-math">
+              <summary>Show the math</summary>
+              <p>Three habits catch most of these mistakes. First, rebuild c₁b₁ + c₂b₂ and compare it with the target. Second, check D before dividing by it. Third, use the dot-product shortcut only when the basis is orthonormal. Keep each coefficient attached to its own arrow, and read (x, y) components in that order.</p>
+            </details>
+          </section>
+
+          <section class="ba-station" data-ba-station="poly" data-ba-accent="green" aria-labelledby="ba-poly-title" hidden>
+            <h4 id="ba-poly-title">Abstract Vectors Preview</h4>
+            <p>Polynomials of the form <var>p</var>(<var>x</var>) = <var>a</var> + <var>bx</var> add and scale just like arrows, so they are vectors too. Two bases for them are <var>P</var> = {1, <var>x</var>} and <var>Q</var> = {1, 1 + <var>x</var>}. The graph of <var>p</var> is the object. Its coordinates depend on the basis.</p>
+            <div data-ba-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ba-sr-only">Abstract Vectors Preview controls</legend>
+              <div class="ba-fields">
+                <label>Basis graphs to show
+                  <select name="view">
+                    <option value="P">P = {1, x}</option>
+                    <option value="Q" selected>Q = {1, 1 + x}</option>
+                  </select>
+                </label>
+              </div>
+              <p class="ba-readout" data-ba-read="state">p(x) = 3 + 2x</p>
+              <div class="ba-missions">
+                <details class="ba-mission" data-ba-mission="poly-both">
+                  <summary>Name 3 + 2x twice<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Give the coordinates of <var>p</var>(<var>x</var>) = 3 + 2<var>x</var> in <var>P</var> and in <var>Q</var>.</p>
+                  <div class="ba-fields">
+                    <label>[p]<sub>P</sub> first slot <input class="ba-answer" type="text" name="both-p1" autocomplete="off" spellcheck="false" required></label>
+                    <label>[p]<sub>P</sub> second slot <input class="ba-answer" type="text" name="both-p2" autocomplete="off" spellcheck="false" required></label>
+                    <label>[p]<sub>Q</sub> first slot <input class="ba-answer" type="text" name="both-q1" autocomplete="off" spellcheck="false" required></label>
+                    <label>[p]<sub>Q</sub> second slot <input class="ba-answer" type="text" name="both-q2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="poly-negative">
+                  <summary>Name 1 − 4x in Q<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>Give the coordinates of <var>p</var>(<var>x</var>) = 1 − 4<var>x</var> in <var>Q</var> = {1, 1 + <var>x</var>}.</p>
+                  <div class="ba-fields">
+                    <label>[p]<sub>Q</sub> first slot <input class="ba-answer" type="text" name="negative-q1" autocomplete="off" spellcheck="false" required></label>
+                    <label>[p]<sub>Q</sub> second slot <input class="ba-answer" type="text" name="negative-q2" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="poly-reverse">
+                  <summary>Rebuild a polynomial<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>A polynomial has [<var>p</var>]<sub>Q</sub> = (−2, 3). Write it as <var>a</var> + <var>bx</var>.</p>
+                  <div class="ba-fields">
+                    <label><var>a</var> (constant term) <input class="ba-answer" type="text" name="reverse-a" autocomplete="off" spellcheck="false" required></label>
+                    <label><var>b</var> (coefficient of <var>x</var>) <input class="ba-answer" type="text" name="reverse-b" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+                <details class="ba-mission" data-ba-mission="poly-evaluate">
+                  <summary>Evaluate from coordinates<span data-ba-done hidden>✓ Complete</span></summary>
+                  <p>A polynomial has [<var>p</var>]<sub>Q</sub> = (2, −1). What is <var>p</var>(2)?</p>
+                  <div class="ba-fields">
+                    <label><var>p</var>(2) <input class="ba-answer" type="text" name="evaluate-value" autocomplete="off" spellcheck="false" required></label>
+                  </div>
+                  <button class="basis-primary" type="button" data-ba-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ba-math">
+              <summary>Show the math</summary>
+              <p>In <var>Q</var>, c₁·1 + c₂(1 + <var>x</var>) = (c₁ + c₂) + c₂<var>x</var>. Matching it with <var>a</var> + <var>bx</var> gives c₂ = <var>b</var> and c₁ = <var>a</var> − <var>b</var>. This is the same calculation as the opening arrow example. There, 1 played the role of b₁ = (1, 0) and 1 + <var>x</var> played the role of b₂ = (1, 1). Any space where you can add and scale has bases and coordinates. Quantum states live in such a space.</p>
+            </details>
+          </section>
+        </div>
+
+        <template id="ba-figure-template">
+          <figure class="ba-figure">
+            <figcaption id="ba-title">Station diagram</figcaption>
+            <div class="ba-viewport" id="ba-viewport" data-renderer="svg">
+              <canvas class="ba-canvas" id="ba-canvas" aria-hidden="true" hidden></canvas>
+              <svg class="ba-diagram" id="ba-diagram" viewBox="0 0 560 360" role="img" aria-labelledby="ba-title" aria-describedby="ba-desc">
+                <desc id="ba-desc"></desc>
+                <g data-ba-geometry></g>
+                <g data-ba-labels></g>
+              </svg>
+            </div>
+            <p class="lesson-note" id="ba-render-status"></p>
+          </figure>
+        </template>
+        <template id="ba-mission-template">
+          <div class="ba-mission-tools">
+            <button type="button" data-ba-hint>Show first hint</button>
+            <ol data-ba-hint-list aria-live="polite" hidden></ol>
+            <p class="basis-feedback" data-ba-feedback role="status"></p>
+            <details data-ba-work hidden><summary>Worked steps</summary><p data-ba-work-text></p></details>
+          </div>
+        </template>
+      </div>
+    </details>
+
+    <nav class="lesson-next" aria-label="Continue the course">
+      <a href="../../index.html">Course homepage</a>
+      <a class="basis-primary" href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html">
+        Next lesson: Matrices and Eigenvectors <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>

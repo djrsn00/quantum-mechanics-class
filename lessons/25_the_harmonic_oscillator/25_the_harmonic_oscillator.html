@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050906">
+  <meta name="description" content="Measure the quantum harmonic oscillator, mix energy states, and launch a moving Gaussian in the Quantum Harmonics Studio.">
+  <title>The Harmonic Oscillator | Quantum Mechanics Class</title>
+  <link rel="stylesheet" href="./styles/main.css">
+  <script src="./scripts/app.js" defer></script>
+  <script src="./scripts/lessons-menu.js" defer></script>
+  <script type="module" src="./scripts/lesson.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="logo-spectrum" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff676f"/>
+              <stop offset="20%" stop-color="#ff9f55"/>
+              <stop offset="40%" stop-color="#ffe16a"/>
+              <stop offset="60%" stop-color="#63f59b"/>
+              <stop offset="80%" stop-color="#65b7ff"/>
+              <stop offset="100%" stop-color="#c19bff"/>
+            </linearGradient>
+            <radialGradient id="logo-fill" cx="34%" cy="26%" r="74%">
+              <stop offset="0%" stop-color="#174732"/>
+              <stop offset="100%" stop-color="#08110d"/>
+            </radialGradient>
+          </defs>
+
+          <circle cx="32" cy="32" r="25" fill="url(#logo-fill)"
+                  stroke="url(#logo-spectrum)" stroke-width="1.4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="25" fill="none"
+                   stroke="#72b595" stroke-width="0.8" opacity="0.65"/>
+          <path d="M32 3v58" stroke="#72b595" stroke-width="0.8"
+                stroke-dasharray="2 3" opacity="0.7"/>
+          <ellipse cx="32" cy="32" rx="25" ry="10" fill="none"
+                   stroke="url(#logo-spectrum)" stroke-width="1.6"
+                   transform="rotate(-23 32 32)"/>
+          <path d="M32 32 46 17m-8 1 8-1-1 8" fill="none"
+                stroke="#edffef" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <circle cx="32" cy="32" r="2.2" fill="#edffef"/>
+        </svg>
+
+        <h1>Quantum Mechanics Class</h1>
+      </div>
+
+      <div class="particle-display" id="particle-display" aria-hidden="true">
+        <svg class="particle-still" id="particle-static"
+             viewBox="0 0 480 108" focusable="false">
+          <defs>
+            <linearGradient id="track-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="white" stop-opacity="0"/>
+              <stop offset="22%" stop-color="white" stop-opacity="0.7"/>
+              <stop offset="46%" stop-color="white"/>
+              <stop offset="73%" stop-color="white" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+            <mask id="track-mask" maskUnits="userSpaceOnUse"
+                  x="0" y="0" width="480" height="108">
+              <rect width="480" height="108" fill="url(#track-fade)"/>
+            </mask>
+          </defs>
+
+          <path class="particle-guide" d="M12 54H468"/>
+          <g class="particle-tracks" mask="url(#track-mask)">
+            <path class="track-in-a" d="M12 17C94 17 147 25 218 54"/>
+            <path class="track-in-b" d="M24 98C108 98 159 82 218 54"/>
+
+            <path class="track-red" d="M218 54C257 28 323 15 461 12"/>
+            <path class="track-orange" d="M218 54C278 32 345 32 475 28"/>
+            <path class="track-yellow" d="M218 54C291 46 368 42 466 47"/>
+            <path class="track-green" d="M218 54C296 58 367 61 477 61"/>
+            <path class="track-blue" d="M218 54C280 72 357 81 464 83"/>
+            <path class="track-violet" d="M218 54C265 80 333 97 454 100"/>
+          </g>
+          <circle class="collision-halo" cx="218" cy="54" r="12"/>
+          <path class="collision-cross" d="M218 46v16m-8-8h16"/>
+          <circle class="collision-core" cx="218" cy="54" r="2.6"/>
+        </svg>
+
+        <canvas class="particle-canvas" id="particle-canvas"></canvas>
+      </div>
+
+      <button class="lessons-menu-toggle" type="button"
+              aria-controls="lessons-menu" aria-expanded="false" hidden>
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+             aria-hidden="true" focusable="false">
+          <path d="M2 4h12M2 8h12M2 12h12"/>
+        </svg>
+        Lessons
+      </button>
+    </div>
+
+    <nav class="lessons-menu" id="lessons-menu" aria-label="Lessons" hidden>
+      <a href="../../index.html"><span class="lessons-menu-step">00</span> <span>HOME</span></a>
+      <a href="../1_start_here/1_start_here.html"><span class="lessons-menu-step">01</span> <span>Start Here</span></a>
+      <a href="../2_classical_states/2_classical_states.html"><span class="lessons-menu-step">02</span> <span>Classical States</span></a>
+      <a href="../3_waves_and_interference/3_waves_and_interference.html"><span class="lessons-menu-step">03</span> <span>Waves and Interference</span></a>
+      <a href="../4_probability/4_probability.html"><span class="lessons-menu-step">04</span> <span>Probability</span></a>
+      <a href="../5_math_bridge/5_math_bridge.html"><span class="lessons-menu-step">05</span> <span>Math Bridge</span></a>
+      <a href="../6_complex_numbers_and_phase/6_complex_numbers_and_phase.html"><span class="lessons-menu-step">06</span> <span>Complex Numbers and Phase</span></a>
+      <a href="../7_vectors_and_inner_products/7_vectors_and_inner_products.html"><span class="lessons-menu-step">07</span> <span>Vectors and Inner Products</span></a>
+      <a href="../8_bases_and_coordinates/8_bases_and_coordinates.html"><span class="lessons-menu-step">08</span> <span>Bases and Coordinates</span></a>
+      <a href="../9_matrices_and_eigenvectors/9_matrices_and_eigenvectors.html"><span class="lessons-menu-step">09</span> <span>Matrices and Eigenvectors</span></a>
+      <a href="../10_calculus_bridge/10_calculus_bridge.html"><span class="lessons-menu-step">10</span> <span>Calculus Bridge</span></a>
+      <a href="../11_quantum_states/11_quantum_states.html"><span class="lessons-menu-step">11</span> <span>Quantum States</span></a>
+      <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html"><span class="lessons-menu-step">12</span> <span>Superposition and Relative Phase</span></a>
+      <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html"><span class="lessons-menu-step">13</span> <span>Measurement and the Born Rule</span></a>
+      <a href="../14_observables_and_operators/14_observables_and_operators.html"><span class="lessons-menu-step">14</span> <span>Observables and Operators</span></a>
+      <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html"><span class="lessons-menu-step">15</span> <span>Expectation and Uncertainty</span></a>
+      <a href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html"><span class="lessons-menu-step">16</span> <span>Spin and Stern–Gerlach</span></a>
+      <a href="../17_time_evolution/17_time_evolution.html"><span class="lessons-menu-step">17</span> <span>Time Evolution</span></a>
+      <a href="../18_composite_systems/18_composite_systems.html"><span class="lessons-menu-step">18</span> <span>Composite Systems</span></a>
+      <a href="../19_entanglement_and_bells_theorem/19_entanglement_and_bells_theorem.html"><span class="lessons-menu-step">19</span> <span>Entanglement and Bell’s Theorem</span></a>
+      <a href="../20_wavefunctions/20_wavefunctions.html"><span class="lessons-menu-step">20</span> <span>Wavefunctions</span></a>
+      <a href="../21_continuous_probability_and_momentum/21_continuous_probability_and_momentum.html"><span class="lessons-menu-step">21</span> <span>Continuous Probability and Momentum</span></a>
+      <a href="../22_the_one-dimensional_schrodinger_equation/22_the_one-dimensional_schrodinger_equation.html"><span class="lessons-menu-step">22</span> <span>The One-Dimensional Schrödinger Equation</span></a>
+      <a href="../23_the_infinite_square_well/23_the_infinite_square_well.html"><span class="lessons-menu-step">23</span> <span>The Infinite Square Well</span></a>
+      <a href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="lessons-menu-step">24</span> <span>Finite Wells and Tunneling</span></a>
+      <a href="./25_the_harmonic_oscillator.html" aria-current="page"><span class="lessons-menu-step">25</span> <span>The Harmonic Oscillator</span></a>
+      <a href="../26_angular_momentum/26_angular_momentum.html"><span class="lessons-menu-step">26</span> <span>Angular Momentum</span></a>
+      <a href="../27_the_hydrogen_atom/27_the_hydrogen_atom.html"><span class="lessons-menu-step">27</span> <span>The Hydrogen Atom</span></a>
+      <a href="../28_identical_particles/28_identical_particles.html"><span class="lessons-menu-step">28</span> <span>Identical Particles</span></a>
+      <a href="../29_approximation_methods/29_approximation_methods.html"><span class="lessons-menu-step">29</span> <span>Approximation Methods</span></a>
+    </nav>
+  </header>
+
+  <main class="site-main oscillator-lesson" aria-labelledby="oh-title">
+    <header class="oh-stack oh-intro">
+      <p class="oh-kicker">Lesson 25</p>
+      <h2 id="oh-title">The Harmonic Oscillator</h2>
+      <p class="oh-lead"><strong>At its lowest energy, a classical oscillator rests at the bottom of the bowl. If we prepare the quantum ground state 100 times, will every position detector click at the center?</strong></p>
+      <p>Make a prediction, sample the ground state, then advance time and sample again. At the Coherent-State Launcher, repeat the experiment with a Gaussian whose center moves.</p>
+    </header>
+
+    <section class="oh-panel" aria-labelledby="oh-lab-title">
+      <header class="oh-stack">
+        <h3 id="oh-lab-title" tabindex="-1">Oscillator lab</h3>
+        <p class="oh-note" id="oh-static-note">The diagram and worked example show the opening preparation. Interactive controls become available when the lesson script initializes.</p>
+        <div class="oh-actions">
+          <button id="oh-enter" class="oh-primary" type="button" aria-expanded="false" aria-controls="oh-studio" disabled>Enter the Studio</button>
+          <a href="#oh-missions">Studio missions</a>
+        </div>
+      </header>
+
+      <section id="oh-studio" class="oh-card oh-studio" aria-labelledby="oh-studio-title" hidden>
+        <header class="oh-stack">
+          <h4 id="oh-studio-title" tabindex="-1">The Quantum Harmonics Studio</h4>
+          <p>The chamber and camera have visual depth. The experiment has one spatial coordinate, and the instruments below share one clock and preparation.</p>
+        </header>
+        <fieldset id="oh-studio-controls" class="oh-card" disabled>
+          <legend>Studio controls</legend>
+          <div class="oh-fields">
+            <label>Station
+              <select id="oh-station">
+                <option value="deck" selected>Energy-State Deck</option>
+                <option value="mixer">State Mixer</option>
+                <option value="launcher">Coherent-State Launcher</option>
+                <option value="sound">Quantum Sound Console</option>
+              </select>
+            </label>
+            <label>Camera
+              <select id="oh-camera">
+                <option value="overview" selected>Chamber overview</option>
+                <option value="inside">Inside the oscillator</option>
+              </select>
+            </label>
+            <label>Camera orbit
+              <input id="oh-orbit" type="range" min="-60" max="60" step="1" value="0" aria-describedby="oh-camera-readout">
+            </label>
+          </div>
+          <div class="oh-actions">
+            <button type="button" id="oh-camera-reset">Reset camera</button>
+            <label class="oh-check"><input type="checkbox" id="oh-effects"> Reduced effects</label>
+            <button type="button" id="oh-return">Return to core lab</button>
+          </div>
+        </fieldset>
+        <p id="oh-station-note">Use the Energy-State Deck to prepare a level and inspect its nodes and turning points.</p>
+        <p class="oh-note" id="oh-camera-readout">Overview, orbit 0°.</p>
+        <div class="oh-viewport" id="oh-viewport" hidden><canvas id="oh-canvas" aria-hidden="true"></canvas></div>
+        <p class="oh-note" id="oh-renderer">The calibrated plots below serve as the studio’s instruments.</p>
+        <div class="oh-monitor">
+          <p><strong>Phase monitor</strong> <span id="oh-studio-phase">Global phase 0°</span></p>
+          <p id="oh-studio-detector"><strong>Detector</strong> Awaiting a position sample.</p>
+        </div>
+
+        <fieldset id="oh-sound-controls" class="oh-card" aria-describedby="oh-sound-map" disabled>
+          <legend>Quantum Sound Console</legend>
+          <p id="oh-sound-map">Playback is silent until you enable sound. The level cue uses 220 × 2<sup>n/12</sup> Hz, so adjacent levels are a semitone apart. In a mix, the two tone gains follow their energy weights. In a coherent preparation, one pulse marks each completed oscillator period during playback. The audible pitches use a chosen musical scale, with no conversion from energy to audible frequency.</p>
+          <div class="oh-actions">
+            <button id="oh-sound-enable" type="button" aria-pressed="false">Enable sound</button>
+            <label class="oh-check"><input id="oh-mute" type="checkbox"> Master mute</label>
+            <label class="oh-check"><input id="oh-tone" type="checkbox" checked> Level cues</label>
+            <label class="oh-check"><input id="oh-pulse" type="checkbox" checked> Coherent pulse</label>
+          </div>
+          <label for="oh-volume">Volume <span id="oh-volume-value">30%</span></label>
+          <input id="oh-volume" type="range" min="0" max="100" step="1" value="30">
+          <p class="oh-note" id="oh-sound-status" role="status" aria-atomic="true">Sound is off.</p>
+        </fieldset>
+      </section>
+
+      <form id="oh-prediction">
+        <fieldset id="oh-prediction-controls" class="oh-card" disabled>
+          <legend>Predict the first 100 measurements</legend>
+          <div class="oh-options">
+            <label><input type="radio" name="oh-opening" value="center" required> All detections will be at the center</label>
+            <label><input type="radio" name="oh-opening" value="spread"> Detections will be spread around the center</label>
+            <label><input type="radio" name="oh-opening" value="turns"> Detections will be at the two turning points</label>
+          </div>
+          <div class="oh-actions">
+            <button type="submit">Check prediction</button>
+            <button id="oh-prediction-retry" type="button" hidden>Try again</button>
+          </div>
+          <p id="oh-prediction-result" class="oh-feedback" role="status" aria-atomic="true"></p>
+        </fieldset>
+      </form>
+
+      <fieldset id="oh-prepare-controls" class="oh-card" disabled>
+        <legend>Prepare the oscillator</legend>
+        <div class="oh-fields">
+          <label>Preparation
+            <select id="oh-mode">
+              <option value="eigen" selected>Eigenstate</option>
+              <option value="pair">Two-state superposition</option>
+              <option value="coherent">Coherent state</option>
+            </select>
+          </label>
+          <label>Mass m / m<sub>ref</sub>
+            <input id="oh-mass" type="number" min="0.5" max="2" step="0.05" value="1">
+          </label>
+          <label>Angular frequency ω / ω<sub>ref</sub>
+            <input id="oh-omega" type="number" min="0.5" max="2" step="0.05" value="1">
+          </label>
+        </div>
+        <p class="oh-note">Mass and angular frequency are set independently. Preparation changes reset time and clear detections. Changes to mass or frequency keep your chosen levels, mixing settings, and launch displacement and momentum in fixed units.</p>
+
+        <div id="oh-eigen-controls" class="oh-fields">
+          <label>Energy level n
+            <select id="oh-n">
+              <option value="0" selected>0 · Ground state</option><option value="1">1</option><option value="2">2</option>
+              <option value="3">3</option><option value="4">4</option><option value="5">5</option>
+              <option value="6">6</option><option value="7">7</option><option value="8">8</option>
+            </select>
+          </label>
+        </div>
+
+        <div id="oh-pair-controls" class="oh-fields oh-faders" hidden>
+          <label>First level r
+            <select id="oh-r">
+              <option value="0" selected>0</option><option value="1">1</option><option value="2">2</option>
+              <option value="3">3</option><option value="4">4</option><option value="5">5</option>
+              <option value="6">6</option><option value="7">7</option><option value="8">8</option>
+            </select>
+          </label>
+          <label>Second level s
+            <select id="oh-s">
+              <option value="0">0</option><option value="1" selected>1</option><option value="2">2</option>
+              <option value="3">3</option><option value="4">4</option><option value="5">5</option>
+              <option value="6">6</option><option value="7">7</option><option value="8">8</option>
+            </select>
+          </label>
+          <label>Mixing angle α <span id="oh-alpha-value">45°</span>
+            <input id="oh-alpha" type="range" min="0" max="90" step="1" value="45">
+          </label>
+          <label>Initial relative phase φ <span id="oh-phi-value">0°</span>
+            <input id="oh-phi" type="range" min="0" max="360" step="1" value="0">
+          </label>
+        </div>
+
+        <div id="oh-coherent-controls" class="oh-fields" hidden>
+          <label>Initial displacement x₀ / L<sub>ref</sub>
+            <input id="oh-x0" type="number" min="-3" max="3" step="0.05" value="2">
+          </label>
+          <label>Initial momentum p₀ / (ℏ/L<sub>ref</sub>)
+            <input id="oh-p0" type="number" min="-3" max="3" step="0.05" value="0">
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset id="oh-clock-controls" class="oh-card" disabled>
+        <legend>Shared time transport</legend>
+        <div class="oh-actions">
+          <button id="oh-play" class="oh-primary" type="button">Play / Resume</button>
+          <button id="oh-pause" type="button" disabled>Pause</button>
+          <button id="oh-step" type="button">Step T/24</button>
+          <button id="oh-quarter" type="button">Advance T/4</button>
+          <button id="oh-reset-time" type="button">Reset time</button>
+          <button id="oh-restore" type="button">Restore opening setup</button>
+        </div>
+        <p id="oh-clock-note" class="oh-note">Paused at t = 0. T is the physical oscillator period.</p>
+      </fieldset>
+
+      <div class="oh-grid">
+        <div class="oh-stack">
+          <figure class="oh-card" aria-labelledby="oh-caption">
+            <figcaption id="oh-caption">Potential, amplitude, and position density</figcaption>
+            <ul class="oh-legend" aria-label="Plot legend">
+              <li class="oh-key-potential">Potential</li>
+              <li class="oh-key-energy">Occupied energy</li>
+              <li class="oh-key-real">Re Ψ</li>
+              <li class="oh-key-imag">Im Ψ</li>
+              <li class="oh-key-density">Theory |Ψ|²</li>
+              <li class="oh-key-histogram">Sample histogram</li>
+              <li class="oh-key-reference" id="oh-reference-key" hidden>Stationary ground-state reference</li>
+              <li class="oh-key-target" id="oh-target-key" hidden>Mission target at T/4</li>
+              <li class="oh-key-mean" id="oh-mean-key" hidden>Quantum mean</li>
+              <li class="oh-key-classical" id="oh-classical-key" hidden>Classical reference</li>
+            </ul>
+            <svg id="oh-plot" class="oh-plot" viewBox="0 0 680 366" role="img" aria-labelledby="oh-caption" aria-describedby="oh-plot-desc" focusable="false">
+              <desc id="oh-plot-desc">The ground state lies half an energy unit above the parabolic minimum. The amplitude is real and positive and the density is a Gaussian with standard deviation 0.7071 reference lengths. The turning points are at minus and plus one reference length.</desc>
+              <path class="oh-grid-line" d="M64 35H616 M64 164H616 M64 193H616 M64 242H616 M340 35V322"/>
+              <path class="oh-axis" d="M64 35V143H616 M64 164V222H616 M64 242V322H616"/>
+              <path id="oh-turn-lines" class="oh-turn" d="M294 140V322 M386 140V322"/>
+              <path id="oh-potential-path" class="oh-potential" d="M64 35 Q340 251 616 35"/>
+              <g id="oh-level-lines" class="oh-rungs">
+                <path d="M64 134H616 M64 128H616 M64 122H616 M64 116H616 M64 110H616 M64 104H616 M64 98H616 M64 92H616"/>
+              </g>
+              <path id="oh-energy-path" class="oh-energy" d="M64 140H616"/>
+              <path id="oh-real-path" class="oh-real" d="M64 193 L156 193 L202 192.7 L225 191.8 L248 189.3 L271 184.2 L294 176.5 L317 169 L340 165.8 L363 169 L386 176.5 L409 184.2 L432 189.3 L455 191.8 L478 192.7 L524 193 L616 193"/>
+              <path id="oh-imag-path" class="oh-imag" d="M64 193H616"/>
+              <g id="oh-histogram" class="oh-histogram"></g>
+              <path id="oh-reference-path" class="oh-reference" d="" hidden/>
+              <path id="oh-target-path" class="oh-target" d="" hidden/>
+              <path id="oh-density-path" class="oh-density" d="M64 322 L202 322 L225 321.9 L248 320.6 L271 314.1 L294 294.3 L317 263.4 L340 246.8 L363 263.4 L386 294.3 L409 314.1 L432 320.6 L455 321.9 L478 322 L616 322"/>
+              <path id="oh-mean-line" class="oh-mean" d="" hidden/>
+              <path id="oh-classical-line" class="oh-classical" d="" hidden/>
+              <g id="oh-node-marks" class="oh-node-marks"></g>
+              <g id="oh-sample-marks" class="oh-sample-marks"></g>
+              <g class="oh-ticks">
+                <text x="66" y="27">Energy / Eref</text>
+                <text x="66" y="157">Amplitude × √Lref</text>
+                <text x="66" y="236">Density × Lref</text>
+                <g text-anchor="end">
+                  <text id="oh-energy-max" x="58" y="40">18.0</text>
+                  <text x="58" y="147">0</text>
+                  <text id="oh-amp-max" x="58" y="169">0.80</text>
+                  <text x="58" y="197">0</text>
+                  <text id="oh-amp-min" x="58" y="226">−0.80</text>
+                  <text id="oh-density-max" x="58" y="247">0.60</text>
+                  <text x="58" y="326">0</text>
+                </g>
+                <g text-anchor="middle">
+                  <text id="oh-x-min" x="64" y="342">−6</text>
+                  <text x="340" y="342">0</text>
+                  <text id="oh-x-max" x="616" y="342">6</text>
+                  <text x="340" y="361">Position x / Lref</text>
+                </g>
+              </g>
+            </svg>
+            <p class="oh-note" id="oh-plot-note">The dashed vertical lines mark the classical turning points. The opening view contains all but about 2.2 × 10<sup>−17</sup> of the total probability.</p>
+          </figure>
+
+          <fieldset id="oh-view-controls" class="oh-card" disabled>
+            <legend>Plot layers and local phase</legend>
+            <div class="oh-actions">
+              <label class="oh-check"><input id="oh-amplitudes" type="checkbox" checked> Real and imaginary amplitude</label>
+              <label class="oh-check"><input id="oh-reference" type="checkbox" checked> Ground-state reference in the mixer</label>
+              <label class="oh-check"><input id="oh-classical" type="checkbox" checked> Classical reference in the launcher</label>
+            </div>
+            <label for="oh-phase-probe">Probe position <span id="oh-probe-x">0.00 Lref</span></label>
+            <input id="oh-phase-probe" type="range" min="-100" max="100" step="1" value="0" aria-describedby="oh-probe-value">
+            <p class="oh-note" id="oh-probe-value">Local phase at the probe is 0°. Phase is undefined where Ψ = 0.</p>
+          </fieldset>
+
+          <section class="oh-card" aria-labelledby="oh-detector-title">
+            <h4 id="oh-detector-title">Position detectors</h4>
+            <p>A batch measures independent copies prepared at the current time. The histogram uses counts divided by the full sample size and bin width, including off-view detections in the denominator.</p>
+            <fieldset id="oh-measure-controls" disabled>
+              <legend>Capture the current snapshot</legend>
+              <div class="oh-actions">
+                <button id="oh-measure" type="button">Measure one position</button>
+                <button id="oh-batch" type="button">Measure 100 copies</button>
+                <button id="oh-clear" type="button" disabled>Clear detections</button>
+              </div>
+            </fieldset>
+            <dl class="oh-readouts">
+              <div><dt>Snapshot time</dt><dd id="oh-sample-time">—</dd></div>
+              <div><dt>Detections in batch history</dt><dd id="oh-sample-count">0</dd></div>
+              <div><dt>Latest position</dt><dd id="oh-sample-latest">—</dd></div>
+              <div><dt>Off-view detections</dt><dd id="oh-sample-off">0</dd></div>
+              <div><dt>Sample mean</dt><dd id="oh-sample-mean">—</dd></div>
+              <div><dt>Sample fraction at x &gt; 0</dt><dd id="oh-sample-right">—</dd></div>
+              <div id="oh-sample-outside-row"><dt>Sample fraction beyond turning points</dt><dd id="oh-sample-outside">—</dd></div>
+            </dl>
+          </section>
+        </div>
+
+        <div class="oh-stack">
+          <section class="oh-card" aria-labelledby="oh-readout-title">
+            <h4 id="oh-readout-title">Oscillator readouts</h4>
+            <dl class="oh-readouts">
+              <div><dt>Time</dt><dd id="oh-time">0.0000 tref</dd></div>
+              <div><dt>Oscillator length ℓ</dt><dd id="oh-length">1.0000 Lref</dd></div>
+              <div><dt>Ground-state spread Δx₀</dt><dd id="oh-ground-width">0.7071 Lref</dd></div>
+              <div><dt>Oscillator period T</dt><dd id="oh-period">6.2832 tref</dd></div>
+              <div><dt>Ordinary frequency f</dt><dd id="oh-frequency">0.1592 / tref</dd></div>
+              <div><dt>Curvature mω²</dt><dd id="oh-curvature">1.0000 Eref/Lref²</dd></div>
+              <div id="oh-energy-row"><dt id="oh-energy-label">Eigenstate energy</dt><dd id="oh-energy">0.5000 Eref</dd></div>
+              <div><dt>Adjacent gap ℏω</dt><dd id="oh-gap">1.0000 Eref</dd></div>
+              <div><dt id="oh-phase-label">Global phase</dt><dd id="oh-phase">0.0°</dd></div>
+              <div><dt>Probability at x &gt; 0</dt><dd id="oh-right">50.00%</dd></div>
+            </dl>
+            <dl id="oh-eigen-readouts" class="oh-readouts">
+              <div id="oh-nodes-row"><dt>Finite nodes</dt><dd id="oh-nodes">0</dd></div>
+              <div id="oh-turning-row"><dt>Classical turning points</dt><dd id="oh-turning">−1.0000, +1.0000 Lref</dd></div>
+              <div id="oh-tail-row"><dt>Probability beyond both turning points</dt><dd id="oh-tail">15.73%</dd></div>
+            </dl>
+            <dl id="oh-pair-readouts" class="oh-readouts" hidden>
+              <div><dt>Level r · amplitude / energy probability</dt><dd id="oh-r-weight">—</dd></div>
+              <div><dt>Level s · amplitude / energy probability</dt><dd id="oh-s-weight">—</dd></div>
+              <div><dt>Density beat period</dt><dd id="oh-beat">—</dd></div>
+            </dl>
+            <dl id="oh-coherent-readouts" class="oh-readouts" hidden>
+              <div><dt>Quantum mean ⟨x⟩</dt><dd id="oh-center">—</dd></div>
+              <div id="oh-classical-row"><dt>Classical position</dt><dd id="oh-classical-position">—</dd></div>
+              <div><dt>Mean momentum ⟨p⟩</dt><dd id="oh-mean-momentum">—</dd></div>
+              <div><dt>Packet spread Δx</dt><dd id="oh-packet-width">—</dd></div>
+            </dl>
+            <p id="oh-state-note" class="oh-note">The phase rotates while the ground-state density stays fixed.</p>
+          </section>
+
+          <section class="oh-card" id="oh-ladder-card" aria-labelledby="oh-ladder-title">
+            <h4 id="oh-ladder-title">Energy ladder</h4>
+            <table>
+              <caption>First nine levels and adjacent gaps, in Eref</caption>
+              <thead><tr><th scope="col">n</th><th scope="col">Energy</th><th scope="col">Gap from below</th></tr></thead>
+              <tbody id="oh-ladder">
+                <tr data-occupied><th scope="row">0</th><td>0.5000</td><td>—</td></tr>
+                <tr><th scope="row">1</th><td>1.5000</td><td>1.0000</td></tr>
+                <tr><th scope="row">2</th><td>2.5000</td><td>1.0000</td></tr>
+                <tr><th scope="row">3</th><td>3.5000</td><td>1.0000</td></tr>
+                <tr><th scope="row">4</th><td>4.5000</td><td>1.0000</td></tr>
+                <tr><th scope="row">5</th><td>5.5000</td><td>1.0000</td></tr>
+                <tr><th scope="row">6</th><td>6.5000</td><td>1.0000</td></tr>
+                <tr><th scope="row">7</th><td>7.5000</td><td>1.0000</td></tr>
+                <tr><th scope="row">8</th><td>8.5000</td><td>1.0000</td></tr>
+              </tbody>
+            </table>
+            <p class="oh-note">Choosing a rung prepares that eigenstate. The mathematical ladder continues above n = 8.</p>
+          </section>
+        </div>
+      </div>
+
+      <p id="oh-lab-status" class="oh-feedback" role="status" aria-atomic="true"></p>
+
+      <section id="oh-missions" class="oh-card" aria-labelledby="oh-mission-title">
+        <h4 id="oh-mission-title">Studio missions</h4>
+        <fieldset id="oh-mission-controls" disabled>
+          <legend>Choose an investigation</legend>
+          <div class="oh-actions">
+            <label for="oh-mission">Mission</label>
+            <select id="oh-mission">
+              <option value="free" selected>Free exploration</option>
+              <option value="ground">Find the Ground Beat</option>
+              <option value="ladder">Climb the Ladder</option>
+              <option value="nodes">Node Detective</option>
+              <option value="mix">Mix a Moving Pattern</option>
+              <option value="launch">Launch the Wave</option>
+              <option value="turn">Beyond the Turning Point</option>
+              <option value="tune">Tune the Instrument</option>
+            </select>
+            <button id="oh-mission-load" type="button">Load mission</button>
+            <button id="oh-mission-retry" type="button" disabled>Retry</button>
+            <button id="oh-mission-exit" type="button" disabled>Return to free exploration</button>
+          </div>
+
+          <p id="oh-mission-goal">Free exploration is active.</p>
+          <p id="oh-mission-hint" class="oh-note"></p>
+
+          <div data-oh-mission="ground" class="oh-stack" hidden>
+            <div class="oh-fields">
+              <label>Predict E₀ / Eref <input id="oh-ground-energy-answer" type="number" min="0" max="10" step="any"></label>
+              <label>Predict Δx₀ / Lref <input id="oh-ground-width-answer" type="number" min="0" max="10" step="any"></label>
+            </div>
+            <button id="oh-ground-commit" type="button">Commit prediction and sample at t = 0</button>
+            <p class="oh-note" id="oh-ground-baseline"></p>
+            <label>Which display stays fixed as time advances?
+              <select id="oh-ground-fixed">
+                <option value="">Choose an observation</option>
+                <option value="density">Position density</option>
+                <option value="real">Real amplitude</option>
+                <option value="phase">Global phase</option>
+              </select>
+            </label>
+            <button id="oh-ground-observe" type="button" disabled>Check observation and sample again</button>
+          </div>
+
+          <div data-oh-mission="ladder" class="oh-stack" hidden>
+            <div class="oh-fields">
+              <label>Predict (E₁ − E₀) / Eref <input id="oh-gap-low" type="number" min="0" max="10" step="any"></label>
+              <label>Predict (E₇ − E₆) / Eref <input id="oh-gap-high" type="number" min="0" max="10" step="any"></label>
+            </div>
+            <button id="oh-ladder-check" type="button">Check both gaps</button>
+          </div>
+
+          <div data-oh-mission="nodes" class="oh-stack" hidden>
+            <p id="oh-node-evidence"></p>
+            <label>Which n produced these zeros?
+              <input id="oh-node-answer" type="number" min="0" max="8" step="1">
+            </label>
+            <button id="oh-node-check" type="button">Commit level guess</button>
+          </div>
+
+          <div data-oh-mission="mix" class="oh-stack" hidden>
+            <p>Target at t = T/4: 80.00% of the probability at x &gt; 0. Tolerance: ±1.00 percentage point. The target trace shows one matching density.</p>
+            <button id="oh-mix-check" type="button">Compare at T/4</button>
+          </div>
+
+          <div data-oh-mission="launch" class="oh-stack" hidden>
+            <label>Predict ⟨x⟩ / Lref at t = T/4
+              <input id="oh-launch-answer" type="number" min="-12" max="12" step="any">
+            </label>
+            <button id="oh-launch-check" type="button">Compare quantum and classical positions</button>
+          </div>
+
+          <div data-oh-mission="turn" class="oh-stack" hidden>
+            <div class="oh-fields">
+              <label>Left turning point / Lref <input id="oh-turn-left" type="number" min="-12" max="12" step="any"></label>
+              <label>Right turning point / Lref <input id="oh-turn-right" type="number" min="-12" max="12" step="any"></label>
+              <label>Can a detector beyond those points fire?
+                <select id="oh-turn-tail">
+                  <option value="">Choose a prediction</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </label>
+            </div>
+            <button id="oh-turn-check" type="button">Reveal turning points and sample</button>
+          </div>
+
+          <div data-oh-mission="tune" class="oh-stack" hidden>
+            <p>Target gap: 1.50 Eref at fixed m = m<sub>ref</sub>. Set ω, then predict the ground-state spread. The tolerance for the spread is ±0.02 Lref.</p>
+            <label>Predict Δx₀ / Lref <input id="oh-tune-answer" type="number" min="0" max="10" step="any"></label>
+            <button id="oh-tune-check" type="button">Check tuning and spread</button>
+          </div>
+        </fieldset>
+        <p id="oh-mission-feedback" class="oh-feedback" role="status" aria-atomic="true"></p>
+      </section>
+    </section>
+
+    <section class="oh-panel" aria-labelledby="oh-math-title">
+      <h3 id="oh-math-title">Mathematical console</h3>
+      <details class="oh-card" open>
+        <summary>Potential, Hamiltonian, and fixed units</summary>
+        <div class="oh-detail">
+          <p class="oh-equation" id="oh-hamiltonian">V(x) = ½mω²x²<br>Ĥ = −(ℏ²/2m)d²/dx² + ½mω²x²</p>
+          <p>The first term gives kinetic energy and the second gives the bowl-shaped potential. The force is −dV/dx = −mω²x. Near a smooth stable minimum, the linear term in a Taylor expansion vanishes. If the curvature is positive, the quadratic term gives the leading restoring force.</p>
+          <p id="oh-units">Use fixed references m<sub>ref</sub> and ω<sub>ref</sub>. Then Lref = √[ℏ/(m<sub>ref</sub>ω<sub>ref</sub>)], Eref = ℏω<sub>ref</sub>, tref = 1/ω<sub>ref</sub>, and the momentum unit is ℏ/Lref. The local oscillator length ℓ = √[ℏ/(mω)] sets ξ = x/ℓ. The period is T = 2π/ω and ordinary frequency is f = ω/(2π).</p>
+          <p>At fixed ω, a larger mass narrows the state and raises the potential curvature while preserving the energy levels. At fixed mass, a larger ω narrows the state, shortens the period, and widens the energy gaps. In a separate fixed-spring-constant experiment, ω = √(k/m), so varying m would also vary ω.</p>
+        </div>
+      </details>
+
+      <div class="oh-symbols" aria-label="Equation symbols">
+        <details class="oh-card" data-oh-symbol="omega"><summary>ω · Angular frequency</summary><p>Phase advance per unit time for the underlying oscillator, in radians per time unit. Change ω and compare the period and energy gap.</p></details>
+        <details class="oh-card" data-oh-symbol="mass"><summary>m · Mass</summary><p>Mass sets the kinetic coefficient ℏ²/(2m) and contributes to curvature mω². Use the mass control to see how ℓ changes at fixed ω.</p></details>
+        <details class="oh-card" data-oh-symbol="n"><summary>n · Level index</summary><p>The ground state has n = 0. Each increment adds one gap ℏω and one finite spatial node. Follow the occupied rung and node readout.</p></details>
+        <details class="oh-card" data-oh-symbol="potential"><summary>V(x) · Potential</summary><p>Potential energy at position x. The plotted parabola measures energy relative to its minimum at x = 0.</p></details>
+        <details class="oh-card" data-oh-symbol="hamiltonian"><summary>Ĥ · Hamiltonian</summary><p>The energy operator acts on a wavefunction. In Ĥuₙ = Eₙuₙ, the energy readout gives its eigenvalue for the prepared level.</p></details>
+        <details class="oh-card" data-oh-symbol="hbar"><summary>ℏ · Reduced Planck constant</summary><p>ℏ = h/(2π) links energy and phase rate through E/ℏ. The lab uses ℏ in its fixed units and displays the accumulated phase.</p></details>
+      </div>
+
+      <h4>Show Me Why</h4>
+
+      <details class="oh-card" open>
+        <summary>1. Derive the ground state and the energy ladder</summary>
+        <div class="oh-detail">
+          <p>In ξ = x/ℓ, divide Ĥ by ℏω to get ½[−d²/dξ² + ξ²]. Define the lowering and raising operators</p>
+          <p class="oh-equation">a = (ξ + d/dξ)/√2 &emsp; a† = (ξ − d/dξ)/√2</p>
+          <p>By the product rule, (d/dξ)(ξu) = u + ξu′. This gives [a,a†] = 1 and a†a = ½[−d²/dξ² + ξ² − 1]. Hence Ĥ = ℏω(a†a + ½). The expectation of a†a is ‖a u‖², so ℏω/2 is a lower bound.</p>
+          <p>At the ground state, a u₀ = 0 gives u₀′(ξ) = −ξu₀(ξ), whose normalized solution is u₀(x) = e<sup>−ξ²/2</sup>/(π<sup>1/4</sup>√ℓ). It attains the lower bound.</p>
+          <p>The commutators [Ĥ,a†] = ℏωa† and [Ĥ,a] = −ℏωa shift a nonzero result by one rung. Repeated lowering must end at the ground state because the spectrum is bounded below. Normalization gives a†|n⟩ = √(n+1)|n+1⟩ and a|n⟩ = √n|n−1⟩.</p>
+          <p class="oh-equation">Eₙ = ℏω(n + ½) &emsp; ΔE = ℏω</p>
+        </div>
+      </details>
+
+      <details class="oh-card">
+        <summary>2. Read the signed wavefunction and its nodes</summary>
+        <div class="oh-detail">
+          <p class="oh-equation">uₙ(x) = Hₙ(ξ)e<sup>−ξ²/2</sup> / [π<sup>1/4</sup>√ℓ √(2ⁿn!)]</p>
+          <p>The physicists’ Hermite polynomials start with H₀ = 1 and H₁ = 2ξ. The recurrence is Hₙ₊₁ = 2ξHₙ − 2nHₙ₋₁. The Gaussian factor is nonzero at every finite x. The n real roots of Hₙ give the nodes, and multiplying each root by ℓ gives its physical position.</p>
+          <p>For n = 1 the node is x = 0. For n = 2, H₂ = 4ξ² − 2 puts the nodes at ±ℓ/√2. During time evolution the real trace can pass through zero while the imaginary part remains nonzero. Local phase is undefined at a zero of the full amplitude.</p>
+        </div>
+      </details>
+
+      <details class="oh-card" open>
+        <summary>3. Work out the opening detector probabilities</summary>
+        <div class="oh-detail">
+          <p>Solving V(x) = Eₙ gives x = ±ℓ√(2n+1). A classical trajectory with that energy reaches those points with zero speed. In the quantum ground state the density is ρ₀(x) = e<sup>−x²/ℓ²</sup>/(√πℓ), with standard deviation Δx₀ = ℓ/√2.</p>
+          <p class="oh-equation">P(a ≤ X ≤ b) = ∫<sub>a</sub><sup>b</sup> |Ψ(x,t)|² dx<br>P(|X| &gt; ℓ) = (2/√π)∫<sub>1</sub><sup>∞</sup> e<sup>−ξ²</sup> dξ = erfc(1) ≈ 15.73%</p>
+          <p>At the opening parameters ℓ = Lref, the turning points are ±Lref, the ground-state energy is 0.5 Eref, and Δx₀ ≈ 0.7071 Lref. A batch of 100 has an expected count of about 16 beyond the turning points, with variation between batches.</p>
+          <p>For Ψ = uₙe<sup>−iEₙt/ℏ</sup>, the phase cancels in the squared magnitude. The stationary probability current is zero because uₙ can be chosen real and the phase is spatially uniform. A detection in a tail is compatible with stationary confinement.</p>
+        </div>
+      </details>
+
+      <details class="oh-card">
+        <summary>4. Follow two phases and their interference</summary>
+        <div class="oh-detail">
+          <p class="oh-equation">Ψ = cos α · uᵣe<sup>−iEᵣt/ℏ</sup> + sin α · uₛe<sup>iφ−iEₛt/ℏ</sup></p>
+          <p>Orthonormality makes the total norm cos²α + sin²α = 1. The density includes a cross term 2 cos α sin α · uᵣuₛ cos δ(t), with δ(t) = φ − (Eₛ − Eᵣ)t/ℏ. When both weights are nonzero, the beat period is 2π/(|s − r|ω).</p>
+          <p>With r = 0, s = 1, α = 45°, and φ = 0, the cross term increases the right-half probability at t = 0 to ½ + 1/√(2π) ≈ 89.89%. At T/4 it gives 50.00%. At T/2 the right-half probability is about 10.11%.</p>
+        </div>
+      </details>
+
+      <details class="oh-card">
+        <summary>5. Compare a coherent packet with a classical oscillator</summary>
+        <div class="oh-detail">
+          <p class="oh-equation">q(t) = x₀ cos(ωt) + [p₀/(mω)] sin(ωt)<br>p(t) = p₀ cos(ωt) − mωx₀ sin(ωt)<br>ρ(x,t) = e<sup>−(x−q(t))²/ℓ²</sup>/(√πℓ)</p>
+          <p>The Gaussian keeps spread ℓ/√2. Its mean q(t) follows the classical solution with the same initial position and momentum. Individual position results are distributed around that mean.</p>
+          <p>The lab uses the displaced ground-state envelope times e<sup>i[p(t)(x−q(t)/2)/ℏ − ωt/2]</sup> to obtain the signed real and imaginary components. This analytic model includes the full coherent state, which generally uses infinitely many rungs. Its mean energy is ½ℏω + p₀²/(2m) + ½mω²x₀².</p>
+        </div>
+      </details>
+
+      <p><strong>Revisit the opening.</strong> The stationary ground state gives a spread of detector positions without moving its mean. A coherent Gaussian can keep that same spread while its mean oscillates.</p>
+      <p>In Lesson 26, rotation brings a new kind of quantization. Look for which components of angular momentum can be specified together.</p>
+    </section>
+
+    <nav class="oh-navigation" aria-label="Lesson navigation">
+      <a rel="prev" href="../24_finite_wells_and_tunneling/24_finite_wells_and_tunneling.html"><span class="oh-note">← Previous</span> Finite Wells and Tunneling</a>
+      <a rel="next" href="../26_angular_momentum/26_angular_momentum.html"><span class="oh-note">Next →</span> Angular Momentum</a>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <p>Quantum Mechanics Class by Mike Mathison, © 2026.</p>
+  </footer>
+</body>
+</html>
