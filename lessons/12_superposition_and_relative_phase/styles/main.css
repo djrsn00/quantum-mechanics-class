@@ -797,3 +797,557 @@ body {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Relative Phase Arcade */
+
+.site-main.relative-phase-lesson {
+  --rp-surface: #0b1612;
+  --rp-plot: var(--phase-plot);
+}
+
+.relative-phase-lesson #relative-phase-arcade {
+  scroll-margin-block-start: 1rem;
+}
+
+.relative-phase-lesson :is(.rp-body, .rp-station, .rp-figure, .rp-missions, .rp-mission-tools, .rp-station > fieldset) {
+  display: grid;
+  gap: 0.75rem;
+  min-inline-size: 0;
+}
+
+.relative-phase-lesson .rp-body {
+  padding-block-start: 0.75rem;
+}
+
+.relative-phase-lesson :is(.rp-arcade, .rp-mission, .rp-math, .rp-mission-tools details) > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem 0.75rem;
+  list-style: none;
+}
+
+.relative-phase-lesson :is(.rp-arcade, .rp-mission, .rp-math, .rp-mission-tools details) > summary::-webkit-details-marker {
+  display: none;
+}
+
+.relative-phase-lesson :is(.rp-arcade, .rp-mission, .rp-math, .rp-mission-tools details) > summary::before {
+  content: "+";
+  inline-size: 1ch;
+}
+
+.relative-phase-lesson :is(.rp-arcade, .rp-mission, .rp-math, .rp-mission-tools details)[open] > summary::before {
+  content: "−";
+}
+
+/* Long mission titles wrap beside the +/− marker instead of dropping below it. */
+.relative-phase-lesson details.rp-mission > summary {
+  flex-wrap: nowrap;
+}
+
+.relative-phase-lesson .rp-arcade > summary strong {
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+}
+
+.relative-phase-lesson .rp-arcade > summary span {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.relative-phase-lesson .rp-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto auto;
+  align-items: end;
+  gap: 0.75rem;
+  min-inline-size: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--rp-surface);
+}
+
+.relative-phase-lesson .rp-toolbar > label:not(.rp-reduced) {
+  display: grid;
+  gap: 0.25rem;
+  min-inline-size: 0;
+  font-size: 0.875rem;
+}
+
+.relative-phase-lesson #rp-progress {
+  align-self: center;
+  color: var(--phosphor);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.relative-phase-lesson .rp-reduced,
+.relative-phase-lesson .rp-check-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-block-size: 44px;
+  font-size: 0.875rem;
+}
+
+.relative-phase-lesson .rp-reduced {
+  color: var(--muted);
+}
+
+.relative-phase-lesson :is(.rp-reduced, .rp-check-row) input {
+  flex: none;
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+  margin: 0;
+  accent-color: var(--phosphor);
+}
+
+.relative-phase-lesson .rp-arcade select,
+.relative-phase-lesson input.rp-answer {
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 44px;
+  padding: 0.45rem 0.625rem;
+  border: 1px solid #4b6c5b;
+  border-radius: 0.375rem;
+  background: #101e18;
+  color: var(--ink);
+  font: inherit;
+}
+
+.relative-phase-lesson .rp-arcade select:disabled,
+.relative-phase-lesson input.rp-answer:disabled {
+  cursor: default;
+  opacity: 0.62;
+}
+
+.relative-phase-lesson input.rp-answer:user-invalid {
+  border-color: var(--red);
+}
+
+.relative-phase-lesson .rp-arcade :is(select, input):focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 3px;
+}
+
+.relative-phase-lesson .rp-station {
+  --rp-accent: var(--phosphor);
+  padding: clamp(0.75rem, 2vw, 1.35rem);
+  border: 1px solid var(--line);
+  border-block-start: 3px solid var(--rp-accent);
+  border-radius: 0.6rem;
+  background: var(--rp-surface);
+}
+
+.relative-phase-lesson [data-rp-accent="blue"] { --rp-accent: var(--blue); }
+.relative-phase-lesson [data-rp-accent="violet"] { --rp-accent: var(--violet); }
+.relative-phase-lesson [data-rp-accent="orange"] { --rp-accent: var(--orange); }
+.relative-phase-lesson [data-rp-accent="green"] { --rp-accent: var(--green); }
+.relative-phase-lesson [data-rp-accent="yellow"] { --rp-accent: var(--yellow); }
+.relative-phase-lesson [data-rp-accent="red"] { --rp-accent: var(--red); }
+
+.relative-phase-lesson .rp-station h4 {
+  color: var(--rp-accent);
+  font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+}
+
+.relative-phase-lesson .rp-station > fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.relative-phase-lesson .rp-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+  align-items: end;
+  gap: 0.65rem 0.85rem;
+}
+
+/* A complex number: one box for the real part and one for the imaginary part. */
+.relative-phase-lesson .rp-complex {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: end;
+  gap: 0.5rem 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-inline: 3px solid var(--rp-accent);
+  border-radius: 0.5rem;
+}
+
+.relative-phase-lesson :is(.rp-fields, .rp-complex) label:not(.rp-check-row) {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: end;
+  gap: 0.25rem 0.3em;
+  min-inline-size: 0;
+  font-size: 0.875rem;
+}
+
+.relative-phase-lesson :is(.rp-fields, .rp-complex) label > :is(input:not([type="checkbox"]), select) {
+  flex: 1 0 100%;
+}
+
+.relative-phase-lesson :is(.rp-fields, .rp-complex) label > output {
+  color: var(--rp-accent);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.relative-phase-lesson .rp-station input[type="range"] {
+  inline-size: 100%;
+  min-block-size: 44px;
+  margin: 0;
+  accent-color: var(--rp-accent);
+}
+
+.relative-phase-lesson .rp-step {
+  color: var(--rp-accent);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.relative-phase-lesson .rp-button-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.relative-phase-lesson .rp-arcade button {
+  max-inline-size: 100%;
+  font-size: 0.9375rem;
+}
+
+.relative-phase-lesson .rp-arcade button.rp-primary {
+  border-color: var(--rp-accent);
+  color: var(--rp-accent);
+  font-weight: 700;
+}
+
+.relative-phase-lesson .rp-readout {
+  padding: 0.5rem 0.7rem;
+  border-inline-start: 3px solid var(--rp-accent);
+  background: #081310;
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.relative-phase-lesson .rp-readout:empty,
+.relative-phase-lesson .rp-log:empty {
+  display: none;
+}
+
+.relative-phase-lesson .rp-log {
+  max-block-size: 10rem;
+  margin: 0;
+  overflow: auto;
+  padding-inline-start: 2.2rem;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.relative-phase-lesson .rp-worked {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0.6rem 0.75rem 0.6rem 2.2rem;
+  border-inline-start: 3px solid var(--rp-accent);
+  background: #07110d;
+  font-variant-numeric: tabular-nums;
+}
+
+.relative-phase-lesson .rp-mission {
+  padding: 0.15rem 0.75rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+  background: #0a1410;
+}
+
+.relative-phase-lesson .rp-mission[open] {
+  border-color: color-mix(in srgb, var(--rp-accent) 55%, var(--line));
+}
+
+.relative-phase-lesson .rp-mission > :not(summary) {
+  margin-block-start: 0.65rem;
+}
+
+.relative-phase-lesson .rp-mission [data-rp-done] {
+  margin-inline-start: auto;
+  color: var(--green);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.relative-phase-lesson .rp-mission-tools > button {
+  justify-self: start;
+}
+
+.relative-phase-lesson .rp-mission-tools ol {
+  margin: 0;
+  padding-inline-start: 1.25rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.relative-phase-lesson .rp-mission-tools details > summary {
+  font-size: 0.875rem;
+}
+
+.relative-phase-lesson .rp-mission-tools details p {
+  margin-block-start: 0.4rem;
+  padding: 0.5rem 0.7rem;
+  border-inline-start: 3px solid var(--line);
+  background: #07110d;
+  font-size: 0.875rem;
+}
+
+.relative-phase-lesson .rp-feedback:not(:empty) {
+  padding: 0.55rem 0.7rem;
+  border-inline-start: 3px solid var(--rp-accent);
+  background: #11241a;
+  font-size: 0.9rem;
+}
+
+.relative-phase-lesson .rp-math > p {
+  margin-block-start: 0.5rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.relative-phase-lesson .rp-figure figcaption {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.relative-phase-lesson .rp-viewport {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  inline-size: 100%;
+  aspect-ratio: 560 / 300;
+  border: 1px solid #36465b;
+  border-radius: 0.5rem;
+  background: var(--rp-plot);
+  touch-action: pan-y;
+}
+
+.relative-phase-lesson .rp-viewport[data-space="true"] {
+  cursor: grab;
+}
+
+.relative-phase-lesson :is(.rp-canvas, .rp-diagram) {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.relative-phase-lesson .rp-viewport[data-renderer="webgl"] [data-rp-geometry] {
+  visibility: hidden;
+}
+
+.relative-phase-lesson .rp-diagram {
+  --tone: var(--violet);
+  pointer-events: none;
+}
+
+.relative-phase-lesson .rp-diagram [data-tone="alpha"] { --tone: var(--phase-alpha); }
+.relative-phase-lesson .rp-diagram [data-tone="beta"] { --tone: var(--phase-beta); }
+.relative-phase-lesson .rp-diagram [data-tone="plus"] { --tone: var(--phase-plus); }
+.relative-phase-lesson .rp-diagram [data-tone="minus"] { --tone: var(--phase-minus); }
+.relative-phase-lesson .rp-diagram [data-tone="angle"] { --tone: var(--phase-angle); }
+.relative-phase-lesson .rp-diagram [data-tone="warn"] { --tone: var(--red); }
+.relative-phase-lesson .rp-diagram [data-tone="guide"] { --tone: var(--phase-axis); }
+.relative-phase-lesson .rp-diagram [data-tone="ink"] { --tone: var(--ink); }
+
+.relative-phase-lesson .rp-diagram .rp-frame {
+  fill: none;
+  stroke: #36465b;
+}
+
+.relative-phase-lesson .rp-diagram .rp-grid {
+  fill: none;
+  stroke: var(--phase-grid);
+  stroke-width: 1;
+}
+
+.relative-phase-lesson .rp-diagram .rp-axis {
+  fill: none;
+  stroke: var(--phase-axis);
+  stroke-width: 1.5;
+}
+
+.relative-phase-lesson .rp-diagram :is(.rp-ring, .rp-ray) {
+  fill: none;
+  stroke: var(--tone);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 5;
+  opacity: 0.85;
+}
+
+.relative-phase-lesson .rp-diagram .rp-arrow {
+  stroke: var(--tone);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
+.relative-phase-lesson .rp-diagram .rp-arrow.rp-dashed {
+  stroke-width: 2;
+  stroke-dasharray: 6 5;
+  opacity: 0.8;
+}
+
+.relative-phase-lesson .rp-diagram :is(.rp-head, .rp-dot, .rp-bar) {
+  fill: var(--tone);
+  stroke: var(--tone);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.relative-phase-lesson .rp-diagram :is(.rp-head, .rp-dot, .rp-bar).rp-hollow {
+  fill: var(--rp-plot);
+}
+
+.relative-phase-lesson .rp-diagram .rp-sphere {
+  fill: #0d1a2a;
+  stroke: var(--phase-axis);
+  stroke-width: 1.5;
+}
+
+.relative-phase-lesson .rp-diagram .rp-wire {
+  fill: none;
+  stroke: var(--phase-axis);
+  stroke-width: 1;
+  opacity: 0.6;
+}
+
+.relative-phase-lesson .rp-diagram .rp-back {
+  opacity: 0.4;
+  stroke-dasharray: 3 4;
+}
+
+.relative-phase-lesson .rp-diagram text {
+  paint-order: stroke;
+  stroke: var(--rp-plot);
+  stroke-width: 3.5;
+  stroke-linejoin: round;
+  fill: var(--ink);
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.relative-phase-lesson .rp-diagram text:is(.rp-label, .rp-caption)[data-tone] {
+  fill: var(--tone);
+}
+
+.relative-phase-lesson .rp-diagram text.rp-tick {
+  fill: var(--phase-axis);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.relative-phase-lesson .rp-diagram text.rp-caption {
+  font-size: 13px;
+}
+
+.relative-phase-lesson .rp-diagram text.rp-back {
+  stroke-dasharray: none;
+}
+
+.relative-phase-lesson .rp-sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 42rem) {
+  .relative-phase-lesson .rp-toolbar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 24rem) {
+  .relative-phase-lesson .rp-complex {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Arcade drawing additions: curves, rays, wide resultants and the bench. */
+.relative-phase-lesson .rp-diagram {
+  --tone: var(--phase-plus);
+}
+
+.relative-phase-lesson .rp-diagram .rp-curve {
+  fill: none;
+  stroke: var(--tone);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.relative-phase-lesson .rp-diagram .rp-curve.rp-dashed {
+  stroke-dasharray: 8 5;
+}
+
+.relative-phase-lesson .rp-diagram .rp-curve.rp-dotted {
+  stroke-dasharray: 2 4;
+  stroke-linecap: round;
+}
+
+.relative-phase-lesson .rp-diagram .rp-ray.rp-solid {
+  stroke-dasharray: none;
+  stroke-width: 1.7;
+}
+
+.relative-phase-lesson .rp-diagram .rp-arrow.rp-wide {
+  stroke-width: 8;
+  opacity: 0.62;
+}
+
+.relative-phase-lesson .rp-diagram .rp-frame {
+  fill: none;
+  stroke: var(--line);
+}
+
+.relative-phase-lesson .rp-diagram .rp-beam {
+  fill: none;
+  stroke: var(--tone);
+  stroke-linecap: round;
+}
+
+.relative-phase-lesson .rp-diagram .rp-part {
+  fill: color-mix(in srgb, var(--tone) 28%, var(--phase-plot));
+  stroke: var(--tone);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.relative-phase-lesson .rp-diagram .rp-table {
+  fill: #0d1d16;
+  stroke: var(--line);
+  stroke-width: 1.5;
+}
+
+.relative-phase-lesson .rp-toolbar > p,
+.relative-phase-lesson #rp-status:empty {
+  margin: 0;
+}
+
+.relative-phase-lesson .rp-body > p {
+  margin: 0;
+}
+
+.relative-phase-lesson .rp-station > p {
+  margin: 0;
+}
+
+.relative-phase-lesson .rp-arcade input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 3px;
+}

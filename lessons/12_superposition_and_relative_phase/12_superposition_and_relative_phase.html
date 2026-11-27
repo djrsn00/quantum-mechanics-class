@@ -6,10 +6,10 @@
   <meta name="theme-color" content="#050906">
   <meta name="description" content="Explore how relative phase changes quantum measurement predictions and why global phase leaves them unchanged.">
   <title>Superposition and Relative Phase | Quantum Mechanics Class</title>
-  <link rel="stylesheet" href="./styles/main.css">
+  <link rel="stylesheet" href="./styles/main.css?v=12-phase-arcade">
   <script src="./scripts/app.js" defer></script>
   <script src="./scripts/lessons-menu.js" defer></script>
-  <script type="module" src="./scripts/lesson.js"></script>
+  <script type="module" src="./scripts/lesson.js?v=12-phase-arcade"></script>
 </head>
 <body>
   <header class="site-header">
@@ -134,6 +134,7 @@
       <p>Start with the normalized state |ψ⟩ = α|0⟩ + β|1⟩. The symbol ψ names the state, and α and β are the complex amplitudes for the two basis kets. A <strong>superposition</strong> is a linear combination of basis states. Which components appear depends on the basis you choose.</p>
       <p class="phase-equation">|ψ(φ, γ)⟩ = (e<sup>iγ</sup>/√2)(|0⟩ + e<sup>iφ</sup>|1⟩)</p>
       <p>In the lab, <strong>φ</strong> is the phase of β relative to α, and <strong>γ</strong> is the common phase. Here <em>i</em>² = −1, and e<sup>iθ</sup> turns a complex number through angle θ without changing its magnitude. Both amplitudes have magnitude 1/√2, so their squared magnitudes always add to 1.</p>
+      <p><a id="rp-arcade-link" href="#relative-phase-arcade">Open the optional Relative Phase Arcade</a></p>
     </header>
 
     <section class="lesson-panel phase-lab" id="phase-lab" aria-labelledby="phase-lab-title">
@@ -494,6 +495,749 @@
         </fieldset>
       </form>
     </section>
+
+    <details class="lesson-panel rp-arcade" id="relative-phase-arcade">
+      <summary><strong>Relative Phase Arcade</strong><span>Optional practice</span></summary>
+      <div class="rp-body">
+        <p>Pick a station, try its controls, and open a mission when you’re ready. Each mission has two hints. Progress lasts while this page is open.</p>
+        <p class="lesson-note" id="rp-tolerance">Answer boxes accept whole numbers, decimals, fractions such as −2/3, and square roots such as 1/√2 or (2 + √3)/4. Each complex number has one box for its real part and one for its imaginary part. Answers that end as decimals, such as 0.25 or 0.9, are checked exactly. Answers such as 1/3 or √3/2 can be typed exactly, or as decimals within 0.002 of the exact value, separately for each real and imaginary part. Phases are typed in degrees, and angles that differ by whole turns count as equal, so −50° and 310° are the same answer. Typed angles count within 1°. Probabilities computed from a state or setting you build count when they are within 0.005 of the target.</p>
+        <div class="rp-toolbar">
+          <label for="rp-station">Station
+            <select id="rp-station" aria-controls="rp-panels" disabled>
+              <optgroup label="Relative phase in action">
+                <option value="tuner">1 · Phase Tuner</option>
+                <option value="same">2 · Same State or Not?</option>
+                <option value="unequal">3 · Unequal Interference</option>
+                <option value="curves">4 · Curve Matcher</option>
+                <option value="measure">5 · Pick the Measurement</option>
+                <option value="third">6 · The Third Basis</option>
+              </optgroup>
+              <optgroup label="Phase as a tool">
+                <option value="gates">7 · Phase Gate Workshop</option>
+                <option value="bench">8 · Interferometer Bench (3D)</option>
+                <option value="trials">9 · Coherent vs Random</option>
+              </optgroup>
+              <optgroup label="Recurring formats">
+                <option value="designer">10 · Phase Designer</option>
+                <option value="detective">11 · Error Detective</option>
+                <option value="motion">12 · Quantum Preview: Phase in Motion</option>
+              </optgroup>
+              <optgroup label="Extras">
+                <option value="bloch">13 · Bloch Sphere Longitude (3D)</option>
+                <option value="polar">14 · Polarization Lab</option>
+                <option value="wave">15 · Wave Callback</option>
+              </optgroup>
+            </select>
+          </label>
+          <p id="rp-progress" role="status">0 of 61 missions completed this session.</p>
+          <button id="rp-reset" type="button" disabled>Reset this station</button>
+          <label class="rp-reduced" for="rp-reduced"><input id="rp-reduced" type="checkbox" disabled> Reduced effects</label>
+        </div>
+        <p class="lesson-note" id="rp-status" role="status"></p>
+        <p><a href="#phase-lab-title">Return to the Relative Phase Lab</a></p>
+        <noscript><p class="lesson-note">JavaScript runs the arcade diagrams, controls, and mission checks.</p></noscript>
+
+        <div id="rp-panels">
+          <section class="rp-station" data-rp-station="tuner" data-rp-accent="blue" aria-labelledby="rp-tuner-title">
+            <h4 id="rp-tuner-title">Phase Tuner</h4>
+            <p>Here the target is a probability, not an angle. The state is (|0⟩ + e<sup>iφ</sup>|1⟩)/√2. Turn φ until the readout hits the target, record that angle, and then look for a second one. Most targets have two solutions in one turn.</p>
+            <div data-rp-plot-slot></div>
+            <fieldset disabled>
+              <legend class="rp-sr-only">Phase Tuner controls</legend>
+              <div class="rp-fields">
+                <label>Target <select name="target"><option value="t34" selected>P(+) = 3/4</option><option value="t14">P(+) = 1/4</option><option value="m09">P(−) = 0.9</option></select></label>
+                <label>Relative phase φ <output data-rp-for="phi" data-rp-angle>0° · 0 rad</output><input type="range" name="phi" min="0" max="359" step="1" value="0"></label>
+                <label>Or type φ in degrees <input class="rp-answer" type="text" name="typed" autocomplete="off" spellcheck="false"></label>
+              </div>
+              <div class="rp-button-row"><button class="rp-primary" type="button" data-rp-action="record">Record the slider’s φ</button><button type="button" data-rp-action="typed">Record the typed φ</button><button type="button" data-rp-action="clear">Clear recorded angles</button></div>
+              <p class="rp-readout" data-rp-read="state" aria-live="polite"></p>
+              <ul class="rp-log" data-rp-log="log" aria-label="Recorded angles"></ul>
+              <div class="rp-missions">
+                <details class="rp-mission" data-rp-mission="tuner-t34">
+                  <summary>Three quarters plus, twice<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Record two different angles in one turn that each give P(+) = 3/4.</p>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="tuner-t14">
+                  <summary>One quarter plus, twice<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Record two different angles that each give P(+) = 1/4.</p>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="tuner-m09">
+                  <summary>Ninety percent minus<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Record two different angles that each give P(−) = 0.9. Neither is a whole-number fraction of a turn.</p>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="tuner-mirror">
+                  <summary>The mirror angle<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>At φ = 50°, P(+) = cos²(25°) ≈ 0.821. Type the other angle in one turn that gives the same P(+).</p>
+                  <div class="rp-fields"><label>Other angle, in degrees <input class="rp-answer" type="text" name="mirror" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="rp-math">
+              <summary>Show the math</summary>
+              <p>P(+) = (1 + cos φ)/2 depends on φ only through cos φ, and cos(360° − φ) = cos φ. So every value strictly between 0 and 1 is reached at two angles, φ and 360° − φ, which are mirror images about 180°. Only P(+) = 1 (φ = 0°) and P(+) = 0 (φ = 180°) have a single solution in one turn.</p>
+            </details>
+          </section>
+
+          <section class="rp-station" data-rp-station="same" data-rp-accent="orange" aria-labelledby="rp-same-title" hidden>
+            <h4 id="rp-same-title">Same State or Not?</h4>
+            <p>Each mission gives two kets. Decide whether they describe the same physical state (they differ only by a global phase) or different states. The trial rotation multiplies the second ket by e<sup>iγ</sup>, turning both of its arrows together. If some γ lays them exactly on the first ket’s arrows, the states are the same.</p>
+            <div data-rp-plot-slot></div>
+            <fieldset disabled>
+              <legend class="rp-sr-only">Same State or Not? controls</legend>
+              <div class="rp-fields">
+                <label>Trial rotation γ for the second ket <output data-rp-for="trial" data-rp-angle>0° · 0 rad</output><input type="range" name="trial" min="0" max="359" step="1" value="0"></label>
+              </div>
+              <p class="rp-readout" data-rp-read="state" aria-live="polite"></p>
+              <div class="rp-missions">
+                <details class="rp-mission" data-rp-mission="same-p1">
+                  <summary>Pair 1 · Both have an i<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>First (i|0⟩ − |1⟩)/√2, second (|0⟩ + i|1⟩)/√2.</p>
+                  <div class="rp-fields"><label>Verdict <select name="v-p1" required><option value="">Choose</option><option value="global">Same physical state: global phase only</option><option value="relative">Different states: the relative phase differs</option><option value="magnitude">Different states: the magnitudes differ</option></select></label><label>γ with first = e<sup>iγ</sup> × second, or Δφ, in degrees <input class="rp-answer" type="text" name="a-p1" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="same-p2">
+                  <summary>Pair 2 · Mirror images<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>First (|0⟩ + i|1⟩)/√2, second (|0⟩ − i|1⟩)/√2.</p>
+                  <div class="rp-fields"><label>Verdict <select name="v-p2" required><option value="">Choose</option><option value="global">Same physical state: global phase only</option><option value="relative">Different states: the relative phase differs</option><option value="magnitude">Different states: the magnitudes differ</option></select></label><label>γ with first = e<sup>iγ</sup> × second, or Δφ, in degrees <input class="rp-answer" type="text" name="a-p2" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="same-p3">
+                  <summary>Pair 3 · Signs swapped<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>First (−|0⟩ + |1⟩)/√2, second (|0⟩ − |1⟩)/√2.</p>
+                  <div class="rp-fields"><label>Verdict <select name="v-p3" required><option value="">Choose</option><option value="global">Same physical state: global phase only</option><option value="relative">Different states: the relative phase differs</option><option value="magnitude">Different states: the magnitudes differ</option></select></label><label>γ with first = e<sup>iγ</sup> × second, or Δφ, in degrees <input class="rp-answer" type="text" name="a-p3" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="same-p4">
+                  <summary>Pair 4 · Phases everywhere<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>First e<sup>i30°</sup>(|0⟩ + e<sup>i45°</sup>|1⟩)/√2, second (e<sup>i75°</sup>|0⟩ + e<sup>i120°</sup>|1⟩)/√2.</p>
+                  <div class="rp-fields"><label>Verdict <select name="v-p4" required><option value="">Choose</option><option value="global">Same physical state: global phase only</option><option value="relative">Different states: the relative phase differs</option><option value="magnitude">Different states: the magnitudes differ</option></select></label><label>γ with first = e<sup>iγ</sup> × second, or Δφ, in degrees <input class="rp-answer" type="text" name="a-p4" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="same-p5">
+                  <summary>Pair 5 · Swapped sizes<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>First (√3|0⟩ + |1⟩)/2, second (|0⟩ + √3|1⟩)/2. Leave the angle box blank if no angle applies.</p>
+                  <div class="rp-fields"><label>Verdict <select name="v-p5" required><option value="">Choose</option><option value="global">Same physical state: global phase only</option><option value="relative">Different states: the relative phase differs</option><option value="magnitude">Different states: the magnitudes differ</option></select></label><label>γ with first = e<sup>iγ</sup> × second, or Δφ, in degrees <input class="rp-answer" type="text" name="a-p5" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="rp-math">
+              <summary>Show the math</summary>
+              <p>Two kets describe the same physical state exactly when one is e<sup>iγ</sup> times the other. Then |α| and |β| match and so does the relative phase, the angle of β/α. To find γ, divide matching nonzero amplitudes: e<sup>iγ</sup> = α<sub>first</sub>/α<sub>second</sub>. If the magnitudes match but the ratios β/α differ, the relative phases differ by Δφ, and some basis gives different predictions.</p>
+            </details>
+          </section>
+
+          <section class="rp-station" data-rp-station="unequal" data-rp-accent="green" aria-labelledby="rp-unequal-title" hidden>
+            <h4 id="rp-unequal-title">Unequal Interference</h4>
+            <p>The lab keeps |α| = |β|. Here you choose the sizes. α is real and positive, and β = |β|e<sup>iφ</sup>. Build c₊ or c₋ head to tail. The dashed circle shows every point the second arrow can reach as φ turns. Watch whether it can ever pass through 0.</p>
+            <div data-rp-plot-slot></div>
+            <fieldset disabled>
+              <legend class="rp-sr-only">Unequal Interference controls</legend>
+              <div class="rp-fields">
+                <label>|α|² <output data-rp-for="a2">0.8</output><input type="range" name="a2" min="0" max="1" step="0.01" value="0.8"></label>
+                <label>Relative phase φ <output data-rp-for="phi" data-rp-angle>0° · 0 rad</output><input type="range" name="phi" min="0" max="359" step="1" value="0"></label>
+                <label>Amplitude to build <select name="branch"><option value="plus" selected>c₊ · add α and β</option><option value="minus">c₋ · add α and −β</option></select></label>
+              </div>
+              <p class="rp-readout" data-rp-read="state" aria-live="polite"></p>
+              <div class="rp-missions">
+                <details class="rp-mission" data-rp-mission="unequal-extremes">
+                  <summary>The range at |α|² = 0.8<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>With |α|² = 0.8 and |β|² = 0.2, find the largest and smallest P(+) as φ turns.</p>
+                  <div class="rp-fields"><label>Largest P(+) <input class="rp-answer" type="text" name="ext-max" autocomplete="off" spellcheck="false"></label><label>Smallest P(+) <input class="rp-answer" type="text" name="ext-min" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="unequal-floor">
+                  <summary>Can c₊ vanish?<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Set |α|² = 0.64. Find the smallest P(+), then explain whether c₊ can ever be exactly 0.</p>
+                  <div class="rp-fields"><label>Smallest P(+) <input class="rp-answer" type="text" name="floor-min" autocomplete="off" spellcheck="false"></label><label>Can c₊ = 0? <select name="floor-why" required><option value="">Choose</option><option value="phase">Yes, at φ = 180°</option><option value="global">Yes, with the right global phase</option><option value="unequal">No: the second arrow is too short to reach back to 0</option></select></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="unequal-swing">
+                  <summary>A swing of 0.6<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Set the |α|² slider so that P(+) swings by exactly 0.6 from its smallest to its largest value. The checker reads your slider.</p>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="unequal-build">
+                  <summary>Build c₊ by hand<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>With |α|² = 1/4 and φ = 90°, find c₊. The readout hides c₊ while this mission is open, but the drawing still shows it.</p>
+                  <div class="rp-complex" role="group" aria-label="c₊"><label>Real part of c₊ <input class="rp-answer" type="text" name="b-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of c₊ <input class="rp-answer" type="text" name="b-im" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="rp-math">
+              <summary>Show the math</summary>
+              <p>With α = |α| and β = |β|e<sup>iφ</sup>, |α + β|² = |α|² + |β|² + 2|α||β| cos φ. Dividing by 2 gives P(+) = 1/2 + |α||β| cos φ, and P(−) = 1/2 − |α||β| cos φ. The curve is centred on 1/2 and swings by |α||β| each way. That swing reaches 1/2, which allows complete cancellation, only when |α| = |β| = 1/√2.</p>
+            </details>
+          </section>
+
+          <section class="rp-station" data-rp-station="curves" data-rp-accent="yellow" aria-labelledby="rp-curves-title" hidden>
+            <h4 id="rp-curves-title">Curve Matcher</h4>
+            <p>Each curve shows P(+) as a dial turns the |1⟩ amplitude: the state is α|0⟩ + e<sup>iφ</sup>β|1⟩. Read the curve’s highest point, lowest point and peak position to work backward to the state. Open a mission to load its curves.</p>
+            <div data-rp-plot-slot></div>
+            <fieldset disabled>
+              <legend class="rp-sr-only">Curve Matcher controls</legend>
+              <p class="rp-readout" data-rp-read="state" aria-live="polite"></p>
+              <div class="rp-missions">
+                <details class="rp-mission" data-rp-mission="curves-match">
+                  <summary>Three curves, three states<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Each of these states has α, β ≥ 0: |α|² = 1/2, |α|² = 0.9 and |α|² = 1. Match each curve to its state.</p>
+                  <div class="rp-fields"><label>Curve A <select name="match-a" required><option value="">Choose</option><option value="h">|α|² = 1/2</option><option value="n">|α|² = 0.9</option><option value="o">|α|² = 1</option></select></label><label>Curve B <select name="match-b" required><option value="">Choose</option><option value="h">|α|² = 1/2</option><option value="n">|α|² = 0.9</option><option value="o">|α|² = 1</option></select></label><label>Curve C <select name="match-c" required><option value="">Choose</option><option value="h">|α|² = 1/2</option><option value="n">|α|² = 0.9</option><option value="o">|α|² = 1</option></select></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="curves-read">
+                  <summary>Magnitudes from a curve<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>This curve runs from 0.1 to 0.9. Find |α|² and |β|².</p>
+                  <div class="rp-fields"><label>|α|² <input class="rp-answer" type="text" name="read-a2" autocomplete="off" spellcheck="false"></label><label>|β|² <input class="rp-answer" type="text" name="read-b2" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="curves-shift">
+                  <summary>A curve that peaks late<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>This curve swings fully but peaks at φ = 270° instead of 0°. Which state (α, β)ᵀ, before the dial turns β, produced it?</p>
+                  <div class="rp-fields"><label>State <select name="shift-pick" required><option value="">Choose</option><option value="a">(1, i)ᵀ/√2</option><option value="b">(1, −i)ᵀ/√2</option><option value="c">(1, −1)ᵀ/√2</option><option value="d">(i, 1)ᵀ/√2</option></select></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="curves-fake">
+                  <summary>The impossible curve<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Three of these curves come from real states. One can’t come from any normalized state. Which one?</p>
+                  <div class="rp-fields"><label>Impossible curve <select name="fake-pick" required><option value="">Choose</option><option value="a">Curve A</option><option value="b">Curve B</option><option value="c">Curve C</option><option value="d">Curve D</option></select></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="rp-math">
+              <summary>Show the math</summary>
+              <p>For α|0⟩ + e<sup>iφ</sup>β|1⟩, P(+) = 1/2 + |α||β| cos(φ + arg β − arg α). The middle value is always 1/2. The swing |α||β| fixes the magnitudes up to swapping them, and the peak sits where e<sup>iφ</sup>β lines up with α, at φ = arg α − arg β.</p>
+            </details>
+          </section>
+
+          <section class="rp-station" data-rp-station="measure" data-rp-accent="red" aria-labelledby="rp-measure-title" hidden>
+            <h4 id="rp-measure-title">Pick the Measurement</h4>
+            <p>You are handed one of two preparations, A or B. Choose a basis whose single outcome tells you which one with certainty, or explain why none can. Besides 0/1 and +/−, you can use the +i/−i basis, |±i⟩ = (|0⟩ ± i|1⟩)/√2. Station 6 explores it.</p>
+            <div data-rp-plot-slot></div>
+            <fieldset disabled>
+              <legend class="rp-sr-only">Pick the Measurement controls</legend>
+              <div class="rp-fields">
+                <label>Preview a basis <select name="basis"><option value="z" selected>0/1 basis</option><option value="x">+/− basis</option><option value="y">+i/−i basis</option></select></label>
+              </div>
+              <p class="rp-readout" data-rp-read="state" aria-live="polite"></p>
+              <div class="rp-missions">
+                <details class="rp-mission" data-rp-mission="measure-pm">
+                  <summary>|+i⟩ or |−i⟩?<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>A = |+i⟩, B = |−i⟩.</p>
+                  <div class="rp-fields"><label>Best choice <select name="pick-pm" required><option value="">Choose</option><option value="z">0/1 basis</option><option value="x">+/− basis</option><option value="y">+i/−i basis</option><option value="same">None: they are the same physical state</option><option value="overlap">None: they overlap, so no basis gives certainty</option></select></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="measure-same">
+                  <summary>|0⟩ or i|0⟩?<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>A = |0⟩, B = i|0⟩.</p>
+                  <div class="rp-fields"><label>Best choice <select name="pick-same" required><option value="">Choose</option><option value="z">0/1 basis</option><option value="x">+/− basis</option><option value="y">+i/−i basis</option><option value="same">None: they are the same physical state</option><option value="overlap">None: they overlap, so no basis gives certainty</option></select></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="measure-overlap">
+                  <summary>|+⟩ or |+i⟩?<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>A = |+⟩, B = |+i⟩.</p>
+                  <div class="rp-fields"><label>Best choice <select name="pick-overlap" required><option value="">Choose</option><option value="z">0/1 basis</option><option value="x">+/− basis</option><option value="y">+i/−i basis</option><option value="same">None: they are the same physical state</option><option value="overlap">None: they overlap, so no basis gives certainty</option></select></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="measure-disguise">
+                  <summary>Two disguised kets<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>A = (−|0⟩ − |1⟩)/√2, B = (i|0⟩ − i|1⟩)/√2.</p>
+                  <div class="rp-fields"><label>Best choice <select name="pick-disguise" required><option value="">Choose</option><option value="z">0/1 basis</option><option value="x">+/− basis</option><option value="y">+i/−i basis</option><option value="same">None: they are the same physical state</option><option value="overlap">None: they overlap, so no basis gives certainty</option></select></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="measure-z">
+                  <summary>Phases on single kets<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>A = −i|1⟩, B = e<sup>i30°</sup>|0⟩.</p>
+                  <div class="rp-fields"><label>Best choice <select name="pick-z" required><option value="">Choose</option><option value="z">0/1 basis</option><option value="x">+/− basis</option><option value="y">+i/−i basis</option><option value="same">None: they are the same physical state</option><option value="overlap">None: they overlap, so no basis gives certainty</option></select></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="rp-math">
+              <summary>Show the math</summary>
+              <p>A basis gives certainty only if A is (up to a phase) one of its kets and B is the other, which needs ⟨A|B⟩ = 0. If |⟨A|B⟩| = 1, A and B are the same physical state, and no basis can separate them. Anything in between means the states overlap: some outcome is possible for both, whichever basis you choose.</p>
+            </details>
+          </section>
+
+          <section class="rp-station" data-rp-station="third" data-rp-accent="violet" aria-labelledby="rp-third-title" hidden>
+            <h4 id="rp-third-title">The Third Basis</h4>
+            <p>Relative phases of 0° and 180° give |+⟩ and |−⟩. Relative phases of ±90° give a third pair, |+i⟩ = (|0⟩ + i|1⟩)/√2 and |−i⟩ = (|0⟩ − i|1⟩)/√2. You met these points on Lesson 11’s Bloch preview. Their amplitudes are c₊ᵢ = ⟨+i|ψ⟩ = (α − iβ)/√2 and c₋ᵢ = (α + iβ)/√2. The bra conjugates the i. Find all three predictions for one state. The bars appear once you complete a mission.</p>
+            <div data-rp-plot-slot></div>
+            <fieldset disabled>
+              <legend class="rp-sr-only">The Third Basis controls</legend>
+              <p class="rp-readout" data-rp-read="state" aria-live="polite"></p>
+              <div class="rp-missions">
+                <details class="rp-mission" data-rp-mission="third-sixty">
+                  <summary>A 60° state in three bases<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>|ψ⟩ = (|0⟩ + e<sup>i60°</sup>|1⟩)/√2.</p>
+                  <div class="rp-fields"><label>P(0) <input class="rp-answer" type="text" name="sixty-z" autocomplete="off" spellcheck="false"></label><label>P(+) <input class="rp-answer" type="text" name="sixty-x" autocomplete="off" spellcheck="false"></label><label>P(+i) <input class="rp-answer" type="text" name="sixty-y" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="third-root">
+                  <summary>Unequal sizes, imaginary β<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>|ψ⟩ = (√3|0⟩ − i|1⟩)/2.</p>
+                  <div class="rp-fields"><label>P(0) <input class="rp-answer" type="text" name="root-z" autocomplete="off" spellcheck="false"></label><label>P(+) <input class="rp-answer" type="text" name="root-x" autocomplete="off" spellcheck="false"></label><label>P(+i) <input class="rp-answer" type="text" name="root-y" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="third-minusi">
+                  <summary>A basis ket of its own<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>|ψ⟩ = (|0⟩ − i|1⟩)/√2.</p>
+                  <div class="rp-fields"><label>P(0) <input class="rp-answer" type="text" name="minusi-z" autocomplete="off" spellcheck="false"></label><label>P(+) <input class="rp-answer" type="text" name="minusi-x" autocomplete="off" spellcheck="false"></label><label>P(+i) <input class="rp-answer" type="text" name="minusi-y" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="third-conj">
+                  <summary>Mind the conjugate<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>For |ψ⟩ = (|0⟩ + i|1⟩)/√2, find the amplitude c₊ᵢ = ⟨+i|ψ⟩.</p>
+                  <div class="rp-complex" role="group" aria-label="c₊ᵢ"><label>Real part of c₊ᵢ <input class="rp-answer" type="text" name="conj-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of c₊ᵢ <input class="rp-answer" type="text" name="conj-im" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="rp-math">
+              <summary>Show the math</summary>
+              <p>⟨+i| = (⟨0| − i⟨1|)/√2, so c₊ᵢ = (α − iβ)/√2. For an equal-magnitude state (|0⟩ + e<sup>iφ</sup>|1⟩)/√2 this gives P(+i) = (1 + sin φ)/2, next to P(+) = (1 + cos φ)/2. The 0/1 basis sees only magnitudes. The +/− basis reads the cosine of φ and the +i/−i basis reads its sine, so between them they pin down φ completely.</p>
+            </details>
+          </section>
+          <section class="rp-station" data-rp-station="gates" data-rp-accent="blue" aria-labelledby="rp-gates-title" hidden>
+            <h4 id="rp-gates-title">Phase Gate Workshop</h4>
+            <p>Lesson 9’s 2×2 matrices act on the amplitude column (α, β)ᵀ. This workshop has two gates. The basis switch H = (1/√2)[[1, 1], [1, −1]] turns (α, β)ᵀ into (c₊, c₋)ᵀ, and the phase shift P(θ) = [[1, 0], [0, e<sup>iθ</sup>]] turns β alone. Gates run left to right through the slots. Predict each mission’s output first, then build its sequence here to check.</p>
+            <div data-rp-plot-slot></div>
+            <fieldset disabled>
+              <legend class="rp-sr-only">Phase Gate Workshop controls</legend>
+              <div class="rp-fields">
+                <label>Input <select name="input"><option value="zero" selected>|0⟩</option><option value="one">|1⟩</option><option value="plus">|+⟩</option><option value="plusi">|+i⟩</option></select></label>
+                <label>Slot 1 <select name="g1"><option value="none" selected>—</option><option value="H">H · switch basis</option><option value="P">P(θ) · phase shift</option></select></label>
+                <label>Slot 2 <select name="g2"><option value="none" selected>—</option><option value="H">H · switch basis</option><option value="P">P(θ) · phase shift</option></select></label>
+                <label>Slot 3 <select name="g3"><option value="none" selected>—</option><option value="H">H · switch basis</option><option value="P">P(θ) · phase shift</option></select></label>
+                <label>Slot 4 <select name="g4"><option value="none" selected>—</option><option value="H">H · switch basis</option><option value="P">P(θ) · phase shift</option></select></label>
+                <label>Phase-shift angle θ <output data-rp-for="theta" data-rp-angle>90° · π/2 rad</output><input type="range" name="theta" min="0" max="359" step="1" value="90"></label>
+              </div>
+              <p class="rp-readout" data-rp-read="state" aria-live="polite"></p>
+              <div class="rp-missions">
+                <details class="rp-mission" data-rp-mission="gates-flip">
+                  <summary>Switch, flip, switch back<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Predict the output of H → P(180°) → H acting on |0⟩.</p>
+                  <div class="rp-complex" role="group" aria-label="output α′"><label>Real part of α′ <input class="rp-answer" type="text" name="f-a-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of α′ <input class="rp-answer" type="text" name="f-a-im" autocomplete="off" spellcheck="false"></label></div>
+                  <div class="rp-complex" role="group" aria-label="output β′"><label>Real part of β′ <input class="rp-answer" type="text" name="f-b-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of β′ <input class="rp-answer" type="text" name="f-b-im" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="gates-quarter">
+                  <summary>A quarter-turn in the middle<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Predict the output of H → P(90°) → H acting on |0⟩.</p>
+                  <div class="rp-complex" role="group" aria-label="output α′"><label>Real part of α′ <input class="rp-answer" type="text" name="q-a-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of α′ <input class="rp-answer" type="text" name="q-a-im" autocomplete="off" spellcheck="false"></label></div>
+                  <div class="rp-complex" role="group" aria-label="output β′"><label>Real part of β′ <input class="rp-answer" type="text" name="q-b-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of β′ <input class="rp-answer" type="text" name="q-b-im" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="gates-collapse">
+                  <summary>Three gates, one matrix<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Multiply out H · P(180°) · H into a single 2×2 matrix. All four entries are real.</p>
+                  <div class="rp-fields rp-matrix"><label>Row 1, column 1 <input class="rp-answer" type="text" name="m11" autocomplete="off" spellcheck="false"></label><label>Row 1, column 2 <input class="rp-answer" type="text" name="m12" autocomplete="off" spellcheck="false"></label><label>Row 2, column 1 <input class="rp-answer" type="text" name="m21" autocomplete="off" spellcheck="false"></label><label>Row 2, column 2 <input class="rp-answer" type="text" name="m22" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="gates-order">
+                  <summary>Does the order matter?<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>The input is |+⟩. Which order changes the 0/1 predictions compared with using H alone?</p>
+                  <div class="rp-fields"><label>Order <select name="order-pick" required><option value="">Choose</option><option value="ph">P(90°), then H</option><option value="hp">H, then P(90°)</option></select></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="rp-math">
+              <summary>Show the math</summary>
+              <p>H(α, β)ᵀ = ((α + β)/√2, (α − β)/√2)ᵀ = (c₊, c₋)ᵀ, and H · H = I, so a second H switches back. P(θ)(α, β)ᵀ = (α, e<sup>iθ</sup>β)ᵀ changes only the relative phase, so it never changes P(0) or P(1) by itself. Sandwiched between two switches it does: H · P(θ) · H sends |0⟩ to ((1 + e<sup>iθ</sup>)/2, (1 − e<sup>iθ</sup>)/2)ᵀ, so P(1) = sin²(θ/2).</p>
+            </details>
+          </section>
+
+          <section class="rp-station" data-rp-station="bench" data-rp-accent="orange" aria-labelledby="rp-bench-title" hidden>
+            <h4 id="rp-bench-title">Interferometer Bench (3D)</h4>
+            <p>This is the physical version of the workshop. A photon meets a 50/50 beam splitter, so its amplitude divides between an upper and a lower path. A phase shifter on the upper arm turns that path’s amplitude by θ. A second splitter recombines the paths in front of detectors D0 and D1. Drag the bench or use the view sliders to turn it.</p>
+            <div data-rp-plot-slot></div>
+            <fieldset disabled>
+              <legend class="rp-sr-only">Interferometer Bench controls</legend>
+              <div class="rp-fields">
+                <label>Phase shifter θ <output data-rp-for="theta" data-rp-angle>0° · 0 rad</output><input type="range" name="theta" min="0" max="359" step="1" value="0"></label>
+                <label>Turn the view <output data-rp-for="turn" data-rp-unit="°">0°</output><input type="range" name="turn" min="-60" max="60" step="5" value="0"></label>
+                <label>Tilt the view <output data-rp-for="tilt" data-rp-unit="°">55°</output><input type="range" name="tilt" min="15" max="90" step="5" value="55"></label>
+              </div>
+              <div class="rp-fields">
+                <label class="rp-check-row"><input type="checkbox" name="block-up"> Block the upper arm</label>
+                <label class="rp-check-row"><input type="checkbox" name="block-low"> Block the lower arm</label>
+                <label class="rp-check-row"><input type="checkbox" name="no-bs2"> Remove the second beam splitter</label>
+              </div>
+              <p class="rp-readout" data-rp-read="state" aria-live="polite"></p>
+              <div class="rp-missions">
+                <details class="rp-mission" data-rp-mission="bench-dark">
+                  <summary>Every photon to D1<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>With both arms open and both splitters in place, set the phase shifter so that every photon reaches D1. The checker reads your bench.</p>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="bench-block">
+                  <summary>Block one path<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Block exactly one arm and keep the second splitter in place. What fraction of photons reaches D0?</p>
+                  <div class="rp-fields"><label>P(D0) <input class="rp-answer" type="text" name="block-ans" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="bench-remove">
+                  <summary>No second splitter<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Remove the second beam splitter and turn the phase shifter. What does θ do now?</p>
+                  <div class="rp-fields"><label>Effect of θ <select name="remove-pick" required><option value="">Choose</option><option value="none">Nothing: each detector gets 1/2 for every θ</option><option value="dark">θ = 180° still sends every photon to D1</option><option value="half">θ moves P(D0) between 0 and 1/2</option></select></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="bench-gates">
+                  <summary>The bench as gates<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Which gate sequence from the workshop does the intact bench perform on the path amplitudes?</p>
+                  <div class="rp-fields"><label>Sequence <select name="gate-pick" required><option value="">Choose</option><option value="hph">H, then P(θ), then H</option><option value="ph">P(θ), then H</option><option value="hh">H, then H</option></select></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="rp-math">
+              <summary>Show the math</summary>
+              <p>Write the photon’s state as amplitudes for (upper, lower). The first splitter gives (1/√2, 1/√2). The phase shifter makes it (e<sup>iθ</sup>/√2, 1/√2). The second splitter sends (u + l)/√2 to D0 and (u − l)/√2 to D1, so P(D0) = cos²(θ/2) and P(D1) = sin²(θ/2). This matches the 50/50 splitter convention used here. Other conventions add fixed phases that slide the pattern without changing its shape.</p>
+            </details>
+          </section>
+
+          <section class="rp-station" data-rp-station="trials" data-rp-accent="green" aria-labelledby="rp-trials-title" hidden>
+            <h4 id="rp-trials-title">Coherent vs Random</h4>
+            <p class="lesson-kicker">Optional preview</p>
+            <p>This preview uses simple counts only. Run 20 simulated trials of the coherent |+⟩, or of a procedure that prepares |0⟩ or |1⟩ at random with equal chances, and measure in either basis. The simulator uses a fixed seed, so resetting this station replays the same sequence. Lesson 13 handles trial statistics properly.</p>
+            <div data-rp-plot-slot></div>
+            <fieldset disabled>
+              <legend class="rp-sr-only">Coherent vs Random controls</legend>
+              <div class="rp-fields">
+                <label>Preparation <select name="prep"><option value="coherent" selected>Coherent |+⟩</option><option value="random">Random 50/50 |0⟩ or |1⟩</option></select></label>
+                <label>Measurement basis <select name="basis"><option value="z" selected>0/1 basis</option><option value="x">+/− basis</option></select></label>
+              </div>
+              <div class="rp-button-row"><button class="rp-primary" type="button" data-rp-action="run">Run 20 trials</button><button type="button" data-rp-action="reseed">New seed</button></div>
+              <p class="rp-readout" data-rp-read="state" aria-live="polite"></p>
+              <ul class="rp-log" data-rp-log="runs" aria-label="Recorded runs"></ul>
+              <div class="rp-missions">
+                <details class="rp-mission" data-rp-mission="trials-z">
+                  <summary>Same counts in 0/1?<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Record a 0/1 run of each preparation. Could the counts tell you which preparation you had?</p>
+                  <div class="rp-fields"><label>Verdict <select name="z-pick" required><option value="">Choose</option><option value="no">No: both give a mix of 0s and 1s</option><option value="yes">Yes: the coherent state gives more 0s</option></select></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="trials-coherent">
+                  <summary>Coherent |+⟩ in +/−<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Record a +/− run of the coherent |+⟩. How many − outcomes did it give?</p>
+                  <div class="rp-fields"><label>Number of − outcomes <input class="rp-answer" type="text" name="coh-minus" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="trials-random">
+                  <summary>Random mix in +/−<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Record a +/− run of the random preparation. How many − outcomes did it give?</p>
+                  <div class="rp-fields"><label>Number of − outcomes <input class="rp-answer" type="text" name="rand-minus" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="rp-math">
+              <summary>Show the math</summary>
+              <p>This is the lesson’s table, played out. Both preparations give P(0) = P(1) = 1/2. In the +/− basis the coherent |+⟩ gives P(−) = 0, because its amplitudes cancel in c₋. The random procedure gives P(−) = 1/2, because each of |0⟩ and |1⟩ gives 1/2 and averaging keeps it 1/2. One − outcome is enough to rule out the coherent |+⟩.</p>
+            </details>
+          </section>
+
+          <section class="rp-station" data-rp-station="designer" data-rp-accent="violet" aria-labelledby="rp-designer-title" hidden>
+            <h4 id="rp-designer-title">Phase Designer</h4>
+            <p>Here you work the problem the other way round. Each card sets targets in two bases at once, and you design the state. Many answers work. The checker tests the state you actually build. Magnitudes set P(0), and the relative phase sets the rest.</p>
+            <div data-rp-plot-slot></div>
+            <fieldset disabled>
+              <legend class="rp-sr-only">Phase Designer controls</legend>
+              <div class="rp-complex" role="group" aria-label="α"><label>Real part of α <input class="rp-answer" type="text" name="a-re" value="1/√2" autocomplete="off" spellcheck="false"></label><label>Imaginary part of α <input class="rp-answer" type="text" name="a-im" value="0" autocomplete="off" spellcheck="false"></label></div>
+              <div class="rp-complex" role="group" aria-label="β"><label>Real part of β <input class="rp-answer" type="text" name="b-re" value="1/√2" autocomplete="off" spellcheck="false"></label><label>Imaginary part of β <input class="rp-answer" type="text" name="b-im" value="0" autocomplete="off" spellcheck="false"></label></div>
+              <p class="rp-readout" data-rp-read="state" aria-live="polite"></p>
+              <div class="rp-missions">
+                <details class="rp-mission" data-rp-mission="designer-quarter">
+                  <summary>A quarter in 0/1, three quarters in +/−<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Design a state with P(0) = 1/4 and P(+) = 3/4.</p>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="designer-circle">
+                  <summary>Certain in the third basis<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Design a state with P(+) = 1/2 and P(+i) = 1.</p>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="designer-third">
+                  <summary>Pick the right twin<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Design a state with P(0) = 1/2, P(+) = 1/4 and P(+i) greater than 1/2.</p>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="designer-hidden">
+                  <summary>Lopsided but balanced<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Design a state with P(0) = 0.9 and P(−) = 1/2, in which α is not a real number.</p>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="rp-math">
+              <summary>Show the math</summary>
+              <p>P(0) = |α|² fixes both magnitudes. Then P(+) = 1/2 + |α||β| cos φ and P(+i) = 1/2 + |α||β| sin φ fix the relative phase φ, the angle of β/α. A +/− target alone leaves two choices, φ and −φ, and a +i/−i target picks between them. The global phase is always free, which is why many designs pass.</p>
+            </details>
+          </section>
+
+          <section class="rp-station" data-rp-station="detective" data-rp-accent="red" aria-labelledby="rp-detective-title" hidden>
+            <h4 id="rp-detective-title">Error Detective</h4>
+            <p>Each case file holds a worked solution with exactly one planted mistake. Find the first line that goes wrong, and name the mistake. The diagram shows the situation each solution claims to describe.</p>
+            <div data-rp-plot-slot></div>
+            <fieldset disabled>
+              <legend class="rp-sr-only">Error Detective controls</legend>
+              <p class="rp-readout" data-rp-read="state"></p>
+              <div class="rp-missions">
+                <details class="rp-mission" data-rp-mission="detective-add">
+                  <summary>Case 1 · The doubled half<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Find P(+) for |ψ⟩ = (|0⟩ + e<sup>i120°</sup>|1⟩)/√2.</p>
+                  <ol class="rp-worked"><li>c₊ = (α + β)/√2, with contributions α/√2 = 1/2 and β/√2 = e<sup>i120°</sup>/2.</li><li>Each contribution has squared magnitude |1/2|² = 1/4.</li><li>So P(+) = 1/4 + 1/4 = 1/2.</li><li>Then P(−) = 1 − P(+) = 1/2.</li></ol>
+                  <div class="rp-fields"><label>First wrong line <select name="add-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="add-kind" required><option value="">Choose</option><option value="add">Added probabilities instead of amplitudes</option><option value="global">Treated a global phase as observable</option><option value="units">Mixed degrees and radians</option><option value="zero">Gave a zero amplitude a phase</option><option value="conj">Dropped the conjugate in |1 + e^(iφ)|²</option></select></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="detective-global">
+                  <summary>Case 2 · The rotated twin<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Compare |+⟩ with |χ⟩ = e<sup>iπ/3</sup>|+⟩.</p>
+                  <ol class="rp-worked"><li>|χ⟩ = (e<sup>iπ/3</sup>|0⟩ + e<sup>iπ/3</sup>|1⟩)/√2.</li><li>Both amplitudes of |χ⟩ have the same phase, π/3, so its relative phase is 0.</li><li>The amplitudes of |χ⟩ sit at 60°, so its P(+) is cos²(60°/2) = 3/4.</li><li>So a +/− measurement can tell |χ⟩ from |+⟩.</li></ol>
+                  <div class="rp-fields"><label>First wrong line <select name="global-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="global-kind" required><option value="">Choose</option><option value="add">Added probabilities instead of amplitudes</option><option value="global">Treated a global phase as observable</option><option value="units">Mixed degrees and radians</option><option value="zero">Gave a zero amplitude a phase</option><option value="conj">Dropped the conjugate in |1 + e^(iφ)|²</option></select></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="detective-units">
+                  <summary>Case 3 · The tiny angle<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Find P(+) for an equal-magnitude state with φ = 60°.</p>
+                  <ol class="rp-worked"><li>P(+) = (1 + cos φ)/2.</li><li>In radians, φ = π/3 ≈ 1.047.</li><li>cos(1.047°) ≈ 0.99983, so P(+) ≈ 0.99992.</li><li>So + is almost certain.</li></ol>
+                  <div class="rp-fields"><label>First wrong line <select name="units-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="units-kind" required><option value="">Choose</option><option value="add">Added probabilities instead of amplitudes</option><option value="global">Treated a global phase as observable</option><option value="units">Mixed degrees and radians</option><option value="zero">Gave a zero amplitude a phase</option><option value="conj">Dropped the conjugate in |1 + e^(iφ)|²</option></select></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="detective-zero">
+                  <summary>Case 4 · The phantom phase<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Is |0⟩ the same state as |0⟩ + 0·e<sup>i180°</sup>|1⟩?</p>
+                  <ol class="rp-worked"><li>In both kets, α = 1 and |β| = 0.</li><li>The second ket’s β = 0·e<sup>i180°</sup> has phase 180°, so its relative phase is 180°, while |0⟩ has relative phase 0.</li><li>Different relative phases mean different physical states.</li><li>So some measurement basis tells them apart.</li></ol>
+                  <div class="rp-fields"><label>First wrong line <select name="zero-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="zero-kind" required><option value="">Choose</option><option value="add">Added probabilities instead of amplitudes</option><option value="global">Treated a global phase as observable</option><option value="units">Mixed degrees and radians</option><option value="zero">Gave a zero amplitude a phase</option><option value="conj">Dropped the conjugate in |1 + e^(iφ)|²</option></select></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="detective-conj">
+                  <summary>Case 5 · The complex probability<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Find P(+) from |1 + e<sup>iφ</sup>|² at φ = 90°.</p>
+                  <ol class="rp-worked"><li>P(+) = |1 + e<sup>iφ</sup>|²/4.</li><li>|1 + e<sup>iφ</sup>|² = (1 + e<sup>iφ</sup>)(1 + e<sup>iφ</sup>) = 1 + 2e<sup>iφ</sup> + e<sup>2iφ</sup>.</li><li>At φ = 90°, this is 1 + 2i + (−1) = 2i.</li><li>So P(+) = 2i/4 = i/2.</li></ol>
+                  <div class="rp-fields"><label>First wrong line <select name="conj-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="conj-kind" required><option value="">Choose</option><option value="add">Added probabilities instead of amplitudes</option><option value="global">Treated a global phase as observable</option><option value="units">Mixed degrees and radians</option><option value="zero">Gave a zero amplitude a phase</option><option value="conj">Dropped the conjugate in |1 + e^(iφ)|²</option></select></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="rp-math">
+              <summary>Show the math</summary>
+              <p>The five checks: add amplitudes before you square; drop any factor shared by every amplitude, because |e<sup>iγ</sup>|² = 1; keep angles in one unit; treat 0 as having no phase; and square a magnitude as z z*, never z². A probability must come out real and between 0 and 1. If it doesn’t, one of these checks has been skipped.</p>
+            </details>
+          </section>
+
+          <section class="rp-station" data-rp-station="motion" data-rp-accent="yellow" aria-labelledby="rp-motion-title" hidden>
+            <h4 id="rp-motion-title">Quantum Preview: Phase in Motion</h4>
+            <p class="lesson-kicker">Optional preview</p>
+            <p>This is a preview of motion only. When |0⟩ and |1⟩ have different energies, the relative phase grows steadily, φ(t) = φ₀ + ωt. The rate ω is set by the energy difference, and Lesson 17 explains why. The magnitudes never change, yet P(+) keeps rising and falling. Play runs the clock unless reduced effects is on.</p>
+            <div data-rp-plot-slot></div>
+            <fieldset disabled>
+              <legend class="rp-sr-only">Phase in Motion controls</legend>
+              <div class="rp-fields">
+                <label>Rate ω <select name="rate"><option value="30">30° per ns</option><option value="45" selected>45° per ns</option><option value="60">60° per ns</option></select></label>
+                <label>Start <select name="start"><option value="0" selected>|+⟩ · φ₀ = 0°</option><option value="90">|+i⟩ · φ₀ = 90°</option></select></label>
+                <label>Time t <output data-rp-for="time" data-rp-unit=" ns">0 ns</output><input type="range" name="time" min="0" max="24" step="0.1" value="0"></label>
+              </div>
+              <div class="rp-button-row"><button class="rp-primary" type="button" data-rp-action="play" aria-pressed="false">Play</button><button type="button" data-rp-action="step">Step +0.5 ns</button></div>
+              <p class="rp-readout" data-rp-read="state"></p>
+              <div class="rp-missions">
+                <details class="rp-mission" data-rp-mission="motion-zero">
+                  <summary>First zero<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>With ω = 45° per ns, starting at |+⟩, when does P(+) first reach 0?</p>
+                  <div class="rp-fields"><label>Time in ns <input class="rp-answer" type="text" name="zero-t" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="motion-period">
+                  <summary>The period<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>With ω = 30° per ns, how long does P(+) take to repeat?</p>
+                  <div class="rp-fields"><label>Period in ns <input class="rp-answer" type="text" name="period" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="motion-pzero">
+                  <summary>What about P(0)?<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>While φ grows, does P(0) change?</p>
+                  <div class="rp-fields"><label>Answer <select name="pzero-pick" required><option value="">Choose</option><option value="no">No: the magnitudes stay fixed and only φ grows</option><option value="yes">Yes: it oscillates like P(+)</option></select></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="motion-return">
+                  <summary>Back to certain plus<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Starting at |+i⟩ (φ₀ = 90°) with ω = 60° per ns, when does P(+) first equal 1?</p>
+                  <div class="rp-fields"><label>Time in ns <input class="rp-answer" type="text" name="return-t" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="rp-math">
+              <summary>Show the math</summary>
+              <p>With φ(t) = φ₀ + ωt, P(+) = (1 + cos φ(t))/2 = cos²(φ(t)/2). It repeats whenever φ grows by 360°, so the period is T = 360°/ω. P(0) = |α|² = 1/2 throughout, because the growing factor e<sup>iωt</sup> has magnitude 1.</p>
+            </details>
+          </section>
+          <section class="rp-station" data-rp-station="bloch" data-rp-accent="violet" aria-labelledby="rp-bloch-title" hidden>
+            <h4 id="rp-bloch-title">Bloch Sphere Longitude (3D)</h4>
+            <p>Lesson 11 placed states on a sphere from a table. Now the table makes sense. The angle from the top comes from the magnitudes, |α| = cos(θ/2), and the longitude is the relative phase φ. Turn γ and watch the point stay put: a global phase has no address on the sphere. Drag the sphere or use the view sliders to turn it.</p>
+            <p class="lesson-note">This sphere describes any two-level state. Lesson 16 connects it to spin measurements, which are not used here.</p>
+            <div data-rp-plot-slot></div>
+            <fieldset disabled>
+              <legend class="rp-sr-only">Bloch Sphere Longitude controls</legend>
+              <div class="rp-fields">
+                <label>|α|² <output data-rp-for="a2">0.5</output><input type="range" name="a2" min="0" max="1" step="0.01" value="0.5"></label>
+                <label>Relative phase φ <output data-rp-for="phi" data-rp-angle>0° · 0 rad</output><input type="range" name="phi" min="0" max="359" step="1" value="0"></label>
+                <label>Global phase γ <output data-rp-for="gamma" data-rp-angle>0° · 0 rad</output><input type="range" name="gamma" min="0" max="359" step="1" value="0"></label>
+              </div>
+              <div class="rp-fields">
+                <label>Turn the view <output data-rp-for="yaw" data-rp-unit="°">30°</output><input type="range" name="yaw" min="0" max="355" step="5" value="30"></label>
+                <label>Tilt the view <output data-rp-for="tilt" data-rp-unit="°">20°</output><input type="range" name="tilt" min="-60" max="60" step="5" value="20"></label>
+              </div>
+              <p class="rp-readout" data-rp-read="state" aria-live="polite"></p>
+              <div class="rp-missions">
+                <details class="rp-mission" data-rp-mission="bloch-read">
+                  <summary>Longitude from a ket<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Where on the equator does (e<sup>i20°</sup>|0⟩ + e<sup>i140°</sup>|1⟩)/√2 sit? Give its longitude.</p>
+                  <div class="rp-fields"><label>Longitude in degrees <input class="rp-answer" type="text" name="read-lon" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="bloch-sweep">
+                  <summary>Around the equator<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Keep |α|² = 0.5 and move φ through all four quarter-turns of the equator. The checker records the quadrants you visit.</p>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="bloch-moves">
+                  <summary>What moves the point?<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Start from any state with both amplitudes nonzero and φ not 0° or 180°. Tick every operation that moves its point on the sphere.</p>
+                  <div class="rp-fields">
+                    <label class="rp-check-row"><input type="checkbox" name="mv-both"> Multiply both α and β by e<sup>i50°</sup></label>
+                    <label class="rp-check-row"><input type="checkbox" name="mv-beta"> Multiply β alone by e<sup>i50°</sup></label>
+                    <label class="rp-check-row"><input type="checkbox" name="mv-alpha"> Multiply α alone by e<sup>i50°</sup></label>
+                    <label class="rp-check-row"><input type="checkbox" name="mv-swap"> Swap α and β</label>
+                  </div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="bloch-off">
+                  <summary>Off the equator<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Set |α|² = 0.8 and φ = 180°. Use the point’s x coordinate to find P(+).</p>
+                  <div class="rp-fields"><label>P(+) <input class="rp-answer" type="text" name="off-p" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="rp-math">
+              <summary>Show the math</summary>
+              <p>Factor out the phase of α: |ψ⟩ = e<sup>iγ</sup>(cos(θ/2)|0⟩ + e<sup>iφ</sup> sin(θ/2)|1⟩). The prefactor e<sup>iγ</sup> is the global phase, and it is dropped. What remains is the point (sin θ cos φ, sin θ sin φ, cos θ). Its coordinates are differences of probabilities: x = P(+) − P(−), y = P(+i) − P(−i) and z = P(0) − P(1).</p>
+            </details>
+          </section>
+
+          <section class="rp-station" data-rp-station="polar" data-rp-accent="blue" aria-labelledby="rp-polar-title" hidden>
+            <h4 id="rp-polar-title">Polarization Lab</h4>
+            <p>A photon’s polarization is a two-level system, with |0⟩ = |H⟩ (horizontal) and |1⟩ = |V⟩ (vertical). The relative phase between the H and V amplitudes decides the shape of the light. A phase of 0° or 180° gives a line, ±90° gives a circle, and anything else gives an ellipse. A linear polarizer at angle θ passes the state cos θ|H⟩ + sin θ|V⟩. Here |R⟩ = |+i⟩, but books disagree about which circular hand is called “right”.</p>
+            <div data-rp-plot-slot></div>
+            <fieldset disabled>
+              <legend class="rp-sr-only">Polarization Lab controls</legend>
+              <div class="rp-fields">
+                <label>Light <select name="prep"><option value="H" selected>|H⟩ = |0⟩</option><option value="V">|V⟩ = |1⟩</option><option value="D">|D⟩ = |+⟩</option><option value="A">|A⟩ = |−⟩</option><option value="R">|R⟩ = |+i⟩</option><option value="L">|L⟩ = |−i⟩</option><option value="s60">(|H⟩ + e^(i60°)|V⟩)/√2</option></select></label>
+                <label>Polarizer angle θ <output data-rp-for="angle" data-rp-angle>0° · 0 rad</output><input type="range" name="angle" min="0" max="179" step="1" value="0"></label>
+              </div>
+              <p class="rp-readout" data-rp-read="state" aria-live="polite"></p>
+              <div class="rp-missions">
+                <details class="rp-mission" data-rp-mission="polar-diag">
+                  <summary>Pass every diagonal photon<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Prepare |D⟩ and set the polarizer so every photon passes. The checker reads your settings.</p>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="polar-match">
+                  <summary>Three pairs, three bases<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>Match each polarization pair to the basis it represents.</p>
+                  <div class="rp-fields"><label>|H⟩, |V⟩ <select name="m-hv" required><option value="">Choose</option><option value="z">0/1 basis</option><option value="x">+/− basis</option><option value="y">+i/−i basis</option></select></label><label>|D⟩, |A⟩ <select name="m-da" required><option value="">Choose</option><option value="z">0/1 basis</option><option value="x">+/− basis</option><option value="y">+i/−i basis</option></select></label><label>|R⟩, |L⟩ <select name="m-rl" required><option value="">Choose</option><option value="z">0/1 basis</option><option value="x">+/− basis</option><option value="y">+i/−i basis</option></select></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="polar-circle">
+                  <summary>Circular light, any angle<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>What fraction of |R⟩ photons passes a linear polarizer at angle θ?</p>
+                  <div class="rp-fields"><label>Fraction passed <input class="rp-answer" type="text" name="circ-p" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="polar-best">
+                  <summary>The best angle for an ellipse<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>For (|H⟩ + e<sup>i60°</sup>|V⟩)/√2, find the polarizer angle that passes the most light, and the fraction it passes.</p>
+                  <div class="rp-fields"><label>Angle in degrees <input class="rp-answer" type="text" name="best-angle" autocomplete="off" spellcheck="false"></label><label>Fraction passed <input class="rp-answer" type="text" name="best-p" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <p class="lesson-note">A polarizer angle repeats every 180°, so 45° and 225° are the same setting. Typed polarizer angles are compared that way.</p>
+            <details class="rp-math">
+              <summary>Show the math</summary>
+              <p>A polarizer at θ passes |θ⟩ = cos θ|H⟩ + sin θ|V⟩, with amplitude ⟨θ|ψ⟩ = cos θ·α + sin θ·β. For (|H⟩ + e<sup>iφ</sup>|V⟩)/√2 the fraction passed is (1 + sin 2θ cos φ)/2. At θ = 45° that is (1 + cos φ)/2 = P(+), and at θ = 0° it is |α|² = P(0). Circular light has cos φ = 0, so every linear polarizer passes half.</p>
+            </details>
+          </section>
+
+          <section class="rp-station" data-rp-station="wave" data-rp-accent="orange" aria-labelledby="rp-wave-title" hidden>
+            <h4 id="rp-wave-title">Wave Callback</h4>
+            <p>Lesson 3 added two waves with a path difference and found a normalized intensity of cos²(Δ/2). This lesson added two amplitudes with a relative phase and found P(+) = cos²(φ/2). Slide the path difference and watch both laws give the same number. The left panel shows the Lesson 3 waves, and the right panel the shared curve.</p>
+            <div data-rp-plot-slot></div>
+            <fieldset disabled>
+              <legend class="rp-sr-only">Wave Callback controls</legend>
+              <div class="rp-fields">
+                <label>Path difference <output data-rp-for="path" data-rp-unit="λ">0λ</output><input type="range" name="path" min="0" max="3" step="0.01" value="0"></label>
+              </div>
+              <p class="rp-readout" data-rp-read="state" aria-live="polite"></p>
+              <div class="rp-missions">
+                <details class="rp-mission" data-rp-mission="wave-dark">
+                  <summary>Half a wavelength<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>A path difference of λ/2 makes a dark fringe. What relative phase φ gives the matching P(+) = 0?</p>
+                  <div class="rp-fields"><label>φ in degrees <input class="rp-answer" type="text" name="dark-phi" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="wave-third">
+                  <summary>A third of a wavelength<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>For a path difference of λ/3, find the normalized intensity. It also equals P(+) for the matching relative phase.</p>
+                  <div class="rp-fields"><label>I/Iₘₐₓ = P(+) <input class="rp-answer" type="text" name="third-val" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+                <details class="rp-mission" data-rp-mission="wave-wrap">
+                  <summary>More than two wavelengths<span data-rp-done hidden>✓ Complete</span></summary>
+                  <p>For a path difference of 2.25λ, give the matching relative phase φ.</p>
+                  <div class="rp-fields"><label>φ in degrees <input class="rp-answer" type="text" name="wrap-phi" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="rp-primary" type="button" data-rp-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="rp-math">
+              <summary>Show the math</summary>
+              <p>Two equal waves cos(kx) + cos(kx − Δ) add to 2 cos(Δ/2) cos(kx − Δ/2). Its intensity, the squared height, scales as cos²(Δ/2). Amplitudes behave the same way: |1 + e<sup>iφ</sup>|²/4 = (2 + 2 cos φ)/4 = cos²(φ/2). In both cases the contributions add first and the result is squared afterward, which is the heart of interference. The difference is what the number means. Lesson 3’s is an energy pattern. Here it is a probability for each single system, and Lesson 13 develops that.</p>
+            </details>
+          </section>
+        </div>
+
+        <template id="rp-figure-template">
+          <figure class="rp-figure">
+            <figcaption id="rp-title">Station diagram</figcaption>
+            <div class="rp-viewport" id="rp-viewport" data-renderer="svg">
+              <canvas class="rp-canvas" id="rp-canvas" aria-hidden="true" hidden></canvas>
+              <svg class="rp-diagram" id="rp-diagram" viewBox="0 0 560 300" role="img" aria-labelledby="rp-title" aria-describedby="rp-desc">
+                <desc id="rp-desc"></desc>
+                <g data-rp-geometry></g>
+                <g data-rp-labels></g>
+              </svg>
+            </div>
+            <p class="lesson-note" id="rp-render-status"></p>
+          </figure>
+        </template>
+        <template id="rp-mission-template">
+          <div class="rp-mission-tools">
+            <button type="button" data-rp-hint>Show first hint</button>
+            <ol data-rp-hint-list aria-live="polite" hidden></ol>
+            <p class="rp-feedback" data-rp-feedback role="status"></p>
+            <details data-rp-work hidden><summary>Worked steps</summary><p data-rp-work-text></p></details>
+          </div>
+        </template>
+      </div>
+    </details>
 
     <nav class="lesson-next" aria-label="Lesson navigation">
       <a href="../11_quantum_states/11_quantum_states.html"><span aria-hidden="true">←</span> Previous: Quantum States</a>
