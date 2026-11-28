@@ -6,10 +6,10 @@
   <meta name="theme-color" content="#050906">
   <meta name="description" content="Multiply a ket by a Pauli operator, predict measurement readings, and compare the product with the state after a simulated measurement.">
   <title>Observables and Operators | Quantum Mechanics Class</title>
-  <link rel="stylesheet" href="./styles/main.css">
+  <link rel="stylesheet" href="./styles/main.css?v=14-observables-arcade">
   <script src="./scripts/app.js" defer></script>
   <script src="./scripts/lessons-menu.js" defer></script>
-  <script type="module" src="./scripts/lesson.js"></script>
+  <script type="module" src="./scripts/lesson.js?v=14-observables-arcade"></script>
 </head>
 <body>
   <header class="site-header">
@@ -133,6 +133,7 @@
       <p class="lesson-lead">The matrix calculation gives X|0⟩ = |1⟩. If you prepare |0⟩ and measure X, what appears on the instrument?</p>
       <p>An <strong>operator</strong> is a linear map on the state space. A matrix describes that map in a chosen basis. An <strong>observable</strong> is a measurable quantity represented by a Hermitian operator. In this lesson, the matrix, input column, and product column all use the ordered basis (|0⟩, |1⟩).</p>
       <p>Try the algebra and the measurement on the same preparation. The workbench uses the dimensionless Pauli observables X, Y, and Z and ideal measurements in which each possible reading belongs to one eigenket.</p>
+      <p><a id="op-arcade-link" href="#observables-arcade">Open the optional Observables Arcade</a></p>
     </header>
 
     <section class="lesson-panel operator-lab" aria-labelledby="operator-lab-title">
@@ -499,6 +500,721 @@
       <h3 id="operator-next-title">From one reading to many</h3>
       <p>Once you know the possible readings and their probabilities, how would you predict the average and spread over many freshly prepared systems? That is the question for Lesson 15.</p>
     </section>
+
+    <details class="lesson-panel op-arcade" id="observables-arcade">
+      <summary><strong>Observables Arcade</strong><span>Optional practice</span></summary>
+      <div class="op-body">
+        <p>Pick a station, try its controls, and open a mission when you’re ready. Each mission has two hints. Progress lasts while this page is open.</p>
+        <p class="lesson-note" id="op-tolerance">Answer boxes accept whole numbers, decimals, fractions such as 9/25, and square roots such as 1/√2 or (1 + √3)/2. Each complex number has one box for its real part and one for its imaginary part. Each matrix cell is labeled by its row and column, and Tab moves through the cells row by row. Answers that end as decimals, such as 0.5 or 3.5, are checked exactly. Answers such as 1/3 or 1/√2 can be typed exactly, or as decimals within 0.002 of the exact value, separately for each real and imaginary part. Eigenkets count up to a global phase, and up to normalization unless the mission asks for a normalized ket. For a matrix you build, readings and eigenket tests count within 0.005. Dial angles count within 1°. Simulated trials use a fixed seed, so resetting a station replays the same run, and missions about runs check your reasoning, never a lucky result.</p>
+        <div class="op-toolbar">
+          <label for="op-station">Station
+            <select id="op-station" aria-controls="op-panels" disabled>
+              <optgroup label="What an operator does">
+                <option value="sort" selected>1 · Product, Reading, or Ket?</option>
+                <option value="dagger">2 · Dagger Workshop</option>
+                <option value="builder">3 · Hermitian Builder</option>
+                <option value="nonobs">4 · Why Not an Observable?</option>
+              </optgroup>
+              <optgroup label="Readings and eigenkets">
+                <option value="eigen">5 · Eigenket Finder</option>
+                <option value="predict">6 · Any Observable, Any State</option>
+                <option value="shift">7 · Scale and Shift</option>
+                <option value="definite">8 · Definite or Not?</option>
+                <option value="commute">9 · Compatible Observables</option>
+                <option value="spectral">10 · Spectral Assembly</option>
+              </optgroup>
+              <optgroup label="Recurring formats">
+                <option value="designer">11 · Observable Designer</option>
+                <option value="detective">12 · Error Detective</option>
+                <option value="average">13 · Quantum Preview: Average Reading</option>
+              </optgroup>
+              <optgroup label="Extras">
+                <option value="degenerate">14 · Degenerate Readings</option>
+                <option value="dial">15 · Direction Dial (3D)</option>
+                <option value="unitary">16 · Hermitian vs Unitary</option>
+              </optgroup>
+            </select>
+          </label>
+          <p id="op-progress" role="status">0 of 78 missions completed this session.</p>
+          <button id="op-reset" type="button" disabled>Reset this station</button>
+          <label class="op-reduced" for="op-reduced"><input id="op-reduced" type="checkbox" disabled> Reduced effects</label>
+        </div>
+        <p class="lesson-note" id="op-status" role="status" aria-atomic="true"></p>
+        <noscript><p class="lesson-note">JavaScript runs the arcade diagrams, controls, simulated trials and mission checks.</p></noscript>
+        <div id="op-panels">
+          <section class="op-station" data-op-station="sort" data-op-accent="green" aria-labelledby="op-sort-title">
+            <h4 id="op-sort-title">Product, Reading, or Ket?</h4>
+            <p>The lesson separates three questions: what the matrix product A|ψ⟩ is, what number the instrument can report, and what ket the measured system is in after that report. Each mission tells a short story. Tag every statement with the question it answers.</p>
+            <div data-op-plot-slot></div>
+            <fieldset disabled>
+              <legend class="op-sr-only">Product, Reading, or Ket? controls</legend>
+              <p class="op-readout" data-op-read="state" aria-live="polite"></p>
+              <div class="op-missions">
+                <details class="op-mission" data-op-mission="sort-ymx">
+                  <summary>X on |−y⟩<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Prepare |−y⟩ = (|0⟩ − i|1⟩)/√2 and measure X.</p><ol class="op-statements"><li><label>X|−y⟩ = −i|+y⟩ <select name="ymx-1" required><option value="">Choose</option><option value="product">The product A|ψ⟩</option><option value="reading">The reading</option><option value="ket">The ket after the reading</option></select></label></li><li><label>+1, on about half of the fresh runs <select name="ymx-2" required><option value="">Choose</option><option value="product">The product A|ψ⟩</option><option value="reading">The reading</option><option value="ket">The ket after the reading</option></select></label></li><li><label>(|0⟩ + |1⟩)/√2, when the instrument showed +1 <select name="ymx-3" required><option value="">Choose</option><option value="product">The product A|ψ⟩</option><option value="reading">The reading</option><option value="ket">The ket after the reading</option></select></label></li><li><label>The column found by multiplying the rows of X by (1, −i)/√2 <select name="ymx-4" required><option value="">Choose</option><option value="product">The product A|ψ⟩</option><option value="reading">The reading</option><option value="ket">The ket after the reading</option></select></label></li><li><label>−1 on some runs and +1 on others <select name="ymx-5" required><option value="">Choose</option><option value="product">The product A|ψ⟩</option><option value="reading">The reading</option><option value="ket">The ket after the reading</option></select></label></li></ol>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="sort-diag">
+                  <summary>Readings 2 and 5<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>B has rows [2, 0] and [0, 5]. Prepare |+x⟩ and measure B.</p><ol class="op-statements"><li><label>(2|0⟩ + 5|1⟩)/√2, whose squared norm is 29/2 <select name="diag-1" required><option value="">Choose</option><option value="product">The product A|ψ⟩</option><option value="reading">The reading</option><option value="ket">The ket after the reading</option></select></label></li><li><label>2 or 5, and nothing else <select name="diag-2" required><option value="">Choose</option><option value="product">The product A|ψ⟩</option><option value="reading">The reading</option><option value="ket">The ket after the reading</option></select></label></li><li><label>|1⟩, when 5 is observed <select name="diag-3" required><option value="">Choose</option><option value="product">The product A|ψ⟩</option><option value="reading">The reading</option><option value="ket">The ket after the reading</option></select></label></li><li><label>One of the eigenvalues of B <select name="diag-4" required><option value="">Choose</option><option value="product">The product A|ψ⟩</option><option value="reading">The reading</option><option value="ket">The ket after the reading</option></select></label></li></ol>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="sort-same">
+                  <summary>When all three look alike<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Prepare |−y⟩ and measure Y.</p><ol class="op-statements"><li><label>Y|−y⟩ = −|−y⟩ <select name="same-1" required><option value="">Choose</option><option value="product">The product A|ψ⟩</option><option value="reading">The reading</option><option value="ket">The ket after the reading</option></select></label></li><li><label>−1, on every run <select name="same-2" required><option value="">Choose</option><option value="product">The product A|ψ⟩</option><option value="reading">The reading</option><option value="ket">The ket after the reading</option></select></label></li><li><label>|−y⟩, the eigenket for −1 <select name="same-3" required><option value="">Choose</option><option value="product">The product A|ψ⟩</option><option value="reading">The reading</option><option value="ket">The ket after the reading</option></select></label></li><li><label>A column that differs from the input only by the factor −1 <select name="same-4" required><option value="">Choose</option><option value="product">The product A|ψ⟩</option><option value="reading">The reading</option><option value="ket">The ket after the reading</option></select></label></li></ol>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="sort-repeat">
+                  <summary>Measure twice<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Prepare (2|0⟩ + |1⟩)/√5 and measure X. The first reading is +1. Then measure X again on the same, undisturbed system.</p><ol class="op-statements"><li><label>+1 on the second measurement, with certainty <select name="repeat-1" required><option value="">Choose</option><option value="product">The product A|ψ⟩</option><option value="reading">The reading</option><option value="ket">The ket after the reading</option></select></label></li><li><label>|+x⟩ after the first reading, and still |+x⟩ after the second <select name="repeat-2" required><option value="">Choose</option><option value="product">The product A|ψ⟩</option><option value="reading">The reading</option><option value="ket">The ket after the reading</option></select></label></li><li><label>X|+x⟩ = |+x⟩ <select name="repeat-3" required><option value="">Choose</option><option value="product">The product A|ψ⟩</option><option value="reading">The reading</option><option value="ket">The ket after the reading</option></select></label></li><li><label>+1 on the first measurement, an outcome with probability 9/10 <select name="repeat-4" required><option value="">Choose</option><option value="product">The product A|ψ⟩</option><option value="reading">The reading</option><option value="ket">The ket after the reading</option></select></label></li></ol>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="op-math">
+              <summary>Show the math</summary>
+              <p>The product A|ψ⟩ is a calculation: multiply the rows of the matrix by the input column. It need not be normalized, and nothing random happens. A reading is one eigenvalue a of the observable, with probability P(a) = |⟨a|ψ⟩|². The ket after reading a is the eigenket |a⟩, up to global phase. The three agree only in form when |ψ⟩ is already an eigenket: then A|ψ⟩ = a|ψ⟩, the reading a is certain, and the ket stays |ψ⟩.</p>
+            </details>
+          </section>
+
+          <section class="op-station" data-op-station="dagger" data-op-accent="orange" aria-labelledby="op-dagger-title" hidden>
+            <h4 id="op-dagger-title">Dagger Workshop</h4>
+            <p>The dagger A† is the conjugate transpose: swap rows and columns, then flip the sign of every imaginary part. Open a mission to load its matrix A, then type A† into the grid. A is Hermitian exactly when A† = A.</p>
+            <div data-op-plot-slot></div>
+            <fieldset disabled>
+              <legend class="op-sr-only">Dagger Workshop controls</legend>
+              <div class="op-matrix-entry"><p class="op-step">Your A†</p><div class="op-matrix" role="group" aria-label="Your A†, entered row by row"><div class="op-cell" role="group" aria-label="Your A†, row 1, column 1"><span class="op-cell-tag" aria-hidden="true">row 1 · col 1</span><label><span class="op-sr-only">Your A†, row 1, column 1, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="d-11-re" value="0"></label><label><span class="op-sr-only">Your A†, row 1, column 1, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="d-11-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your A†, row 1, column 2"><span class="op-cell-tag" aria-hidden="true">row 1 · col 2</span><label><span class="op-sr-only">Your A†, row 1, column 2, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="d-12-re" value="0"></label><label><span class="op-sr-only">Your A†, row 1, column 2, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="d-12-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your A†, row 2, column 1"><span class="op-cell-tag" aria-hidden="true">row 2 · col 1</span><label><span class="op-sr-only">Your A†, row 2, column 1, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="d-21-re" value="0"></label><label><span class="op-sr-only">Your A†, row 2, column 1, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="d-21-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your A†, row 2, column 2"><span class="op-cell-tag" aria-hidden="true">row 2 · col 2</span><label><span class="op-sr-only">Your A†, row 2, column 2, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="d-22-re" value="0"></label><label><span class="op-sr-only">Your A†, row 2, column 2, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="d-22-im" value="0"></label></div></div></div><p class="op-readout" data-op-read="state" aria-live="polite"></p>
+              <div class="op-missions">
+                <details class="op-mission" data-op-mission="dagger-one">
+                  <summary>A complex corner<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [1, 2 + i] and [3i, 4]. Enter A† and decide whether A is Hermitian.</p><div class="op-fields"><label>Is A Hermitian? <select name="one-herm" required><option value="">Choose</option><option value="yes">Yes: A† = A</option><option value="no">No: A† ≠ A</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="dagger-two">
+                  <summary>Conjugate pairs<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [3, 1 − 2i] and [1 + 2i, −1]. Enter A† and decide whether A is Hermitian.</p><div class="op-fields"><label>Is A Hermitian? <select name="two-herm" required><option value="">Choose</option><option value="yes">Yes: A† = A</option><option value="no">No: A† ≠ A</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="dagger-diag">
+                  <summary>An imaginary diagonal<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [2i, 1] and [1, 0]. Enter A† and decide whether A is Hermitian.</p><div class="op-fields"><label>Is A Hermitian? <select name="diag-herm" required><option value="">Choose</option><option value="yes">Yes: A† = A</option><option value="no">No: A† ≠ A</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="dagger-anti">
+                  <summary>Looks like Y<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [0, i] and [i, 0]. Enter A† and decide whether A is Hermitian.</p><div class="op-fields"><label>Is A Hermitian? <select name="anti-herm" required><option value="">Choose</option><option value="yes">Yes: A† = A</option><option value="no">No: A† ≠ A</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="dagger-order">
+                  <summary>Daggers reverse order<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>ZX has rows [0, 1] and [−1, 0]. Enter (ZX)†, then say which product it equals.</p><div class="op-fields"><label>(ZX)† equals <select name="order-pick" required><option value="">Choose</option><option value="xz">XZ, which is X†Z†</option><option value="zx">ZX itself</option><option value="zdxd">Z†X†, in the original order</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="op-math">
+              <summary>Show the math</summary>
+              <p>(A†)ᵢⱼ = (Aⱼᵢ)*: the entry in row i, column j of A† is the conjugate of the entry in row j, column i of A. Diagonal entries stay on the diagonal but are conjugated, so a Hermitian matrix needs a real diagonal. Off-diagonal entries swap places and are conjugated, so a Hermitian matrix needs A₂₁ = A₁₂*. For products, (AB)† = B†A†. Each Pauli matrix is its own dagger, so (ZX)† = XZ.</p>
+            </details>
+          </section>
+
+          <section class="op-station" data-op-station="builder" data-op-accent="blue" aria-labelledby="op-builder-title" hidden>
+            <h4 id="op-builder-title">Hermitian Builder</h4>
+            <p>Here some entries are fixed and you complete the rest so that A = A†. The readout tracks the largest entry of A − A† for the open mission.</p>
+            <div data-op-plot-slot></div>
+            <fieldset disabled>
+              <legend class="op-sr-only">Hermitian Builder controls</legend>
+              <p class="op-readout" data-op-read="state" aria-live="polite"></p>
+              <div class="op-missions">
+                <details class="op-mission" data-op-mission="builder-fill">
+                  <summary>One missing entry<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [4, 2 − 3i] and [?, −1]. Fill in ? so A is Hermitian.</p><div class="op-complex" role="group" aria-label="?"><label>Real part of ? <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="fill-z-re" value="0"></label><label>Imaginary part of ? <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="fill-z-im" value="0"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="builder-free">
+                  <summary>Three blanks<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [p, i] and [z, q]. Choose p, q and z so A is Hermitian. Several choices work.</p><div class="op-complex" role="group" aria-label="p"><label>Real part of p <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="free-p-re" value="0"></label><label>Imaginary part of p <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="free-p-im" value="0"></label></div><div class="op-complex" role="group" aria-label="q"><label>Real part of q <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="free-q-re" value="0"></label><label>Imaginary part of q <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="free-q-im" value="0"></label></div><div class="op-complex" role="group" aria-label="z"><label>Real part of z <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="free-z-re" value="0"></label><label>Imaginary part of z <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="free-z-im" value="0"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="builder-stuck">
+                  <summary>A diagonal that can’t be fixed<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [2 + i, 1] and [1, ?]. What can you put in place of ?</p><div class="op-fields"><label>Finding <select name="stuck-pick" required><option value="">Choose</option><option value="none">Nothing works: the entry 2 + i is on the diagonal and is not real</option><option value="conj">? = 2 − i balances it</option><option value="zero">? = 0 makes it Hermitian</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="builder-column">
+                  <summary>Build it from one column<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Build a Hermitian A with both diagonal entries 0 and A|0⟩ = (0, 3i)ᵀ.</p><div class="op-matrix-entry"><p class="op-step">Your A</p><div class="op-matrix" role="group" aria-label="Your A, entered row by row"><div class="op-cell" role="group" aria-label="Your A, row 1, column 1"><span class="op-cell-tag" aria-hidden="true">row 1 · col 1</span><label><span class="op-sr-only">Your A, row 1, column 1, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="column-11-re" value="0"></label><label><span class="op-sr-only">Your A, row 1, column 1, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="column-11-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your A, row 1, column 2"><span class="op-cell-tag" aria-hidden="true">row 1 · col 2</span><label><span class="op-sr-only">Your A, row 1, column 2, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="column-12-re" value="0"></label><label><span class="op-sr-only">Your A, row 1, column 2, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="column-12-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your A, row 2, column 1"><span class="op-cell-tag" aria-hidden="true">row 2 · col 1</span><label><span class="op-sr-only">Your A, row 2, column 1, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="column-21-re" value="0"></label><label><span class="op-sr-only">Your A, row 2, column 1, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="column-21-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your A, row 2, column 2"><span class="op-cell-tag" aria-hidden="true">row 2 · col 2</span><label><span class="op-sr-only">Your A, row 2, column 2, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="column-22-re" value="0"></label><label><span class="op-sr-only">Your A, row 2, column 2, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="column-22-im" value="0"></label></div></div></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="builder-count">
+                  <summary>Count the dials<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>How many real numbers do you need to specify a general 2×2 Hermitian matrix?</p><div class="op-fields"><label>Number of real numbers <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="count-n"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="op-math">
+              <summary>Show the math</summary>
+              <p>A = A† means Aᵢⱼ = (Aⱼᵢ)*. On the diagonal that reads Aᵢᵢ = Aᵢᵢ*, so each diagonal entry is real. Off the diagonal, A₂₁ is fixed by A₁₂: it must be A₁₂*. A 2×2 Hermitian matrix is therefore set by two real diagonal entries and one complex off-diagonal entry: four real numbers.</p>
+            </details>
+          </section>
+
+          <section class="op-station" data-op-station="nonobs" data-op-accent="red" aria-labelledby="op-nonobs-title" hidden>
+            <h4 id="op-nonobs-title">Why Not an Observable?</h4>
+            <p>Explore two families of matrices that are not Hermitian. The readout shows their eigenvalues, their normalized eigenkets, how much the eigenkets overlap, and what you would get if you added their squared overlaps with a state as if they were probabilities.</p>
+            <div data-op-plot-slot></div>
+            <fieldset disabled>
+              <legend class="op-sr-only">Why Not an Observable? controls</legend>
+              <div class="op-fields"><label>Family <select name="fam"><option value="m" selected>M(k) with rows [0, 1] and [k, 0]</option><option value="n">N(k) with rows [1, k] and [0, 2]</option></select></label><label>Parameter k <output data-op-for="k">0.5</output><input type="range" name="k" min="-1.5" max="1.5" step="0.05" value="0.5"></label><label>State |ψ⟩ for the sum <select name="psi"><option value="zero" selected>|0⟩</option><option value="plusx">|+x⟩</option><option value="minusx">|−x⟩</option></select></label></div><p class="op-readout" data-op-read="state" aria-live="polite"></p>
+              <div class="op-missions">
+                <details class="op-mission" data-op-mission="nonobs-imag">
+                  <summary>Imaginary readings?<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Choose family M and set k so the eigenvalues are not real. Then say what that would mean for an instrument.</p><div class="op-fields"><label>An instrument would report <select name="imag-pick" required><option value="">Choose</option><option value="complex">Numbers that aren’t real, which no reading can be</option><option value="zero">0, the average of the two</option><option value="real">The real parts only</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="nonobs-overlap">
+                  <summary>Real but tilted<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>For M(k) at k = 1/4 the eigenvalues ±1/2 are real. Find |⟨e₊|e₋⟩|² for the normalized eigenkets.</p><div class="op-fields"><label>|⟨e₊|e₋⟩|² <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="overlap-v"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="nonobs-sum">
+                  <summary>Probabilities that don’t add up<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>For the shear N(k) at k = 1 and |ψ⟩ = |0⟩, add |⟨e₁|ψ⟩|² + |⟨e₂|ψ⟩|² over the normalized eigenkets.</p><div class="op-fields"><label>Sum <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="sum-v"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="nonobs-fix">
+                  <summary>Make it an observable<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Set a family and k so the matrix becomes Hermitian.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="nonobs-enough">
+                  <summary>Is real enough?<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>If a matrix has real eigenvalues, does that make it an observable?</p><div class="op-fields"><label>Answer <select name="enough-pick" required><option value="">Choose</option><option value="no">No: the eigenkets must also be orthogonal, which Hermitian matrices guarantee</option><option value="yes">Yes: real eigenvalues are all a reading needs</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="op-math">
+              <summary>Show the math</summary>
+              <p>M(k) has eigenvalues ±√k. For k < 0 these are ±i√|k|, which no instrument can display. For 0 < k ≠ 1 they are real, but the eigenkets (1, ±√k) are not orthogonal: ⟨e₊|e₋⟩ = (1 − k)/(1 + k). The shear N(k) has eigenvalues 1 and 2 with eigenkets |0⟩ and (k, 1)/√(1 + k²), which are orthogonal only at k = 0. With non-orthogonal eigenkets the would-be probabilities |⟨eⱼ|ψ⟩|² do not add to 1, so they cannot be outcome probabilities. A Hermitian matrix always has real eigenvalues and an orthonormal eigenbasis, which is why observables are Hermitian.</p>
+            </details>
+          </section>
+
+          <section class="op-station" data-op-station="eigen" data-op-accent="green" aria-labelledby="op-eigen-title" hidden>
+            <h4 id="op-eigen-title">Eigenket Finder</h4>
+            <p>Open a mission to load a Hermitian matrix A. Find its eigenvalues from det(A − aI) = 0, then solve (A − aI)|a⟩ = 0 for an eigenket. The readout shows ‖A|v⟩ − a|v⟩‖ for the ket you type and each reading you enter.</p>
+            <div data-op-plot-slot></div>
+            <fieldset disabled>
+              <legend class="op-sr-only">Eigenket Finder controls</legend>
+              <div class="op-fields"><label>Reading a₁ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="r1"></label><label>Reading a₂ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="r2"></label></div><p class="op-step">Your eigenket |v⟩</p><div class="op-complex" role="group" aria-label="v₀"><label>Real part of v₀ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="v-0-re" value="1"></label><label>Imaginary part of v₀ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="v-0-im" value="0"></label></div><div class="op-complex" role="group" aria-label="v₁"><label>Real part of v₁ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="v-1-re" value="0"></label><label>Imaginary part of v₁ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="v-1-im" value="0"></label></div><p class="op-readout" data-op-read="state" aria-live="polite"></p>
+              <div class="op-missions">
+                <details class="op-mission" data-op-mission="eigen-h14">
+                  <summary>Readings 1 and 4?<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [2, 1 − i] and [1 + i, 3]. Enter both readings, and a <strong>normalized</strong> eigenket for the larger reading.</p><p class="lesson-note">Readings may be entered in either order.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="eigen-two">
+                  <summary>A shifted diagonal<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [0, 2i] and [−2i, 3]. Enter both readings, and an eigenket for the smaller reading. Any nonzero multiple counts.</p><p class="lesson-note">Readings may be entered in either order.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="eigen-five">
+                  <summary>Plus or minus five<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [3, 4i] and [−4i, −3]. Enter both readings, and a <strong>normalized</strong> eigenket for +5. Any global phase counts.</p><p class="lesson-note">Readings may be entered in either order.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="eigen-partner">
+                  <summary>The second one for free<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [2, 1 − i] and [1 + i, 3], and (1 − i, 2)ᵀ/√6 is its eigenket for reading 4. Without solving again, enter an eigenket for reading 1. The reading boxes are not used.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="op-math">
+              <summary>Show the math</summary>
+              <p>For a 2×2 matrix, det(A − aI) = a² − (tr A)a + det A, so the readings add to tr A and multiply to det A. If A₁₂ ≠ 0, the first row of (A − aI)|v⟩ = 0 gives |v⟩ ∝ (A₁₂, a − A₁₁)ᵀ. Divide by √(⟨v|v⟩) to normalize. Eigenkets of a Hermitian matrix for different readings are orthogonal, so in two dimensions the partner of (v₀, v₁) is (−v₁*, v₀*), up to phase.</p>
+            </details>
+          </section>
+
+          <section class="op-station" data-op-station="predict" data-op-accent="yellow" aria-labelledby="op-predict-title" hidden>
+            <h4 id="op-predict-title">Any Observable, Any State</h4>
+            <p>Observables need not read ±1. Pick an observable and a state to see its readings and eigenkets. Fill in each mission’s prediction table, then use <strong>Show the bars</strong> to compare.</p>
+            <div data-op-plot-slot></div>
+            <fieldset disabled>
+              <legend class="op-sr-only">Any Observable, Any State controls</legend>
+              <div class="op-fields"><label>Observable A <select name="obs"><option value="m6" selected>rows [6, −2], [−2, 3]</option><option value="h14">rows [2, 1 − i], [1 + i, 3]</option><option value="d25">rows [2, 0], [0, 5]</option></select></label><label>State |ψ⟩ <select name="psi"><option value="zero" selected>|0⟩</option><option value="plusx">|+x⟩</option><option value="plusy">|+y⟩</option><option value="one">|1⟩</option></select></label></div><div class="op-button-row"><button class="op-primary" type="button" data-op-action="reveal">Show the bars</button><button type="button" data-op-action="hide">Hide the bars</button></div><p class="op-readout" data-op-read="state" aria-live="polite"></p>
+              <div class="op-missions">
+                <details class="op-mission" data-op-mission="predict-trace">
+                  <summary>Readings without solving<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [6, −2] and [−2, 3]. Its readings add to tr A = 9 and multiply to det A = 14. Find them.</p><div class="op-fields"><label>Reading <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="trace-r1"></label><label>Other reading <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="trace-r2"></label></div><p class="lesson-note">Readings may be entered in either order.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="predict-zero">
+                  <summary>From |0⟩<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Same A, eigenkets (1, 2)ᵀ/√5 for 2 and (2, −1)ᵀ/√5 for 7. Prepare |0⟩. Find P(2) and P(7).</p><div class="op-fields"><label>P(2) <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="zero-p2"></label><label>P(7) <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="zero-p7"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="predict-plusx">
+                  <summary>From |+x⟩<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Same A. Prepare |+x⟩. Find P(2) and P(7).</p><div class="op-fields"><label>P(2) <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="plusx-p2"></label><label>P(7) <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="plusx-p7"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="predict-complex">
+                  <summary>A complex observable<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [2, 1 − i] and [1 + i, 3], with eigenkets (1 − i, −1)ᵀ/√3 for 1 and (1 − i, 2)ᵀ/√6 for 4. Prepare |+y⟩. Find P(1) and P(4).</p><div class="op-fields"><label>P(1) <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="complex-p1"></label><label>P(4) <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="complex-p4"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="predict-which">
+                  <summary>Which numbers can appear?<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>For A with rows [6, −2] and [−2, 3], tick every number the instrument can display.</p><div class="op-fields"><label class="op-check-row"><input type="checkbox" name="which-6"> 6</label><label class="op-check-row"><input type="checkbox" name="which-3"> 3</label><label class="op-check-row"><input type="checkbox" name="which-2"> 2</label><label class="op-check-row"><input type="checkbox" name="which-7"> 7</label><label class="op-check-row"><input type="checkbox" name="which-9"> 9</label><label class="op-check-row"><input type="checkbox" name="which-14"> 14</label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="op-math">
+              <summary>Show the math</summary>
+              <p>Any Hermitian A has an orthonormal eigenbasis {|a⟩} with real readings a. For any state, P(a) = |⟨a|ψ⟩|², exactly as for X, Y and Z: the size of the readings does not enter. Conjugate the bra. For A with rows [6, −2], [−2, 3] and |+x⟩, ⟨2|+x⟩ = (1 + 2)/√10, so P(2) = 9/10. The diagonal entries, the trace and the determinant are not readings.</p>
+            </details>
+          </section>
+
+          <section class="op-station" data-op-station="shift" data-op-accent="violet" aria-labelledby="op-shift-title" hidden>
+            <h4 id="op-shift-title">Scale and Shift</h4>
+            <p>Build B = cA + dI from a base observable A. Multiplying by c and adding dI moves every reading to ca + d, but B keeps the eigenkets of A. Watch the number line and the probability bars.</p>
+            <div data-op-plot-slot></div>
+            <fieldset disabled>
+              <legend class="op-sr-only">Scale and Shift controls</legend>
+              <div class="op-fields"><label>Base A <select name="base"><option value="x" selected>X</option><option value="z">Z</option><option value="m6">rows [6, −2], [−2, 3]</option></select></label><label>Scale c <output data-op-for="c">1</output><input type="range" name="c" min="-3" max="3" step="0.5" value="1"></label><label>Shift d <output data-op-for="d">0</output><input type="range" name="d" min="-3" max="3" step="0.5" value="0"></label><label>State |ψ⟩ <select name="psi"><option value="zero" selected>|0⟩</option><option value="tf">(3|0⟩ + 4|1⟩)/5</option><option value="minusy">|−y⟩</option></select></label></div><p class="op-readout" data-op-read="state" aria-live="polite"></p>
+              <div class="op-missions">
+                <details class="op-mission" data-op-mission="shift-five">
+                  <summary>Predict the new readings<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>What are the readings of 2X + 3I?</p><div class="op-fields"><label>Reading <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="five-r1"></label><label>Other reading <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="five-r2"></label></div><p class="lesson-note">Readings may be entered in either order.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="shift-bits">
+                  <summary>Readings 0 and 1<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Choose base Z and set c and d so B reads 0 and 1. The checker reads your sliders.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="shift-prob">
+                  <summary>Same odds, new numbers<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>B = 2Z + 3I. Prepare (3|0⟩ + 4|1⟩)/5. Find P(5).</p><div class="op-fields"><label>P(5) <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="prob-p"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="shift-flip">
+                  <summary>A negative scale<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>B = −X. Which eigenket goes with the larger reading of B?</p><div class="op-fields"><label>Larger reading’s eigenket <select name="flip-pick" required><option value="">Choose</option><option value="plusx">|+x⟩</option><option value="minusx">|−x⟩</option><option value="zero">|0⟩</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="shift-zero">
+                  <summary>Squash it flat<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Set c = 0. How many distinct readings does B have now?</p><div class="op-fields"><label>Distinct readings <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="zero-n"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="op-math">
+              <summary>Show the math</summary>
+              <p>If A|a⟩ = a|a⟩, then (cA + dI)|a⟩ = (ca + d)|a⟩. The eigenkets are the same, so P(ca + d) = |⟨a|ψ⟩|² = P(a): the bars only move along the number line. A negative c reverses the order of the readings. With c = 0, B = dI and every ket is an eigenket with reading d, the first case of a repeated reading (station 14).</p>
+            </details>
+          </section>
+
+          <section class="op-station" data-op-station="definite" data-op-accent="blue" aria-labelledby="op-definite-title" hidden>
+            <h4 id="op-definite-title">Definite or Not?</h4>
+            <p>A reading is definite exactly when |ψ⟩ is an eigenket: A|ψ⟩ = a|ψ⟩. Pick a state and a candidate observable and compare the product A|ψ⟩ with |ψ⟩ itself.</p>
+            <div data-op-plot-slot></div>
+            <fieldset disabled>
+              <legend class="op-sr-only">Definite or Not? controls</legend>
+              <div class="op-fields"><label>State |ψ⟩ <select name="psi"><option value="ot" selected>(|0⟩ + 2|1⟩)/√5</option><option value="my">|−y⟩</option><option value="one">|1⟩</option></select></label><label>Candidate A <select name="cand"><option value="x" selected>X</option><option value="y">Y</option><option value="z">Z</option><option value="m6">rows [6, −2], [−2, 3]</option><option value="m6b">2(rows [6, −2], [−2, 3]) − I</option><option value="d25">rows [2, 0], [0, 5]</option><option value="i3y">I + 3Y</option><option value="i2y">rows [1, 2i], [−2i, 1]</option><option value="ny">rows [0, i], [−i, 0]</option><option value="id">I</option></select></label></div><p class="op-readout" data-op-read="state" aria-live="polite"></p>
+              <div class="op-missions">
+                <details class="op-mission" data-op-mission="definite-ot">
+                  <summary>Definite for (|0⟩ + 2|1⟩)/√5<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>For |ψ⟩ = (|0⟩ + 2|1⟩)/√5, tick every observable with a definite reading.</p><div class="op-fields"><label class="op-check-row"><input type="checkbox" name="ot-x"> X</label><label class="op-check-row"><input type="checkbox" name="ot-y"> Y</label><label class="op-check-row"><input type="checkbox" name="ot-z"> Z</label><label class="op-check-row"><input type="checkbox" name="ot-m6"> rows [6, −2], [−2, 3]</label><label class="op-check-row"><input type="checkbox" name="ot-m6b"> 2(rows [6, −2], [−2, 3]) − I</label><label class="op-check-row"><input type="checkbox" name="ot-d25"> rows [2, 0], [0, 5]</label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="definite-my">
+                  <summary>Definite for |−y⟩<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>For |ψ⟩ = |−y⟩, tick every observable with a definite reading.</p><div class="op-fields"><label class="op-check-row"><input type="checkbox" name="my-x"> X</label><label class="op-check-row"><input type="checkbox" name="my-y"> Y</label><label class="op-check-row"><input type="checkbox" name="my-z"> Z</label><label class="op-check-row"><input type="checkbox" name="my-i3y"> I + 3Y</label><label class="op-check-row"><input type="checkbox" name="my-i2y"> rows [1, 2i], [−2i, 1]</label><label class="op-check-row"><input type="checkbox" name="my-ny"> rows [0, i], [−i, 0]</label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="definite-value">
+                  <summary>Name the reading<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>(|0⟩ + 2|1⟩)/√5 has a definite reading for A with rows [6, −2] and [−2, 3]. Which reading?</p><div class="op-fields"><label>Definite reading <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="value-a"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="definite-build">
+                  <summary>Make 5 certain<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Enter a ket whose reading of B (rows [2, 0] and [0, 5]) is 5 with certainty. Any phase or length counts.</p><div class="op-complex" role="group" aria-label="ψ₀"><label>Real part of ψ₀ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="build-0-re" value="1"></label><label>Imaginary part of ψ₀ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="build-0-im" value="0"></label></div><div class="op-complex" role="group" aria-label="ψ₁"><label>Real part of ψ₁ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="build-1-re" value="0"></label><label>Imaginary part of ψ₁ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="build-1-im" value="0"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="definite-identity">
+                  <summary>The do-nothing observable<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>For which states does I have a definite reading?</p><div class="op-fields"><label>Answer <select name="identity-pick" required><option value="">Choose</option><option value="all">Every state: I|ψ⟩ = 1·|ψ⟩</option><option value="basis">Only |0⟩ and |1⟩</option><option value="none">None: I measures nothing</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="op-math">
+              <summary>Show the math</summary>
+              <p>P(a) = |⟨a|ψ⟩|² = 1 exactly when |ψ⟩ equals |a⟩ up to phase, which is the same as A|ψ⟩ = a|ψ⟩. So to test a candidate, multiply and see whether the product is a multiple of the input. If it is, the multiple is the definite reading. Different observables have different eigenkets, so a state can be definite for one and not for another.</p>
+            </details>
+          </section>
+
+          <section class="op-station" data-op-station="commute" data-op-accent="orange" aria-labelledby="op-commute-title" hidden>
+            <h4 id="op-commute-title">Compatible Observables</h4>
+            <p>The commutator is [A, B] = AB − BA. When it is zero, A and B share an orthonormal set of eigenkets, so measuring B leaves an A reading in place. Pick A and B, use <strong>Show AB and BA</strong> if you want the products, and run sequences A → B → A on fresh copies of the chosen state.</p>
+            <div data-op-plot-slot></div>
+            <fieldset disabled>
+              <legend class="op-sr-only">Compatible Observables controls</legend>
+              <div class="op-fields"><label>A <select name="a"><option value="x" selected>X</option><option value="y">Y</option><option value="z">Z</option><option value="p11">rows [1, 1], [1, 1]</option><option value="d25">rows [2, 0], [0, 5]</option><option value="m6">rows [6, −2], [−2, 3]</option></select></label><label>B <select name="b"><option value="z" selected>Z</option><option value="x">X</option><option value="y">Y</option><option value="q31">rows [3, −1], [−1, 3]</option><option value="d25">rows [2, 0], [0, 5]</option><option value="i2y">I − 2Y</option></select></label><label>Fresh copies of <select name="psi"><option value="zero" selected>|0⟩</option><option value="plusy">|+y⟩</option><option value="ot">(|0⟩ + 2|1⟩)/√5</option></select></label></div><div class="op-button-row"><button class="op-primary" type="button" data-op-action="run">Run 20 sequences A → B → A</button><button type="button" data-op-action="products">Show AB and BA</button><button type="button" data-op-action="clear">Clear log</button><button type="button" data-op-action="reseed">New seed</button></div><div class="op-matrix-entry"><p class="op-step">Your [A, B]</p><div class="op-matrix" role="group" aria-label="Your [A, B], entered row by row"><div class="op-cell" role="group" aria-label="Your [A, B], row 1, column 1"><span class="op-cell-tag" aria-hidden="true">row 1 · col 1</span><label><span class="op-sr-only">Your [A, B], row 1, column 1, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="k-11-re" value="0"></label><label><span class="op-sr-only">Your [A, B], row 1, column 1, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="k-11-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your [A, B], row 1, column 2"><span class="op-cell-tag" aria-hidden="true">row 1 · col 2</span><label><span class="op-sr-only">Your [A, B], row 1, column 2, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="k-12-re" value="0"></label><label><span class="op-sr-only">Your [A, B], row 1, column 2, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="k-12-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your [A, B], row 2, column 1"><span class="op-cell-tag" aria-hidden="true">row 2 · col 1</span><label><span class="op-sr-only">Your [A, B], row 2, column 1, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="k-21-re" value="0"></label><label><span class="op-sr-only">Your [A, B], row 2, column 1, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="k-21-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your [A, B], row 2, column 2"><span class="op-cell-tag" aria-hidden="true">row 2 · col 2</span><label><span class="op-sr-only">Your [A, B], row 2, column 2, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="k-22-re" value="0"></label><label><span class="op-sr-only">Your [A, B], row 2, column 2, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="k-22-im" value="0"></label></div></div></div><p class="op-readout" data-op-read="state" aria-live="polite"></p><ul class="op-log" data-op-log="log" aria-label="Sequence log"></ul>
+              <div class="op-missions">
+                <details class="op-mission" data-op-mission="commute-xz">
+                  <summary>X and Z<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Enter [X, Z] = XZ − ZX in the grid.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="commute-pair">
+                  <summary>A commuting pair<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [1, 1], [1, 1] and B has rows [3, −1], [−1, 3]. Enter [A, B] in the grid and name a shared eigenbasis.</p><div class="op-fields"><label>Shared eigenkets <select name="pair-basis" required><option value="">Choose</option><option value="x">|+x⟩ and |−x⟩</option><option value="z">|0⟩ and |1⟩</option><option value="y">|+y⟩ and |−y⟩</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="commute-repeat">
+                  <summary>Does the first reading survive?<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Measure A, then B, then A again on the same system. Predict the probability that the second A reading repeats the first.</p><div class="op-fields"><label>A = rows [1, 1], [1, 1] and B = rows [3, −1], [−1, 3] <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="repeat-c"></label><label>A = X and B = Z, starting from |0⟩ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="repeat-n"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="commute-shared">
+                  <summary>Definite for both<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Enter a ket with a definite reading for both Z and B (rows [2, 0] and [0, 5]).</p><div class="op-complex" role="group" aria-label="ψ₀"><label>Real part of ψ₀ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="shared-0-re" value="1"></label><label>Imaginary part of ψ₀ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="shared-0-im" value="0"></label></div><div class="op-complex" role="group" aria-label="ψ₁"><label>Real part of ψ₁ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="shared-1-re" value="0"></label><label>Imaginary part of ψ₁ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="shared-1-im" value="0"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="commute-sort">
+                  <summary>Commute or not?<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Decide for each pair.</p><div class="op-fields"><label>X and Y <select name="sort-1" required><option value="">Choose</option><option value="yes">Commute</option><option value="no">Don’t commute</option></select></label><label>Z and rows [2, 0], [0, 5] <select name="sort-2" required><option value="">Choose</option><option value="yes">Commute</option><option value="no">Don’t commute</option></select></label><label>Y and I − 2Y <select name="sort-3" required><option value="">Choose</option><option value="yes">Commute</option><option value="no">Don’t commute</option></select></label><label>X and rows [6, −2], [−2, 3] <select name="sort-4" required><option value="">Choose</option><option value="yes">Commute</option><option value="no">Don’t commute</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="op-math">
+              <summary>Show the math</summary>
+              <p>If [A, B] = 0 and A has distinct readings, then for A|a⟩ = a|a⟩ we get A(B|a⟩) = B(A|a⟩) = a(B|a⟩), so B|a⟩ is a multiple of |a⟩: every eigenket of A is an eigenket of B. Measuring B on |a⟩ then gives a definite reading and leaves |a⟩ in place, so a repeated A gives a again with probability 1. X and Z do not commute: [X, Z] = −2iY. After an X reading, a Z measurement puts the system in |0⟩ or |1⟩, and the next X reading repeats the first only half the time. Lesson 15 turns non-commuting pairs into a statement about spread.</p>
+            </details>
+          </section>
+
+          <section class="op-station" data-op-station="spectral" data-op-accent="yellow" aria-labelledby="op-spectral-title" hidden>
+            <h4 id="op-spectral-title">Spectral Assembly</h4>
+            <p>Every observable can be rebuilt from its readings and eigenkets: A = Σ a|a⟩⟨a|. Each |a⟩⟨a| is a projector P: a matrix with P² = P whose projectors add up to I. Enter a matrix in the grid and the readout tests it.</p>
+            <div data-op-plot-slot></div>
+            <fieldset disabled>
+              <legend class="op-sr-only">Spectral Assembly controls</legend>
+              <div class="op-fields"><label>Eigenket pair <select name="set"><option value="y" selected>|+y⟩ and |−y⟩</option><option value="m6">(1, 2)ᵀ/√5 and (2, −1)ᵀ/√5</option><option value="z">|0⟩ and |1⟩</option></select></label><label>Reading for the first eigenket a₁ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="a1" value="1"></label><label>Reading for the second eigenket a₂ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="a2" value="−1"></label></div><div class="op-matrix-entry"><p class="op-step">Your matrix</p><div class="op-matrix" role="group" aria-label="Your matrix, entered row by row"><div class="op-cell" role="group" aria-label="Your matrix, row 1, column 1"><span class="op-cell-tag" aria-hidden="true">row 1 · col 1</span><label><span class="op-sr-only">Your matrix, row 1, column 1, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="p-11-re" value="0"></label><label><span class="op-sr-only">Your matrix, row 1, column 1, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="p-11-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your matrix, row 1, column 2"><span class="op-cell-tag" aria-hidden="true">row 1 · col 2</span><label><span class="op-sr-only">Your matrix, row 1, column 2, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="p-12-re" value="0"></label><label><span class="op-sr-only">Your matrix, row 1, column 2, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="p-12-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your matrix, row 2, column 1"><span class="op-cell-tag" aria-hidden="true">row 2 · col 1</span><label><span class="op-sr-only">Your matrix, row 2, column 1, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="p-21-re" value="0"></label><label><span class="op-sr-only">Your matrix, row 2, column 1, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="p-21-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your matrix, row 2, column 2"><span class="op-cell-tag" aria-hidden="true">row 2 · col 2</span><label><span class="op-sr-only">Your matrix, row 2, column 2, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="p-22-re" value="0"></label><label><span class="op-sr-only">Your matrix, row 2, column 2, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="p-22-im" value="0"></label></div></div></div><p class="op-readout" data-op-read="state" aria-live="polite"></p>
+              <div class="op-missions">
+                <details class="op-mission" data-op-mission="spectral-outer">
+                  <summary>One projector<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Enter |+y⟩⟨+y| in the grid.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="spectral-partner">
+                  <summary>The other half of I<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Enter |−y⟩⟨−y| in the grid. Your two projectors should add to I.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="spectral-m6">
+                  <summary>Rebuild a familiar matrix<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Assemble 2|a⟩⟨a| + 7|b⟩⟨b| with |a⟩ = (1, 2)ᵀ/√5 and |b⟩ = (2, −1)ᵀ/√5, and enter the result.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="spectral-zero4">
+                  <summary>Readings 0 and 4<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Assemble the observable with reading 0 for |+y⟩ and reading 4 for |−y⟩, and enter it.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="spectral-makey">
+                  <summary>Rebuild Y<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Choose the pair |+y⟩, |−y⟩ and set a₁ and a₂ so that a₁|+y⟩⟨+y| + a₂|−y⟩⟨−y| = Y. The checker reads the pair and the two reading boxes.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="op-math">
+              <summary>Show the math</summary>
+              <p>For |a⟩ = (a₀, a₁)ᵀ, the outer product |a⟩⟨a| has entries aᵢaⱼ*: row i of the column times column j of the conjugated row. For a normalized |a⟩, (|a⟩⟨a|)² = |a⟩⟨a|a⟩⟨a| = |a⟩⟨a|. For an orthonormal pair, |a⟩⟨a| + |b⟩⟨b| = I. Then A = a|a⟩⟨a| + b|b⟩⟨b| sends |a⟩ to a|a⟩ and |b⟩ to b|b⟩, which is exactly the observable with those readings and eigenkets. With readings 0 and 1, the observable is itself a projector.</p>
+            </details>
+          </section>
+
+          <section class="op-station" data-op-station="designer" data-op-accent="violet" aria-labelledby="op-designer-title" hidden>
+            <h4 id="op-designer-title">Observable Designer</h4>
+            <p>Here you work the problem the other way round. Each card fixes some readings and eigenkets, and you design the observable A. Many answers work where the card allows it. The checker tests the matrix you actually build: A = A†, readings on target, and the required eigenket.</p>
+            <div data-op-plot-slot></div>
+            <fieldset disabled>
+              <legend class="op-sr-only">Observable Designer controls</legend>
+              <div class="op-matrix-entry"><p class="op-step">Your A</p><div class="op-matrix" role="group" aria-label="Your A, entered row by row"><div class="op-cell" role="group" aria-label="Your A, row 1, column 1"><span class="op-cell-tag" aria-hidden="true">row 1 · col 1</span><label><span class="op-sr-only">Your A, row 1, column 1, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="a-11-re" value="1"></label><label><span class="op-sr-only">Your A, row 1, column 1, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="a-11-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your A, row 1, column 2"><span class="op-cell-tag" aria-hidden="true">row 1 · col 2</span><label><span class="op-sr-only">Your A, row 1, column 2, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="a-12-re" value="0"></label><label><span class="op-sr-only">Your A, row 1, column 2, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="a-12-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your A, row 2, column 1"><span class="op-cell-tag" aria-hidden="true">row 2 · col 1</span><label><span class="op-sr-only">Your A, row 2, column 1, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="a-21-re" value="0"></label><label><span class="op-sr-only">Your A, row 2, column 1, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="a-21-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your A, row 2, column 2"><span class="op-cell-tag" aria-hidden="true">row 2 · col 2</span><label><span class="op-sr-only">Your A, row 2, column 2, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="a-22-re" value="−1"></label><label><span class="op-sr-only">Your A, row 2, column 2, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="a-22-im" value="0"></label></div></div></div><p class="op-readout" data-op-read="state" aria-live="polite"></p>
+              <div class="op-missions">
+                <details class="op-mission" data-op-mission="designer-qubit">
+                  <summary>A yes-or-no question<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Readings 0 and 1, with |+y⟩ the eigenket for reading 1.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="designer-offdiag">
+                  <summary>Two and five, tilted<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Readings 2 and 5, and neither eigenket may be |0⟩ or |1⟩. Any such design counts.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="designer-plusx">
+                  <summary>Certain for |+x⟩ only<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>|+x⟩ must give a definite reading of 3, and |0⟩ must not give a definite reading.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="designer-complex">
+                  <summary>A complex eigenket<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>(1 − i, 1)ᵀ/√3 must have reading 4. The other reading can be anything except 4.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="designer-impossible">
+                  <summary>A card that can’t be built<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Readings 1 and 2, with |0⟩ for reading 1 and |+x⟩ for reading 2. What do you find?</p><div class="op-fields"><label>Finding <select name="impossible-pick" required><option value="">Choose</option><option value="orth">Impossible: eigenkets for different readings must be orthogonal, and ⟨0|+x⟩ ≠ 0</option><option value="many">Many matrices work</option><option value="scale">It works once the readings are scaled</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="op-math">
+              <summary>Show the math</summary>
+              <p>Choose an orthonormal pair |a⟩, |b⟩ and real readings a ≠ b. Then A = a|a⟩⟨a| + b|b⟩⟨b| is Hermitian, with exactly those readings and eigenkets (station 10). In two dimensions, fixing one eigenket fixes the other up to phase, so a card that names both readings and one eigenket has a single answer. A card that leaves the eigenkets free has many. No Hermitian matrix has non-orthogonal eigenkets for different readings.</p>
+            </details>
+          </section>
+
+          <section class="op-station" data-op-station="detective" data-op-accent="red" aria-labelledby="op-detective-title" hidden>
+            <h4 id="op-detective-title">Error Detective</h4>
+            <p>Each case file holds a worked solution with exactly one planted mistake. Find the first line that goes wrong, and name the mistake. The diagram shows what the solution claims next to what is actually true.</p>
+            <div data-op-plot-slot></div>
+            <fieldset disabled>
+              <legend class="op-sr-only">Error Detective controls</legend>
+              <p class="op-readout" data-op-read="state"></p>
+              <div class="op-missions">
+                <details class="op-mission" data-op-mission="detective-product">
+                  <summary>Case 1 · The instrument shows a ket<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Measure Z on |−x⟩. What can the instrument show?</p><ol class="op-worked"><li>|−x⟩ = (|0⟩ − |1⟩)/√2, so the input column is (1, −1)ᵀ/√2.</li><li>Z(1, −1)ᵀ/√2 = (1, 1)ᵀ/√2 = |+x⟩.</li><li>So the instrument shows |+x⟩, and the system is left in |+x⟩.</li><li>Repeating Z on the same system shows |+x⟩ again.</li></ol><div class="op-fields"><label>First wrong line <select name="product-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="product-kind" required><option value="">Choose</option><option value="product">Treated the product A|ψ⟩ as the reading or the new ket</option><option value="conj">Forgot to conjugate the bra</option><option value="nonherm">Called a non-Hermitian matrix an observable</option><option value="eigprob">Confused an eigenvalue with a probability</option><option value="norm">Used the product’s norm as a probability</option><option value="diag">Read the diagonal entries as the readings</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="detective-conj">
+                  <summary>Case 2 · A tiny overlap<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Find P(+1) for Y and |ψ⟩ = (2|0⟩ + i|1⟩)/√5.</p><ol class="op-worked"><li>The +1 eigenket of Y is |+y⟩ = (|0⟩ + i|1⟩)/√2.</li><li>So the bra is ⟨+y| = (⟨0| + i⟨1|)/√2.</li><li>⟨+y|ψ⟩ = (1·2 + i·i)/√10 = 1/√10.</li><li>P(+1) = 1/10.</li></ol><div class="op-fields"><label>First wrong line <select name="conj-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="conj-kind" required><option value="">Choose</option><option value="product">Treated the product A|ψ⟩ as the reading or the new ket</option><option value="conj">Forgot to conjugate the bra</option><option value="nonherm">Called a non-Hermitian matrix an observable</option><option value="eigprob">Confused an eigenvalue with a probability</option><option value="norm">Used the product’s norm as a probability</option><option value="diag">Read the diagonal entries as the readings</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="detective-nonherm">
+                  <summary>Case 3 · Real is enough<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Find the possible readings of M with rows [1, 2] and [0, 3].</p><ol class="op-worked"><li>det(M − aI) = (1 − a)(3 − a), so the eigenvalues are 1 and 3.</li><li>Both eigenvalues are real, so M is an observable with readings 1 and 3.</li><li>Its eigenkets are |0⟩ for 1 and (|0⟩ + |1⟩)/√2 for 3.</li></ol><div class="op-fields"><label>First wrong line <select name="nonherm-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option></select></label><label>Mistake <select name="nonherm-kind" required><option value="">Choose</option><option value="product">Treated the product A|ψ⟩ as the reading or the new ket</option><option value="conj">Forgot to conjugate the bra</option><option value="nonherm">Called a non-Hermitian matrix an observable</option><option value="eigprob">Confused an eigenvalue with a probability</option><option value="norm">Used the product’s norm as a probability</option><option value="diag">Read the diagonal entries as the readings</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="detective-eigprob">
+                  <summary>Case 4 · Point eight<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [0.2, 0] and [0, 0.8]. Prepare |+x⟩. Find P(0.8).</p><ol class="op-worked"><li>A is real and diagonal, so A = A†.</li><li>Its readings are 0.2, with eigenket |0⟩, and 0.8, with eigenket |1⟩.</li><li>So the reading 0.8 occurs with probability 0.8.</li><li>And 0.2 occurs with probability 0.2, so the two add to 1.</li></ol><div class="op-fields"><label>First wrong line <select name="eigprob-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="eigprob-kind" required><option value="">Choose</option><option value="product">Treated the product A|ψ⟩ as the reading or the new ket</option><option value="conj">Forgot to conjugate the bra</option><option value="nonherm">Called a non-Hermitian matrix an observable</option><option value="eigprob">Confused an eigenvalue with a probability</option><option value="norm">Used the product’s norm as a probability</option><option value="diag">Read the diagonal entries as the readings</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="detective-norm">
+                  <summary>Case 5 · Probability two<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [2, 0] and [0, 0]. Prepare |−x⟩. Find P(2).</p><ol class="op-worked"><li>A is Hermitian, with reading 2 for |0⟩ and reading 0 for |1⟩.</li><li>A|−x⟩ = (2, 0)ᵀ/√2 = √2|0⟩.</li><li>P(2) = ‖A|−x⟩‖² = 2.</li><li>A probability of 2 or more means the reading 2 is certain.</li></ol><div class="op-fields"><label>First wrong line <select name="norm-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="norm-kind" required><option value="">Choose</option><option value="product">Treated the product A|ψ⟩ as the reading or the new ket</option><option value="conj">Forgot to conjugate the bra</option><option value="nonherm">Called a non-Hermitian matrix an observable</option><option value="eigprob">Confused an eigenvalue with a probability</option><option value="norm">Used the product’s norm as a probability</option><option value="diag">Read the diagonal entries as the readings</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="op-math">
+              <summary>Show the math</summary>
+              <p>Four checks catch most operator errors. The product A|ψ⟩ is a calculation, not a reading and not the new ket. Conjugate the bra before taking ⟨a|ψ⟩. An observable must be Hermitian: real eigenvalues alone are not enough. Readings are eigenvalues and probabilities are |⟨a|ψ⟩|²; neither one is the other, and neither is ‖A|ψ⟩‖² or a diagonal entry.</p>
+            </details>
+          </section>
+
+          <section class="op-station" data-op-station="average" data-op-accent="yellow" aria-labelledby="op-average-title" hidden>
+            <h4 id="op-average-title">Quantum Preview: Average Reading</h4>
+            <p class="lesson-kicker">Optional preview</p>
+            <p>This is a preview of averages. Each fresh trial gives one reading a with probability P(a). Run trials and watch the running average of the readings. Lesson 15 develops the expectation value and the spread around it. Here you only run trials and average.</p>
+            <div data-op-plot-slot></div>
+            <fieldset disabled>
+              <legend class="op-sr-only">Quantum Preview: Average Reading controls</legend>
+              <div class="op-fields"><label>Observable A <select name="obs"><option value="d25" selected>rows [2, 0], [0, 5]</option><option value="m6">rows [6, −2], [−2, 3]</option><option value="h14">rows [2, 1 − i], [1 + i, 3]</option></select></label><label>State |ψ⟩ <select name="psi"><option value="plusx" selected>|+x⟩</option><option value="zero">|0⟩</option><option value="plusy">|+y⟩</option></select></label></div><div class="op-button-row"><button class="op-primary" type="button" data-op-action="run10">Run 10</button><button type="button" data-op-action="run100">Run 100</button><button type="button" data-op-action="run1000">Run 1000</button><button type="button" data-op-action="clear">Clear readings</button><button type="button" data-op-action="reseed">New seed</button></div><p class="op-readout" data-op-read="state" aria-live="polite"></p>
+              <div class="op-missions">
+                <details class="op-mission" data-op-mission="average-d25">
+                  <summary>Halfway?<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [2, 0] and [0, 5], and |ψ⟩ = |+x⟩. Find Σ a·P(a).</p><div class="op-fields"><label>Σ a·P(a) <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="d25-avg"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="average-m6">
+                  <summary>Two routes, one number<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [6, −2] and [−2, 3], and |ψ⟩ = |0⟩, with P(2) = 1/5 and P(7) = 4/5. Find Σ a·P(a) and ⟨ψ|A|ψ⟩, then say what the number is not.</p><div class="op-fields"><label>Σ a·P(a) <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="m6-sum"></label><label>⟨ψ|A|ψ⟩ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="m6-sandwich"></label><label>This number <select name="m6-pick" required><option value="">Choose</option><option value="not">is not a possible reading</option><option value="is">is the most likely reading</option><option value="half">shows up on half the trials</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="average-run">
+                  <summary>Your run versus the long run<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Run at least 100 trials for one setup. Enter the average your run shows and the long-run value for that setup.</p><div class="op-fields"><label>Your run’s average <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="run-obs"></label><label>Long-run value Σ a·P(a) <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="run-long"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="average-h14">
+                  <summary>A complex sandwich<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [2, 1 − i] and [1 + i, 3], and |ψ⟩ = |+y⟩. Find Σ a·P(a) and ⟨ψ|A|ψ⟩.</p><div class="op-fields"><label>Σ a·P(a) <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="h14-sum"></label><label>⟨ψ|A|ψ⟩ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="h14-sandwich"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="average-single">
+                  <summary>One trial, one reading<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>For rows [2, 0], [0, 5] and |+x⟩, the long-run average is 7/2. Can one trial show 3.5?</p><div class="op-fields"><label>Answer <select name="single-pick" required><option value="">Choose</option><option value="no">No: each trial shows 2 or 5</option><option value="yes">Yes: some trials show 3.5</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="op-math">
+              <summary>Show the math</summary>
+              <p>Over N fresh trials the average is Σ a·(count of a)/N. As the frequencies settle toward the probabilities, it settles toward Σ a·P(a). Using A = Σ a|a⟩⟨a|, the same number is ⟨ψ|A|ψ⟩ = Σ a|⟨a|ψ⟩|². The long-run average need not be a possible reading. Lesson 15 names it, and asks how far single readings scatter around it.</p>
+            </details>
+          </section>
+
+          <section class="op-station" data-op-station="degenerate" data-op-accent="green" aria-labelledby="op-degenerate-title" hidden>
+            <h4 id="op-degenerate-title">Degenerate Readings</h4>
+            <p><strong>Beyond this lesson’s setting.</strong> So far each reading had a single eigenket. With three levels |0⟩, |1⟩ and |2⟩, a reading can repeat. Then one reading no longer pins down a single ket: its eigenkets fill a plane, and its probability is a sum over that plane.</p>
+            <div data-op-plot-slot></div>
+            <fieldset disabled>
+              <legend class="op-sr-only">Degenerate Readings controls</legend>
+              <div class="op-fields"><label>Observable A <select name="obs"><option value="d113" selected>rows [1, 0, 0], [0, 1, 0], [0, 0, 3]</option><option value="k">rows [1, 0, 0], [0, 2, 1], [0, 1, 2]</option></select></label><label>State |ψ⟩ <select name="psi"><option value="u" selected>(|0⟩ + |1⟩ + |2⟩)/√3</option><option value="one">|1⟩</option><option value="zero">|0⟩</option></select></label></div><div class="op-button-row"><button class="op-primary" type="button" data-op-action="reveal">Show the bars</button><button type="button" data-op-action="hide">Hide the bars</button></div><p class="op-readout" data-op-read="state" aria-live="polite"></p>
+              <div class="op-missions">
+                <details class="op-mission" data-op-mission="degenerate-count">
+                  <summary>How many readings?<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>How many distinct readings does diag(1, 1, 3) have?</p><div class="op-fields"><label>Distinct readings <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="count-n"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="degenerate-sum">
+                  <summary>Add over the plane<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A = diag(1, 1, 3). Prepare (|0⟩ + |1⟩ + |2⟩)/√3. Find P(1) and P(3).</p><div class="op-fields"><label>P(1) <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="sum-p1"></label><label>P(3) <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="sum-p3"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="degenerate-after">
+                  <summary>The ket after reading 1<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Same A and state. The reading is 1. Enter the ket after the reading. Any phase or length counts.</p><div class="op-complex" role="group" aria-label="ψ₀"><label>Real part of ψ₀ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="after-0-re" value="1"></label><label>Imaginary part of ψ₀ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="after-0-im" value="0"></label></div><div class="op-complex" role="group" aria-label="ψ₁"><label>Real part of ψ₁ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="after-1-re" value="0"></label><label>Imaginary part of ψ₁ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="after-1-im" value="0"></label></div><div class="op-complex" role="group" aria-label="ψ₂"><label>Real part of ψ₂ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="after-2-re" value="0"></label><label>Imaginary part of ψ₂ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="after-2-im" value="0"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="degenerate-which">
+                  <summary>Many eigenkets for one reading<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Tick every ket that is an eigenket of diag(1, 1, 3) with reading 1.</p><div class="op-fields"><label class="op-check-row"><input type="checkbox" name="which-0"> |0⟩</label><label class="op-check-row"><input type="checkbox" name="which-1"> |1⟩</label><label class="op-check-row"><input type="checkbox" name="which-mix"> (|0⟩ − i|1⟩)/√2</label><label class="op-check-row"><input type="checkbox" name="which-2"> |2⟩</label><label class="op-check-row"><input type="checkbox" name="which-02"> (|0⟩ + |2⟩)/√2</label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="degenerate-hidden">
+                  <summary>A hidden repeat<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [1, 0, 0], [0, 2, 1] and [0, 1, 2]. Its readings are 1, 1 and 3. Prepare |1⟩. Find P(1).</p><div class="op-fields"><label>P(1) <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="hidden-p1"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="op-math">
+              <summary>Show the math</summary>
+              <p>For a reading a with an orthonormal set of eigenkets |a, 1⟩, |a, 2⟩, …, P(a) = Σₖ |⟨a, k⟩|ψ⟩|², the squared length of the projection of |ψ⟩ onto that eigenspace. After the reading, the ket is that projection, normalized. For diag(1, 1, 3) and (1, 1, 1)ᵀ/√3, the projection onto the reading-1 plane is (1, 1, 0)ᵀ/√3, so P(1) = 2/3 and the new ket is (|0⟩ + |1⟩)/√2. The matrix with rows [1, 0, 0], [0, 2, 1], [0, 1, 2] has reading-1 eigenkets |0⟩ and (|1⟩ − |2⟩)/√2, and reading-3 eigenket (|1⟩ + |2⟩)/√2.</p>
+            </details>
+          </section>
+
+          <section class="op-station" data-op-station="dial" data-op-accent="blue" aria-labelledby="op-dial-title" hidden>
+            <h4 id="op-dial-title">Direction Dial (3D)</h4>
+            <p>Point a unit direction n = (sin θ cos φ, sin θ sin φ, cos θ) on the Bloch sphere and build the observable n·σ = n_x X + n_y Y + n_z Z. Its two eigenkets sit at opposite ends of the axis through n, with readings +1 and −1. The direction is abstract: the readings are dimensionless. Drag the sphere or use the view sliders to turn it.</p>
+            <div data-op-plot-slot></div>
+            <fieldset disabled>
+              <legend class="op-sr-only">Direction Dial (3D) controls</legend>
+              <div class="op-fields"><label>Polar angle θ <output data-op-for="theta" data-op-angle>45</output><input type="range" name="theta" min="0" max="180" step="1" value="45"></label><label>Azimuth φ <output data-op-for="phi" data-op-angle>0</output><input type="range" name="phi" min="0" max="359" step="1" value="0"></label><label>View turn <output data-op-for="yaw" data-op-unit="°">30</output><input type="range" name="yaw" min="0" max="359" step="5" value="30"></label><label>View tilt <output data-op-for="tilt" data-op-unit="°">20</output><input type="range" name="tilt" min="-60" max="60" step="5" value="20"></label></div><div class="op-matrix-entry"><p class="op-step">Your n·σ</p><div class="op-matrix" role="group" aria-label="Your n·σ, entered row by row"><div class="op-cell" role="group" aria-label="Your n·σ, row 1, column 1"><span class="op-cell-tag" aria-hidden="true">row 1 · col 1</span><label><span class="op-sr-only">Your n·σ, row 1, column 1, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="n-11-re" value="0"></label><label><span class="op-sr-only">Your n·σ, row 1, column 1, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="n-11-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your n·σ, row 1, column 2"><span class="op-cell-tag" aria-hidden="true">row 1 · col 2</span><label><span class="op-sr-only">Your n·σ, row 1, column 2, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="n-12-re" value="0"></label><label><span class="op-sr-only">Your n·σ, row 1, column 2, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="n-12-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your n·σ, row 2, column 1"><span class="op-cell-tag" aria-hidden="true">row 2 · col 1</span><label><span class="op-sr-only">Your n·σ, row 2, column 1, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="n-21-re" value="0"></label><label><span class="op-sr-only">Your n·σ, row 2, column 1, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="n-21-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your n·σ, row 2, column 2"><span class="op-cell-tag" aria-hidden="true">row 2 · col 2</span><label><span class="op-sr-only">Your n·σ, row 2, column 2, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="n-22-re" value="0"></label><label><span class="op-sr-only">Your n·σ, row 2, column 2, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="n-22-im" value="0"></label></div></div></div><p class="op-step">Your eigenket |v⟩</p><div class="op-complex" role="group" aria-label="v₀"><label>Real part of v₀ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="v-0-re" value="1"></label><label>Imaginary part of v₀ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="v-0-im" value="0"></label></div><div class="op-complex" role="group" aria-label="v₁"><label>Real part of v₁ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="v-1-re" value="0"></label><label>Imaginary part of v₁ <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="v-1-im" value="0"></label></div><p class="op-readout" data-op-read="state" aria-live="polite"></p>
+              <div class="op-missions">
+                <details class="op-mission" data-op-mission="dial-tilt45">
+                  <summary>Halfway between Z and X<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Enter n·σ for θ = 45°, φ = 0°.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="dial-eq45">
+                  <summary>On the equator<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Enter n·σ for θ = 90°, φ = 45°.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="dial-ket60">
+                  <summary>Find the +1 end<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>For θ = 60°, φ = 90°, enter the eigenket of n·σ with reading +1 in the eigenket boxes. Any phase counts.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="dial-aim">
+                  <summary>Aim at |−y⟩<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Set the dial so that |−y⟩ is the +1 eigenket of n·σ. The checker reads your sliders.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="dial-five">
+                  <summary>A longer arrow<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>For the vector (0, 3, 4), which is not unit length, the operator is 3Y + 4Z. What are its readings?</p><div class="op-fields"><label>Reading <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="five-r1"></label><label>Other reading <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="five-r2"></label></div><p class="lesson-note">Readings may be entered in either order.</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="op-math">
+              <summary>Show the math</summary>
+              <p>n·σ has rows [cos θ, e^(−iφ) sin θ] and [e^(iφ) sin θ, −cos θ]. It is Hermitian, its trace is 0 and its determinant is −1, so its readings are +1 and −1 for every unit n. The +1 eigenket is cos(θ/2)|0⟩ + e^(iφ) sin(θ/2)|1⟩, the point n on the sphere. The −1 eigenket is the opposite point −n. Z, X and Y are the special cases n = (0, 0, 1), (1, 0, 0) and (0, 1, 0). For a vector r that is not unit length, r·σ has readings ±|r|.</p>
+            </details>
+          </section>
+
+          <section class="op-station" data-op-station="unitary" data-op-accent="orange" aria-labelledby="op-unitary-title" hidden>
+            <h4 id="op-unitary-title">Hermitian vs Unitary</h4>
+            <p>Two different properties: Hermitian means A† = A, which observables need. Unitary means A†A = I, which preserves the norm of every ket. Lesson 17 uses unitary matrices for evolution. Pick a matrix and run the two tests.</p>
+            <div data-op-plot-slot></div>
+            <fieldset disabled>
+              <legend class="op-sr-only">Hermitian vs Unitary controls</legend>
+              <div class="op-fields"><label>Matrix <select name="mat"><option value="x" selected>X</option><option value="y">Y</option><option value="z">Z</option><option value="h">(X + Z)/√2</option><option value="s">S, rows [1, 0], [0, i]</option><option value="twoz">2Z</option><option value="rot">rows [0, −1], [1, 0]</option><option value="shear">rows [1, 1], [0, 1]</option></select></label></div><div class="op-button-row"><button class="op-primary" type="button" data-op-action="testh">Compare A with A†</button><button type="button" data-op-action="testu">Compute A†A</button><button type="button" data-op-action="clear">Clear tests</button></div><div class="op-matrix-entry"><p class="op-step">Your matrix</p><div class="op-matrix" role="group" aria-label="Your matrix, entered row by row"><div class="op-cell" role="group" aria-label="Your matrix, row 1, column 1"><span class="op-cell-tag" aria-hidden="true">row 1 · col 1</span><label><span class="op-sr-only">Your matrix, row 1, column 1, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="u-11-re" value="0"></label><label><span class="op-sr-only">Your matrix, row 1, column 1, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="u-11-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your matrix, row 1, column 2"><span class="op-cell-tag" aria-hidden="true">row 1 · col 2</span><label><span class="op-sr-only">Your matrix, row 1, column 2, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="u-12-re" value="0"></label><label><span class="op-sr-only">Your matrix, row 1, column 2, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="u-12-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your matrix, row 2, column 1"><span class="op-cell-tag" aria-hidden="true">row 2 · col 1</span><label><span class="op-sr-only">Your matrix, row 2, column 1, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="u-21-re" value="0"></label><label><span class="op-sr-only">Your matrix, row 2, column 1, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="u-21-im" value="0"></label></div><div class="op-cell" role="group" aria-label="Your matrix, row 2, column 2"><span class="op-cell-tag" aria-hidden="true">row 2 · col 2</span><label><span class="op-sr-only">Your matrix, row 2, column 2, </span>real <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="u-22-re" value="0"></label><label><span class="op-sr-only">Your matrix, row 2, column 2, </span>imaginary <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="u-22-im" value="0"></label></div></div></div><p class="op-readout" data-op-read="state" aria-live="polite"></p><ul class="op-log" data-op-log="log" aria-label="Test results"></ul>
+              <div class="op-missions">
+                <details class="op-mission" data-op-mission="unitary-deck">
+                  <summary>Sort the deck<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Place each matrix.</p><div class="op-fields"><label>X <select name="deck-x" required><option value="">Choose</option><option value="both">Both</option><option value="herm">Hermitian only</option><option value="unit">Unitary only</option><option value="neither">Neither</option></select></label><label>Y <select name="deck-y" required><option value="">Choose</option><option value="both">Both</option><option value="herm">Hermitian only</option><option value="unit">Unitary only</option><option value="neither">Neither</option></select></label><label>Z <select name="deck-z" required><option value="">Choose</option><option value="both">Both</option><option value="herm">Hermitian only</option><option value="unit">Unitary only</option><option value="neither">Neither</option></select></label><label>(X + Z)/√2 <select name="deck-h" required><option value="">Choose</option><option value="both">Both</option><option value="herm">Hermitian only</option><option value="unit">Unitary only</option><option value="neither">Neither</option></select></label><label>S <select name="deck-s" required><option value="">Choose</option><option value="both">Both</option><option value="herm">Hermitian only</option><option value="unit">Unitary only</option><option value="neither">Neither</option></select></label><label>2Z <select name="deck-twoz" required><option value="">Choose</option><option value="both">Both</option><option value="herm">Hermitian only</option><option value="unit">Unitary only</option><option value="neither">Neither</option></select></label><label>rows [0, −1], [1, 0] <select name="deck-rot" required><option value="">Choose</option><option value="both">Both</option><option value="herm">Hermitian only</option><option value="unit">Unitary only</option><option value="neither">Neither</option></select></label><label>rows [1, 1], [0, 1] <select name="deck-shear" required><option value="">Choose</option><option value="both">Both</option><option value="herm">Hermitian only</option><option value="unit">Unitary only</option><option value="neither">Neither</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="unitary-ss">
+                  <summary>S†S<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Enter S†S in the grid, for S with rows [1, 0] and [0, i].</p>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="unitary-seig">
+                  <summary>S as an instrument?<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>S has eigenvalues 1 and i. Why can’t S be an observable?</p><div class="op-fields"><label>Reason <select name="seig-pick" required><option value="">Choose</option><option value="real">i is not real, so it can’t be a reading; S is not Hermitian</option><option value="norm">S changes the norm of kets</option><option value="unit">Unitary matrices are never observables</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="unitary-cz">
+                  <summary>Unitary but not Hermitian<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>Find a number c so that cZ is unitary but not Hermitian. Many answers work.</p><div class="op-complex" role="group" aria-label="c"><label>Real part of c <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="cz-re" value="0"></label><label>Imaginary part of c <input class="op-answer" type="text" autocomplete="off" spellcheck="false" name="cz-im" value="0"></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+                <details class="op-mission" data-op-mission="unitary-both">
+                  <summary>Both at once<span data-op-done hidden>✓ Complete</span></summary>
+                  <p>A matrix is both Hermitian and unitary. Which eigenvalues can it have?</p><div class="op-fields"><label>Eigenvalues <select name="both-pick" required><option value="">Choose</option><option value="pm1">Only +1 and −1</option><option value="real">Any real numbers</option><option value="circle">Any numbers of size 1</option></select></label></div>
+                  <button class="op-primary" type="button" data-op-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="op-math">
+              <summary>Show the math</summary>
+              <p>If A = A†, the eigenvalues are real. If A†A = I, then ‖A|v⟩‖ = ‖|v⟩‖, so each eigenvalue has |λ| = 1. A matrix with both properties has real eigenvalues of size 1: only ±1. The Pauli matrices and (X + Z)/√2 are examples. S and the quarter-turn are unitary but have eigenvalues i or ±i, so they are not observables. 2Z is an observable but doubles some norms, so it is not unitary. cZ is unitary when |c| = 1 and Hermitian when c is real.</p>
+            </details>
+          </section>
+
+        </div>
+
+        <template id="op-figure-template">
+          <figure class="op-figure">
+            <figcaption id="op-title">Station diagram</figcaption>
+            <div class="op-viewport" id="op-viewport" data-renderer="svg">
+              <canvas class="op-canvas" id="op-canvas" aria-hidden="true" hidden></canvas>
+              <svg class="op-diagram" id="op-diagram" viewBox="0 0 560 300" role="img" aria-labelledby="op-title" aria-describedby="op-desc">
+                <desc id="op-desc"></desc>
+                <g data-op-geometry></g>
+                <g data-op-labels></g>
+              </svg>
+            </div>
+            <p class="lesson-note" id="op-render-status"></p>
+          </figure>
+        </template>
+        <template id="op-mission-template">
+          <div class="op-mission-tools">
+            <button type="button" data-op-hint>Show first hint</button>
+            <ol data-op-hint-list aria-live="polite" hidden></ol>
+            <p class="op-feedback" data-op-feedback role="status"></p>
+            <details data-op-work hidden><summary>Worked steps</summary><p data-op-work-text></p></details>
+          </div>
+        </template>
+      </div>
+    </details>
 
     <nav class="lesson-next" aria-label="Lesson navigation">
       <a href="../13_measurement_and_the_born_rule/13_measurement_and_the_born_rule.html">
