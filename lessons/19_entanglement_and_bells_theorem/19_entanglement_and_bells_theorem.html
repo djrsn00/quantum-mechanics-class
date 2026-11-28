@@ -6,10 +6,10 @@
   <meta name="theme-color" content="#050906">
   <meta name="description" content="Play the CHSH game, compare classical strategies with an entangled spin pair, and derive the correlations behind Bell’s theorem.">
   <title>Entanglement and Bell’s Theorem | Quantum Mechanics Class</title>
-  <link rel="stylesheet" href="./styles/main.css">
+  <link rel="stylesheet" href="./styles/main.css?v=19-entanglement-arcade">
   <script src="./scripts/app.js" defer></script>
   <script src="./scripts/lessons-menu.js" defer></script>
-  <script type="module" src="./scripts/lesson.js"></script>
+  <script type="module" src="./scripts/lesson.js?v=19-entanglement-arcade"></script>
 </head>
 <body>
   <header class="site-header">
@@ -129,6 +129,7 @@
       <p class="bell-kicker">Lesson 19</p>
       <h2 id="bell-title">Entanglement and Bell’s Theorem</h2>
       <p class="bell-lead"><strong>Alice and Bob can agree on a plan before a round. Once they receive their separate questions, they cannot communicate. Can they win more than three quarters of the rounds?</strong></p>
+      <p><a id="eb-arcade-link" href="#entanglement-arcade">Open the optional Entanglement Arcade</a></p>
     </header>
 
     <section class="bell-panel" aria-labelledby="bell-game-title">
@@ -373,6 +374,575 @@
       </form>
       <p>Here, each state was described by amplitudes for a finite list of basis states. In Lesson 20, <strong>Wavefunctions</strong>, you’ll use an amplitude that varies continuously with position and turn it into a probability density.</p>
     </section>
+
+    <details class="lesson-panel eb-arcade" id="entanglement-arcade">
+      <summary><strong>Entanglement Arcade</strong><span>Optional practice</span></summary>
+      <div class="eb-body">
+        <p>Pick a station, try its controls, and open a mission when you’re ready. Each mission has two hints. Progress lasts while this page is open. Every station keeps Alice first and Bob second, maps the sign +1 to bit 0 and −1 to bit 1, and uses the singlet correlation E(α, β) = −cos δ with δ = α − β unless it says otherwise.</p>
+        <p class="eb-note" id="eb-tolerance">Answer boxes accept whole numbers, decimals, fractions such as 3/8, and square roots such as 1/√2, 2√2 or (2 − √3)/8 (type √ or sqrt). Answers that end as decimals, such as 0.25, are checked exactly. Answers such as 1/3 or 1/√2 can be typed exactly, or as decimals within 0.002 of the exact value. Angles are in degrees, measured in the X–Z plane from +z toward +x; a full turn changes nothing, so 370° counts as 10°. A setting you build counts when each angle is within 0.5° of the target and each correlation or S value within 0.005. Every simulated run uses a seed: a reset with the same seed repeats the same rounds, and missions check your reasoning about your own run, never a lucky result.</p>
+        <div class="eb-toolbar">
+          <label for="eb-station">Station
+            <select id="eb-station" aria-controls="eb-panels" disabled>
+              <optgroup label="Correlations">
+                <option value="curve" selected>1 · Correlation Curve</option>
+                <option value="atlas">2 · Bell State Atlas</option>
+                <option value="mixture">3 · Mixture Unmasked</option>
+                <option value="nosignal">4 · No-Signaling Check</option>
+              </optgroup>
+              <optgroup label="The CHSH game">
+                <option value="hunter">5 · Classical Strategy Hunter</option>
+                <option value="tuner">6 · Angle Tuner (3D)</option>
+                <option value="rounds">7 · How Many Rounds?</option>
+              </optgroup>
+              <optgroup label="Bell experiments">
+                <option value="mermin">8 · Mermin’s Device</option>
+              </optgroup>
+              <optgroup label="Recurring formats">
+                <option value="designer">9 · Strategy Designer</option>
+                <option value="detective">10 · Error Detective</option>
+                <option value="preview">11 · Quantum Preview: EPR in Position and Momentum</option>
+              </optgroup>
+              <optgroup label="Extras">
+                <option value="loophole">12 · Loophole Lab</option>
+                <option value="qkd">13 · Quantum Key Distribution (E91)</option>
+              </optgroup>
+            </select>
+          </label>
+          <p id="eb-progress" role="status">0 of 56 missions completed this session.</p>
+          <button id="eb-reset" type="button" disabled>Reset this station</button>
+          <label class="eb-reduced" for="eb-reduced"><input id="eb-reduced" type="checkbox" disabled> Reduced effects</label>
+        </div>
+        <p class="eb-note" id="eb-status" role="status" aria-atomic="true"></p>
+        <noscript><p class="eb-note">JavaScript runs the arcade diagrams, controls, simulated rounds and mission checks.</p></noscript>
+        <div id="eb-panels">
+          <section class="eb-station" data-eb-station="curve" data-eb-accent="blue" aria-labelledby="eb-curve-title">
+            <h4 id="eb-curve-title">Correlation Curve</h4>
+            <p>Choose Alice’s axis α and Bob’s axis β in the X–Z plane, measured from +z toward +x. For the singlet |Ψ⁻⟩ the correlation depends only on δ = α − β: E(α, β) = −cos δ.</p>
+            <p>The dashed line is a simple local instruction-set model. The source gives both particles a shared random direction λ. Alice reports the sign of cos(α − λ), and Bob reports the opposite of the sign of cos(β − λ). Its correlation is piecewise linear: E = −1 + |δ|/90° for δ between −180° and 180°.</p>
+            <div data-eb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eb-sr-only">Correlation Curve controls</legend>
+              <div class="eb-fields"><label>Alice’s axis α <output data-eb-for="al" data-eb-unit="°">0</output><input type="range" name="al-range" data-eb-pair="al" data-eb-angle min="0" max="359" step="1" value="0"></label><label>α in degrees (box) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="al" value="0"></label><label>Bob’s axis β <output data-eb-for="be" data-eb-unit="°">120</output><input type="range" name="be-range" data-eb-pair="be" data-eb-angle min="0" max="359" step="1" value="120"></label><label>β in degrees (box) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="be" value="120"></label></div><div class="eb-fields"><label class="eb-check-row"><input type="checkbox" name="q" checked> Show the singlet curve E = −cos δ</label><label class="eb-check-row"><input type="checkbox" name="cl" checked> Show the instruction-set model</label></div><p class="eb-readout" data-eb-read="state" aria-live="polite"></p>
+              <div class="eb-missions">
+                <details class="eb-mission" data-eb-mission="curve-a">
+                  <summary>Sixty degrees apart<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Set any α and β with δ = α − β = 60° or −60°. Enter both correlations at that setting.</p><div class="eb-fields"><label>Singlet E =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-q" value=""></label><label>Instruction-set model E =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-c" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="curve-b">
+                  <summary>Where the curves part<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Find a setting where the singlet and the instruction-set model differ by at least 0.2: |E<sub>singlet</sub> − E<sub>model</sub>| ≥ 0.2. Many settings work. The checker reads your own axes.</p>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="curve-c">
+                  <summary>Full turns<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission sets α = 370° and β = 130°. Enter both correlations.</p><div class="eb-fields"><label>Singlet E =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-q" value=""></label><label>Instruction-set model E =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-c" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="curve-d">
+                  <summary>Always the same sign<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Choose axes so that Alice’s and Bob’s signs always agree (E = +1). Then say which model does that at your setting.</p><div class="eb-fields"><label>At your setting, E = +1 for <select name="d-pick" required><option value="">Choose</option><option value="q">only the singlet</option><option value="cl">only the instruction-set model</option><option value="both">both: perfect agreement</option><option value="none">neither</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eb-math">
+              <summary>Show the math</summary>
+              <p>For the singlet, P(equal signs) = (1 − cos δ)/2 and P(unequal) = (1 + cos δ)/2, so E = P(equal) − P(unequal) = −cos δ. Only the difference δ matters, and adding 360° to either axis changes nothing.</p>
+              <p>In the model, λ is a direction spread evenly round the circle. Alice reports + when λ lies within 90° of α, and Bob reports − when λ lies within 90° of β. Their signs are equal exactly when λ lies within 90° of just one of the two axes, which happens for a fraction |δ|/180° of the circle when |δ| ≤ 180°. So E = |δ|/180° − (1 − |δ|/180°) = −1 + |δ|/90°. The two curves meet at 0°, ±90° and 180°; in between the cosine bends away from the straight lines. The largest gap, about 0.21, is near |δ| ≈ 39.5° and 140.5°, where sin δ = 2/π.</p>
+            </details>
+          </section>
+
+          <section class="eb-station" data-eb-station="atlas" data-eb-accent="green" aria-labelledby="eb-atlas-title" hidden>
+            <h4 id="eb-atlas-title">Bell State Atlas</h4>
+            <p>Pick one of the four Bell states and a measurement basis for each qubit, Alice first and Bob second. The grid shows the joint probabilities of the signs (u, v), with +1 → bit 0 and −1 → bit 1. Leave the predictions hidden, work out the correlation E = P(equal signs) − P(unequal signs), then reveal.</p>
+            <div data-eb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eb-sr-only">Bell State Atlas controls</legend>
+              <div class="eb-fields"><label>Bell state <select name="state"><option value="phip" selected>|Φ⁺⟩ = (|00⟩ + |11⟩)/√2</option><option value="phim">|Φ⁻⟩ = (|00⟩ − |11⟩)/√2</option><option value="psip">|Ψ⁺⟩ = (|01⟩ + |10⟩)/√2</option><option value="psim">|Ψ⁻⟩ = (|01⟩ − |10⟩)/√2</option></select></label><label>Alice measures <select name="ba"><option value="z" selected>Z</option><option value="x">X</option><option value="y">Y</option></select></label><label>Bob measures <select name="bb"><option value="z" selected>Z</option><option value="x">X</option><option value="y">Y</option></select></label></div><div class="eb-fields"><label class="eb-check-row"><input type="checkbox" name="reveal"> Reveal the predictions</label></div><p class="eb-readout" data-eb-read="state" aria-live="polite"></p>
+              <div class="eb-missions">
+                <details class="eb-mission" data-eb-mission="atlas-a">
+                  <summary>The |Φ⁺⟩ row<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>For |Φ⁺⟩, enter the correlation when both qubits are measured along Z, along X, and along Y. Predict before you reveal.</p><div class="eb-fields"><label>E<sub>ZZ</sub> =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-zz" value=""></label><label>E<sub>XX</sub> =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-xx" value=""></label><label>E<sub>YY</sub> =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-yy" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="atlas-b">
+                  <summary>A fingerprint<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>A Bell state gives E<sub>ZZ</sub> = +1 and E<sub>XX</sub> = −1. Which state is it, and what is its E<sub>YY</sub>?</p><div class="eb-fields"><label>The state is <select name="b-state" required><option value="">Choose</option><option value="phip">|Φ⁺⟩ = (|00⟩ + |11⟩)/√2</option><option value="phim">|Φ⁻⟩ = (|00⟩ − |11⟩)/√2</option><option value="psip">|Ψ⁺⟩ = (|01⟩ + |10⟩)/√2</option><option value="psim">|Ψ⁻⟩ = (|01⟩ − |10⟩)/√2</option></select></label><label>E<sub>YY</sub> =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-yy" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="atlas-c">
+                  <summary>Different bases<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks |Φ⁺⟩ with Alice measuring Z and Bob measuring X. Find the probability that both get +1 (bits 00), and the correlation.</p><div class="eb-fields"><label>P(00) =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-p00" value=""></label><label>E =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-e" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="atlas-d">
+                  <summary>One product for all four<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>For each Bell state, multiply its three same-basis correlations: E<sub>XX</sub> · E<sub>YY</sub> · E<sub>ZZ</sub>. All four states give the same number. Enter it.</p><div class="eb-fields"><label>E<sub>XX</sub> · E<sub>YY</sub> · E<sub>ZZ</sub> =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="d-prod" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eb-math">
+              <summary>Show the math</summary>
+              <p>X|0⟩ = |1⟩, X|1⟩ = |0⟩, Y|0⟩ = i|1⟩, Y|1⟩ = −i|0⟩ and Z|1⟩ = −|1⟩. A Bell state is an eigenstate of X ⊗ X, Y ⊗ Y and Z ⊗ Z, so each same-basis correlation is ±1. For example (Y ⊗ Y)|00⟩ = (i)(i)|11⟩ = −|11⟩, so E<sub>YY</sub> = −1 for |Φ⁺⟩.</p>
+              <p>Listed as (E<sub>XX</sub>, E<sub>YY</sub>, E<sub>ZZ</sub>): |Φ⁺⟩ (+1, −1, +1), |Φ⁻⟩ (−1, +1, +1), |Ψ⁺⟩ (+1, +1, −1), |Ψ⁻⟩ (−1, −1, −1). Since (X ⊗ X)(Y ⊗ Y)(Z ⊗ Z) = (XYZ) ⊗ (XYZ) = (iI) ⊗ (iI) = −I, the product is −1 for every Bell state. Mixed bases such as Z on Alice and X on Bob give E = 0, and every marginal is 50/50.</p>
+            </details>
+          </section>
+
+          <section class="eb-station" data-eb-station="mixture" data-eb-accent="orange" aria-labelledby="eb-mixture-title" hidden>
+            <h4 id="eb-mixture-title">Mixture Unmasked</h4>
+            <p>Lesson 18 stopped at Z measurements, where |Φ⁺⟩ and a classical 50/50 mixture of |00⟩ and |11⟩ give the same records. Here both qubits can also be measured along X. Choose a source and a basis, predict, then run seeded pairs. A pair matches when both signs are equal (bits 00 or 11).</p>
+            <div data-eb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eb-sr-only">Mixture Unmasked controls</legend>
+              <div class="eb-fields"><label>Source <select name="source"><option value="phi" selected>|Φ⁺⟩, the pure entangled state</option><option value="mix">a 50/50 mixture of |00⟩ and |11⟩</option><option value="mystery">mystery source (set by the seed)</option></select></label><label>Both qubits measured in <select name="basis"><option value="z" selected>Z</option><option value="x">X</option></select></label><label>Pairs per run <select name="n"><option value="10">10</option><option value="20" selected>20</option><option value="100">100</option></select></label><label>Seed (whole number) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="seed" value="19"></label></div><div class="eb-button-row"><button class="eb-primary" type="button" data-eb-action="run">Run pairs</button><button type="button" data-eb-action="clear">Clear this run</button><button type="button" data-eb-action="reseed">New seed</button></div><p class="eb-readout" data-eb-read="state" aria-live="polite"></p><ol class="eb-log" data-eb-log="records" aria-label="The last 20 pairs, Alice first"></ol>
+              <div class="eb-missions">
+                <details class="eb-mission" data-eb-mission="mixture-a">
+                  <summary>The Z test<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Predict the chance that the two Z results match, for each source.</p><div class="eb-fields"><label>P(match) for |Φ⁺⟩ =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-phi" value=""></label><label>P(match) for the mixture =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-mix" value=""></label><label>So Z records <select name="a-pick" required><option value="">Choose</option><option value="same">can’t tell the two sources apart</option><option value="phi">show |Φ⁺⟩ matching more often</option><option value="mix">show the mixture matching more often</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="mixture-b">
+                  <summary>The X test<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Now both qubits are measured along X. Predict the chance that the two results match, for each source.</p><div class="eb-fields"><label>P(match) for |Φ⁺⟩ =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-phi" value=""></label><label>P(match) for the mixture =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-mix" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="mixture-c">
+                  <summary>Unmask the mystery source<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks the mystery source and the X basis. Run at least 20 pairs, then report what your own run shows and what it tells you.</p><div class="eb-fields"><label>In my X run <select name="c-ev" required><option value="">Choose</option><option value="mismatch">at least one pair mismatched</option><option value="allmatch">every pair matched</option></select></label><label>So the source is <select name="c-verdict" required><option value="">Choose</option><option value="phi">consistent with |Φ⁺⟩</option><option value="mix">the mixture, not |Φ⁺⟩</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="mixture-d">
+                  <summary>How many pairs?<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>If the source is the mixture, each X pair matches with probability 1/2. What is the smallest number of X pairs N for which “all N match” has probability below 1/1000?</p><div class="eb-fields"><label>N =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="d-n" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eb-math">
+              <summary>Show the math</summary>
+              <p>In the X basis, |Φ⁺⟩ = (|++⟩ + |−−⟩)/√2, so its X results always match. Each component of the mixture is a product, |0⟩|0⟩ or |1⟩|1⟩, and each qubit gives + or − along X with probability 1/2, independently. So all four X pairs have probability 1/4, and P(match) = 1/2.</p>
+              <p>One mismatched X pair rules out the ideal |Φ⁺⟩. If every pair matches, the mixture is still possible, but with probability (1/2)<sup>N</sup>: 2<sup>−10</sup> = 1/1024 is the first power below 1/1000. With the seeded mystery source, a reset with the same seed repeats the same pairs.</p>
+            </details>
+          </section>
+
+          <section class="eb-station" data-eb-station="nosignal" data-eb-accent="yellow" aria-labelledby="eb-nosignal-title" hidden>
+            <h4 id="eb-nosignal-title">No-Signaling Check</h4>
+            <p>Alice tries to send Bob one bit through a stream of singlets. For bit 0 she measures along α₀, for bit 1 along α₁. Bob always measures along β and looks only at his own results. The grid shows the joint probabilities for the current bit, with Bob’s marginal along the bottom. Send seeded runs and compare Bob’s + fractions.</p>
+            <div data-eb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eb-sr-only">No-Signaling Check controls</legend>
+              <div class="eb-fields"><label>Alice’s message bit <select name="msg"><option value="0" selected>0: Alice uses α₀</option><option value="1">1: Alice uses α₁</option></select></label><label>Alice’s axis for bit 0, α₀ <output data-eb-for="a0" data-eb-unit="°">0</output><input type="range" name="a0-range" data-eb-pair="a0" data-eb-angle min="0" max="359" step="1" value="0"></label><label>α₀ in degrees (box) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a0" value="0"></label><label>Alice’s axis for bit 1, α₁ <output data-eb-for="a1" data-eb-unit="°">90</output><input type="range" name="a1-range" data-eb-pair="a1" data-eb-angle min="0" max="359" step="1" value="90"></label><label>α₁ in degrees (box) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a1" value="90"></label><label>Bob’s axis β <output data-eb-for="be" data-eb-unit="°">0</output><input type="range" name="be-range" data-eb-pair="be" data-eb-angle min="0" max="359" step="1" value="0"></label><label>β in degrees (box) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="be" value="0"></label><label>Seed (whole number) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="seed" value="19"></label></div><div class="eb-button-row"><button class="eb-primary" type="button" data-eb-action="send">Send 200 pairs with this bit</button><button type="button" data-eb-action="clear">Clear both runs</button><button type="button" data-eb-action="reseed">New seed</button></div><p class="eb-readout" data-eb-read="state" aria-live="polite"></p>
+              <div class="eb-missions">
+                <details class="eb-mission" data-eb-mission="nosignal-a">
+                  <summary>Sum out Alice<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission sets bit 0 with α₀ = 0° and β = 30°. Find the two joint probabilities with Bob +1, and add them to get Bob’s own chance of +1.</p><div class="eb-fields"><label>P(+1, +1) =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-pp" value=""></label><label>P(−1, +1) =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-mp" value=""></label><label>P(Bob +1) =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-sum" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="nosignal-b">
+                  <summary>Sweep Alice’s axis<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Keep β fixed and move Alice’s current axis through at least three different angles (use either message bit). Watch Bob’s marginal.</p><div class="eb-fields"><label>Bob’s chance of +1 <select name="b-pick" required><option value="">Choose</option><option value="half">stays 1/2 for every α</option><option value="cos">follows cos²(δ/2)</option><option value="max">is largest when α = β</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="nosignal-c">
+                  <summary>Try to send a bit<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Send 200 pairs with bit 0 and 200 with bit 1 (switch the bit between sends; the same axes for both). Enter the difference between Bob’s two + fractions, then judge it.</p><div class="eb-fields"><label>|Bob’s + fraction with bit 0 − with bit 1| =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-diff" value=""></label><label>Can Bob read the bit from his own record? <select name="c-pick" required><option value="">Choose</option><option value="yes">yes: the fractions differ</option><option value="noise">no: Bob’s expected fraction is 1/2 for both bits, so the gap is statistical noise that shrinks as more pairs are sent</option><option value="later">only if he waits long enough</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="nosignal-d">
+                  <summary>Where the setting shows up<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Alice’s choice of axis does change something. What reveals it?</p><div class="eb-fields"><label>Alice’s setting shows up <select name="d-pick" required><option value="">Choose</option><option value="bob">in Bob’s local + fraction</option><option value="compare">only when the two records are compared, which needs an ordinary signal</option><option value="never">nowhere: the correlations don’t depend on α</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eb-math">
+              <summary>Show the math</summary>
+              <p>For the singlet, P(u, v | α, β) = [1 + uv E(α, β)]/4 with E = −cos δ. Bob’s marginal sums over Alice’s sign: P(v) = [(1 + vE) + (1 − vE)]/4 = 1/2, whatever α is. With α = 0° and β = 30°, cos δ = √3/2, so P(+1, +1) = (2 − √3)/8 and P(−1, +1) = (2 + √3)/8, which add to 1/2.</p>
+              <p>Each send draws fresh random results, so Bob’s two fractions wobble by about 0.5/√200 ≈ 0.035 each and their difference by about 0.05. Most runs differ by less than 0.1, and the gap shrinks like 1/√N as Bob collects more pairs. The correlation E does depend on α, but Bob can only see it by comparing his list with Alice’s, and her list has to reach him by an ordinary signal.</p>
+            </details>
+          </section>
+
+          <section class="eb-station" data-eb-station="hunter" data-eb-accent="green" aria-labelledby="eb-hunter-title" hidden>
+            <h4 id="eb-hunter-title">Classical Strategy Hunter</h4>
+            <p>A deterministic classical strategy is a response table: Alice’s replies a for x = 0 and x = 1, and Bob’s replies b for y = 0 and y = 1. There are 2⁴ = 16 tables. The grid shows every one, with its CHSH sum S and expected win rate. Shared randomness lets the players choose a table at random before each round, so the mixer weights up to three tables and computes the mixture’s S and win rate.</p>
+            <div data-eb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eb-sr-only">Classical Strategy Hunter controls</legend>
+              <p class="eb-step">All 16 deterministic tables</p><ol class="eb-log" data-eb-log="tables" aria-label="All 16 tables: Alice’s replies for x = 0 and 1, Bob’s for y = 0 and 1"></ol><p class="eb-step">Shared-randomness mixer</p><div class="eb-fields"><label>Mixer table 1 <select name="t1"><option value="0" selected>0 · Alice 00, Bob 00</option><option value="1">1 · Alice 00, Bob 01</option><option value="2">2 · Alice 00, Bob 10</option><option value="3">3 · Alice 00, Bob 11</option><option value="4">4 · Alice 01, Bob 00</option><option value="5">5 · Alice 01, Bob 01</option><option value="6">6 · Alice 01, Bob 10</option><option value="7">7 · Alice 01, Bob 11</option><option value="8">8 · Alice 10, Bob 00</option><option value="9">9 · Alice 10, Bob 01</option><option value="10">10 · Alice 10, Bob 10</option><option value="11">11 · Alice 10, Bob 11</option><option value="12">12 · Alice 11, Bob 00</option><option value="13">13 · Alice 11, Bob 01</option><option value="14">14 · Alice 11, Bob 10</option><option value="15">15 · Alice 11, Bob 11</option></select></label><label>Weight of table 1 <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="w1" value="1"></label><label>Mixer table 2 <select name="t2"><option value="0">0 · Alice 00, Bob 00</option><option value="1" selected>1 · Alice 00, Bob 01</option><option value="2">2 · Alice 00, Bob 10</option><option value="3">3 · Alice 00, Bob 11</option><option value="4">4 · Alice 01, Bob 00</option><option value="5">5 · Alice 01, Bob 01</option><option value="6">6 · Alice 01, Bob 10</option><option value="7">7 · Alice 01, Bob 11</option><option value="8">8 · Alice 10, Bob 00</option><option value="9">9 · Alice 10, Bob 01</option><option value="10">10 · Alice 10, Bob 10</option><option value="11">11 · Alice 10, Bob 11</option><option value="12">12 · Alice 11, Bob 00</option><option value="13">13 · Alice 11, Bob 01</option><option value="14">14 · Alice 11, Bob 10</option><option value="15">15 · Alice 11, Bob 11</option></select></label><label>Weight of table 2 <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="w2" value="0"></label><label>Mixer table 3 <select name="t3"><option value="0">0 · Alice 00, Bob 00</option><option value="1">1 · Alice 00, Bob 01</option><option value="2" selected>2 · Alice 00, Bob 10</option><option value="3">3 · Alice 00, Bob 11</option><option value="4">4 · Alice 01, Bob 00</option><option value="5">5 · Alice 01, Bob 01</option><option value="6">6 · Alice 01, Bob 10</option><option value="7">7 · Alice 01, Bob 11</option><option value="8">8 · Alice 10, Bob 00</option><option value="9">9 · Alice 10, Bob 01</option><option value="10">10 · Alice 10, Bob 10</option><option value="11">11 · Alice 10, Bob 11</option><option value="12">12 · Alice 11, Bob 00</option><option value="13">13 · Alice 11, Bob 01</option><option value="14">14 · Alice 11, Bob 10</option><option value="15">15 · Alice 11, Bob 11</option></select></label><label>Weight of table 3 <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="w3" value="0"></label></div><p class="eb-readout" data-eb-read="state" aria-live="polite"></p>
+              <div class="eb-missions">
+                <details class="eb-mission" data-eb-mission="hunter-a">
+                  <summary>Count the best tables<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>How many of the 16 tables reach the expected win rate 3/4?</p><div class="eb-fields"><label>Number of tables =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="a-n" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="hunter-b">
+                  <summary>A mixed best strategy<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Use the mixer to build a strategy that mixes at least two different tables and still has expected win rate 3/4. Weights must be 0 or more and add to 1.</p>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="hunter-c">
+                  <summary>Five eighths<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Build a mixture whose expected win rate is exactly 5/8.</p>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="hunter-d">
+                  <summary>Why 3/4 is the ceiling<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Explain the bound.</p><div class="eb-fields"><label>No mixture beats 3/4 because <select name="d-why" required><option value="">Choose</option><option value="average">a mixture’s S is a weighted average of the tables’ S values, each +2 or −2</option><option value="luck">a mixture could beat 3/4, but only by luck</option><option value="count">there are only 16 tables</option></select></label><label>If Alice also flips a private coin to pick her reply <select name="d-coin" required><option value="">Choose</option><option value="mixture">that is just another mixture of tables, so the bound still holds</option><option value="beat">her randomness can push the score above 3/4</option><option value="signal">the coin sends Bob information</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eb-math">
+              <summary>Show the math</summary>
+              <p>A table fixes four signs A₀, A₁, B₀, B₁ = ±1 (bit 0 → +1). Its CHSH sum is A₀(B₀ + B₁) + A₁(B₀ − B₁). One bracket is 0 and the other ±2, so every table has S = ±2, and P(win) = 1/2 + S/8 is 3/4 or 1/4. Exactly half the tables, 8 of 16, have S = +2: flipping both of Alice’s replies flips the sign of S.</p>
+              <p>With shared randomness λ the players pick table λ with probability w<sub>λ</sub>. Expectations are linear, so S<sub>mix</sub> = Σ w<sub>λ</sub> S<sub>λ</sub> lies between −2 and +2. A mix of w on an S = +2 table and 1 − w on an S = −2 table has S = 4w − 2; for 5/8 you need S = 1, so w = 3/4. Private coins are random variables too: fold them into λ and the same bound holds.</p>
+            </details>
+          </section>
+
+          <section class="eb-station" data-eb-station="tuner" data-eb-accent="blue" aria-labelledby="eb-tuner-title" hidden>
+            <h4 id="eb-tuner-title">Angle Tuner</h4>
+            <p>Choose all four axes: Alice’s α₀ and α₁ for her inputs x = 0 and 1, and Bob’s β₀ and β₁ for y = 0 and 1. The station computes each E<sub>xy</sub> = −cos(α<sub>x</sub> − β<sub>y</sub>) for the singlet and the signed CHSH sum S. Alice’s analyzers are blue and Bob’s violet.</p>
+            <p>Each slider moves 1° with the arrow keys and 15° with Page Up or Page Down; the boxes take any angle, including decimals. The optional 3D view shows the analyzers in the X–Z plane. Spin the view turns it slowly; it stays still with reduced motion or the Reduced effects box.</p>
+            <div data-eb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eb-sr-only">Angle Tuner controls</legend>
+              <div class="eb-fields"><label>Alice’s axis for x = 0, α₀ <output data-eb-for="a0" data-eb-unit="°">0</output><input type="range" name="a0-range" data-eb-pair="a0" data-eb-angle min="0" max="359" step="1" value="0"></label><label>α₀ in degrees (box) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a0" value="0"></label><label>Alice’s axis for x = 1, α₁ <output data-eb-for="a1" data-eb-unit="°">90</output><input type="range" name="a1-range" data-eb-pair="a1" data-eb-angle min="0" max="359" step="1" value="90"></label><label>α₁ in degrees (box) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a1" value="90"></label><label>Bob’s axis for y = 0, β₀ <output data-eb-for="b0" data-eb-unit="°">45</output><input type="range" name="b0-range" data-eb-pair="b0" data-eb-angle min="0" max="359" step="1" value="45"></label><label>β₀ in degrees (box) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b0" value="45"></label><label>Bob’s axis for y = 1, β₁ <output data-eb-for="b1" data-eb-unit="°">135</output><input type="range" name="b1-range" data-eb-pair="b1" data-eb-angle min="0" max="359" step="1" value="135"></label><label>β₁ in degrees (box) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b1" value="135"></label></div><div class="eb-fields"><label class="eb-check-row"><input type="checkbox" name="view3d"> Show the 3D view (Three.js, with an SVG fallback)</label><label>View turn in degrees <output data-eb-for="yaw" data-eb-unit="°">-60</output><input type="range" name="yaw-range" data-eb-pair="yaw" min="-180" max="180" step="1" value="-60"></label><label>View turn (number) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="yaw" value="-60"></label></div><div class="eb-button-row"><button type="button" data-eb-action="play">Spin the view</button></div><p class="eb-readout" data-eb-read="state" aria-live="polite"></p>
+              <div class="eb-missions">
+                <details class="eb-mission" data-eb-mission="tuner-a">
+                  <summary>Reach 2√2 your own way<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Find four axes with S = 2√2 (at least 2√2 − 0.005). The lesson’s set, α = 0°/90° and β = 225°/135°, doesn’t count: change at least one axis.</p>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="tuner-b">
+                  <summary>The other extreme<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Find axes with S = −2√2. Then enter the expected win rate for those axes.</p><div class="eb-fields"><label>P(win) = 1/2 + S/8 =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-p" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="tuner-c">
+                  <summary>Alice stuck on one axis<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Give Alice the same axis for both inputs (α₀ = α₁). Push S as high as it will go, then enter that maximum.</p><div class="eb-fields"><label>Largest S with α₀ = α₁:  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-max" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="tuner-d">
+                  <summary>Lose the advantage<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission loads α₀ = 0°, α₁ = 90°, β₀ = 225°, β₁ = 135°, so S = 2√2. Move only β₁ until S drops to exactly the classical bound, S = 2. Type a decimal angle in the β₁ box for fine control.</p>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="tuner-e">
+                  <summary>Analyzer geometry<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Set up any arrangement with S = 2√2 and look at it, in 3D if you like. What is the angle between Alice’s two analyzers?</p><div class="eb-fields"><label>Angle between α₀ and α₁, in degrees =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="e-ang" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eb-math">
+              <summary>Show the math</summary>
+              <p>Each input pair uses its own pair of axes: E<sub>xy</sub> = −cos(α<sub>x</sub> − β<sub>y</sub>), and S = E₀₀ + E₀₁ + E₁₀ − E₁₁. Rotating all four axes by the same angle, or adding 180° to all of Bob’s axes and flipping the sign of S, keeps |S|, so there are many optimal arrangements. In each one Alice’s two axes are 90° apart, Bob’s two are 90° apart, and every Alice–Bob pair is 45° or 135° apart.</p>
+              <p>If α₀ = α₁ = α, then S = 2E(α, β₀) ≤ 2: Alice has no second question to answer, and the advantage disappears. With α = 0°/90° and β₀ = 225°, S = √2 + (sin β₁ − cos β₁), which equals 2 when sin(β₁ − 45°) = (2 − √2)/2, at β₁ ≈ 69.5° or 200.5°. Signed S = −2√2 gives P(win) = 1/2 − √2/4 = (2 − √2)/4 ≈ 0.146: use signed S in that formula.</p>
+            </details>
+          </section>
+
+          <section class="eb-station" data-eb-station="rounds" data-eb-accent="orange" aria-labelledby="eb-rounds-title" hidden>
+            <h4 id="eb-rounds-title">How Many Rounds?</h4>
+            <p>Lesson 15’s “How Many Trials?” used ΔA/√N to plan an experiment. A Bell test needs the same planning: the observed S has to beat 2 by several standard errors before anyone believes it. Pick a strategy and N, then run seeded experiments. Repeat 100 experiments shows how Ŝ scatters from run to run.</p>
+            <div data-eb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eb-sr-only">How Many Rounds? controls</legend>
+              <div class="eb-fields"><label>Strategy <select name="strat"><option value="quantum" selected>Quantum singlet, best axes: P(win) = cos²(π/8)</option><option value="classical">Best classical table: P(win) = 3/4</option></select></label><label>Rounds per experiment N <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="n" value="100"></label><label>Seed (whole number) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="seed" value="19"></label></div><div class="eb-button-row"><button class="eb-primary" type="button" data-eb-action="one">Run one experiment</button><button type="button" data-eb-action="repeat">Repeat 100 experiments</button><button type="button" data-eb-action="clear">Clear experiments</button><button type="button" data-eb-action="reseed">New seed</button></div><p class="eb-readout" data-eb-read="state" aria-live="polite"></p><ol class="eb-log" data-eb-log="mine" aria-label="Your own experiments, most recent last"></ol>
+              <div class="eb-missions">
+                <details class="eb-mission" data-eb-mission="rounds-a">
+                  <summary>Spread per round<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>For the quantum strategy each round is a win with probability p = cos²(π/8). Find p(1 − p), and the standard error of Ŝ for N = 100 rounds.</p><div class="eb-fields"><label>p(1 − p) =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-pq" value=""></label><label>Standard error of Ŝ at N = 100 =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-se" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="rounds-b">
+                  <summary>Plan for three standard errors<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Choose the smallest N for which the expected Ŝ = 2√2 sits at least three standard errors above 2 (an N up to 10% larger also counts). Then run one quantum experiment with exactly that N, and report on your own run.</p><div class="eb-fields"><label>N =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="b-n" value=""></label><label>In my experiment at that N, Ŝ was <select name="b-over" required><option value="">Choose</option><option value="yes">above 2</option><option value="no">2 or below</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="rounds-c">
+                  <summary>How often does a short run fail?<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Set N = 50 and the quantum strategy, then repeat 100 experiments. Report the fraction of your experiments with Ŝ ≤ 2, and the fraction you’d expect over many batches.</p><div class="eb-fields"><label>Fraction of my 100 with Ŝ ≤ 2 =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-frac" value=""></label><label>Expected fraction <select name="c-pick" required><option value="">Choose</option><option value="2">about 2%: 2√2 is about two standard errors above 2</option><option value="16">about 16%</option><option value="50">about half</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="rounds-d">
+                  <summary>A classical team<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>The best classical table has expected Ŝ = 2 exactly. With N = 100 rounds, how often will it show Ŝ above 2?</p><div class="eb-fields"><label>A classical run shows Ŝ > 2 <select name="d-pick" required><option value="">Choose</option><option value="never">never: |S| ≤ 2</option><option value="half">a bit under half the time: its runs scatter evenly round 2, and some land exactly on 2</option><option value="rare">about 2% of the time</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eb-math">
+              <summary>Show the math</summary>
+              <p>An experiment draws the input pairs at random, so each round is a win with probability p = 1/2 + S/8. That turns the win count into an estimate Ŝ = 8(wins/N) − 4. A win is a 0/1 reading with variance p(1 − p), so by Lesson 15 the win fraction has standard error √(p(1 − p)/N), and Ŝ has 8 times that.</p>
+              <p>Quantum: p = cos²(π/8), and p(1 − p) = cos²(π/8)sin²(π/8) = sin²(π/4)/4 = 1/8. So the standard error of Ŝ is √(64/(8N)) = √(8/N), which is 0.283 at N = 100. Three standard errors above 2 needs 3√(8/N) ≤ 2√2 − 2, so N ≥ 72/(2√2 − 2)² ≈ 104.9, giving N = 105. At N = 50 the gap 0.83 is about 2.07 standard errors, so roughly 2% of runs fall to Ŝ ≤ 2. A classical team’s runs center on Ŝ = 2, so a short run beats 2 a bit under half the time. That is why one lucky run proves nothing.</p>
+            </details>
+          </section>
+
+          <section class="eb-station" data-eb-station="mermin" data-eb-accent="violet" aria-labelledby="eb-mermin-title" hidden>
+            <h4 id="eb-mermin-title">Mermin’s Device</h4>
+            <p>David Mermin’s thought experiment: a source sends two particles to two detectors, each with a switch with three settings. Each detector flashes green or red. Whenever the switches match, the lights always match. With random settings, how often do the lights agree overall? Build an instruction set, or switch to the quantum device, and compare.</p>
+            <div data-eb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eb-sr-only">Mermin’s Device controls</legend>
+              <div class="eb-fields"><label>Device <select name="device"><option value="sets" selected>Instruction sets</option><option value="quantum">Quantum singlet</option></select></label><label>Instruction for setting 1 <select name="s1"><option value="+" selected>+1 (green light)</option><option value="-">−1 (red light)</option></select></label><label>Instruction for setting 2 <select name="s2"><option value="+" selected>+1 (green light)</option><option value="-">−1 (red light)</option></select></label><label>Instruction for setting 3 <select name="s3"><option value="+" selected>+1 (green light)</option><option value="-">−1 (red light)</option></select></label><label>Seed (whole number) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="seed" value="19"></label></div><div class="eb-button-row"><button class="eb-primary" type="button" data-eb-action="run">Run 90 rounds</button><button type="button" data-eb-action="clear">Clear the run</button><button type="button" data-eb-action="reseed">New seed</button></div><p class="eb-readout" data-eb-read="state" aria-live="polite"></p><ol class="eb-log" data-eb-log="records" aria-label="The last 20 rounds"></ol>
+              <div class="eb-missions">
+                <details class="eb-mission" data-eb-mission="mermin-a">
+                  <summary>Count the agreements<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission loads the instruction set (+, +, −). Of the 9 equally likely setting pairs, on how many do the lights agree?</p><div class="eb-fields"><label>Agreeing setting pairs out of 9 =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="a-n" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="mermin-b">
+                  <summary>The classical floor<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Try all 8 instruction sets. What is the smallest agreement rate any of them can give when both settings are random?</p><div class="eb-fields"><label>Smallest agreement rate =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-min" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="mermin-c">
+                  <summary>The quantum device<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>For the singlet device, find the chance that the lights agree when the settings differ (axes 120° apart), and the overall agreement rate with random settings.</p><div class="eb-fields"><label>P(agree | different settings) =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-diff" value=""></label><label>Overall P(agree) =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-all" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="mermin-d">
+                  <summary>Run the device<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Switch to the quantum device and run at least 90 rounds. Report your agreement fraction and judge it against the quantum prediction.</p><div class="eb-fields"><label>My agreement fraction =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="d-frac" value=""></label><label>Compared with 1/2, my fraction is <select name="d-pick" required><option value="">Choose</option><option value="within">within two standard errors, √(1/4 ÷ N) each</option><option value="outside">more than two standard errors away</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eb-math">
+              <summary>Show the math</summary>
+              <p>Equal settings always give equal lights, so both particles must carry the same instructions, one light for each setting. With (+, +, +) or (−, −, −) the lights always agree. Any other set has two lights of one color and one of the other: the agreeing pairs are the 3 with equal settings plus the 2 ordered pairs of the two matching settings, 5 of 9. So instruction sets give P(agree) ≥ 5/9.</p>
+              <p>Quantum: the three settings are axes 0°, 120° and 240°, and Bob’s light shows the opposite of his sign, so equal settings always agree. Then P(agree) = P(unequal signs) = (1 + cos δ)/2. For δ = ±120° this is (1 − 1/2)/2 = 1/4. With random settings, P(agree) = (1/3)(1) + (2/3)(1/4) = 1/2, below the classical floor 5/9.</p>
+            </details>
+          </section>
+
+          <section class="eb-station" data-eb-station="designer" data-eb-accent="violet" aria-labelledby="eb-designer-title" hidden>
+            <h4 id="eb-designer-title">Strategy Designer</h4>
+            <p>Here you work the problem the other way round. Each card names target win probabilities or a target S, and you design the four measurement axes for the singlet. Many answers work. The checker tests the axes you actually set: each target counts within 0.005.</p>
+            <div data-eb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eb-sr-only">Strategy Designer controls</legend>
+              <div class="eb-fields"><label>Alice’s axis for x = 0, α₀ <output data-eb-for="a0" data-eb-unit="°">0</output><input type="range" name="a0-range" data-eb-pair="a0" data-eb-angle min="0" max="359" step="1" value="0"></label><label>α₀ in degrees (box) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a0" value="0"></label><label>Alice’s axis for x = 1, α₁ <output data-eb-for="a1" data-eb-unit="°">90</output><input type="range" name="a1-range" data-eb-pair="a1" data-eb-angle min="0" max="359" step="1" value="90"></label><label>α₁ in degrees (box) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a1" value="90"></label><label>Bob’s axis for y = 0, β₀ <output data-eb-for="b0" data-eb-unit="°">45</output><input type="range" name="b0-range" data-eb-pair="b0" data-eb-angle min="0" max="359" step="1" value="45"></label><label>β₀ in degrees (box) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b0" value="45"></label><label>Bob’s axis for y = 1, β₁ <output data-eb-for="b1" data-eb-unit="°">135</output><input type="range" name="b1-range" data-eb-pair="b1" data-eb-angle min="0" max="359" step="1" value="135"></label><label>β₁ in degrees (box) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b1" value="135"></label></div><p class="eb-readout" data-eb-read="state" aria-live="polite"></p>
+              <div class="eb-missions">
+                <details class="eb-mission" data-eb-mission="designer-a">
+                  <summary>Card 1 · S = 2.5<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Design four axes with S = 2.5.</p>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="designer-b">
+                  <summary>Card 2 · a certain win on 11<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Make input pair 11 a certain win (P(win | 11) = 1) while keeping S at least 2.49.</p>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="designer-c">
+                  <summary>Card 3 · certain, coin flip, coin flip, certain<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Design axes whose win probabilities on input pairs 00, 01, 10, 11 are 1, 1/2, 1/2, 1.</p>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="designer-d">
+                  <summary>Card 4 · Bob’s axes are fixed<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission sets Bob’s axes to β₀ = 0° and β₁ = 90°. Keep them, and choose Alice’s axes so that S = 2√2.</p>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eb-math">
+              <summary>Show the math</summary>
+              <p>P(win | xy) = (1 + E<sub>xy</sub>)/2 on 00, 01 and 10, and (1 − E₁₁)/2 on 11, with E<sub>xy</sub> = −cos(α<sub>x</sub> − β<sub>y</sub>). A certain win on 00 needs α₀ − β₀ = 180°; a coin flip needs a 90° difference; a certain win on 11 needs α₁ = β₁. For example α₀ = 0°, α₁ = 90°, β₀ = 180°, β₁ = 90° gives 1, 1/2, 1/2, 1 and S = 2.</p>
+              <p>With α₁ = β₁ = 0°, S = 1 − cos α₀ − cos β₀ − cos(α₀ − β₀). The last three terms are at most 3/2, reached when the three directions are 120° apart, so S ≤ 2.5: try α₀ = 120°, β₀ = 240°. With Bob at 0° and 90°, S = −(cos α₀ + sin α₀) + (sin α₁ − cos α₁), largest at α₀ = 225° and α₁ = 135°. For S = 2.5 there are endless answers; the checker tests the axes you build.</p>
+            </details>
+          </section>
+
+          <section class="eb-station" data-eb-station="detective" data-eb-accent="red" aria-labelledby="eb-detective-title" hidden>
+            <h4 id="eb-detective-title">Error Detective</h4>
+            <p>Each case file holds a worked solution with exactly one planted mistake. Find the first line that goes wrong, and name the mistake. Once you solve a case, the diagram shows what the solution claimed next to what is actually true.</p>
+            <div data-eb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eb-sr-only">Error Detective controls</legend>
+              <p class="eb-readout" data-eb-read="state" aria-live="polite"></p>
+              <div class="eb-missions">
+                <details class="eb-mission" data-eb-mission="detective-signal">
+                  <summary>Case 1 · a message through singlets<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Alice and Bob share singlets. Alice picks her axis to send Bob one bit; Bob always measures along β = 0°.</p><ol class="eb-worked"><li>With α = 0°, δ = 0° and E = −cos 0° = −1: Bob’s sign is always opposite to Alice’s.</li><li>With α = 90°, δ = 90° and E = 0: their signs are uncorrelated.</li><li>So the pair statistics depend on Alice’s choice of α.</li><li>Bob can therefore read Alice’s bit from his own results as soon as they arrive, faster than light.</li></ol><div class="eb-fields"><label>First wrong line <select name="signal-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="signal-kind" required><option value="">Choose</option><option value="signal">Claims entanglement sends a faster-than-light signal</option><option value="short">Treats a short winning run as proof</option><option value="sign">Sign error in δ or S</option><option value="marginal">Forgets that each observer’s local results are 50/50</option><option value="unsigned">Uses |S| instead of signed S in P(win) = 1/2 + S/8</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="detective-short">
+                  <summary>Case 2 · nine wins in ten<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>A lab plays 10 CHSH rounds with an unknown device and wins 9 of them.</p><ol class="eb-worked"><li>The observed win rate is 9/10 = 90%.</li><li>Any local strategy has an expected win rate of at most 3/4.</li><li>90% is above both 3/4 and the quantum value cos²(π/8) ≈ 85%.</li><li>So the device must be using entanglement.</li></ol><div class="eb-fields"><label>First wrong line <select name="short-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="short-kind" required><option value="">Choose</option><option value="signal">Claims entanglement sends a faster-than-light signal</option><option value="short">Treats a short winning run as proof</option><option value="sign">Sign error in δ or S</option><option value="marginal">Forgets that each observer’s local results are 50/50</option><option value="unsigned">Uses |S| instead of signed S in P(win) = 1/2 + S/8</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="detective-sign">
+                  <summary>Case 3 · a CHSH sum<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Find S for α₀ = 45°, α₁ = 135°, β₀ = 270°, β₁ = 180°, with q = 1/√2.</p><ol class="eb-worked"><li>E₀₀ = −cos(45° − 270°) = −cos(−225°) = +q.</li><li>E₀₁ = −cos(45° − 180°) = +q, and E₁₀ = −cos(135° − 270°) = +q.</li><li>E₁₁ = −cos(135° − 180°) = −cos(−45°) = −q.</li><li>S = E₀₀ + E₀₁ + E₁₀ + E₁₁ = q + q + q − q = 2q = √2, so these axes don’t beat the classical bound.</li></ol><div class="eb-fields"><label>First wrong line <select name="sign-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="sign-kind" required><option value="">Choose</option><option value="signal">Claims entanglement sends a faster-than-light signal</option><option value="short">Treats a short winning run as proof</option><option value="sign">Sign error in δ or S</option><option value="marginal">Forgets that each observer’s local results are 50/50</option><option value="unsigned">Uses |S| instead of signed S in P(win) = 1/2 + S/8</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="detective-marginal">
+                  <summary>Case 4 · Alice’s own odds<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Singlet, α = 0°, β = 60°. Find the chance that Alice gets +1.</p><ol class="eb-worked"><li>δ = 0° − 60° = −60°, so cos δ = 1/2.</li><li>P(+1, +1) = (1 − cos δ)/4 = 1/8 and P(+1, −1) = (1 + cos δ)/4 = 3/8.</li><li>Alice’s +1 is the case where Bob also gets +1, so P(Alice +1) = P(+1, +1) = 1/8.</li><li>So by turning β, Bob changes Alice’s local odds.</li></ol><div class="eb-fields"><label>First wrong line <select name="marginal-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="marginal-kind" required><option value="">Choose</option><option value="signal">Claims entanglement sends a faster-than-light signal</option><option value="short">Treats a short winning run as proof</option><option value="sign">Sign error in δ or S</option><option value="marginal">Forgets that each observer’s local results are 50/50</option><option value="unsigned">Uses |S| instead of signed S in P(win) = 1/2 + S/8</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="detective-unsigned">
+                  <summary>Case 5 · a negative S<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Some axes give E₀₀ = E₀₁ = E₁₀ = −q and E₁₁ = +q, with q = 1/√2.</p><ol class="eb-worked"><li>S = −q − q − q − q = −4q = −2√2.</li><li>|S| = 2√2 is larger than 2, the classical limit on |S|.</li><li>P(win) = 1/2 + |S|/8 = 1/2 + √2/4 ≈ 85%.</li><li>So this team wins about 85% of its rounds.</li></ol><div class="eb-fields"><label>First wrong line <select name="unsigned-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="unsigned-kind" required><option value="">Choose</option><option value="signal">Claims entanglement sends a faster-than-light signal</option><option value="short">Treats a short winning run as proof</option><option value="sign">Sign error in δ or S</option><option value="marginal">Forgets that each observer’s local results are 50/50</option><option value="unsigned">Uses |S| instead of signed S in P(win) = 1/2 + S/8</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eb-math">
+              <summary>Show the math</summary>
+              <p>The planted mistakes: Bob’s local record is 50/50 for every choice Alice makes, so no message travels; only the comparison of both records shows a correlation. A short run can beat its expected rate by luck: the bound limits the expected value, not 10 rounds.</p>
+              <p>S = E₀₀ + E₀₁ + E₁₀ − E₁₁: the 11 term enters with a minus sign. Alice’s marginal sums over Bob’s results, P(Alice +1) = P(+1, +1) + P(+1, −1) = 1/2. The game’s win rate uses signed S: P(win) = 1/2 + S/8, so S = −2√2 gives about 15%, not 85%.</p>
+            </details>
+          </section>
+
+          <section class="eb-station" data-eb-station="preview" data-eb-accent="yellow" aria-labelledby="eb-preview-title" hidden>
+            <p class="eb-kicker">Optional preview · Lesson 20</p>
+            <h4 id="eb-preview-title">Quantum Preview: EPR in Position and Momentum</h4>
+            <p>This is a preview of Lesson 20. The 1935 Einstein–Podolsky–Rosen paper didn’t use spins. It used two particles flying apart with correlated positions and momenta. Choose which quantity Alice measures on particle 1 and see what she can predict about particle 2. There is no wavefunction math here; Lesson 20 supplies it.</p>
+            <div data-eb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eb-sr-only">Quantum Preview: EPR in Position and Momentum controls</legend>
+              <div class="eb-fields"><label>Measure particle 1’s <select name="measure"><option value="x" selected>position x₁</option><option value="p">momentum p₁</option></select></label><label>Separation L = x₁ − x₂ <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="L" value="3"></label><label>x₁ if measured <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="x1" value="5"></label><label>p₁ if measured <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="p1" value="2"></label></div><p class="eb-readout" data-eb-read="state" aria-live="polite"></p>
+              <div class="eb-missions">
+                <details class="eb-mission" data-eb-mission="preview-a">
+                  <summary>Elements of reality<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>EPR’s argument rested on one criterion. Which is it?</p><div class="eb-fields"><label>EPR’s criterion <select name="a-pick" required><option value="">Choose</option><option value="reality">If you can predict a quantity with certainty without disturbing a system, that quantity is an element of reality</option><option value="measure">A quantity exists only once someone measures it</option><option value="signal">Measuring one particle sends a signal that fixes the other</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="preview-b">
+                  <summary>Predict particle 2<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>The source fixes x₁ − x₂ = L = 3 and p₁ + p₂ = 0 (in some units). If Alice finds x₁ = 5, what is x₂? If instead she finds p₁ = +2, what is p₂?</p><div class="eb-fields"><label>x₂ =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-x2" value=""></label><label>p₂ =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-p2" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="preview-c">
+                  <summary>Does Alice’s choice reach Bob?<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Alice chooses to measure position or momentum. Bob only looks at his own particle’s results.</p><div class="eb-fields"><label>Can Alice’s choice change Bob’s local statistics? <select name="c-pick" required><option value="">Choose</option><option value="no">No: as with spins, Bob’s own record looks the same either way</option><option value="yes">Yes: measuring x₁ makes Bob’s positions sharper, which he can see</option><option value="half">Only half of the time</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="preview-d">
+                  <summary>What Lesson 20 adds<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Position takes a continuum of values, not two.</p><div class="eb-fields"><label>To describe a particle’s position, Lesson 20 uses <select name="d-pick" required><option value="">Choose</option><option value="continuous">an amplitude that varies continuously with position, turned into a probability density</option><option value="two">two amplitudes, one for left and one for right</option><option value="bits">a list of bits, one for each measurement</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eb-math">
+              <summary>Show the math</summary>
+              <p>In 1935 Einstein, Podolsky and Rosen described two particles whose positions are perfectly correlated (x₁ − x₂ fixed) and whose momenta are perfectly anticorrelated (p₁ + p₂ fixed). Measuring x₁ lets you predict x₂ with certainty, and measuring p₁ lets you predict p₂, without touching particle 2. EPR argued both values must already be elements of reality, so quantum mechanics, which can’t assign both at once, would be incomplete.</p>
+              <p>Bohm later recast the argument with two spins, the version this lesson uses, and Bell (1964) showed that local elements of reality can’t reproduce the singlet’s correlations. Lesson 20 builds the language for the original version: wavefunctions, amplitudes over a continuum of positions.</p>
+            </details>
+          </section>
+
+          <section class="eb-station" data-eb-station="loophole" data-eb-accent="orange" aria-labelledby="eb-loophole-title" hidden>
+            <h4 id="eb-loophole-title">Loophole Lab</h4>
+            <p>A Bell test only rules out local hidden variables if the experiment meets the assumptions of the derivation. Here local models exploit three gaps: discarding rounds where a detector didn’t fire, settings chosen too early or slowly, and settings the source could predict. The timeline shows how experiments closed them.</p>
+            <div data-eb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eb-sr-only">Loophole Lab controls</legend>
+              <div class="eb-fields"><label>Loophole <select name="mode"><option value="detect" selected>Detection: discarding non-detections</option><option value="locality">Locality: slow setting choices</option><option value="timeline">Timeline of Bell experiments</option></select></label></div><div class="eb-fields" data-eb-when="detect"><label>Fraction of guessing pairs w <output data-eb-for="w">0</output><input type="range" name="w-range" data-eb-pair="w" min="0" max="0.7" step="0.01" value="0"></label><label>w (number) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="w" value="0"></label><label>Seed (whole number) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="seed" value="19"></label></div><div data-eb-when="detect"><div class="eb-button-row"><button class="eb-primary" type="button" data-eb-action="run">Run 1000 pairs</button><button type="button" data-eb-action="clear">Clear the run</button><button type="button" data-eb-action="reseed">New seed</button></div></div><div class="eb-fields" data-eb-when="locality"><label>Distance between the stations in m <output data-eb-for="d" data-eb-unit=" m">12</output><input type="range" name="d-range" data-eb-pair="d" min="1" max="1000" step="1" value="12"></label><label>Distance in m (number) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="d" value="12"></label><label>Time from setting choice to finished measurement in μs <output data-eb-for="t" data-eb-unit=" μs">0.01</output><input type="range" name="t-range" data-eb-pair="t" min="0" max="5" step="0.01" value="0.01"></label><label>Time in μs (number) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="t" value="0.01"></label></div><p class="eb-readout" data-eb-read="state" aria-live="polite"></p>
+              <div class="eb-missions">
+                <details class="eb-mission" data-eb-mission="loophole-a">
+                  <summary>A local model that cheats<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission sets w = 1/2. Using only the coincidences, what S does the model appear to have? And what fraction of its particles does each detector register?</p><div class="eb-fields"><label>Apparent S =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-s" value=""></label><label>Detection efficiency per side η =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-eta" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="loophole-b">
+                  <summary>Closing the detection loophole<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>What stops this model from faking a violation?</p><div class="eb-fields"><label>The fix <select name="b-pick" required><option value="">Choose</option><option value="count">Detectors efficient enough that every round counts, with non-detections included in the score</option><option value="more">Run more rounds</option><option value="faster">Switch the settings faster</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="loophole-c">
+                  <summary>Beat the light signal<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission shows stations 400 m apart. What is the longest time from Alice’s setting choice to her finished measurement that still keeps Bob’s setting from reaching her? Use c = 299,792,458 m/s.</p><div class="eb-fields"><label>Longest time in μs =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-t" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="loophole-d">
+                  <summary>Freedom of choice<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Suppose the source could know the settings in advance, for example because they come from a predictable list.</p><div class="eb-fields"><label>Which step of the |S| ≤ 2 argument fails? <select name="d-pick" required><option value="">Choose</option><option value="lambda">Averaging over λ with weights that don’t depend on the settings x and y</option><option value="table">Each table gives S = ±2</option><option value="signs">Each output is +1 or −1</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="loophole-e">
+                  <summary>Timeline<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission shows the timeline. Match each year to its event.</p><div class="eb-fields"><label>1972 <select name="e-1972" required><option value="">Choose</option><option value="fc">Freedman and Clauser: the first CHSH test, with photons</option><option value="aspect">Aspect: settings switched while the photons were in flight</option><option value="free">Delft, Vienna and NIST: the first loophole-free tests</option><option value="nobel">Nobel Prize to Aspect, Clauser and Zeilinger</option></select></label><label>1982 <select name="e-1982" required><option value="">Choose</option><option value="fc">Freedman and Clauser: the first CHSH test, with photons</option><option value="aspect">Aspect: settings switched while the photons were in flight</option><option value="free">Delft, Vienna and NIST: the first loophole-free tests</option><option value="nobel">Nobel Prize to Aspect, Clauser and Zeilinger</option></select></label><label>2015 <select name="e-2015" required><option value="">Choose</option><option value="fc">Freedman and Clauser: the first CHSH test, with photons</option><option value="aspect">Aspect: settings switched while the photons were in flight</option><option value="free">Delft, Vienna and NIST: the first loophole-free tests</option><option value="nobel">Nobel Prize to Aspect, Clauser and Zeilinger</option></select></label><label>2022 <select name="e-2022" required><option value="">Choose</option><option value="fc">Freedman and Clauser: the first CHSH test, with photons</option><option value="aspect">Aspect: settings switched while the photons were in flight</option><option value="free">Delft, Vienna and NIST: the first loophole-free tests</option><option value="nobel">Nobel Prize to Aspect, Clauser and Zeilinger</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eb-math">
+              <summary>Show the math</summary>
+              <p>Detection: in a guessing pair the source picks a setting pair (x′, y′) at random and prepares outputs that win for it; each detector fires only if its own setting matches the guess. Coincidences then happen only when both guesses are right, and those rounds always win. The rest of the time the source uses the all-zero table, which wins 3/4. Counting only coincidences gives W = (3 − 2w)/(4 − 3w), so S = 8W − 4 looks larger than 2 for any w > 0. Each detector fires on a fraction η = 1 − w/2 of its particles. With w = 1/2, W = 4/5, S = 2.4 and η = 3/4.</p>
+              <p>Locality: Bob’s setting choice can affect Alice only if light from it reaches her before her measurement finishes, so the time must be less than d/c. At 400 m that is 400/299,792,458 s ≈ 1.334 μs. Freedom of choice: the bound averages S over λ with weights independent of x and y. Loophole-free tests in 2015 closed detection and locality together and used fast random number generators for the settings.</p>
+            </details>
+          </section>
+
+          <section class="eb-station" data-eb-station="qkd" data-eb-accent="green" aria-labelledby="eb-qkd-title" hidden>
+            <h4 id="eb-qkd-title">Quantum Key Distribution (E91)</h4>
+            <p>Alice and Bob use singlets to build a shared secret key. Rounds where their axes match give key bits; rounds with CHSH settings test whether the pairs are still entangled. An eavesdropper, Eve, who measures particles on the way spoils the correlations and pushes |S| toward the classical range. Bob’s first 32 key bits are shown flipped, as he uses them.</p>
+            <div data-eb-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eb-sr-only">Quantum Key Distribution (E91) controls</legend>
+              <div class="eb-fields"><label>Channel <select name="line"><option value="open" selected>Eve intercepts the fraction f you set</option><option value="mystery">Mystery channel (set by the seed)</option></select></label><label>Eve’s intercept fraction f <output data-eb-for="f">0</output><input type="range" name="f-range" data-eb-pair="f" min="0" max="1" step="0.01" value="0"></label><label>f (number) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="f" value="0"></label><label>Rounds per run <select name="n"><option value="300">300</option><option value="900" selected>900</option><option value="3000">3000</option></select></label><label>Seed (whole number) <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="seed" value="19"></label></div><div class="eb-button-row"><button class="eb-primary" type="button" data-eb-action="run">Run rounds</button><button type="button" data-eb-action="clear">Clear the run</button><button type="button" data-eb-action="reseed">New seed</button></div><p class="eb-readout" data-eb-read="state" aria-live="polite"></p>
+              <div class="eb-missions">
+                <details class="eb-mission" data-eb-mission="qkd-a">
+                  <summary>The key rate<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Alice picks each of her three axes with probability 1/3, and so does Bob. What fraction of rounds goes into the key?</p><div class="eb-fields"><label>Fraction of key rounds =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-frac" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="qkd-b">
+                  <summary>Matching axes<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>On a key round both measure the singlet along the same axis.</p><div class="eb-fields"><label>Bob builds his key by <select name="b-pick" required><option value="">Choose</option><option value="flip">flipping his bit, since equal axes give opposite signs</option><option value="keep">keeping his bit, since equal axes give equal signs</option><option value="xor">XOR-ing his bit with Alice’s</option></select></label><label>Key error rate with no eavesdropper =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-err" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="qkd-c">
+                  <summary>Eve on every pair<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Eve measures every one of Bob’s particles along a random axis and resends it (f = 1). Predict |S| and the key error rate.</p><div class="eb-fields"><label>|S| =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-s" value=""></label><label>Key error rate =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-err" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="qkd-d">
+                  <summary>How much can Eve hide?<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>If Eve intercepts a fraction f of the pairs, the expected |S| is 2√2(1 − f/2). What is the largest f that keeps |S| above 2?</p><div class="eb-fields"><label>Largest f =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="d-f" value=""></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+                <details class="eb-mission" data-eb-mission="qkd-e">
+                  <summary>Is someone listening?<span data-eb-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks the mystery channel. Run at least 900 rounds, read |Ŝ| from your own test rounds, and decide.</p><div class="eb-fields"><label>My |Ŝ| =  <input class="eb-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="e-s" value=""></label><label>Verdict <select name="e-pick" required><option value="">Choose</option><option value="clear">|Ŝ| is above 2: keep the key</option><option value="listen">|Ŝ| is 2 or below: someone may be listening, so discard the key</option></select></label></div>
+                  <button class="eb-primary" type="button" data-eb-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eb-math">
+              <summary>Show the math</summary>
+              <p>E91 (Ekert, 1991): Alice measures along 0°, 45° or 90° and Bob along 45°, 90° or 135°, each chosen at random. The pairs (45°, 45°) and (90°, 90°) give perfectly opposite signs, so Bob flips his bit and both hold the same key bit: 2 of 9 setting pairs. The four pairs with Alice at 90° or 0° and Bob at 45° or 135° form a CHSH test (x = 0 → 90°, x = 1 → 0°, y = 0 → 45°, y = 1 → 135°). For the singlet these give S = −2√2, so E91 checks |S|. The other three pairs are discarded.</p>
+              <p>If Eve measures Bob’s particle along a random axis θ and resends it, the pair becomes a product: E(α, β) = −cos(α − θ)cos(β − θ), which averages to −(1/2)cos(α − β) over θ. So every correlation halves: |S| = √2 and matched axes disagree with probability 1/4. With a fraction f intercepted, |S| = 2√2(1 − f/2) and the error rate is f/4. |S| stays above 2 only while f < 2 − √2 ≈ 0.586.</p>
+            </details>
+          </section>
+        </div>
+        <template id="eb-figure-template">
+          <figure class="eb-figure">
+            <figcaption id="eb-title">Station diagram</figcaption>
+            <div class="eb-viewport" id="eb-viewport" data-renderer="svg">
+              <canvas class="eb-canvas" id="eb-canvas" aria-hidden="true" hidden></canvas>
+              <svg class="eb-diagram" id="eb-diagram" viewBox="0 0 560 300" role="img" aria-labelledby="eb-title" aria-describedby="eb-desc">
+                <desc id="eb-desc"></desc>
+                <g data-eb-geometry></g>
+                <g data-eb-labels></g>
+              </svg>
+            </div>
+            <p class="eb-note" id="eb-render-status"></p>
+          </figure>
+        </template>
+        <template id="eb-mission-template">
+          <div class="eb-mission-tools">
+            <button type="button" data-eb-hint>Show first hint</button>
+            <ol data-eb-hint-list aria-live="polite" hidden></ol>
+            <p class="eb-feedback" data-eb-feedback role="status"></p>
+            <details data-eb-work hidden><summary>Worked steps</summary><p data-eb-work-text></p></details>
+          </div>
+        </template>
+      </div>
+    </details>
 
     <nav class="bell-navigation" aria-label="Lesson navigation">
       <a rel="prev" href="../18_composite_systems/18_composite_systems.html">
