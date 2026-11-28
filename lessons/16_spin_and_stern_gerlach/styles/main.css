@@ -577,3 +577,673 @@ body {
     font-size: 0.8125rem;
   }
 }
+
+/* Stern–Gerlach Arcade */
+
+.site-main.spin-lesson {
+  --sg-surface: #0b1612;
+  --sg-plot: var(--spin-well);
+  --sg-grid: #284235;
+  --sg-axis: #b4c9bc;
+}
+
+.spin-lesson #stern-gerlach-arcade {
+  scroll-margin-block-start: 1rem;
+}
+
+.spin-lesson :is(.sg-body, .sg-station, .sg-figure, .sg-missions, .sg-mission-tools, .sg-station > fieldset) {
+  display: grid;
+  gap: 0.75rem;
+  min-inline-size: 0;
+}
+
+.spin-lesson .sg-body {
+  padding-block-start: 0.75rem;
+}
+
+.spin-lesson :is(.sg-arcade, .sg-mission, .sg-math, .sg-mission-tools details) > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem 0.75rem;
+  list-style: none;
+}
+
+.spin-lesson :is(.sg-arcade, .sg-mission, .sg-math, .sg-mission-tools details) > summary::-webkit-details-marker {
+  display: none;
+}
+
+.spin-lesson :is(.sg-arcade, .sg-mission, .sg-math, .sg-mission-tools details) > summary::before {
+  content: "+";
+  inline-size: 1ch;
+}
+
+.spin-lesson :is(.sg-arcade, .sg-mission, .sg-math, .sg-mission-tools details)[open] > summary::before {
+  content: "−";
+}
+
+/* Long mission titles wrap beside the +/− marker instead of dropping below it. */
+.spin-lesson details.sg-mission > summary {
+  flex-wrap: nowrap;
+}
+
+.spin-lesson .sg-arcade > summary strong {
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+}
+
+.spin-lesson .sg-arcade > summary span {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.spin-lesson .sg-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto auto;
+  align-items: end;
+  gap: 0.75rem;
+  min-inline-size: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--sg-surface);
+}
+
+.spin-lesson .sg-toolbar > label:not(.sg-reduced) {
+  display: grid;
+  gap: 0.25rem;
+  min-inline-size: 0;
+  font-size: 0.875rem;
+}
+
+.spin-lesson #sg-progress {
+  align-self: center;
+  color: var(--phosphor);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.spin-lesson .sg-reduced,
+.spin-lesson .sg-check-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-block-size: 44px;
+  font-size: 0.875rem;
+}
+
+.spin-lesson .sg-reduced {
+  color: var(--muted);
+}
+
+.spin-lesson :is(.sg-reduced, .sg-check-row) input {
+  flex: none;
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+  margin: 0;
+  accent-color: var(--phosphor);
+}
+
+.spin-lesson .sg-arcade select,
+.spin-lesson input.sg-answer {
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 44px;
+  padding: 0.45rem 0.625rem;
+  border: 1px solid #4b6c5b;
+  border-radius: 0.375rem;
+  background: #101e18;
+  color: var(--ink);
+  font: inherit;
+}
+
+.spin-lesson .sg-arcade select:disabled,
+.spin-lesson input.sg-answer:disabled {
+  cursor: default;
+  opacity: 0.62;
+}
+
+.spin-lesson input.sg-answer:user-invalid {
+  border-color: var(--red);
+}
+
+.spin-lesson .sg-arcade :is(select, input):focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 3px;
+}
+
+.spin-lesson .sg-station {
+  --sg-accent: var(--phosphor);
+  padding: clamp(0.75rem, 2vw, 1.35rem);
+  border: 1px solid var(--line);
+  border-block-start: 3px solid var(--sg-accent);
+  border-radius: 0.6rem;
+  background: var(--sg-surface);
+}
+
+.spin-lesson [data-sg-accent="blue"] { --sg-accent: var(--blue); }
+.spin-lesson [data-sg-accent="violet"] { --sg-accent: var(--violet); }
+.spin-lesson [data-sg-accent="orange"] { --sg-accent: var(--orange); }
+.spin-lesson [data-sg-accent="green"] { --sg-accent: var(--green); }
+.spin-lesson [data-sg-accent="yellow"] { --sg-accent: var(--yellow); }
+.spin-lesson [data-sg-accent="red"] { --sg-accent: var(--red); }
+
+.spin-lesson .sg-station h4 {
+  color: var(--sg-accent);
+  font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+}
+
+.spin-lesson .sg-station > fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.spin-lesson .sg-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+  align-items: end;
+  gap: 0.65rem 0.85rem;
+}
+
+.spin-lesson .sg-fields label:not(.sg-check-row) {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: end;
+  gap: 0.25rem 0.3em;
+  min-inline-size: 0;
+  font-size: 0.875rem;
+}
+
+.spin-lesson .sg-fields label > :is(input:not([type="checkbox"]), select) {
+  flex: 1 0 100%;
+}
+
+.spin-lesson .sg-fields label > output {
+  color: var(--sg-accent);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.spin-lesson .sg-station input[type="range"] {
+  inline-size: 100%;
+  min-block-size: 44px;
+  margin: 0;
+  accent-color: var(--sg-accent);
+}
+
+.spin-lesson .sg-step {
+  color: var(--sg-accent);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.spin-lesson .sg-button-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.spin-lesson .sg-arcade button {
+  max-inline-size: 100%;
+  font-size: 0.9375rem;
+}
+
+.spin-lesson .sg-arcade button.sg-primary {
+  border-color: var(--sg-accent);
+  color: var(--sg-accent);
+  font-weight: 700;
+}
+
+.spin-lesson .sg-readout {
+  padding: 0.5rem 0.7rem;
+  border-inline-start: 3px solid var(--sg-accent);
+  background: #081310;
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.spin-lesson .sg-readout:empty,
+.spin-lesson .sg-log:empty {
+  display: none;
+}
+
+.spin-lesson .sg-log {
+  max-block-size: 10rem;
+  margin: 0;
+  overflow: auto;
+  padding-inline-start: 2.2rem;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.spin-lesson .sg-worked {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0.6rem 0.75rem 0.6rem 2.2rem;
+  border-inline-start: 3px solid var(--sg-accent);
+  background: #07110d;
+  font-variant-numeric: tabular-nums;
+}
+
+.spin-lesson .sg-mission {
+  padding: 0.15rem 0.75rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+  background: #0a1410;
+}
+
+.spin-lesson .sg-mission[open] {
+  border-color: color-mix(in srgb, var(--sg-accent) 55%, var(--line));
+}
+
+.spin-lesson .sg-mission > :not(summary) {
+  margin-block-start: 0.65rem;
+}
+
+.spin-lesson .sg-mission [data-sg-done] {
+  margin-inline-start: auto;
+  color: var(--green);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.spin-lesson .sg-mission-tools > button {
+  justify-self: start;
+}
+
+.spin-lesson .sg-mission-tools ol {
+  margin: 0;
+  padding-inline-start: 1.25rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.spin-lesson .sg-mission-tools details > summary {
+  font-size: 0.875rem;
+}
+
+.spin-lesson .sg-mission-tools details p {
+  margin-block-start: 0.4rem;
+  padding: 0.5rem 0.7rem;
+  border-inline-start: 3px solid var(--line);
+  background: #07110d;
+  font-size: 0.875rem;
+}
+
+.spin-lesson .sg-feedback:not(:empty) {
+  padding: 0.55rem 0.7rem;
+  border-inline-start: 3px solid var(--sg-accent);
+  background: #11241a;
+  font-size: 0.9rem;
+}
+
+.spin-lesson .sg-math > p {
+  margin-block-start: 0.5rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.spin-lesson .sg-figure figcaption {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.spin-lesson .sg-viewport {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  inline-size: 100%;
+  aspect-ratio: 560 / 300;
+  border: 1px solid #36465b;
+  border-radius: 0.5rem;
+  background: var(--sg-plot);
+  touch-action: pan-y;
+}
+
+.spin-lesson .sg-viewport[data-space="true"] {
+  cursor: grab;
+}
+
+.spin-lesson :is(.sg-canvas, .sg-diagram) {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.spin-lesson .sg-viewport[data-renderer="webgl"] [data-sg-geometry] {
+  visibility: hidden;
+}
+
+.spin-lesson .sg-diagram {
+  --tone: var(--violet);
+  pointer-events: none;
+}
+
+.spin-lesson .sg-diagram [data-tone="alpha"] { --tone: var(--blue); }
+.spin-lesson .sg-diagram [data-tone="beta"] { --tone: var(--orange); }
+.spin-lesson .sg-diagram [data-tone="plus"] { --tone: var(--green); }
+.spin-lesson .sg-diagram [data-tone="minus"] { --tone: var(--violet); }
+.spin-lesson .sg-diagram [data-tone="angle"] { --tone: var(--yellow); }
+.spin-lesson .sg-diagram [data-tone="warn"] { --tone: var(--red); }
+.spin-lesson .sg-diagram [data-tone="guide"] { --tone: var(--sg-axis); }
+.spin-lesson .sg-diagram [data-tone="ink"] { --tone: var(--ink); }
+
+.spin-lesson .sg-diagram .sg-frame {
+  fill: none;
+  stroke: #36465b;
+}
+
+.spin-lesson .sg-diagram .sg-grid {
+  fill: none;
+  stroke: var(--sg-grid);
+  stroke-width: 1;
+}
+
+.spin-lesson .sg-diagram .sg-axis {
+  fill: none;
+  stroke: var(--sg-axis);
+  stroke-width: 1.5;
+}
+
+.spin-lesson .sg-diagram :is(.sg-ring, .sg-ray) {
+  fill: none;
+  stroke: var(--tone);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 5;
+  opacity: 0.85;
+}
+
+.spin-lesson .sg-diagram .sg-arrow {
+  stroke: var(--tone);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
+.spin-lesson .sg-diagram .sg-arrow.sg-dashed {
+  stroke-width: 2;
+  stroke-dasharray: 6 5;
+  opacity: 0.8;
+}
+
+.spin-lesson .sg-diagram :is(.sg-head, .sg-dot, .sg-bar) {
+  fill: var(--tone);
+  stroke: var(--tone);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.spin-lesson .sg-diagram :is(.sg-head, .sg-dot, .sg-bar).sg-hollow {
+  fill: var(--sg-plot);
+}
+
+.spin-lesson .sg-diagram .sg-sphere {
+  fill: #0d1a2a;
+  stroke: var(--sg-axis);
+  stroke-width: 1.5;
+}
+
+.spin-lesson .sg-diagram .sg-wire {
+  fill: none;
+  stroke: var(--sg-axis);
+  stroke-width: 1;
+  opacity: 0.6;
+}
+
+.spin-lesson .sg-diagram .sg-back {
+  opacity: 0.4;
+  stroke-dasharray: 3 4;
+}
+
+.spin-lesson .sg-diagram text {
+  paint-order: stroke;
+  stroke: var(--sg-plot);
+  stroke-width: 3.5;
+  stroke-linejoin: round;
+  fill: var(--ink);
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.spin-lesson .sg-diagram text:is(.sg-label, .sg-caption)[data-tone] {
+  fill: var(--tone);
+}
+
+.spin-lesson .sg-diagram text.sg-tick {
+  fill: var(--sg-axis);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.spin-lesson .sg-diagram text.sg-caption {
+  font-size: 13px;
+}
+
+.spin-lesson .sg-diagram text.sg-back {
+  stroke-dasharray: none;
+}
+
+.spin-lesson .sg-sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 42rem) {
+  .spin-lesson .sg-toolbar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Arcade drawing additions: curves, rays, wide resultants and timeline boxes. */
+.spin-lesson .sg-diagram {
+  --tone: var(--green);
+}
+
+.spin-lesson .sg-diagram .sg-curve {
+  fill: none;
+  stroke: var(--tone);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.spin-lesson .sg-diagram .sg-curve.sg-dashed {
+  stroke-dasharray: 8 5;
+}
+
+.spin-lesson .sg-diagram .sg-curve.sg-dotted {
+  stroke-dasharray: 2 4;
+  stroke-linecap: round;
+}
+
+.spin-lesson .sg-diagram .sg-ray.sg-solid {
+  stroke-dasharray: none;
+  stroke-width: 1.7;
+}
+
+.spin-lesson .sg-diagram .sg-arrow.sg-wide {
+  stroke-width: 8;
+  opacity: 0.62;
+}
+
+.spin-lesson .sg-diagram .sg-frame {
+  fill: none;
+  stroke: var(--line);
+}
+
+.spin-lesson .sg-diagram .sg-part {
+  fill: color-mix(in srgb, var(--tone) 28%, var(--sg-plot));
+  stroke: var(--tone);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.spin-lesson .sg-toolbar > p,
+.spin-lesson #sg-status:empty {
+  margin: 0;
+}
+
+.spin-lesson .sg-body > p {
+  margin: 0;
+}
+
+.spin-lesson .sg-station > p {
+  margin: 0;
+}
+
+.spin-lesson .sg-arcade input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 3px;
+}
+
+/* Check rows and statements. */
+
+.spin-lesson .sg-station .sg-fields .sg-check-row {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #344b42;
+  border-radius: 0.35rem;
+  background: #101e17;
+}
+
+.spin-lesson .sg-missions .sg-note,
+.spin-lesson .sg-station > fieldset > .sg-note {
+  margin: 0;
+}
+
+
+.spin-lesson .sg-statements {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding-inline-start: 1.6rem;
+}
+
+.spin-lesson .sg-statements label {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.9375rem;
+}
+
+/* Diagram input and beams. */
+
+.spin-lesson .sg-viewport[data-space="point"] {
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.spin-lesson .sg-viewport:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 3px;
+}
+
+.spin-lesson .sg-station > .sg-kicker {
+  margin: 0;
+}
+
+.spin-lesson .sg-fields label[hidden] {
+  display: none !important;
+}
+
+.spin-lesson .sg-diagram .sg-beam {
+  stroke: var(--sg-axis);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.spin-lesson .sg-diagram .sg-cell {
+  fill: var(--tone);
+  stroke: none;
+}
+
+.spin-lesson .sg-diagram .sg-cell.sg-hollow {
+  fill: none;
+  stroke: var(--tone);
+  stroke-width: 1.5;
+}
+
+/* Lesson 16 additions: the arcade panel, notes, plates, magnets and beams. */
+
+.spin-lesson .sg-arcade {
+  display: grid;
+  gap: clamp(0.875rem, 2.4vw, 1.25rem);
+  min-inline-size: 0;
+  padding: clamp(0.875rem, 2.5vw, 1.7rem);
+  border: 1px solid var(--line);
+  border-radius: 0.55rem;
+  background: var(--panel);
+}
+
+.spin-lesson .sg-note {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.spin-lesson .sg-kicker {
+  margin: 0;
+  color: var(--phosphor);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.spin-lesson .sg-station p.sg-note {
+  margin: 0;
+}
+
+.spin-lesson .sg-arcade input[type="number"].sg-answer {
+  inline-size: 100%;
+}
+
+.spin-lesson .sg-diagram .sg-glass {
+  fill: #0d1a2a;
+  stroke: var(--sg-axis);
+  stroke-width: 1.5;
+}
+
+.spin-lesson .sg-diagram .sg-hit {
+  fill: var(--tone);
+  stroke: none;
+  opacity: 0.8;
+}
+
+.spin-lesson .sg-diagram .sg-beam-dot {
+  fill: var(--spin-well);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.spin-lesson .sg-diagram .sg-path {
+  fill: none;
+  stroke: var(--tone);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.spin-lesson .sg-diagram .sg-path.sg-dashed {
+  stroke-dasharray: 8 5;
+}
+
+.spin-lesson .sg-diagram .sg-path.sg-faint {
+  opacity: 0.25;
+}
+
+.spin-lesson .sg-diagram .sg-block {
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.spin-lesson .sg-diagram .sg-head.sg-dashed {
+  fill: var(--spin-well);
+}

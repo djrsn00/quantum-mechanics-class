@@ -6,10 +6,10 @@
   <meta name="theme-color" content="#050906">
   <meta name="description" content="Explore spin measurements, channel selection, and sequential Stern–Gerlach analyzers.">
   <title>Spin and Stern–Gerlach | Quantum Mechanics Class</title>
-  <link rel="stylesheet" href="./styles/main.css">
+  <link rel="stylesheet" href="./styles/main.css?v=16-stern-gerlach-arcade">
   <script src="./scripts/app.js" defer></script>
   <script src="./scripts/lessons-menu.js" defer></script>
-  <script type="module" src="./scripts/lesson.js"></script>
+  <script type="module" src="./scripts/lesson.js?v=16-stern-gerlach-arcade"></script>
 </head>
 <body>
   <header class="site-header">
@@ -130,6 +130,7 @@
       <h2 id="spin-title">Spin and Stern–Gerlach</h2>
       <p class="spin-lead">A source prepares every atom in |+z⟩, so a Z analyzer always gives +ℏ/2. How can inserting an X analyzer and passing only its positive channel make a later Z analyzer give some negative readings?</p>
       <p>Follow one atom from the source to its endpoint. Then compare the predictions with a simulated beam.</p>
+      <p><a id="sg-arcade-link" href="#stern-gerlach-arcade">Open the optional Stern–Gerlach Arcade</a></p>
     </header>
 
     <section class="spin-panel" aria-labelledby="spin-lab-title">
@@ -402,6 +403,463 @@
       </form>
       <p>Here we assumed the spin state stayed fixed between analyzers. In the next lesson, you’ll see how a state can change over time before a measurement.</p>
     </section>
+
+    <details class="lesson-panel sg-arcade" id="stern-gerlach-arcade">
+      <summary><strong>Stern–Gerlach Arcade</strong><span>Optional practice</span></summary>
+      <div class="sg-body">
+        <p>Pick a station, try its controls, and open a mission when you’re ready. Each mission has two hints. Progress lasts while this page is open. Spin readings are in units of ℏ, and the Pauli observables X, Y and Z are dimensionless.</p>
+        <p class="sg-note" id="sg-tolerance">Angles are in degrees, with radians shown beside each dial. Angles that differ by whole turns count as equal, so 300° and −60° are the same setting. A direction n is set by its tilt η from +z and its azimuth φ from +x toward +y. Answer boxes accept whole numbers, decimals, fractions such as 3/8, and square roots such as √3/2 or (2 − √3)/4. Answers that end as decimals, such as 0.2, are checked exactly. Answers such as 1/3 or √3/2 can be typed exactly, or as decimals within 0.002 of the exact value. Probabilities of a setup you build count within 0.005, angles within 1°, and Mystery Oven directions within 3° of what your own counts imply. Simulated atoms use a fixed seed, so resetting a station replays the same run, and missions about runs check your reasoning, never a lucky result.</p>
+        <div class="sg-toolbar">
+          <label for="sg-station">Station
+            <select id="sg-station" aria-controls="sg-panels" disabled>
+              <optgroup label="The apparatus">
+                <option value="screen" selected>1 · Classical vs Quantum Screen</option>
+                <option value="gradient">2 · Gradient and Deflection</option>
+                <option value="units">3 · Readings in ℏ</option>
+              </optgroup>
+              <optgroup label="Angles and directions">
+                <option value="aim">4 · Angle Sharpshooter</option>
+                <option value="half">5 · Half-Angle Puzzle</option>
+                <option value="oven">6 · Mystery Oven</option>
+              </optgroup>
+              <optgroup label="Sequences">
+                <option value="chain">7 · Analyzer Chain Builder</option>
+                <option value="recombine">8 · Recombine the Beams</option>
+              </optgroup>
+              <optgroup label="What spin is">
+                <option value="magnitude">9 · Magnitude vs Component</option>
+              </optgroup>
+              <optgroup label="Recurring formats">
+                <option value="designer">10 · Beamline Designer</option>
+              </optgroup>
+            </select>
+          </label>
+          <p id="sg-progress" role="status">0 of 44 missions completed this session.</p>
+          <button id="sg-reset" type="button" disabled>Reset this station</button>
+          <label class="sg-reduced" for="sg-reduced"><input id="sg-reduced" type="checkbox" disabled> Reduced effects</label>
+        </div>
+        <p class="sg-note" id="sg-status" role="status" aria-atomic="true"></p>
+        <noscript><p class="sg-note">JavaScript runs the arcade diagrams, controls, simulated atoms and mission checks.</p></noscript>
+        <div id="sg-panels">
+          <section class="sg-station" data-sg-station="screen" data-sg-accent="blue" aria-labelledby="sg-screen-title">
+            <h4 id="sg-screen-title">Classical vs Quantum Screen</h4>
+            <p>An oven sends silver atoms through the magnet onto a plate. If each atom were a tiny classical spinning magnet, its moment could point any way, and its deflection would be proportional to its z component μ_z = μ cos α. Pick a model and send atoms. Each model keeps its own plate.</p>
+            <p class="sg-note">History: Otto Stern and Walther Gerlach ran this experiment in Frankfurt in 1922. Their glass plate showed the silver deposit split in two, with a gap where the classical picture predicts the densest part of a band. They read it as Bohr–Sommerfeld “space quantization”. Electron spin was proposed only in 1925, and silver’s moment comes from its single unpaired outer electron.</p>
+            <div data-sg-plot-slot></div>
+            <fieldset disabled>
+              <legend class="sg-sr-only">Classical vs Quantum Screen controls</legend>
+              <div class="sg-fields"><label>Model <select name="model"><option value="classical" selected>Classical spinning moments</option><option value="quantum">Quantum spin-½ (silver)</option></select></label></div><div class="sg-button-row"><button class="sg-primary" type="button" data-sg-action="send1">Send one</button><button type="button" data-sg-action="send10">Send 10</button><button type="button" data-sg-action="send100">Send 100</button><button type="button" data-sg-action="clear">Clear this plate</button><button type="button" data-sg-action="reseed">New seed</button></div><p class="sg-readout" data-sg-read="state" aria-live="polite"></p>
+              <div class="sg-missions">
+                <details class="sg-mission" data-sg-mission="screen-a">
+                  <summary>Predict the classical plate<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Before sending atoms, predict the classical model’s plate.</p><div class="sg-fields"><label>The classical plate shows <select name="a-pick" required><option value="">Choose</option><option value="two">two separate spots</option><option value="one">one spot in the middle</option><option value="band">one continuous band from top to bottom</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="screen-b">
+                  <summary>What 1922 showed<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Now run the quantum model and compare it with Stern and Gerlach’s result.</p><div class="sg-fields"><label>The silver atoms land <select name="b-pattern" required><option value="">Choose</option><option value="band">in a continuous band</option><option value="two">in two separate spots with a gap</option><option value="three">in three spots</option></select></label><label>So the z component of the moment takes <select name="b-means" required><option value="">Choose</option><option value="any">any value between −μ and +μ</option><option value="two">only two values</option><option value="zero">only the value 0</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="screen-c">
+                  <summary>Read the smear<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>In the classical model, a moment tilted 60° from +z lands at what share of the largest deflection?</p><div class="sg-fields"><label>Share of the largest deflection = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="c-f"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="screen-d">
+                  <summary>The middle half<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Send at least 100 atoms in each model. Then give each model’s probability that an atom lands in the middle half, with |deflection| less than half the largest. Answer with the model probability, not your count.</p><div class="sg-fields"><label>Classical model probability = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="d-cl"></label><label>Quantum model probability = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="d-qu"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="sg-math">
+              <summary>Show the math</summary>
+              <p>Classical: the deflection is proportional to μ cos α. For moments pointing every way equally often, the share of directions with cos α in a range is proportional to the length of that range, so cos α is uniform on [−1, 1]. The middle half, |cos α| < 1/2, has probability 1/2.</p>
+              <p>Quantum: an S_z analyzer has two readings, +ℏ/2 and −ℏ/2, so atoms land only at the two largest deflections. An oven’s random spins put half in each spot. The spots have some width because the beam itself has width.</p>
+            </details>
+          </section>
+
+          <section class="sg-station" data-sg-station="gradient" data-sg-accent="orange" aria-labelledby="sg-gradient-title" hidden>
+            <h4 id="sg-gradient-title">Gradient and Deflection</h4>
+            <p>Look down the beam. The magnet’s axis u points from the beam toward the end marked +u. Its field points along u, and the pointed pole makes the field stronger on that side. The force on an atom is F = μ_u ∂B_u/∂u along u. A silver atom’s magnetic moment points opposite its spin, so an atom with S_u = +ℏ/2 has μ_u &lt; 0. Change the gradient and roll the magnet, then decide where each channel goes. Tick the box to check your reasoning on the diagram.</p>
+            <div data-sg-plot-slot></div>
+            <fieldset disabled>
+              <legend class="sg-sr-only">Gradient and Deflection controls</legend>
+              <div class="sg-fields"><label>Field gradient <select name="grad"><option value="up" selected>Stronger toward +u (pointed pole at +u)</option><option value="down">Stronger toward −u (pointed pole at −u)</option><option value="none">Uniform field (two flat poles)</option></select></label><label>Magnet roll ρ about the beam <output data-sg-for="roll" data-sg-angle>0</output><input type="range" name="roll-range" data-sg-pair="roll" min="0" max="360" step="1" value="0"></label><label>ρ in degrees <input class="sg-answer" type="number" name="roll" step="any" value="0"></label><label class="sg-check-row"><input type="checkbox" name="show"> Show the deflections</label></div><p class="sg-readout" data-sg-read="state" aria-live="polite"></p>
+              <div class="sg-missions">
+                <details class="sg-mission" data-sg-mission="gradient-a">
+                  <summary>Which way is up?<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Roll ρ = 0°, field stronger toward +z. Where does an atom with S_z = +ℏ/2 go?</p><div class="sg-fields"><label>An S_z = +ℏ/2 atom is deflected <select name="a-pick" required><option value="">Choose</option><option value="+z">toward +z</option><option value="-z">toward −z</option><option value="+x">toward +x</option><option value="-x">toward −x</option><option value="none">not deflected</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="gradient-b">
+                  <summary>Flip the gradient<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Keep ρ = 0° and make the field stronger toward −z. Now where does an S_z = +ℏ/2 atom go?</p><div class="sg-fields"><label>An S_z = +ℏ/2 atom is deflected <select name="b-pick" required><option value="">Choose</option><option value="+z">toward +z</option><option value="-z">toward −z</option><option value="+x">toward +x</option><option value="-x">toward −x</option><option value="none">not deflected</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="gradient-c">
+                  <summary>Roll to analyze x<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Field stronger toward +u. Roll the magnet so it measures S_x, with u = +x. Where does an S_x = +ℏ/2 atom go?</p><div class="sg-fields"><label>An S_x = +ℏ/2 atom is deflected <select name="c-pick" required><option value="">Choose</option><option value="+z">toward +z</option><option value="-z">toward −z</option><option value="+x">toward +x</option><option value="-x">toward −x</option><option value="none">not deflected</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="gradient-d">
+                  <summary>Upside down<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Field stronger toward +u, and roll the magnet to ρ = 180°. What happens to the atoms with S_z = +ℏ/2?</p><div class="sg-fields"><label>Compared with ρ = 0°, <select name="d-pick" required><option value="">Choose</option><option value="swap">they now go toward +z: the channels swap places</option><option value="same">they still go toward −z, but the magnet now calls them S_u = −ℏ/2</option><option value="none">they are no longer deflected</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="gradient-e">
+                  <summary>Uniform field<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Replace the poles with two flat ones, so the field is uniform. What does the beam do?</p><div class="sg-fields"><label>In a uniform field <select name="e-pick" required><option value="">Choose</option><option value="split">the beam splits the same way, just less</option><option value="none">the beam does not split: a torque acts but no net force</option><option value="one">all atoms bend the same way</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="sg-math">
+              <summary>Show the math</summary>
+              <p>The energy of a moment in a field is U = −μ·B, so the force is F = −∇U = ∇(μ·B). Along the magnet’s axis, F_u = μ_u ∂B_u/∂u. For silver, μ = −γS with γ &gt; 0, so S_u = +ℏ/2 gives μ_u &lt; 0 and the force points toward the weaker field.</p>
+              <p>Reversing the gradient flips the sign of ∂B_u/∂u, so the channels swap places. Rolling the magnet by 180° reverses both B and the direction of u, which leaves ∂B_z/∂z unchanged: the atoms land where they did, and only the names of the channels swap. A uniform field has ∂B/∂u = 0, so there is no split.</p>
+            </details>
+          </section>
+
+          <section class="sg-station" data-sg-station="units" data-sg-accent="green" aria-labelledby="sg-units-title" hidden>
+            <h4 id="sg-units-title">Readings in ℏ</h4>
+            <p>Lessons 14 and 15 used the dimensionless Pauli observables X, Y and Z with readings ±1. The physical spin component is S_n = (ℏ/2) n·σ, so each Pauli reading, mean and spread is multiplied by ℏ/2. ℏ = h/(2π) ≈ 1.054571817 × 10⁻³⁴ J·s. Choose a state |+n⟩ in the xz-plane and the axis to measure. Opening a mission loads its setup.</p>
+            <div data-sg-plot-slot></div>
+            <fieldset disabled>
+              <legend class="sg-sr-only">Readings in ℏ controls</legend>
+              <div class="sg-fields"><label>State direction η (in the xz-plane) <output data-sg-for="eta" data-sg-angle>30</output><input type="range" name="eta-range" data-sg-pair="eta" min="0" max="360" step="1" value="30"></label><label>η in degrees <input class="sg-answer" type="number" name="eta" step="any" value="30"></label><label>Analyzer axis <select name="axis"><option value="z" selected>Z, giving S_z</option><option value="x">X, giving S_x</option></select></label></div><p class="sg-readout" data-sg-read="state" aria-live="polite"></p>
+              <div class="sg-missions">
+                <details class="sg-mission" data-sg-mission="units-a">
+                  <summary>Pauli to physical<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>A Z analyzer reads −1 on the Pauli scale. Give the physical reading in units of ℏ, then in units of 10⁻³⁵ J·s (within 0.01).</p><div class="sg-fields"><label>S_z = (?) ℏ: <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="a-s"></label><label>S_z in units of 10⁻³⁵ J·s = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="a-si"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="units-b">
+                  <summary>Mean in ℏ<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>A state has P(+) = 3/4 along z (η = 60°). Find ⟨Z⟩, then ⟨S_z⟩ in units of ℏ.</p><div class="sg-fields"><label>⟨Z⟩ = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="b-z"></label><label>⟨S_z⟩ = (?) ℏ: <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="b-s"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="units-c">
+                  <summary>Spread in ℏ<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>For the same state, find ΔZ and ΔS_z.</p><div class="sg-fields"><label>ΔZ = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="c-dz"></label><label>ΔS_z = (?) ℏ: <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="c-ds"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="units-d">
+                  <summary>Back from physical units<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>A state has ⟨S_x⟩ = −0.3ℏ. Find ⟨X⟩ and the probability of the +ℏ/2 reading along x.</p><div class="sg-fields"><label>⟨X⟩ = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="d-x"></label><label>P(S_x = +ℏ/2) = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="d-p"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="units-e">
+                  <summary>Not a reading<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Could a single S_z measurement show ℏ/4? And what is every reading of S_z², in units of ℏ²?</p><div class="sg-fields"><label>A single reading of ℏ/4 is <select name="e-pick" required><option value="">Choose</option><option value="yes">possible, for a state with ⟨S_z⟩ = ℏ/4</option><option value="rare">possible but rare</option><option value="no">impossible: each reading is +ℏ/2 or −ℏ/2</option></select></label><label>S_z² reading = (?) ℏ²: <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="e-sq"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="sg-math">
+              <summary>Show the math</summary>
+              <p>S_n = (ℏ/2) n·σ, so a reading λ = ±1 of n·σ becomes (ℏ/2)λ = ±ℏ/2. Means and spreads scale the same way: ⟨S_z⟩ = (ℏ/2)⟨Z⟩ and ΔS_z = (ℏ/2)ΔZ, because ΔZ has the same units as Z.</p>
+              <p>For |+n⟩ at η in the xz-plane, ⟨Z⟩ = cos η and ⟨X⟩ = sin η. With P(+) = cos²(η/2), ⟨Z⟩ = 2P(+) − 1.</p>
+            </details>
+          </section>
+
+          <section class="sg-station" data-sg-station="aim" data-sg-accent="yellow" aria-labelledby="sg-aim-title" hidden>
+            <h4 id="sg-aim-title">Angle Sharpshooter</h4>
+            <p>The lab’s dial stops at 180° in the xz-plane. Here the source direction s and the analyzer direction n can point anywhere: tilt η from +z, azimuth φ from +x toward +y, both over the full 360°. The side and top views show both directions, and P(+) = cos²(θ/2) = (1 + s·n)/2.</p>
+            <p class="sg-note">A real magnet’s gradient is perpendicular to the beam, so an axis with a component along the beam means turning the beam line too. The prediction depends only on n.</p>
+            <div data-sg-plot-slot></div>
+            <fieldset disabled>
+              <legend class="sg-sr-only">Angle Sharpshooter controls</legend>
+              <div class="sg-fields"><label>Source tilt η_s <output data-sg-for="s-eta" data-sg-angle>0</output><input type="range" name="s-eta-range" data-sg-pair="s-eta" min="0" max="360" step="1" value="0"></label><label>η_s in degrees <input class="sg-answer" type="number" name="s-eta" step="any" value="0"></label><label>Source azimuth φ_s <output data-sg-for="s-phi" data-sg-angle>0</output><input type="range" name="s-phi-range" data-sg-pair="s-phi" min="0" max="360" step="1" value="0"></label><label>φ_s in degrees <input class="sg-answer" type="number" name="s-phi" step="any" value="0"></label><label>Analyzer tilt η <output data-sg-for="n-eta" data-sg-angle>90</output><input type="range" name="n-eta-range" data-sg-pair="n-eta" min="0" max="360" step="1" value="90"></label><label>η in degrees <input class="sg-answer" type="number" name="n-eta" step="any" value="90"></label><label>Analyzer azimuth φ <output data-sg-for="n-phi" data-sg-angle>90</output><input type="range" name="n-phi-range" data-sg-pair="n-phi" min="0" max="360" step="1" value="90"></label><label>φ in degrees <input class="sg-answer" type="number" name="n-phi" step="any" value="90"></label></div><p class="sg-readout" data-sg-read="state" aria-live="polite"></p>
+              <div class="sg-missions">
+                <details class="sg-mission" data-sg-mission="aim-a">
+                  <summary>One third<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Source |+z⟩. Aim the analyzer so P(+) = 1/3, using a direction with a y component of at least 0.3 in size.</p>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="aim-b">
+                  <summary>Past 180°<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Source |+x⟩, analyzer at η = 300°, φ = 0° (opening the mission sets both). Give P(+) exactly. Then give the lab dial setting, from 0° to 180°, of the magnet that is this one with its channels swapped.</p><div class="sg-fields"><label>P(+) = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="b-p"></label><label>Lab dial setting in degrees = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="b-dial"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="aim-c">
+                  <summary>The only zero<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Source at η_s = 60°, φ_s = 45°. Find the one analyzer direction that never gives +ℏ/2.</p>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="aim-d">
+                  <summary>A ring of answers<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Source |+x⟩. Aim for P(+) = 3/4 with an analyzer whose y component is at least 0.3 in size. Many directions work.</p>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="aim-e">
+                  <summary>Three targets<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Source at η_s = 50°, φ_s = 30°. Hit P(+) = 1/4, 1/2 and 9/10, pinning each shot as you land it.</p><div class="sg-button-row"><button type="button" data-sg-action="pin">Pin this shot</button></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="sg-math">
+              <summary>Show the math</summary>
+              <p>n = (sin η cos φ, sin η sin φ, cos η). Adding 360° to η or φ gives the same n. A tilt beyond 180° is the same as tilting 360° − η the other way: η = 300°, φ = 0° is the direction η = 60°, φ = 180°.</p>
+              <p>P(+) = (1 + s·n)/2 = cos²(θ/2), where θ is the angle between s and n. Every n at the same angle θ from s gives the same probability: a cone of answers around s.</p>
+            </details>
+          </section>
+
+          <section class="sg-station" data-sg-station="half" data-sg-accent="violet" aria-labelledby="sg-half-title" hidden>
+            <h4 id="sg-half-title">Half-Angle Puzzle</h4>
+            <p>Lesson 12’s polarizer and a spin analyzer, side by side, both turned by the same angle α. Horizontal light goes into the polarizer, and |+z⟩ goes into the spin analyzer. Light’s ket |θ⟩ = cos θ|H⟩ + sin θ|V⟩ uses the physical angle. The spin ket |+n⟩ = cos(η/2)|+z⟩ + sin(η/2)|−z⟩ uses half of it.</p>
+            <div data-sg-plot-slot></div>
+            <fieldset disabled>
+              <legend class="sg-sr-only">Half-Angle Puzzle controls</legend>
+              <div class="sg-fields"><label>Turn α <output data-sg-for="alpha" data-sg-angle>60</output><input type="range" name="alpha-range" data-sg-pair="alpha" min="0" max="360" step="1" value="60"></label><label>α in degrees <input class="sg-answer" type="number" name="alpha" step="any" value="60"></label></div><p class="sg-readout" data-sg-read="state" aria-live="polite"></p>
+              <div class="sg-missions">
+                <details class="sg-mission" data-sg-mission="half-a">
+                  <summary>Find the opposites<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>At what turn does each device first pass nothing?</p><div class="sg-fields"><label>Polarizer blocks all H light at α = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="a-pol"></label><label>Spin analyzer never gives +ℏ/2 at α = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="a-spin"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="half-b">
+                  <summary>Match the curves<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>The polarizer at 60° passes 1/4. Turn the spin analyzer until it also passes 1/4, then explain the difference.</p><div class="sg-fields"><label>The two turns differ because <select name="b-pick" required><option value="">Choose</option><option value="half">the spin ket’s angle is half the physical angle</option><option value="double">the spin ket’s angle is twice the physical angle</option><option value="light">light is classical and spin is quantum</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="half-c">
+                  <summary>A full turn<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Put η = 360° into |+n⟩ = cos(η/2)|+z⟩ + sin(η/2)|−z⟩. What is the coefficient of |+z⟩, and is this a new state?</p><div class="sg-fields"><label>Coefficient of |+z⟩ = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="c-coef"></label><label>After a full turn, the analyzer’s positive state is <select name="c-pick" required><option value="">Choose</option><option value="same">the same physical state: an overall −1 changes no probability</option><option value="new">a new state, orthogonal to |+z⟩</option><option value="minus">|−z⟩</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="half-d">
+                  <summary>Best middle device<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Place one middle device to send the most from H to a final V polarizer, and from |+z⟩ to a final −z selection. Give each middle setting.</p><div class="sg-fields"><label>Middle polarizer angle = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="d-pol"></label><label>Middle spin analyzer angle = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="d-spin"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="sg-math">
+              <summary>Show the math</summary>
+              <p>Opposite states must be orthogonal kets. For light, ⟨H|V⟩ = 0 and V is 90° from H. For spin, ⟨+z|−z⟩ = 0, but −z is 180° from +z in space. The ket angle is η/2, so a 180° turn in space is a 90° turn in the ket.</p>
+              <p>P_light = cos²α and P_spin = cos²(α/2). The spin curve is the light curve stretched to twice the width: it reaches 1/2 at 90° instead of 45° and reaches 0 at 180° instead of 90°.</p>
+            </details>
+          </section>
+
+          <section class="sg-station" data-sg-station="oven" data-sg-accent="red" aria-labelledby="sg-oven-title" hidden>
+            <h4 id="sg-oven-title">Mystery Oven</h4>
+            <p>Each mission has its own oven, which prepares every atom in the same unknown state |+n⟩. You can’t see n. You only choose where the magnet points and count where atoms land, within an atom budget and a limit on magnet settings. A setting and its opposite count as one setting. Your answer is graded against the direction your own counts imply, so luck doesn’t decide the result, and efficient settings make your estimate sharper. Atoms you send with no mission open come from oven a.</p>
+            <div data-sg-plot-slot></div>
+            <fieldset disabled>
+              <legend class="sg-sr-only">Mystery Oven controls</legend>
+              <div class="sg-fields"><label>Magnet tilt η <output data-sg-for="m-eta" data-sg-angle>0</output><input type="range" name="m-eta-range" data-sg-pair="m-eta" min="0" max="360" step="1" value="0"></label><label>η in degrees <input class="sg-answer" type="number" name="m-eta" step="any" value="0"></label><label>Magnet azimuth φ <output data-sg-for="m-phi" data-sg-angle>0</output><input type="range" name="m-phi-range" data-sg-pair="m-phi" min="0" max="360" step="1" value="0"></label><label>φ in degrees <input class="sg-answer" type="number" name="m-phi" step="any" value="0"></label></div><div class="sg-button-row"><button class="sg-primary" type="button" data-sg-action="send1">Send one</button><button type="button" data-sg-action="send10">Send 10</button><button type="button" data-sg-action="send50">Send 50</button><button type="button" data-sg-action="reseed">New seed</button></div><p class="sg-readout" data-sg-read="state" aria-live="polite"></p><ol class="sg-log" data-sg-log="log" aria-label="Settings used on this oven"></ol>
+              <div class="sg-missions">
+                <details class="sg-mission" data-sg-mission="oven-a">
+                  <summary>Six suspects<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Oven a is one of |±x⟩, |±y⟩, |±z⟩. Use at most 20 atoms. Name it once your counts favor it at least 20 to 1 over every other suspect.</p><div class="sg-fields"><label>Oven a prepares <select name="a-pick" required><option value="">Choose</option><option value="+x">|+x⟩</option><option value="-x">|−x⟩</option><option value="+y">|+y⟩</option><option value="-y">|−y⟩</option><option value="+z">|+z⟩</option><option value="-z">|−z⟩</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="oven-b">
+                  <summary>In the xz-plane<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Oven b points somewhere in the xz-plane (φ = 0° with any η from 0° to 360°). Use at most 2 settings and 400 atoms, and at least 100. Give η to within 3° of what your counts imply.</p><div class="sg-fields"><label>Oven b’s η in degrees = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="b-eta"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="oven-c">
+                  <summary>Anywhere at all<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Oven c can point in any direction. Use at most 3 settings and 600 atoms, and at least 150. Give its η and φ.</p><div class="sg-fields"><label>Oven c’s η in degrees = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="c-eta"></label><label>Oven c’s φ in degrees = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="c-phi"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="oven-d">
+                  <summary>Efficient settings<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Oven d can point anywhere. Use at most 3 settings and 300 atoms, and at least 240, with a precision score of at least 0.8. The score depends only on your settings and how you split the atoms, never on the results. Give η and φ.</p><div class="sg-fields"><label>Oven d’s η in degrees = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="d-eta"></label><label>Oven d’s φ in degrees = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="d-phi"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="sg-math">
+              <summary>Show the math</summary>
+              <p>For a setting n_k, each atom gives +ℏ/2 with probability (1 + s·n_k)/2, so the mean m_k = (up − down)/atoms estimates s·n_k. Along x, y and z the means estimate the three components of s.</p>
+              <p>With other settings, the checker solves n_k·v ≈ m_k by least squares, weighting each setting by its atoms, and uses the direction of v. Its precision score is 3λ_min/N, where λ_min is the smallest eigenvalue of Σ N_k n_k n_kᵀ: it is 1 for three perpendicular settings with equal atoms and 0 when the settings leave some direction unmeasured.</p>
+            </details>
+          </section>
+
+          <section class="sg-station" data-sg-station="chain" data-sg-accent="green" aria-labelledby="sg-chain-title" hidden>
+            <h4 id="sg-chain-title">Analyzer Chain Builder</h4>
+            <p>Build a chain of three to five analyzers in the xz-plane. Each has a selector that passes one channel and blocks the other, so each stage prepares the state the next one sees. The ledger tracks P(pass | reached) at each stage and the share of all atoms sent that survives. Opening a mission loads its chain. Keep the model hidden while you work, then tick the box to check.</p>
+            <div data-sg-plot-slot></div>
+            <fieldset disabled>
+              <legend class="sg-sr-only">Analyzer Chain Builder controls</legend>
+              <div class="sg-fields"><label>Source <select name="source"><option value="plus-z" selected>|+z⟩</option><option value="plus-x">|+x⟩</option><option value="minus-z">|−z⟩</option><option value="plus-y">|+y⟩</option></select></label><label>Number of analyzers <select name="count"><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option></select></label><label class="sg-check-row"><input type="checkbox" name="model"> Show the model</label></div><div class="sg-fields" data-sg-stage="1"><label>A1 axis η <output data-sg-for="a1-eta" data-sg-angle>0</output><input type="range" name="a1-eta-range" data-sg-pair="a1-eta" min="0" max="360" step="1" value="0"></label><label>A1 η in degrees <input class="sg-answer" type="number" name="a1-eta" step="any" value="0"></label><label>A1 selector <select name="a1-pass"><option value="plus" selected>Pass + (+ℏ/2)</option><option value="minus">Pass − (−ℏ/2)</option></select></label></div><div class="sg-fields" data-sg-stage="2"><label>A2 axis η <output data-sg-for="a2-eta" data-sg-angle>90</output><input type="range" name="a2-eta-range" data-sg-pair="a2-eta" min="0" max="360" step="1" value="90"></label><label>A2 η in degrees <input class="sg-answer" type="number" name="a2-eta" step="any" value="90"></label><label>A2 selector <select name="a2-pass"><option value="plus" selected>Pass + (+ℏ/2)</option><option value="minus">Pass − (−ℏ/2)</option></select></label></div><div class="sg-fields" data-sg-stage="3"><label>A3 axis η <output data-sg-for="a3-eta" data-sg-angle>0</output><input type="range" name="a3-eta-range" data-sg-pair="a3-eta" min="0" max="360" step="1" value="0"></label><label>A3 η in degrees <input class="sg-answer" type="number" name="a3-eta" step="any" value="0"></label><label>A3 selector <select name="a3-pass"><option value="plus" selected>Pass + (+ℏ/2)</option><option value="minus">Pass − (−ℏ/2)</option></select></label></div><div class="sg-fields" data-sg-stage="4" hidden><label>A4 axis η <output data-sg-for="a4-eta" data-sg-angle>0</output><input type="range" name="a4-eta-range" data-sg-pair="a4-eta" min="0" max="360" step="1" value="0"></label><label>A4 η in degrees <input class="sg-answer" type="number" name="a4-eta" step="any" value="0"></label><label>A4 selector <select name="a4-pass"><option value="plus" selected>Pass + (+ℏ/2)</option><option value="minus">Pass − (−ℏ/2)</option></select></label></div><div class="sg-fields" data-sg-stage="5" hidden><label>A5 axis η <output data-sg-for="a5-eta" data-sg-angle>0</output><input type="range" name="a5-eta-range" data-sg-pair="a5-eta" min="0" max="360" step="1" value="0"></label><label>A5 η in degrees <input class="sg-answer" type="number" name="a5-eta" step="any" value="0"></label><label>A5 selector <select name="a5-pass"><option value="plus" selected>Pass + (+ℏ/2)</option><option value="minus">Pass − (−ℏ/2)</option></select></label></div><p class="sg-readout" data-sg-read="state" aria-live="polite"></p>
+              <div class="sg-missions">
+                <details class="sg-mission" data-sg-mission="chain-a">
+                  <summary>Read the ledger<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>|+z⟩ → A1 at 90° passing + → A2 at 0° passing − → A3 at 90° passing +. Find the share of all atoms sent that reaches the end, and P_A3(+ | A2 = −).</p><div class="sg-fields"><label>Share of all atoms sent = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="a-all"></label><label>P_A3(+ | A2 = −) = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="a-cond"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="chain-b">
+                  <summary>Where did they go?<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>|+x⟩ → A1 at 0° passing + → A2 at 90° passing − → A3 at 0° passing +. Account for every atom sent.</p><div class="sg-fields"><label>Blocked at A1 = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="b-1"></label><label>Blocked at A2 = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="b-2"></label><label>Blocked at A3 = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="b-3"></label><label>Reach the end = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="b-out"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="chain-c">
+                  <summary>Flip with three<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Start from |+z⟩. With exactly three analyzers, deliver |−z⟩ to the end with more than 40% of the atoms sent.</p>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="chain-d">
+                  <summary>Order matters<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>|+z⟩ through analyzers at 60°, 120° and 0°, all passing +. Find the surviving share, then reverse the order of the three analyzers and find it again.</p><div class="sg-fields"><label>Forward (60°, 120°, 0°) = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="d-fwd"></label><label>Reversed (0°, 120°, 60°) = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="d-rev"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="sg-math">
+              <summary>Show the math</summary>
+              <p>Each stage passes q and blocks −q. Given the state s that reaches it, P(pass | reached) = (1 + q n·s)/2, and the passed atoms leave in the state q n. This is P_B(+ | A = q) from the lesson, applied stage after stage.</p>
+              <p>Share reaching stage k + 1 = share reaching stage k × P(pass | reached stage k). Blocked at stage k = share reaching it × (1 − P(pass | reached)). The blocked shares and the final share always add to 1.</p>
+            </details>
+          </section>
+
+          <section class="sg-station" data-sg-station="recombine" data-sg-accent="blue" aria-labelledby="sg-recombine-title" hidden>
+            <h4 id="sg-recombine-title">Recombine the Beams</h4>
+            <p>A Z magnet splits the beam into a +z path and a −z path. A second magnet with the opposite gradient (Z⁻¹) brings them back together before a final analyzer F along n. If nothing records which path an atom took, the original state comes back. Block a path or tag it with a which-path marker and it does not.</p>
+            <p class="sg-note"><strong>Idealized thought experiment.</strong> Recombining the two paths so precisely that nothing, not even the atom’s position or momentum, records the path is extremely hard to do in practice. Here the magnets are perfect.</p>
+            <div data-sg-plot-slot></div>
+            <fieldset disabled>
+              <legend class="sg-sr-only">Recombine the Beams controls</legend>
+              <div class="sg-fields"><label>Source <select name="source"><option value="plus-x" selected>|+x⟩</option><option value="plus-z">|+z⟩</option><option value="plus-y">|+y⟩</option><option value="mystery">Mystery |+n⟩</option></select></label><label>Paths <select name="paths"><option value="open" selected>Both open, recombined</option><option value="block-plus">Block the +z path</option><option value="block-minus">Block the −z path</option><option value="tag">Both open, path tagged</option></select></label><label>F tilt η <output data-sg-for="f-eta" data-sg-angle>0</output><input type="range" name="f-eta-range" data-sg-pair="f-eta" min="0" max="360" step="1" value="0"></label><label>F η in degrees <input class="sg-answer" type="number" name="f-eta" step="any" value="0"></label><label>F azimuth φ <output data-sg-for="f-phi" data-sg-angle>0</output><input type="range" name="f-phi-range" data-sg-pair="f-phi" min="0" max="360" step="1" value="0"></label><label>F φ in degrees <input class="sg-answer" type="number" name="f-phi" step="any" value="0"></label></div><div class="sg-button-row"><button class="sg-primary" type="button" data-sg-action="send1">Send one</button><button type="button" data-sg-action="send10">Send 10</button><button type="button" data-sg-action="send100">Send 100</button><button type="button" data-sg-action="clear">Clear counts</button><button type="button" data-sg-action="reseed">New seed</button></div><p class="sg-readout" data-sg-read="state" aria-live="polite"></p>
+              <div class="sg-missions">
+                <details class="sg-mission" data-sg-mission="recombine-a">
+                  <summary>Recombine<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Source |+x⟩, both paths open, no marker. Point F along +x and give the share of atoms sent that reach F+.</p><div class="sg-fields"><label>F+ share = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="a-p"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="recombine-b">
+                  <summary>Block one path<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Source |+x⟩. Block either path and point F along x. What share of all atoms sent reaches F+?</p><div class="sg-fields"><label>F+ share of atoms sent = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="b-p"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="recombine-c">
+                  <summary>Tag the path<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Source |+x⟩, both paths open, but a marker records each atom’s path. Point F along x.</p><div class="sg-fields"><label>F+ share of atoms sent = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="c-p"></label><label>The marker changes the result because <select name="c-pick" required><option value="">Choose</option><option value="absorb">it absorbs half the atoms</option><option value="measure">a which-path record acts as a Z measurement</option><option value="phase">it adds a random phase to only one path</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="recombine-d">
+                  <summary>Find the input<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>The mystery source sends one fixed state |+n⟩. With both paths open, turn F until every atom reaches F+.</p>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="sg-math">
+              <summary>Show the math</summary>
+              <p>Split: |ψ⟩ = α|+z⟩ + β|−z⟩, with each term sent along its own path. Recombined with no record, the terms rejoin with their relative phase, so the state is α|+z⟩ + β|−z⟩ again. F then gives P(+) = (1 + s·n)/2 with the original s.</p>
+              <p>Blocking the −z path keeps only α|+z⟩: a share |α|² survives, in |+z⟩. A which-path record leaves each atom in |+z⟩ or |−z⟩ with probabilities |α|² and |β|², which is the same as a Z measurement, so P(F+) = |α|²(1 + n_z)/2 + |β|²(1 − n_z)/2.</p>
+            </details>
+          </section>
+
+          <section class="sg-station" data-sg-station="magnitude" data-sg-accent="orange" aria-labelledby="sg-magnitude-title" hidden>
+            <h4 id="sg-magnitude-title">Magnitude vs Component</h4>
+            <p>For spin s = 1/2, S² = S_x² + S_y² + S_z² has the value s(s + 1)ℏ² = (3/4)ℏ² on every state, so the spin’s magnitude is √(s(s + 1))ℏ = (√3/2)ℏ. A component reads only ±ℏ/2, which is smaller. The cone is the old vector-model picture of a state with one definite component: the arrow’s azimuth is not a real, measurable angle. Choose which component is definite.</p>
+            <div data-sg-plot-slot></div>
+            <fieldset disabled>
+              <legend class="sg-sr-only">Magnitude vs Component controls</legend>
+              <div class="sg-fields"><label>Definite component <select name="comp"><option value="z" selected>S_z = +ℏ/2</option><option value="x">S_x = +ℏ/2</option><option value="y">S_y = +ℏ/2</option></select></label><label>Picture azimuth (not measurable) <output data-sg-for="az" data-sg-angle>30</output><input type="range" name="az-range" data-sg-pair="az" min="0" max="360" step="1" value="30"></label><label>Picture azimuth in degrees <input class="sg-answer" type="number" name="az" step="any" value="30"></label></div><p class="sg-readout" data-sg-read="state" aria-live="polite"></p>
+              <div class="sg-missions">
+                <details class="sg-mission" data-sg-mission="magnitude-a">
+                  <summary>How long is spin?<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Find the spin magnitude and S² for s = 1/2.</p><div class="sg-fields"><label>|S| = (?) ℏ: <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="a-mag"></label><label>S² = (?) ℏ²: <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="a-sq"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="magnitude-b">
+                  <summary>Cone angle<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>In the vector model, how far is the spin tilted from the z axis when S_z = +ℏ/2? Can it ever lie along z?</p><div class="sg-fields"><label>Tilt in degrees = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="b-angle"></label><label>The spin lies exactly along z <select name="b-pick" required><option value="">Choose</option><option value="cold">only at very low temperature</option><option value="never">never: S_z = ℏ/2 is less than |S| = (√3/2)ℏ</option><option value="measure">right after an S_z measurement</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="magnitude-c">
+                  <summary>Components add up<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Find every reading of S_x², in units of ℏ², then add the three squared components.</p><div class="sg-fields"><label>Each S_x² reading = (?) ℏ²: <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="c-x2"></label><label>S_x² + S_y² + S_z² = (?) ℏ²: <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="c-sum"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="magnitude-d">
+                  <summary>Commutator in physical units<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Using [X, Y] = 2iZ, write [S_x, S_y] = c · iℏS_z and find c. Then complete the cycle.</p><div class="sg-fields"><label>c = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="d-c"></label><label>[S_y, S_z] = <select name="d-pick" required><option value="">Choose</option><option value="x">iℏS_x</option><option value="mx">−iℏS_x</option><option value="zero">0</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="magnitude-e">
+                  <summary>Both definite?<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>In |+z⟩, find P(S_x = +ℏ/2). Then say why S_x and S_z can’t both be definite.</p><div class="sg-fields"><label>P(S_x = +ℏ/2) = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="e-p"></label><label>They can’t both be definite because <select name="e-pick" required><option value="">Choose</option><option value="instrument">no magnet measures two axes at once</option><option value="noshared">S_x and S_z share no eigenket, since [S_z, S_x] ≠ 0</option><option value="small">ℏ/2 is too small to measure twice</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="sg-math">
+              <summary>Show the math</summary>
+              <p>S = (ℏ/2)σ. Each Pauli matrix squares to I, so S_x² = S_y² = S_z² = (ℏ²/4)I and S² = (3ℏ²/4)I. For general spin s the value is s(s + 1)ℏ², and the largest component reading is sℏ, always smaller (Lesson 26).</p>
+              <p>[S_x, S_y] = (ℏ/2)²[X, Y] = (ℏ²/4)(2iZ) = iℏS_z, and cyclically. Because the components don’t commute, no state is an eigenket of two of them, so at most one component can have a definite value.</p>
+            </details>
+          </section>
+
+          <section class="sg-station" data-sg-station="designer" data-sg-accent="violet" aria-labelledby="sg-designer-title" hidden>
+            <h4 id="sg-designer-title">Beamline Designer</h4>
+            <p>Here you work the problem the other way round. Each card names an output state and a share of the atoms, and you design the beamline: a source and up to four analyzers, each pointing anywhere and passing + or −. Many answers work where the card allows it. The checker tests the beamline you actually build: the output state to within 1° and the share to within 0.005.</p>
+            <div data-sg-plot-slot></div>
+            <fieldset disabled>
+              <legend class="sg-sr-only">Beamline Designer controls</legend>
+              <div class="sg-fields"><label>Source <select name="source"><option value="plus-z" selected>|+z⟩</option><option value="plus-x">|+x⟩</option><option value="plus-y">|+y⟩</option><option value="minus-z">|−z⟩</option></select></label><label>Number of analyzers <select name="count"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option></select></label></div><div class="sg-fields" data-sg-stage="1"><label>D1 tilt η in degrees <input class="sg-answer" type="number" name="d1-eta" step="any" value="90"></label><label>D1 azimuth φ in degrees <input class="sg-answer" type="number" name="d1-phi" step="any" value="0"></label><label>D1 selector <select name="d1-pass"><option value="plus" selected>Pass + (+ℏ/2)</option><option value="minus">Pass − (−ℏ/2)</option></select></label></div><div class="sg-fields" data-sg-stage="2"><label>D2 tilt η in degrees <input class="sg-answer" type="number" name="d2-eta" step="any" value="0"></label><label>D2 azimuth φ in degrees <input class="sg-answer" type="number" name="d2-phi" step="any" value="0"></label><label>D2 selector <select name="d2-pass"><option value="plus" selected>Pass + (+ℏ/2)</option><option value="minus">Pass − (−ℏ/2)</option></select></label></div><div class="sg-fields" data-sg-stage="3" hidden><label>D3 tilt η in degrees <input class="sg-answer" type="number" name="d3-eta" step="any" value="0"></label><label>D3 azimuth φ in degrees <input class="sg-answer" type="number" name="d3-phi" step="any" value="0"></label><label>D3 selector <select name="d3-pass"><option value="plus" selected>Pass + (+ℏ/2)</option><option value="minus">Pass − (−ℏ/2)</option></select></label></div><div class="sg-fields" data-sg-stage="4" hidden><label>D4 tilt η in degrees <input class="sg-answer" type="number" name="d4-eta" step="any" value="0"></label><label>D4 azimuth φ in degrees <input class="sg-answer" type="number" name="d4-phi" step="any" value="0"></label><label>D4 selector <select name="d4-pass"><option value="plus" selected>Pass + (+ℏ/2)</option><option value="minus">Pass − (−ℏ/2)</option></select></label></div><p class="sg-readout" data-sg-read="state" aria-live="polite"></p>
+              <div class="sg-missions">
+                <details class="sg-mission" data-sg-mission="designer-a">
+                  <summary>Card 1 · |−y⟩ at one half<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>From |+z⟩, deliver |−y⟩ with 1/2 of the atoms sent.</p>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="designer-b">
+                  <summary>Card 2 · flip and keep half<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>From |+z⟩, deliver |−z⟩ with at least 1/2 of the atoms sent, using at most four analyzers.</p>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="designer-c">
+                  <summary>Card 3 · |+x⟩ at three eighths<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>From |+z⟩, deliver |+x⟩ with exactly 3/8 of the atoms sent.</p>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="designer-d">
+                  <summary>Card 4 · can it be built?<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>The card asks for |−x⟩ from a |+x⟩ source with at least 1/3 of the atoms, using exactly two analyzers.</p><div class="sg-fields"><label>This card <select name="d-pick" required><option value="">Choose</option><option value="yes">can be built: x, then −x</option><option value="tilt">can be built with a tilted first analyzer</option><option value="no">can’t be built: two analyzers deliver at most 1/4</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="sg-math">
+              <summary>Show the math</summary>
+              <p>The output state is q n for the last analyzer’s direction n and selection q. The share is the product of each stage’s P(pass | reached) = (1 + q n·s)/2, where s is the state reaching that stage.</p>
+              <p>To turn a state through an angle Θ with k equal steps, each step keeps cos²(Θ/2k), so the share is cos^(2k)(Θ/2k). For Θ = 180°: one step keeps 0, two keep 1/4, three keep 27/64 and four keep about 0.53.</p>
+            </details>
+          </section>
+
+        </div>
+        <template id="sg-figure-template">
+          <figure class="sg-figure">
+            <figcaption id="sg-title">Station diagram</figcaption>
+            <div class="sg-viewport" id="sg-viewport" data-renderer="svg">
+              <canvas class="sg-canvas" id="sg-canvas" aria-hidden="true" hidden></canvas>
+              <svg class="sg-diagram" id="sg-diagram" viewBox="0 0 560 300" role="img" aria-labelledby="sg-title" aria-describedby="sg-desc">
+                <desc id="sg-desc"></desc>
+                <g data-sg-geometry></g>
+                <g data-sg-labels></g>
+              </svg>
+            </div>
+            <p class="sg-note" id="sg-render-status"></p>
+          </figure>
+        </template>
+        <template id="sg-mission-template">
+          <div class="sg-mission-tools">
+            <button type="button" data-sg-hint>Show first hint</button>
+            <ol data-sg-hint-list aria-live="polite" hidden></ol>
+            <p class="sg-feedback" data-sg-feedback role="status"></p>
+            <details data-sg-work hidden><summary>Worked steps</summary><p data-sg-work-text></p></details>
+          </div>
+        </template>
+      </div>
+    </details>
+
 
     <nav class="spin-next" aria-label="Lesson navigation">
       <a href="../15_expectation_and_uncertainty/15_expectation_and_uncertainty.html">← Previous: Expectation and Uncertainty</a>
