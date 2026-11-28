@@ -650,3 +650,746 @@ body {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Time Evolution Arcade */
+
+.site-main.time-evolution-lesson {
+  --te-surface: #0b1612;
+  --te-plot: var(--evo-well);
+  --te-grid: #284235;
+  --te-axis: #b4c9bc;
+}
+
+.time-evolution-lesson #time-arcade {
+  scroll-margin-block-start: 1rem;
+}
+
+.time-evolution-lesson :is(.te-body, .te-station, .te-figure, .te-missions, .te-mission-tools, .te-station > fieldset) {
+  display: grid;
+  gap: 0.75rem;
+  min-inline-size: 0;
+}
+
+.time-evolution-lesson .te-body {
+  padding-block-start: 0.75rem;
+}
+
+.time-evolution-lesson :is(.te-arcade, .te-mission, .te-math, .te-mission-tools details) > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem 0.75rem;
+  list-style: none;
+}
+
+.time-evolution-lesson :is(.te-arcade, .te-mission, .te-math, .te-mission-tools details) > summary::-webkit-details-marker {
+  display: none;
+}
+
+.time-evolution-lesson :is(.te-arcade, .te-mission, .te-math, .te-mission-tools details) > summary::before {
+  content: "+";
+  inline-size: 1ch;
+}
+
+.time-evolution-lesson :is(.te-arcade, .te-mission, .te-math, .te-mission-tools details)[open] > summary::before {
+  content: "−";
+}
+
+/* Long mission titles wrap beside the +/− marker instead of dropping below it. */
+.time-evolution-lesson details.te-mission > summary {
+  flex-wrap: nowrap;
+}
+
+.time-evolution-lesson .te-arcade > summary strong {
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+}
+
+.time-evolution-lesson .te-arcade > summary span {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.time-evolution-lesson .te-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto auto;
+  align-items: end;
+  gap: 0.75rem;
+  min-inline-size: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--te-surface);
+}
+
+.time-evolution-lesson .te-toolbar > label:not(.te-reduced) {
+  display: grid;
+  gap: 0.25rem;
+  min-inline-size: 0;
+  font-size: 0.875rem;
+}
+
+.time-evolution-lesson #te-progress {
+  align-self: center;
+  color: var(--phosphor);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.time-evolution-lesson .te-reduced,
+.time-evolution-lesson .te-check-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-block-size: 44px;
+  font-size: 0.875rem;
+}
+
+.time-evolution-lesson .te-reduced {
+  color: var(--muted);
+}
+
+.time-evolution-lesson :is(.te-reduced, .te-check-row) input {
+  flex: none;
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+  margin: 0;
+  accent-color: var(--phosphor);
+}
+
+.time-evolution-lesson .te-arcade select,
+.time-evolution-lesson input.te-answer {
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 44px;
+  padding: 0.45rem 0.625rem;
+  border: 1px solid #4b6c5b;
+  border-radius: 0.375rem;
+  background: #101e18;
+  color: var(--ink);
+  font: inherit;
+}
+
+.time-evolution-lesson .te-arcade select:disabled,
+.time-evolution-lesson input.te-answer:disabled {
+  cursor: default;
+  opacity: 0.62;
+}
+
+.time-evolution-lesson input.te-answer:user-invalid {
+  border-color: var(--red);
+}
+
+.time-evolution-lesson .te-arcade :is(select, input):focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 3px;
+}
+
+.time-evolution-lesson .te-station {
+  --te-accent: var(--phosphor);
+  padding: clamp(0.75rem, 2vw, 1.35rem);
+  border: 1px solid var(--line);
+  border-block-start: 3px solid var(--te-accent);
+  border-radius: 0.6rem;
+  background: var(--te-surface);
+}
+
+.time-evolution-lesson [data-te-accent="blue"] { --te-accent: var(--blue); }
+.time-evolution-lesson [data-te-accent="violet"] { --te-accent: var(--violet); }
+.time-evolution-lesson [data-te-accent="orange"] { --te-accent: var(--orange); }
+.time-evolution-lesson [data-te-accent="green"] { --te-accent: var(--green); }
+.time-evolution-lesson [data-te-accent="yellow"] { --te-accent: var(--yellow); }
+.time-evolution-lesson [data-te-accent="red"] { --te-accent: var(--red); }
+
+.time-evolution-lesson .te-station h4 {
+  color: var(--te-accent);
+  font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+}
+
+.time-evolution-lesson .te-station > fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.time-evolution-lesson .te-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+  align-items: end;
+  gap: 0.65rem 0.85rem;
+}
+
+/* A complex number: one box for the real part and one for the imaginary part. */
+.time-evolution-lesson .te-complex {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: end;
+  gap: 0.5rem 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-inline: 3px solid var(--te-accent);
+  border-radius: 0.5rem;
+}
+
+.time-evolution-lesson :is(.te-fields, .te-complex) label:not(.te-check-row) {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: end;
+  gap: 0.25rem 0.3em;
+  min-inline-size: 0;
+  font-size: 0.875rem;
+}
+
+.time-evolution-lesson :is(.te-fields, .te-complex) label > :is(input:not([type="checkbox"]), select) {
+  flex: 1 0 100%;
+}
+
+.time-evolution-lesson :is(.te-fields, .te-complex) label > output {
+  color: var(--te-accent);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.time-evolution-lesson .te-station input[type="range"] {
+  inline-size: 100%;
+  min-block-size: 44px;
+  margin: 0;
+  accent-color: var(--te-accent);
+}
+
+.time-evolution-lesson .te-step {
+  color: var(--te-accent);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.time-evolution-lesson .te-button-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.time-evolution-lesson .te-arcade button {
+  max-inline-size: 100%;
+  font-size: 0.9375rem;
+}
+
+.time-evolution-lesson .te-arcade button.te-primary {
+  border-color: var(--te-accent);
+  color: var(--te-accent);
+  font-weight: 700;
+}
+
+.time-evolution-lesson .te-readout {
+  padding: 0.5rem 0.7rem;
+  border-inline-start: 3px solid var(--te-accent);
+  background: #081310;
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.time-evolution-lesson .te-readout:empty,
+.time-evolution-lesson .te-log:empty {
+  display: none;
+}
+
+.time-evolution-lesson .te-log {
+  max-block-size: 10rem;
+  margin: 0;
+  overflow: auto;
+  padding-inline-start: 2.2rem;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.time-evolution-lesson .te-worked {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0.6rem 0.75rem 0.6rem 2.2rem;
+  border-inline-start: 3px solid var(--te-accent);
+  background: #07110d;
+  font-variant-numeric: tabular-nums;
+}
+
+.time-evolution-lesson .te-mission {
+  padding: 0.15rem 0.75rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+  background: #0a1410;
+}
+
+.time-evolution-lesson .te-mission[open] {
+  border-color: color-mix(in srgb, var(--te-accent) 55%, var(--line));
+}
+
+.time-evolution-lesson .te-mission > :not(summary) {
+  margin-block-start: 0.65rem;
+}
+
+.time-evolution-lesson .te-mission [data-te-done] {
+  margin-inline-start: auto;
+  color: var(--green);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.time-evolution-lesson .te-mission-tools > button {
+  justify-self: start;
+}
+
+.time-evolution-lesson .te-mission-tools ol {
+  margin: 0;
+  padding-inline-start: 1.25rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.time-evolution-lesson .te-mission-tools details > summary {
+  font-size: 0.875rem;
+}
+
+.time-evolution-lesson .te-mission-tools details p {
+  margin-block-start: 0.4rem;
+  padding: 0.5rem 0.7rem;
+  border-inline-start: 3px solid var(--line);
+  background: #07110d;
+  font-size: 0.875rem;
+}
+
+.time-evolution-lesson .te-feedback:not(:empty) {
+  padding: 0.55rem 0.7rem;
+  border-inline-start: 3px solid var(--te-accent);
+  background: #11241a;
+  font-size: 0.9rem;
+}
+
+.time-evolution-lesson .te-math > p {
+  margin-block-start: 0.5rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.time-evolution-lesson .te-figure figcaption {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.time-evolution-lesson .te-viewport {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  inline-size: 100%;
+  aspect-ratio: 560 / 300;
+  border: 1px solid #36465b;
+  border-radius: 0.5rem;
+  background: var(--te-plot);
+  touch-action: pan-y;
+}
+
+.time-evolution-lesson .te-viewport[data-space="true"] {
+  cursor: grab;
+}
+
+.time-evolution-lesson :is(.te-canvas, .te-diagram) {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.time-evolution-lesson .te-viewport[data-renderer="webgl"] [data-te-geometry] {
+  visibility: hidden;
+}
+
+.time-evolution-lesson .te-diagram {
+  --tone: var(--violet);
+  pointer-events: none;
+}
+
+.time-evolution-lesson .te-diagram [data-tone="alpha"] { --tone: var(--blue); }
+.time-evolution-lesson .te-diagram [data-tone="beta"] { --tone: var(--orange); }
+.time-evolution-lesson .te-diagram [data-tone="plus"] { --tone: var(--green); }
+.time-evolution-lesson .te-diagram [data-tone="minus"] { --tone: var(--violet); }
+.time-evolution-lesson .te-diagram [data-tone="angle"] { --tone: var(--yellow); }
+.time-evolution-lesson .te-diagram [data-tone="warn"] { --tone: var(--red); }
+.time-evolution-lesson .te-diagram [data-tone="guide"] { --tone: var(--te-axis); }
+.time-evolution-lesson .te-diagram [data-tone="ink"] { --tone: var(--ink); }
+
+.time-evolution-lesson .te-diagram .te-frame {
+  fill: none;
+  stroke: #36465b;
+}
+
+.time-evolution-lesson .te-diagram .te-grid {
+  fill: none;
+  stroke: var(--te-grid);
+  stroke-width: 1;
+}
+
+.time-evolution-lesson .te-diagram .te-axis {
+  fill: none;
+  stroke: var(--te-axis);
+  stroke-width: 1.5;
+}
+
+.time-evolution-lesson .te-diagram :is(.te-ring, .te-ray) {
+  fill: none;
+  stroke: var(--tone);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 5;
+  opacity: 0.85;
+}
+
+.time-evolution-lesson .te-diagram .te-arrow {
+  stroke: var(--tone);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
+.time-evolution-lesson .te-diagram .te-arrow.te-dashed {
+  stroke-width: 2;
+  stroke-dasharray: 6 5;
+  opacity: 0.8;
+}
+
+.time-evolution-lesson .te-diagram :is(.te-head, .te-dot, .te-bar) {
+  fill: var(--tone);
+  stroke: var(--tone);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.time-evolution-lesson .te-diagram :is(.te-head, .te-dot, .te-bar).te-hollow {
+  fill: var(--te-plot);
+}
+
+.time-evolution-lesson .te-diagram .te-sphere {
+  fill: #0d1a2a;
+  stroke: var(--te-axis);
+  stroke-width: 1.5;
+}
+
+.time-evolution-lesson .te-diagram .te-wire {
+  fill: none;
+  stroke: var(--te-axis);
+  stroke-width: 1;
+  opacity: 0.6;
+}
+
+.time-evolution-lesson .te-diagram .te-back {
+  opacity: 0.4;
+  stroke-dasharray: 3 4;
+}
+
+.time-evolution-lesson .te-diagram text {
+  paint-order: stroke;
+  stroke: var(--te-plot);
+  stroke-width: 3.5;
+  stroke-linejoin: round;
+  fill: var(--ink);
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.time-evolution-lesson .te-diagram text:is(.te-label, .te-caption)[data-tone] {
+  fill: var(--tone);
+}
+
+.time-evolution-lesson .te-diagram text.te-tick {
+  fill: var(--te-axis);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.time-evolution-lesson .te-diagram text.te-caption {
+  font-size: 13px;
+}
+
+.time-evolution-lesson .te-diagram text.te-back {
+  stroke-dasharray: none;
+}
+
+.time-evolution-lesson .te-sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 42rem) {
+  .time-evolution-lesson .te-toolbar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 24rem) {
+  .time-evolution-lesson .te-complex {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Arcade drawing additions: curves, rays, wide resultants and timeline boxes. */
+.time-evolution-lesson .te-diagram {
+  --tone: var(--green);
+}
+
+.time-evolution-lesson .te-diagram .te-curve {
+  fill: none;
+  stroke: var(--tone);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.time-evolution-lesson .te-diagram .te-curve.te-dashed {
+  stroke-dasharray: 8 5;
+}
+
+.time-evolution-lesson .te-diagram .te-curve.te-dotted {
+  stroke-dasharray: 2 4;
+  stroke-linecap: round;
+}
+
+.time-evolution-lesson .te-diagram .te-ray.te-solid {
+  stroke-dasharray: none;
+  stroke-width: 1.7;
+}
+
+.time-evolution-lesson .te-diagram .te-arrow.te-wide {
+  stroke-width: 8;
+  opacity: 0.62;
+}
+
+.time-evolution-lesson .te-diagram .te-frame {
+  fill: none;
+  stroke: var(--line);
+}
+
+.time-evolution-lesson .te-diagram .te-part {
+  fill: color-mix(in srgb, var(--tone) 28%, var(--te-plot));
+  stroke: var(--tone);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.time-evolution-lesson .te-toolbar > p,
+.time-evolution-lesson #te-status:empty {
+  margin: 0;
+}
+
+.time-evolution-lesson .te-body > p {
+  margin: 0;
+}
+
+.time-evolution-lesson .te-station > p {
+  margin: 0;
+}
+
+.time-evolution-lesson .te-arcade input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 3px;
+}
+
+/* Arcade additions: check rows, statements and matrix grids. */
+
+.time-evolution-lesson .te-station .te-fields .te-check-row {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #344b42;
+  border-radius: 0.35rem;
+  background: #101e17;
+}
+
+
+
+/* A matrix entry grid: one cell per entry, each with a real and an imaginary box,
+   in reading order so Tab moves row by row. Square brackets frame the grid. */
+.time-evolution-lesson .te-matrix-entry {
+  display: grid;
+  gap: 0.4rem;
+  min-inline-size: 0;
+}
+
+.time-evolution-lesson .te-matrix {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  max-inline-size: 34rem;
+  padding: 0.5rem 0.75rem;
+  border-inline: 3px solid var(--te-accent);
+  border-radius: 0.35rem;
+}
+
+.time-evolution-lesson .te-cell {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: end;
+  gap: 0.3rem 0.5rem;
+  min-inline-size: 0;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #344b42;
+  border-radius: 0.35rem;
+  background: #0a1611;
+}
+
+.time-evolution-lesson .te-cell-tag {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+
+.time-evolution-lesson .te-cell label {
+  display: grid;
+  gap: 0.2rem;
+  min-inline-size: 0;
+  font-size: 0.8125rem;
+}
+
+.time-evolution-lesson .te-cell:focus-within {
+  border-color: var(--te-accent);
+}
+
+@media (max-width: 30rem) {
+  .time-evolution-lesson .te-cell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 20rem) {
+  .time-evolution-lesson .te-matrix {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Arcade additions: diagram input, ledgers, beams and heat maps. */
+
+.time-evolution-lesson .te-viewport[data-space="point"] {
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.time-evolution-lesson .te-viewport:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 3px;
+}
+
+.time-evolution-lesson .te-fields label[hidden] {
+  display: none !important;
+}
+
+.time-evolution-lesson .te-diagram .te-cell {
+  fill: var(--tone);
+  stroke: none;
+}
+
+.time-evolution-lesson .te-diagram .te-cell.te-hollow {
+  fill: none;
+  stroke: var(--tone);
+  stroke-width: 1.5;
+}
+
+/* Time Evolution Arcade additions: the panel itself (this lesson has no shared
+   lesson-panel style), notes, kickers, read-only matrix cells and sphere traces. */
+
+.time-evolution-lesson .te-arcade {
+  display: grid;
+  min-inline-size: 0;
+  padding: clamp(1rem, 3vw, 1.75rem);
+  border: 1px solid var(--line);
+  border-radius: 0.625rem;
+  background: var(--evo-surface);
+  scroll-margin-block-start: 1rem;
+}
+
+.time-evolution-lesson .te-arcade > summary {
+  min-block-size: 44px;
+  cursor: pointer;
+}
+
+.time-evolution-lesson .te-arcade summary:focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+.time-evolution-lesson :is(.te-mission, .te-math, .te-mission-tools details) > summary {
+  min-block-size: 44px;
+  cursor: pointer;
+}
+
+.time-evolution-lesson .te-note,
+.time-evolution-lesson .te-figure .te-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.time-evolution-lesson .te-kicker {
+  margin: 0;
+  color: var(--phosphor);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.time-evolution-lesson .te-unit-hint {
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.time-evolution-lesson .te-cell-note {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.time-evolution-lesson .te-cell-note output {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.time-evolution-lesson .te-arcade button {
+  justify-self: start;
+}
+
+.time-evolution-lesson .te-arcade button[aria-pressed="true"] {
+  background: #143623;
+}
+
+.time-evolution-lesson .te-diagram .te-arrow.te-thin {
+  stroke-width: 2;
+}
+
+.time-evolution-lesson .te-diagram .te-arrow.te-field {
+  stroke-width: 3;
+  opacity: 0.9;
+}
+
+.time-evolution-lesson .te-diagram .te-curve.te-trace {
+  stroke-width: 2.5;
+}
+
+.time-evolution-lesson .te-diagram .te-curve.te-back {
+  opacity: 0.45;
+  stroke-dasharray: 3 4;
+}
+
+.time-evolution-lesson .te-diagram .te-dot.te-back {
+  opacity: 0.55;
+}
+
+.time-evolution-lesson .te-pulses {
+  margin: 0;
+  padding-inline-start: 1.6rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.time-evolution-lesson .te-pulses:empty {
+  display: none;
+}

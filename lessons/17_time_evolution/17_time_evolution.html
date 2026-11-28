@@ -6,10 +6,10 @@
   <meta name="theme-color" content="#050906">
   <meta name="description" content="Explore how a spin evolves in a constant magnetic field and how relative phase changes X and Z measurement predictions.">
   <title>Time Evolution | Quantum Mechanics Class</title>
-  <link rel="stylesheet" href="./styles/main.css">
+  <link rel="stylesheet" href="./styles/main.css?v=17-time-arcade">
   <script src="./scripts/app.js" defer></script>
   <script src="./scripts/lessons-menu.js" defer></script>
-  <script type="module" src="./scripts/lesson.js"></script>
+  <script type="module" src="./scripts/lesson.js?v=17-time-arcade"></script>
 </head>
 <body>
   <header class="site-header">
@@ -130,6 +130,7 @@
       <h2 id="evo-title">Time Evolution</h2>
       <p>In the Stern–Gerlach lesson, passing only the positive X channel prepared the spin in |+x⟩. An immediate X measurement would give + with certainty. Now let the prepared spin spend time in a uniform, constant magnetic field along Z before measuring it.</p>
       <p class="evo-lead"><strong>How long must we wait before an X measurement is certain to give −, and what would a Z measurement show at that same instant?</strong></p>
+      <p><a id="te-arcade-link" href="#time-arcade">Open the optional Time Evolution Arcade</a></p>
     </header>
 
     <section class="evo-panel" aria-labelledby="evo-model-title">
@@ -324,6 +325,546 @@
       <h3 id="evo-bridge-title">From one spin to a composite system</h3>
       <p>Here the ket and Hamiltonian describe one spin. In Lesson 18, you’ll build a joint state space for more than one system, where the Hamiltonian can include interactions between the parts.</p>
     </section>
+
+    <details class="lesson-panel te-arcade" id="time-arcade">
+      <summary><strong>Time Evolution Arcade</strong><span>Optional practice</span></summary>
+      <div class="te-body">
+        <p>Pick a station, try its controls, and open a mission when you’re ready. Each mission has two hints. Progress lasts while this page is open. Every station uses a Hamiltonian H that doesn’t change in time, so |ψ(t)⟩ = U(t)|ψ(0)⟩ with U(t) = exp(−iHt/ℏ). For a spin in a field along n, H = (ℏω/2) n·σ and θ = ωt.</p>
+        <p class="te-note" id="te-tolerance">Answer boxes accept whole numbers, decimals, fractions such as 3/8, square roots such as √3/2, π (type π or pi), and powers of ten such as 6.6e-25. Time boxes take the unit shown or a multiple of the period T, such as T/4, 0.25T or 3T/8. Each typed angle has a unit menu, radians or degrees; an angle written with π is always read in radians. Angles that differ by whole turns count as equal, and where a mission says so, times that differ by whole periods count as equal. Answers that end as decimals, such as 0.125, are checked exactly. Answers such as 1/3, √2/2 or π can be typed exactly, or as decimals within 0.002 of the exact value, separately for each real and imaginary part; typed angles count within 0.002 rad (about 0.1°). Answers that use measured constants such as ℏ, h or a gyromagnetic ratio count within 0.5%. States you build count within 1° on the Bloch sphere, and probabilities of a setup you build within 0.005. Dials are set in degrees, with radians shown beside each one.</p>
+        <div class="te-toolbar">
+          <label for="te-station">Station
+            <select id="te-station" aria-controls="te-panels" disabled>
+              <optgroup label="Energy and phase">
+                <option value="ladder" selected>1 · Energy Ladder</option>
+                <option value="clocks">2 · Phase Clocks</option>
+                <option value="stationary">3 · Stationary or Not?</option>
+              </optgroup>
+              <optgroup label="Precession in 3D">
+                <option value="dial">4 · Field Dial (3D)</option>
+                <option value="timing">5 · Timing Puzzles</option>
+                <option value="pulse">6 · Pulse Workshop</option>
+              </optgroup>
+              <optgroup label="Unitary evolution">
+                <option value="unitary">7 · Unitary Toolkit</option>
+              </optgroup>
+              <optgroup label="Recurring formats">
+                <option value="designer">8 · Evolution Designer</option>
+                <option value="detective">9 · Error Detective</option>
+                <option value="twospins">10 · Quantum Preview: Two Spins</option>
+              </optgroup>
+              <optgroup label="Extras">
+                <option value="echo">11 · Spin Echo</option>
+                <option value="real">12 · Real-World Precession</option>
+              </optgroup>
+            </select>
+          </label>
+          <p id="te-progress" role="status">0 of 54 missions completed this session.</p>
+          <button id="te-reset" type="button" disabled>Reset this station</button>
+          <label class="te-reduced" for="te-reduced"><input id="te-reduced" type="checkbox" disabled> Reduced effects</label>
+        </div>
+        <p class="te-note" id="te-status" role="status" aria-atomic="true"></p>
+        <noscript><p class="te-note">JavaScript runs the arcade diagrams, controls and mission checks.</p></noscript>
+        <div id="te-panels">
+          <section class="te-station" data-te-station="ladder" data-te-accent="blue" aria-labelledby="te-ladder-title">
+            <h4 id="te-ladder-title">Energy Ladder</h4>
+            <p>The energies of a system are the eigenvalues of its Hamiltonian H. For a 2×2 H they are E₊ ≥ E₋, the gap is ΔE = E₊ − E₋, and the gap sets the angular frequency ω = ΔE/ℏ and the period T = 2π/ω = h/ΔE. Enter H in µeV (10⁻⁶ eV). H is Hermitian, so its diagonal is real and the entry in row 2, column 1 is the conjugate of the one in row 1, column 2. The ladder shows the diagonal entries dashed and the energies solid.</p>
+            <div data-te-plot-slot></div>
+            <fieldset disabled>
+              <legend class="te-sr-only">Energy Ladder controls</legend>
+              <div class="te-matrix-entry"><p class="te-step">Your H in µeV</p><div class="te-matrix" role="group" aria-label="Your H in µeV, entered row by row"><div class="te-cell te-cell-real" role="group" aria-label="Your H in µeV, row 1, column 1"><span class="te-cell-tag" aria-hidden="true">row 1 · col 1</span><label><span class="te-sr-only">Your H in µeV, row 1, column 1, </span>real <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="h-11" value="1"></label><p class="te-cell-note">imaginary part 0 (H is Hermitian)</p></div><div class="te-cell" role="group" aria-label="Your H in µeV, row 1, column 2"><span class="te-cell-tag" aria-hidden="true">row 1 · col 2</span><label><span class="te-sr-only">Your H in µeV, row 1, column 2, </span>real <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="h-12-re" value="1"></label><label><span class="te-sr-only">Your H in µeV, row 1, column 2, </span>imaginary <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="h-12-im" value="0"></label></div><div class="te-cell te-cell-real" role="group" aria-label="Your H in µeV, row 2, column 1"><span class="te-cell-tag" aria-hidden="true">row 2 · col 1</span><p class="te-cell-note">conjugate of row 1, column 2: <output data-te-text="h-21">0</output></p></div><div class="te-cell te-cell-real" role="group" aria-label="Your H in µeV, row 2, column 2"><span class="te-cell-tag" aria-hidden="true">row 2 · col 2</span><label><span class="te-sr-only">Your H in µeV, row 2, column 2, </span>real <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="h-22" value="-1"></label><p class="te-cell-note">imaginary part 0 (H is Hermitian)</p></div></div></div><div class="te-fields"><label class="te-check-row"><input type="checkbox" name="show"> Show the energies and conversions</label></div><p class="te-readout" data-te-read="state" aria-live="polite"></p>
+              <div class="te-missions">
+                <details class="te-mission" data-te-mission="ladder-a">
+                  <summary>Read a diagonal ladder<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission loads H with rows [3, 0], [0, −1] in µeV, in the basis (|+z⟩, |−z⟩). Find the energies and the gap.</p><div class="te-fields"><label>E₊ in µeV = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-ep" value=""></label><label>E₋ in µeV = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-em" value=""></label><label>ΔE in µeV = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-gap" value=""></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="ladder-b">
+                  <summary>Mix the levels<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission loads H with rows [1, 2], [2, −2] in µeV. Now |+z⟩ and |−z⟩ are not energy eigenstates. Find the energies and the gap.</p><div class="te-fields"><label>E₊ in µeV = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-ep" value=""></label><label>E₋ in µeV = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-em" value=""></label><label>ΔE in µeV = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-gap" value=""></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="ladder-c">
+                  <summary>Joules, rad/s, GHz and ns<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>A gap of ΔE = 5 µeV. Convert it, and find how fast the relative phase turns. Answers count within 0.5%.</p><div class="te-fields"><label>ΔE in units of 10⁻²⁵ J = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-j" value=""></label><label>ω = ΔE/ℏ in units of 10⁹ rad/s = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-w" value=""></label><label>f = ω/2π in GHz = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-f" value=""></label><label>T in ns = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-t" value=""></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="ladder-d">
+                  <summary>Build a 2 µeV gap<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Enter your own H with a nonzero off-diagonal entry and a gap of exactly ΔE = 2 µeV. Many matrices work; the checker diagonalizes the one you enter.</p>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="te-math">
+              <summary>Show the math</summary>
+              <p>E± = (H₁₁ + H₂₂)/2 ± √[((H₁₁ − H₂₂)/2)² + |H₁₂|²], so ΔE = 2√[((H₁₁ − H₂₂)/2)² + |H₁₂|²]. Mixing (H₁₂ ≠ 0) always pushes the levels apart.</p>
+              <p>ω = ΔE/ℏ in rad/s, f = ΔE/h = ω/2π in Hz and T = 1/f. With ℏ = 6.582119569 × 10⁻¹⁶ eV·s, 1 µeV corresponds to ω ≈ 1.519 × 10⁹ rad/s and f ≈ 241.8 MHz.</p>
+            </details>
+          </section>
+
+          <section class="te-station" data-te-station="clocks" data-te-accent="orange" aria-labelledby="te-clocks-title" hidden>
+            <h4 id="te-clocks-title">Phase Clocks</h4>
+            <p>Each energy eigenstate is a clock. Under H, the amplitude of an eigenstate with energy E is multiplied by exp(−iEt/ℏ): its hand turns clockwise at the rate E/ℏ. Here a is the amplitude of |+z⟩ with energy E₊, and b the amplitude of |−z⟩ with energy E₋, so H = diag(E₊, E₋). Change the rates, add a common shift V to both energies, and watch which readouts move. Play respects your reduced-motion setting and the Reduced effects box; Step always works.</p>
+            <div data-te-plot-slot></div>
+            <fieldset disabled>
+              <legend class="te-sr-only">Phase Clocks controls</legend>
+              <div class="te-fields"><label>E₊/ℏ in rad/ns <output data-te-for="ep" data-te-unit=" rad/ns">3</output><input type="range" name="ep-range" data-te-pair="ep" min="0" max="6" step="0.1" value="3"></label><label>E₊/ℏ in rad/ns (number) <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="ep" value="3"></label><label>E₋/ℏ in rad/ns <output data-te-for="em" data-te-unit=" rad/ns">1</output><input type="range" name="em-range" data-te-pair="em" min="0" max="6" step="0.1" value="1"></label><label>E₋/ℏ in rad/ns (number) <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="em" value="1"></label><label>Common shift V/ℏ in rad/ns <output data-te-for="shift" data-te-unit=" rad/ns">0</output><input type="range" name="shift-range" data-te-pair="shift" min="-6" max="6" step="0.1" value="0"></label><label>Common shift V/ℏ in rad/ns (number) <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="shift" value="0"></label><label>Time t in ns <output data-te-for="t" data-te-unit=" ns">0</output><input type="range" name="t-range" data-te-pair="t" min="0" max="8" step="0.01" value="0"></label><label>Time t in ns (number) <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="t" value="0"></label><label>Start state <select name="start"><option value="tilt" selected>(√3/2)|+z⟩ + (1/2)|−z⟩</option><option value="plus-x">|+x⟩</option><option value="plus-y">|+y⟩</option></select></label></div><div class="te-button-row"><button class="te-primary" type="button" data-te-action="play">Play</button><button type="button" data-te-action="step">Step +0.25 ns</button><button type="button" data-te-action="zero">Back to t = 0</button></div><p class="te-readout" data-te-read="state" aria-live="polite"></p>
+              <div class="te-missions">
+                <details class="te-mission" data-te-mission="clocks-a">
+                  <summary>Read both clocks<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission sets E₊/ℏ = 3 rad/ns, E₋/ℏ = 1 rad/ns, V = 0 and t = 0.5 ns. Both amplitudes start real and positive. What phase does each clock show?</p><div class="te-fields"><label>arg a = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-pa" value=""></label><label>Unit for arg a <select name="a-pa-unit"><option value="rad" selected>radians</option><option value="deg">degrees</option></select></label><label>arg b = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-pb" value=""></label><label>Unit for arg b <select name="a-pb-unit"><option value="rad" selected>radians</option><option value="deg">degrees</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="clocks-b">
+                  <summary>The phase that matters<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Same setting, t = 0.5 ns. Find the relative phase arg b − arg a.</p><div class="te-fields"><label>arg b − arg a = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-rel" value=""></label><label>Unit for arg b − arg a <select name="b-rel-unit"><option value="rad" selected>radians</option><option value="deg">degrees</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="clocks-c">
+                  <summary>Shift every energy<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Add the same shift V to both energies: move V away from 0. What changes?</p><div class="te-fields"><label>Shifting both energies by V changes <select name="c-pick" required><option value="">Choose</option><option value="rel">the relative phase, so P(+x) and P(+y) change</option><option value="probs">every probability, because the rates change</option><option value="global">only the global phase; every probability stays the same</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="clocks-d">
+                  <summary>Stop one clock<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>With E₊/ℏ = 3 and E₋/ℏ = 1 rad/ns, choose V so the |+z⟩ clock stands still. Then compare P(+x) at t = 1 ns with its value for V = 0.</p><div class="te-fields"><label>P(+x) at 1 ns <select name="d-pick" required><option value="">Choose</option><option value="same">is the same as with V = 0</option><option value="bigger">is larger than with V = 0</option><option value="frozen">stays at its starting value, since one clock stopped</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="clocks-e">
+                  <summary>When the clocks line up<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>E₊/ℏ = 3 and E₋/ℏ = 1 rad/ns. After t = 0, when is the relative phase first back to 0? Here T is the period of the relative phase, and any later realignment counts too.</p><div class="te-fields"><label>t in ns = <span class="te-unit-hint">(or a multiple of T)</span> <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="e-t" value=""></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="te-math">
+              <summary>Show the math</summary>
+              <p>a(t) = a(0) exp(−iE₊t/ℏ) and b(t) = b(0) exp(−iE₋t/ℏ). Factoring out exp(−iE₊t/ℏ) leaves a(0)|+z⟩ + b(0) exp(i(E₊ − E₋)t/ℏ)|−z⟩: only the gap enters the relative phase.</p>
+              <p>Shifting H → H + V I multiplies the whole ket by exp(−iVt/ℏ), a global phase. So the zero of energy is a free choice, and only energy differences can be seen.</p>
+            </details>
+          </section>
+
+          <section class="te-station" data-te-station="stationary" data-te-accent="green" aria-labelledby="te-stationary-title" hidden>
+            <h4 id="te-stationary-title">Stationary or Not?</h4>
+            <p>A state is stationary when every probability it predicts stays constant in time. Pick a Hamiltonian, a state and an observable, and the chart shows P(+) for that observable over two periods. Then test whether the observable commutes with H, as in Lesson 14.</p>
+            <div data-te-plot-slot></div>
+            <fieldset disabled>
+              <legend class="te-sr-only">Stationary or Not? controls</legend>
+              <div class="te-fields"><label>Hamiltonian H <select name="h"><option value="x" selected>(ℏω/2)σx · field along +x</option><option value="y">(ℏω/2)σy · field along +y</option><option value="n">(ℏω/2)(σx + σz)/√2 · between +x and +z</option></select></label><label>State tilt η <output data-te-for="eta" data-te-angle>90</output><input type="range" name="eta-range" data-te-pair="eta" min="0" max="180" step="1" value="90"></label><label>State tilt η in degrees <input class="te-answer" type="number" name="eta" step="any" value="90"></label><label>State azimuth φ <output data-te-for="phi" data-te-angle>90</output><input type="range" name="phi-range" data-te-pair="phi" min="0" max="360" step="1" value="90"></label><label>State azimuth φ in degrees <input class="te-answer" type="number" name="phi" step="any" value="90"></label><label>Measured observable A <select name="obs"><option value="x">X</option><option value="y">Y</option><option value="z" selected>Z</option></select></label></div><div class="te-button-row"><button class="te-primary" type="button" data-te-action="comm">Compute [H, A]</button></div><p class="te-readout" data-te-read="state" aria-live="polite"></p>
+              <div class="te-missions">
+                <details class="te-mission" data-te-mission="stationary-a">
+                  <summary>Sort the states<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>H = (ℏω/2)σx. Which of these states are stationary?</p><div class="te-fields"><label>|+x⟩ is <select name="a-px" required><option value="">Choose</option><option value="still">stationary: every probability stays fixed</option><option value="moves">not stationary: some probability changes</option></select></label><label>|−x⟩ is <select name="a-mx" required><option value="">Choose</option><option value="still">stationary: every probability stays fixed</option><option value="moves">not stationary: some probability changes</option></select></label><label>|+z⟩ is <select name="a-pz" required><option value="">Choose</option><option value="still">stationary: every probability stays fixed</option><option value="moves">not stationary: some probability changes</option></select></label><label>|+y⟩ is <select name="a-py" required><option value="">Choose</option><option value="still">stationary: every probability stays fixed</option><option value="moves">not stationary: some probability changes</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="stationary-b">
+                  <summary>Which probabilities move?<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>H = (ℏω/2)σx, and the state starts at |+z⟩. Opening this mission sets both. For each observable, do its probabilities stay fixed?</p><div class="te-fields"><label>X probabilities <select name="b-x" required><option value="">Choose</option><option value="fixed">stay fixed</option><option value="changes">change in time</option></select></label><label>Y probabilities <select name="b-y" required><option value="">Choose</option><option value="fixed">stay fixed</option><option value="changes">change in time</option></select></label><label>Z probabilities <select name="b-z" required><option value="">Choose</option><option value="fixed">stay fixed</option><option value="changes">change in time</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="stationary-c">
+                  <summary>The commutator test<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Enter [σx, σz] = σxσz − σzσx. A nonzero commutator with H is why the Z probabilities of mission 2 change.</p><div class="te-matrix-entry"><p class="te-step">Your [σx, σz]</p><div class="te-matrix" role="group" aria-label="Your [σx, σz], entered row by row"><div class="te-cell" role="group" aria-label="Your [σx, σz], row 1, column 1"><span class="te-cell-tag" aria-hidden="true">row 1 · col 1</span><label><span class="te-sr-only">Your [σx, σz], row 1, column 1, </span>real <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="c-11-re" value="0"></label><label><span class="te-sr-only">Your [σx, σz], row 1, column 1, </span>imaginary <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="c-11-im" value="0"></label></div><div class="te-cell" role="group" aria-label="Your [σx, σz], row 1, column 2"><span class="te-cell-tag" aria-hidden="true">row 1 · col 2</span><label><span class="te-sr-only">Your [σx, σz], row 1, column 2, </span>real <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="c-12-re" value="0"></label><label><span class="te-sr-only">Your [σx, σz], row 1, column 2, </span>imaginary <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="c-12-im" value="0"></label></div><div class="te-cell" role="group" aria-label="Your [σx, σz], row 2, column 1"><span class="te-cell-tag" aria-hidden="true">row 2 · col 1</span><label><span class="te-sr-only">Your [σx, σz], row 2, column 1, </span>real <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="c-21-re" value="0"></label><label><span class="te-sr-only">Your [σx, σz], row 2, column 1, </span>imaginary <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="c-21-im" value="0"></label></div><div class="te-cell" role="group" aria-label="Your [σx, σz], row 2, column 2"><span class="te-cell-tag" aria-hidden="true">row 2 · col 2</span><label><span class="te-sr-only">Your [σx, σz], row 2, column 2, </span>real <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="c-22-re" value="0"></label><label><span class="te-sr-only">Your [σx, σz], row 2, column 2, </span>imaginary <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="c-22-im" value="0"></label></div></div></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="stationary-d">
+                  <summary>Find a stationary state<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission selects H = (ℏω/2)(σx + σz)/√2. Set the dials to a state whose probabilities never change.</p>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="te-math">
+              <summary>Show the math</summary>
+              <p>An energy eigenstate gains only a global phase, so it is stationary. A superposition of two energies has a relative phase that grows at ΔE/ℏ.</p>
+              <p>If [H, A] = 0, then A and H share eigenstates, and the probabilities of A’s readings are the same at every time, for every state. If [H, A] ≠ 0, some state has changing A probabilities.</p>
+            </details>
+          </section>
+
+          <section class="te-station" data-te-station="dial" data-te-accent="violet" aria-labelledby="te-dial-title" hidden>
+            <h4 id="te-dial-title">Field Dial (3D)</h4>
+            <p>Point a uniform field B in any direction n and the Hamiltonian is H = (ℏω/2) n·σ. The Bloch vector precesses right-handedly about n at the angular frequency ω, completing one turn per period T, and it keeps its angle to the field. Set the field and the start with the dials, or focus the sphere and use the arrow keys to turn the field. Drag the sphere or use the view sliders to turn the view. The time readout and every direction are also given as text.</p>
+            <p class="te-note">Positive rotation is right-handed: with your right thumb along the field, your fingers curl the way the vector moves. This matches the lab, where a field along +z takes +x toward +y.</p>
+            <div data-te-plot-slot></div>
+            <fieldset disabled>
+              <legend class="te-sr-only">Field Dial (3D) controls</legend>
+              <div class="te-fields"><label>Field tilt η_B <output data-te-for="beta" data-te-angle>90</output><input type="range" name="beta-range" data-te-pair="beta" min="0" max="180" step="1" value="90"></label><label>Field tilt η_B in degrees <input class="te-answer" type="number" name="beta" step="any" value="90"></label><label>Field azimuth φ_B <output data-te-for="bphi" data-te-angle>0</output><input type="range" name="bphi-range" data-te-pair="bphi" min="0" max="360" step="1" value="0"></label><label>Field azimuth φ_B in degrees <input class="te-answer" type="number" name="bphi" step="any" value="0"></label><label>Start tilt η <output data-te-for="seta" data-te-angle>0</output><input type="range" name="seta-range" data-te-pair="seta" min="0" max="180" step="1" value="0"></label><label>Start tilt η in degrees <input class="te-answer" type="number" name="seta" step="any" value="0"></label><label>Start azimuth φ <output data-te-for="sphi" data-te-angle>0</output><input type="range" name="sphi-range" data-te-pair="sphi" min="0" max="360" step="1" value="0"></label><label>Start azimuth φ in degrees <input class="te-answer" type="number" name="sphi" step="any" value="0"></label><label>Time t in periods T <output data-te-for="t" data-te-unit=" T">0</output><input type="range" name="t-range" data-te-pair="t" min="0" max="2" step="0.005" value="0"></label><label>Time t in periods T (number) <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="t" value="0"></label><label>View turn <output data-te-for="yaw" data-te-angle>35</output><input type="range" name="yaw" min="-180" max="180" step="1" value="35"></label><label>View tilt <output data-te-for="tilt" data-te-angle>20</output><input type="range" name="tilt" min="-60" max="60" step="1" value="20"></label></div><div class="te-button-row"><button class="te-primary" type="button" data-te-action="play">Play</button><button type="button" data-te-action="step">Step +T/8</button><button type="button" data-te-action="zero">Back to t = 0</button></div><p class="te-readout" data-te-read="state" aria-live="polite"></p>
+              <div class="te-missions">
+                <details class="te-mission" data-te-mission="dial-a">
+                  <summary>Field along +x<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission points the field along +x and starts the state at |+z⟩. Predict before you play: where is the Bloch vector at T/4 and at T/2?</p><div class="te-fields"><label>At T/4 it points along <select name="a-q" required><option value="">Choose</option><option value="+x">+x</option><option value="-x">−x</option><option value="+y">+y</option><option value="-y">−y</option><option value="+z">+z</option><option value="-z">−z</option></select></label><label>At T/2 it points along <select name="a-h" required><option value="">Choose</option><option value="+x">+x</option><option value="-x">−x</option><option value="+y">+y</option><option value="-y">−y</option><option value="+z">+z</option><option value="-z">−z</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="dial-b">
+                  <summary>Field along +y<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Field along +y, start |+x⟩. Where is the Bloch vector at T/4 and at T/2?</p><div class="te-fields"><label>At T/4 it points along <select name="b-q" required><option value="">Choose</option><option value="+x">+x</option><option value="-x">−x</option><option value="+y">+y</option><option value="-y">−y</option><option value="+z">+z</option><option value="-z">−z</option></select></label><label>At T/2 it points along <select name="b-h" required><option value="">Choose</option><option value="+x">+x</option><option value="-x">−x</option><option value="+y">+y</option><option value="-y">−y</option><option value="+z">+z</option><option value="-z">−z</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="dial-c">
+                  <summary>A tilted field<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Field at η_B = 45°, φ_B = 0° (halfway between +z and +x), start |+z⟩. Give the Bloch vector at T/4, then its direction at T/2.</p><div class="te-fields"><label>x at T/4 = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-x" value=""></label><label>y at T/4 = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-y" value=""></label><label>z at T/4 = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-z" value=""></label><label>At T/2 it points along <select name="c-h" required><option value="">Choose</option><option value="+x">+x</option><option value="-x">−x</option><option value="+y">+y</option><option value="-y">−y</option><option value="+z">+z</option><option value="-z">−z</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="dial-d">
+                  <summary>The lowest point<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Field at η_B = 60°, φ_B = 0°, start |+z⟩. What is the smallest P(+z) the state ever reaches?</p><div class="te-fields"><label>Smallest P(+z) = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="d-p" value=""></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="te-math">
+              <summary>Show the math</summary>
+              <p>For H = (ℏω/2) n·σ, U(t) = cos(θ/2) I − i sin(θ/2) n·σ with θ = ωt. On the Bloch sphere this is a rotation by θ about n.</p>
+              <p>Rodrigues’ formula gives the turned vector: v(θ) = v cos θ + (n × v) sin θ + n(n·v)(1 − cos θ). The component along n never changes, so the vector stays on a cone around the field.</p>
+            </details>
+          </section>
+
+          <section class="te-station" data-te-station="timing" data-te-accent="yellow" aria-labelledby="te-timing-title" hidden>
+            <h4 id="te-timing-title">Timing Puzzles</h4>
+            <p>Precession repeats every period, so a probability that hits a target once hits it again in every period. Pick a scenario, type a time in seconds or as a multiple of T, and plot it against the curve. Once you solve a mission, dashed lines mark every solution in the window.</p>
+            <div data-te-plot-slot></div>
+            <fieldset disabled>
+              <legend class="te-sr-only">Timing Puzzles controls</legend>
+              <div class="te-fields"><label>Scenario <select name="card"><option value="A" selected>A · field +x, ω = π rad/s, start |+z⟩, measure Z</option><option value="B">B · field +z, ω = 4π rad/s, start η = 60°, measure Y</option><option value="C">C · field +y, ω = 6π rad/s, start |+z⟩, measure X</option></select></label><label>Time t in s <span class="te-unit-hint">(or a multiple of T)</span> <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="t" value="T/4"></label></div><div class="te-button-row"><button class="te-primary" type="button" data-te-action="try">Plot this time</button><button type="button" data-te-action="clear">Clear plotted times</button></div><p class="te-readout" data-te-read="state" aria-live="polite"></p>
+              <div class="te-missions">
+                <details class="te-mission" data-te-mission="timing-a">
+                  <summary>Hit one quarter<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Scenario A (T = 2 s). Give one time t ≥ 0 when P(+z) = 1/4. Any time in the family counts.</p><div class="te-fields"><label>t in s = <span class="te-unit-hint">(or a multiple of T)</span> <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-t" value=""></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="timing-b">
+                  <summary>The best moment for Y<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Scenario B (T = 0.5 s). When does P(+y) first reach its largest value, and what is that value?</p><div class="te-fields"><label>Earliest t in s = <span class="te-unit-hint">(or a multiple of T)</span> <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-t" value=""></label><label>Largest P(+y) = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-p" value=""></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="timing-c">
+                  <summary>Count the certainties<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Scenario C (T = 1/3 s). How many times between 0 and 1 s is P(+x) = 1, and which is the earliest?</p><div class="te-fields"><label>Number of times = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-n" value=""></label><label>Earliest t in s = <span class="te-unit-hint">(or a multiple of T)</span> <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-t" value=""></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="timing-d">
+                  <summary>The whole family<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Scenario A again. Give three different times when P(−z) = 3/4, then pick the formula that lists every such time (k = 0, 1, 2, …).</p><div class="te-fields"><label>First time in s = <span class="te-unit-hint">(or a multiple of T)</span> <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="d-t1" value=""></label><label>Second time in s = <span class="te-unit-hint">(or a multiple of T)</span> <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="d-t2" value=""></label><label>Third time in s = <span class="te-unit-hint">(or a multiple of T)</span> <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="d-t3" value=""></label><label>Every solution is <select name="d-pick" required><option value="">Choose</option><option value="third">t = kT/3</option><option value="one">t = T/3 + kT only</option><option value="both">t = T/3 + kT or t = 2T/3 + kT</option><option value="half">t = T/3 + kT/2</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="te-math">
+              <summary>Show the math</summary>
+              <p>For a turn about n starting from s, the vector at time t is s turned by θ = ωt about n, and P(+a) = (1 + s(t)·a)/2 for a measurement along a. Each probability is periodic with period T = 2π/ω.</p>
+              <p>An equation such as cos ωt = c with −1 < c < 1 has two solutions in each period, ωt = ±arccos c (mod 2π). So the full answer is two families, t = t₁ + kT and t = t₂ + kT.</p>
+            </details>
+          </section>
+
+          <section class="te-station" data-te-station="pulse" data-te-accent="red" aria-labelledby="te-pulse-title" hidden>
+            <h4 id="te-pulse-title">Pulse Workshop</h4>
+            <p>A strong static field along z sets the spin’s energy levels. A short extra field B₁ across it, along a direction φ in the xy-plane, acts as a pulse. In the frame turning with the spin, the pulse simply turns the state about its own axis at a fixed rate, here ω = π/2 rad/µs (T = 4 µs). The angle turned, θ = ωt, is the pulse area: t = 2 µs gives a π pulse (a full flip) and t = 1 µs a π/2 pulse (a half flip). Build a sequence of up to three pulses; each starts from |+z⟩.</p>
+            <p class="te-note">In MRI, a π/2 pulse tips the protons’ magnetization into the transverse plane, where its precession induces the signal the scanner records; a π pulse inverts it. In quantum computing, a π pulse about x is the X (NOT) gate, and π/2 pulses build superpositions. Real pulses work in a frame rotating with the spin’s precession; this station works in that frame.</p>
+            <div data-te-plot-slot></div>
+            <fieldset disabled>
+              <legend class="te-sr-only">Pulse Workshop controls</legend>
+              <div class="te-fields"><label>Pulse axis φ in the xy-plane <output data-te-for="phi" data-te-angle>0</output><input type="range" name="phi-range" data-te-pair="phi" min="0" max="360" step="1" value="0"></label><label>Pulse axis φ in the xy-plane in degrees <input class="te-answer" type="number" name="phi" step="any" value="0"></label><label>Pulse length in µs <span class="te-unit-hint">(or a multiple of T)</span> <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="dur" value="1"></label><label>View turn <output data-te-for="yaw" data-te-angle>35</output><input type="range" name="yaw" min="-180" max="180" step="1" value="35"></label><label>View tilt <output data-te-for="tilt" data-te-angle>20</output><input type="range" name="tilt" min="-60" max="60" step="1" value="20"></label></div><div class="te-button-row"><button class="te-primary" type="button" data-te-action="apply">Apply pulse</button><button type="button" data-te-action="undo">Undo last pulse</button><button type="button" data-te-action="clear">Clear sequence</button></div><ol class="te-pulses" data-te-log="pulses" aria-label="Applied pulses"></ol><p class="te-readout" data-te-read="state" aria-live="polite"></p>
+              <div class="te-missions">
+                <details class="te-mission" data-te-mission="pulse-a">
+                  <summary>A full flip<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>From |+z⟩, use a single pulse to reach |−z⟩. Opening this mission clears the sequence.</p>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="pulse-b">
+                  <summary>Tip toward +y<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>From |+z⟩, use a single pulse to reach |+y⟩.</p>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="pulse-c">
+                  <summary>Two halves make a flip<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Use exactly two π/2 pulses to go from |+z⟩ to |−z⟩.</p>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="pulse-d">
+                  <summary>Undo a pulse<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Apply a π/2 pulse about +y (φ = 90°, 1 µs), then one more pulse that brings the state back to |+z⟩.</p>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="te-math">
+              <summary>Show the math</summary>
+              <p>Each pulse is U = cos(θ/2) I − i sin(θ/2)(cos φ σx + sin φ σy). Pulses about the same axis add their areas; pulses about different axes do not commute.</p>
+              <p>These are the same rotations as the Field Dial, with the field limited to the xy-plane and switched on for a set time.</p>
+            </details>
+          </section>
+
+          <section class="te-station" data-te-station="unitary" data-te-accent="green" aria-labelledby="te-unitary-title" hidden>
+            <h4 id="te-unitary-title">Unitary Toolkit</h4>
+            <p>U(t) = exp(−iHt/ℏ) is the whole evolution in one matrix. For H = (ℏω/2) n·σ it is U(t) = cos(θ/2) I − i sin(θ/2) n·σ with θ = ωt. Build it, take its adjoint, compose two steps, run time backward, and compare a fake evolution that leaks probability. Times accept seconds or multiples of T = 2π/ω; the time boxes also accept π, as in π/4.</p>
+            <div data-te-plot-slot></div>
+            <fieldset disabled>
+              <legend class="te-sr-only">Unitary Toolkit controls</legend>
+              <div class="te-fields"><label>Hamiltonian H <select name="h"><option value="x" selected>(ℏω/2)σx</option><option value="y">(ℏω/2)σy</option><option value="z">(ℏω/2)σz</option><option value="n">(ℏω/2)(σx + σz)/√2</option></select></label><label>ω in rad/s <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="omega" value="2"></label><label>t₁ in s <span class="te-unit-hint">(or a multiple of T)</span> <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="t1" value="π/4"></label><label>t₂ in s <span class="te-unit-hint">(or a multiple of T)</span> <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="t2" value="0.2"></label></div><div class="te-button-row"><button class="te-primary" type="button" data-te-action="u">Show U(t₁)</button><button type="button" data-te-action="dag">Show U(t₁)†</button><button type="button" data-te-action="udu">Show U(t₁)†U(t₁)</button><button type="button" data-te-action="comp">Compare U(t₁)U(t₂) with U(t₁ + t₂)</button><button type="button" data-te-action="back">Evolve |+z⟩ by t₁, then t₂</button><button type="button" data-te-action="leak">Fake leaky M(t₁)</button></div><p class="te-readout" data-te-read="state" aria-live="polite"></p>
+              <div class="te-missions">
+                <details class="te-mission" data-te-mission="unitary-a">
+                  <summary>Build U(t)<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>H = (ℏω/2)σx with θ = ωt = π/2. Opening this mission sets ω = 2 rad/s and t₁ = π/4 s. Enter U(t) = exp(−iHt/ℏ).</p><div class="te-matrix-entry"><p class="te-step">Your U(t)</p><div class="te-matrix" role="group" aria-label="Your U(t), entered row by row"><div class="te-cell" role="group" aria-label="Your U(t), row 1, column 1"><span class="te-cell-tag" aria-hidden="true">row 1 · col 1</span><label><span class="te-sr-only">Your U(t), row 1, column 1, </span>real <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="a-11-re" value="0"></label><label><span class="te-sr-only">Your U(t), row 1, column 1, </span>imaginary <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="a-11-im" value="0"></label></div><div class="te-cell" role="group" aria-label="Your U(t), row 1, column 2"><span class="te-cell-tag" aria-hidden="true">row 1 · col 2</span><label><span class="te-sr-only">Your U(t), row 1, column 2, </span>real <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="a-12-re" value="0"></label><label><span class="te-sr-only">Your U(t), row 1, column 2, </span>imaginary <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="a-12-im" value="0"></label></div><div class="te-cell" role="group" aria-label="Your U(t), row 2, column 1"><span class="te-cell-tag" aria-hidden="true">row 2 · col 1</span><label><span class="te-sr-only">Your U(t), row 2, column 1, </span>real <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="a-21-re" value="0"></label><label><span class="te-sr-only">Your U(t), row 2, column 1, </span>imaginary <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="a-21-im" value="0"></label></div><div class="te-cell" role="group" aria-label="Your U(t), row 2, column 2"><span class="te-cell-tag" aria-hidden="true">row 2 · col 2</span><label><span class="te-sr-only">Your U(t), row 2, column 2, </span>real <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="a-22-re" value="0"></label><label><span class="te-sr-only">Your U(t), row 2, column 2, </span>imaginary <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="a-22-im" value="0"></label></div></div></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="unitary-b">
+                  <summary>Its adjoint<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Enter U(t)† for the same U, then say which evolution it is.</p><div class="te-matrix-entry"><p class="te-step">Your U(t)†</p><div class="te-matrix" role="group" aria-label="Your U(t)†, entered row by row"><div class="te-cell" role="group" aria-label="Your U(t)†, row 1, column 1"><span class="te-cell-tag" aria-hidden="true">row 1 · col 1</span><label><span class="te-sr-only">Your U(t)†, row 1, column 1, </span>real <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="b-11-re" value="0"></label><label><span class="te-sr-only">Your U(t)†, row 1, column 1, </span>imaginary <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="b-11-im" value="0"></label></div><div class="te-cell" role="group" aria-label="Your U(t)†, row 1, column 2"><span class="te-cell-tag" aria-hidden="true">row 1 · col 2</span><label><span class="te-sr-only">Your U(t)†, row 1, column 2, </span>real <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="b-12-re" value="0"></label><label><span class="te-sr-only">Your U(t)†, row 1, column 2, </span>imaginary <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="b-12-im" value="0"></label></div><div class="te-cell" role="group" aria-label="Your U(t)†, row 2, column 1"><span class="te-cell-tag" aria-hidden="true">row 2 · col 1</span><label><span class="te-sr-only">Your U(t)†, row 2, column 1, </span>real <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="b-21-re" value="0"></label><label><span class="te-sr-only">Your U(t)†, row 2, column 1, </span>imaginary <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="b-21-im" value="0"></label></div><div class="te-cell" role="group" aria-label="Your U(t)†, row 2, column 2"><span class="te-cell-tag" aria-hidden="true">row 2 · col 2</span><label><span class="te-sr-only">Your U(t)†, row 2, column 2, </span>real <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="b-22-re" value="0"></label><label><span class="te-sr-only">Your U(t)†, row 2, column 2, </span>imaginary <input class="te-answer" type="text" autocomplete="off" spellcheck="false" name="b-22-im" value="0"></label></div></div></div><div class="te-fields"><label>U(t)† equals <select name="b-pick" required><option value="">Choose</option><option value="same">U(t): U is Hermitian</option><option value="minus">U(−t): the same evolution run backward</option><option value="double">U(2t)</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="unitary-c">
+                  <summary>Two steps make one<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Choose two different, nonzero times t₁ and t₂ (in the toolbar boxes) so that U(t₁)U(t₂) equals U(T/4) for the selected H and ω. Many answers work; the checker multiplies your matrices.</p>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="unitary-d">
+                  <summary>Run time backward<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission sets H = (ℏω/2)σx, ω = 2 rad/s and t₁ = 0.3 s. Choose t₂ so that evolving |+z⟩ by t₁ and then by t₂ returns it to |+z⟩.</p>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="unitary-e">
+                  <summary>A fake that leaks<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>The fake evolution M(t) = diag(1, e^(−γt)) with γ = ln 2 per second acts on (|+z⟩ + |−z⟩)/√2 for t = 1 s. Find the total probability, and say what is wrong with M.</p><div class="te-fields"><label>|a|² + |b|² after 1 s = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="e-p" value=""></label><label>M fails because <select name="e-pick" required><option value="">Choose</option><option value="hermitian">it is not Hermitian</option><option value="nonunitary">M†M ≠ I, so it is not unitary and the norm shrinks</option><option value="phase">it changes the global phase</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="te-math">
+              <summary>Show the math</summary>
+              <p>Because H is Hermitian, U(t)† = exp(+iHt/ℏ) = U(−t), so U†U = I: U is unitary, and ⟨ψ(t)|ψ(t)⟩ = ⟨ψ(0)|ψ(0)⟩ for every state.</p>
+              <p>For a time-independent H, U(t₁)U(t₂) = U(t₁ + t₂) and U(0) = I. A matrix with M†M ≠ I changes some norms, so it can’t be the evolution of a closed system.</p>
+            </details>
+          </section>
+
+          <section class="te-station" data-te-station="designer" data-te-accent="violet" aria-labelledby="te-designer-title" hidden>
+            <h4 id="te-designer-title">Evolution Designer</h4>
+            <p>Here you work the problem the other way round. Each card names a start and a target, and you design the evolution: a field direction, a strength ω and a time t. Many answers work where the card allows it. The checker tests the evolution you actually build: your final state must lie within 1° of the target on the Bloch sphere.</p>
+            <div data-te-plot-slot></div>
+            <fieldset disabled>
+              <legend class="te-sr-only">Evolution Designer controls</legend>
+              <div class="te-fields"><label>Start state <select name="start"><option value="+z" selected>|+z⟩</option><option value="+x">|+x⟩</option><option value="+y">|+y⟩</option><option value="-z">|−z⟩</option></select></label><label>Field tilt η_B <output data-te-for="beta" data-te-angle>90</output><input type="range" name="beta-range" data-te-pair="beta" min="0" max="180" step="1" value="90"></label><label>Field tilt η_B in degrees <input class="te-answer" type="number" name="beta" step="any" value="90"></label><label>Field azimuth φ_B <output data-te-for="bphi" data-te-angle>90</output><input type="range" name="bphi-range" data-te-pair="bphi" min="0" max="360" step="1" value="90"></label><label>Field azimuth φ_B in degrees <input class="te-answer" type="number" name="bphi" step="any" value="90"></label><label>ω in rad/s <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="omega" value="π"></label><label>Time t in s <span class="te-unit-hint">(or a multiple of T)</span> <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="t" value="0.5"></label><label>View turn <output data-te-for="yaw" data-te-angle>35</output><input type="range" name="yaw" min="-180" max="180" step="1" value="35"></label><label>View tilt <output data-te-for="tilt" data-te-angle>20</output><input type="range" name="tilt" min="-60" max="60" step="1" value="20"></label></div><p class="te-readout" data-te-read="state" aria-live="polite"></p>
+              <div class="te-missions">
+                <details class="te-mission" data-te-mission="designer-a">
+                  <summary>Card 1 · |+z⟩ to |+x⟩<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Carry |+z⟩ to |+x⟩.</p>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="designer-b">
+                  <summary>Card 2 · reverse |+x⟩ in one second<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Carry |+x⟩ to |−x⟩ at exactly t = 1 s, with ω ≤ 5 rad/s.</p>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="designer-c">
+                  <summary>Card 3 · |+z⟩ to |+y⟩, field across<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Carry |+z⟩ to |+y⟩ with the field in the xy-plane (η_B = 90°).</p>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="designer-d">
+                  <summary>Card 4 · a tilted target<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Carry |+z⟩ to the state at η = 60°, φ = 0°, whose Bloch vector is (√3/2, 0, 1/2).</p>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="designer-e">
+                  <summary>Card 5 · can it be built?<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>The card asks you to carry |+z⟩ to |+x⟩ with the field along +z.</p><div class="te-fields"><label>This card <select name="e-pick" required><option value="">Choose</option><option value="yes">can be built with θ = π/2</option><option value="slow">can be built, but only with a very long time</option><option value="no">can’t be built: |+z⟩ only gains a global phase</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="te-math">
+              <summary>Show the math</summary>
+              <p>The field n, the rate ω and the time t give θ = ωt and U(t) = cos(θ/2) I − i sin(θ/2) n·σ. The start s reaches the target s′ only if both are the same angle from n, so the field must lie on the plane that bisects s and s′.</p>
+              <p>Any field on that plane works with the right θ. The field halfway between s and s′ always works with θ = π.</p>
+            </details>
+          </section>
+
+          <section class="te-station" data-te-station="detective" data-te-accent="red" aria-labelledby="te-detective-title" hidden>
+            <h4 id="te-detective-title">Error Detective</h4>
+            <p>Each case file holds a worked solution with exactly one planted mistake. Find the first line that goes wrong, and name the mistake. The diagram shows what the solution claims next to what is actually true.</p>
+            <div data-te-plot-slot></div>
+            <fieldset disabled>
+              <legend class="te-sr-only">Error Detective controls</legend>
+              <p class="te-readout" data-te-read="state" aria-live="polite"></p>
+              <div class="te-missions">
+                <details class="te-mission" data-te-mission="detective-hbar">
+                  <summary>Case 1 · from gap to frequency<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Two levels are ΔE = 4 µeV apart. How long is one period of precession?</p><ol class="te-worked"><li>ΔE = 4 × 10⁻⁶ eV × 1.602 × 10⁻¹⁹ J/eV = 6.409 × 10⁻²⁵ J.</li><li>ω = ΔE = 6.409 × 10⁻²⁵ rad/s.</li><li>T = 2π/ω ≈ 9.80 × 10²⁴ s.</li><li>So the spin takes longer than the age of the universe to turn once.</li></ol><div class="te-fields"><label>First wrong line <select name="hbar-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="hbar-kind" required><option value="">Choose</option><option value="hbar">Forgot ℏ: used ω = ΔE instead of ΔE/ℏ</option><option value="sign">Used exp(+iEt/ℏ) instead of exp(−iEt/ℏ)</option><option value="global">Treated the global sign at T as observable</option><option value="half">Mixed up θ and θ/2</option><option value="still">Said an energy eigenstate doesn’t evolve at all</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="detective-sign">
+                  <summary>Case 2 · which way it turns<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>H = (ℏω/2)σx and |ψ(0)⟩ = |+z⟩ = (|+x⟩ + |−x⟩)/√2. Where is the Bloch vector at θ = ωt = π/2?</p><ol class="te-worked"><li>The energies are +ℏω/2 on |+x⟩ and −ℏω/2 on |−x⟩.</li><li>Each component gains exp(+iEt/ℏ): |ψ(t)⟩ = (e^(+iθ/2)|+x⟩ + e^(−iθ/2)|−x⟩)/√2.</li><li>In the Z basis this is cos(θ/2)|+z⟩ + i sin(θ/2)|−z⟩, which at θ = π/2 is |+y⟩.</li><li>So the spin turns from +z toward +y.</li></ol><div class="te-fields"><label>First wrong line <select name="sign-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="sign-kind" required><option value="">Choose</option><option value="hbar">Forgot ℏ: used ω = ΔE instead of ΔE/ℏ</option><option value="sign">Used exp(+iEt/ℏ) instead of exp(−iEt/ℏ)</option><option value="global">Treated the global sign at T as observable</option><option value="half">Mixed up θ and θ/2</option><option value="still">Said an energy eigenstate doesn’t evolve at all</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="detective-global">
+                  <summary>Case 3 · one full period<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>H = (ℏω/2)σy and |ψ(0)⟩ = |+z⟩. What does a Z measurement give after one period T?</p><ol class="te-worked"><li>After one period, θ = ωT = 2π.</li><li>U(T) = cos(π) I − i sin(π) σy = −I.</li><li>So |ψ(T)⟩ = −|+z⟩.</li><li>The minus sign has reversed the spin, so a Z measurement now gives − with certainty.</li></ol><div class="te-fields"><label>First wrong line <select name="global-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="global-kind" required><option value="">Choose</option><option value="hbar">Forgot ℏ: used ω = ΔE instead of ΔE/ℏ</option><option value="sign">Used exp(+iEt/ℏ) instead of exp(−iEt/ℏ)</option><option value="global">Treated the global sign at T as observable</option><option value="half">Mixed up θ and θ/2</option><option value="still">Said an energy eigenstate doesn’t evolve at all</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="detective-half">
+                  <summary>Case 4 · a quarter period<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>H = (ℏω/2)σx and |ψ(0)⟩ = |+z⟩. Find P(+z) at t = T/4.</p><ol class="te-worked"><li>At t = T/4, θ = ωt = π/2.</li><li>The amplitude of |+z⟩ is cos θ = cos(π/2) = 0.</li><li>So P(+z) = 0.</li><li>The spin has reached −z after a quarter period.</li></ol><div class="te-fields"><label>First wrong line <select name="half-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="half-kind" required><option value="">Choose</option><option value="hbar">Forgot ℏ: used ω = ΔE instead of ΔE/ℏ</option><option value="sign">Used exp(+iEt/ℏ) instead of exp(−iEt/ℏ)</option><option value="global">Treated the global sign at T as observable</option><option value="half">Mixed up θ and θ/2</option><option value="still">Said an energy eigenstate doesn’t evolve at all</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="detective-still">
+                  <summary>Case 5 · an energy eigenstate<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>H = (ℏω/2)σy and |ψ(0)⟩ = |+y⟩. Describe |ψ(t)⟩.</p><ol class="te-worked"><li>|+y⟩ is an eigenstate of H with energy E = +ℏω/2.</li><li>So |ψ(t)⟩ = |+y⟩ for every t: the state does not evolve at all.</li><li>Its probabilities in every basis stay constant.</li><li>So adding a constant V to H changes nothing about |ψ(t)⟩.</li></ol><div class="te-fields"><label>First wrong line <select name="still-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="still-kind" required><option value="">Choose</option><option value="hbar">Forgot ℏ: used ω = ΔE instead of ΔE/ℏ</option><option value="sign">Used exp(+iEt/ℏ) instead of exp(−iEt/ℏ)</option><option value="global">Treated the global sign at T as observable</option><option value="half">Mixed up θ and θ/2</option><option value="still">Said an energy eigenstate doesn’t evolve at all</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="te-math">
+              <summary>Show the math</summary>
+              <p>The planted mistakes: ω = ΔE/ℏ, never ΔE itself. Each energy component gains exp(−iEt/ℏ), with a minus sign. A global factor such as the −1 at T changes no probability. U(t) contains cos(θ/2) and sin(θ/2), half the Bloch sphere angle θ = ωt. An energy eigenstate does evolve, but only by a global phase.</p>
+            </details>
+          </section>
+
+          <section class="te-station" data-te-station="twospins" data-te-accent="yellow" aria-labelledby="te-twospins-title" hidden>
+            <p class="te-kicker">Optional preview · Lesson 18</p>
+            <h4 id="te-twospins-title">Quantum Preview: Two Spins</h4>
+            <p>This is a preview of Lesson 18. Two separate spins sit in their own fields along +z, so each precesses about z at its own rate, ω_A or ω_B, and neither one knows about the other. Measuring X on both gives joint outcomes whose probabilities are products of the single-spin ones. How to describe two spins together, and what happens when they interact, is Lesson 18’s topic; here you only watch two independent precessions. Play respects your reduced-motion setting and the Reduced effects box; Step always works.</p>
+            <div data-te-plot-slot></div>
+            <fieldset disabled>
+              <legend class="te-sr-only">Quantum Preview: Two Spins controls</legend>
+              <div class="te-fields"><label>ω_A in rad/s <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="wa" value="2π"></label><label>Spin A starts in <select name="sa"><option value="+x" selected>|+x⟩</option><option value="+y">|+y⟩</option><option value="-x">|−x⟩</option></select></label><label>ω_B in rad/s <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="wb" value="3π"></label><label>Spin B starts in <select name="sb"><option value="+x" selected>|+x⟩</option><option value="+y">|+y⟩</option><option value="-x">|−x⟩</option></select></label><label>Time t in s <output data-te-for="t" data-te-unit=" s">0</output><input type="range" name="t-range" data-te-pair="t" min="0" max="4" step="0.01" value="0"></label><label>Time t in s (number) <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="t" value="0"></label></div><div class="te-button-row"><button class="te-primary" type="button" data-te-action="play">Play</button><button type="button" data-te-action="step">Step +1/12 s</button><button type="button" data-te-action="zero">Back to t = 0</button></div><p class="te-readout" data-te-read="state" aria-live="polite"></p>
+              <div class="te-missions">
+                <details class="te-mission" data-te-mission="twospins-a">
+                  <summary>Back together<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>ω_A = 2π rad/s and ω_B = 3π rad/s, both starting in |+x⟩. Opening this mission sets them. When are both spins first back at their starting directions together? Later times that work count too.</p><div class="te-fields"><label>t in s = <span class="te-unit-hint">(or a multiple of T)</span> <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-t" value=""></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="twospins-b">
+                  <summary>A joint probability<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Same rates; A starts in |+x⟩ and B in |+y⟩. At t = 1/3 s, measure X on both spins. What is P(A gives +, B gives +)?</p><div class="te-fields"><label>P(+, +) = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-p" value=""></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="twospins-c">
+                  <summary>Does B affect A?<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Change ω_B while you watch spin A.</p><div class="te-fields"><label>Changing ω_B <select name="c-pick" required><option value="">Choose</option><option value="same">leaves P_A(+x) unchanged at every time</option><option value="slows">slows spin A down</option><option value="joint">changes P_A(+x) through the joint probabilities</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="twospins-d">
+                  <summary>What would couple them?<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Here each spin has its own field and they never influence each other.</p><div class="te-fields"><label>To make A’s evolution depend on B, H needs <select name="d-pick" required><option value="">Choose</option><option value="stronger">a stronger field on each spin</option><option value="same">the same ω for both spins</option><option value="interaction">an interaction term that involves both spins at once</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="te-math">
+              <summary>Show the math</summary>
+              <p>Each spin follows its own Schrödinger equation with H_A = (ℏω_A/2)σz or H_B = (ℏω_B/2)σz, so each Bloch vector turns about z at its own rate.</p>
+              <p>With no interaction, P(A = a, B = b) = P_A(a) P_B(b) at every time. An interaction term in H, involving both spins, would break this. Lesson 18 builds that joint description.</p>
+            </details>
+          </section>
+
+          <section class="te-station" data-te-station="echo" data-te-accent="orange" aria-labelledby="te-echo-title" hidden>
+            <h4 id="te-echo-title">Spin Echo</h4>
+            <p>Spins in a sample feel slightly different fields, so they precess at slightly different rates and fan out: their net magnetization M shrinks. A π pulse at time τ flips every spin’s phase, and at 2τ they all line up again. The view turns with the average precession, so each spin drifts at its own offset δ. Play respects your reduced-motion setting and the Reduced effects box; Step moves by τ/4, and the time slider scrubs.</p>
+            <div data-te-plot-slot></div>
+            <fieldset disabled>
+              <legend class="te-sr-only">Spin Echo controls</legend>
+              <div class="te-fields"><label>Spins <select name="mode"><option value="many" selected>12 spins spread over ±Δ</option><option value="two">Two spins at +Δ and −Δ</option></select></label><label>Spread Δ in rad/ms <output data-te-for="spread" data-te-unit=" rad/ms">0.5</output><input type="range" name="spread-range" data-te-pair="spread" min="0" max="2" step="0.05" value="0.5"></label><label>Spread Δ in rad/ms (number) <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="spread" value="0.5"></label><label>π pulse time τ in ms <output data-te-for="tau" data-te-unit=" ms">2</output><input type="range" name="tau-range" data-te-pair="tau" min="0.5" max="5" step="0.1" value="2"></label><label>π pulse time τ in ms (number) <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="tau" value="2"></label><label class="te-check-row"><input type="checkbox" name="pulse" checked> Apply the π pulse at τ</label><label>Time t in ms <output data-te-for="t" data-te-unit=" ms">0</output><input type="range" name="t-range" data-te-pair="t" min="0" max="12" step="0.05" value="0"></label><label>Time t in ms (number) <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="t" value="0"></label></div><div class="te-button-row"><button class="te-primary" type="button" data-te-action="play">Play</button><button type="button" data-te-action="step">Step +τ/4</button><button type="button" data-te-action="zero">Back to t = 0</button></div><p class="te-readout" data-te-read="state" aria-live="polite"></p>
+              <div class="te-missions">
+                <details class="te-mission" data-te-mission="echo-a">
+                  <summary>When is the echo?<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission loads 12 spins, Δ = 0.5 rad/ms and a π pulse at τ = 2 ms. At what time are the spins back in line?</p><div class="te-fields"><label>Echo time in ms = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-t" value=""></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="echo-b">
+                  <summary>How strong is it?<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Same setting. What is |M|, the length of the net magnetization, at the echo?</p><div class="te-fields"><label>|M| at the echo = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-m" value=""></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="echo-c">
+                  <summary>Two spins apart<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission loads two spins at ±Δ with Δ = π/4 rad/ms and τ = 2 ms. Just before the pulse, at τ, how far apart are they, and what is |M|?</p><div class="te-fields"><label>Angle between them = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-a" value=""></label><label>Unit for Angle between them <select name="c-a-unit"><option value="rad" selected>radians</option><option value="deg">degrees</option></select></label><label>|M| at τ = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-m" value=""></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="echo-d">
+                  <summary>Echo on cue<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Set the controls so the echo arrives at t = 6 ms.</p>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="echo-e">
+                  <summary>Why it works<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Watch a fast spin across the pulse.</p><div class="te-fields"><label>The echo forms because the π pulse <select name="e-pick" required><option value="">Choose</option><option value="stop">stops every spin for a moment</option><option value="reverse">sends each phase φ to −φ, so faster spins end up behind and catch up</option><option value="slow">slows the fast spins and speeds up the slow ones</option></select></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="te-math">
+              <summary>Show the math</summary>
+              <p>In the frame turning at the average rate, a spin with offset δ has phase φ = δt. A π pulse about x at τ maps φ to −φ, after which φ = −δτ + δ(t − τ) = δ(t − 2τ). Every φ is 0 at t = 2τ, whatever δ is.</p>
+              <p>|M| is the length of the average of the unit arrows (cos φ, sin φ). For two spins at ±δ, |M| = |cos δt|.</p>
+            </details>
+          </section>
+
+          <section class="te-station" data-te-station="real" data-te-accent="blue" aria-labelledby="te-real-title" hidden>
+            <h4 id="te-real-title">Real-World Precession</h4>
+            <p>A spin in a field B precesses at ω = γB, where γ, the gyromagnetic ratio, belongs to the particle. For a proton γ/2π = 42.577 MHz per tesla; for a free electron |γ|/2π = 28.025 GHz per tesla. The same two-level physics sets the tick of an atomic clock, where the gap ΔE = hf between two hyperfine levels defines the second. Answers that use these constants count within 0.5%.</p>
+            <div data-te-plot-slot></div>
+            <fieldset disabled>
+              <legend class="te-sr-only">Real-World Precession controls</legend>
+              <div class="te-fields"><label>System <select name="sys"><option value="proton" selected>Proton in a magnetic field</option><option value="electron">Free electron in a magnetic field</option><option value="cs">Caesium-133 clock transition</option></select></label><label>Field B in tesla <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b" value="1.5"></label><label class="te-check-row"><input type="checkbox" name="show"> Show the computed values</label></div><p class="te-readout" data-te-read="state" aria-live="polite"></p>
+              <div class="te-missions">
+                <details class="te-mission" data-te-mission="real-a">
+                  <summary>A 1.5 T MRI scanner<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Protons in a 1.5 T scanner. Find the precession frequency and the period. Answers count within 0.5%.</p><div class="te-fields"><label>f in MHz = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-f" value=""></label><label>T in ns = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-t" value=""></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="real-b">
+                  <summary>A 3 T scanner<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Protons at 3 T. Find the angular frequency ω.</p><div class="te-fields"><label>ω in units of 10⁸ rad/s = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-w" value=""></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="real-c">
+                  <summary>Electron spin resonance<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>A free electron in 1 T. Find its precession frequency and how many times faster it is than a proton in the same field.</p><div class="te-fields"><label>f in GHz = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-f" value=""></label><label>f_electron / f_proton = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-r" value=""></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="real-d">
+                  <summary>The atomic clock<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>The caesium-133 clock transition has f = 9 192 631 770 Hz. Find the energy gap and the period.</p><div class="te-fields"><label>ΔE in µeV = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="d-e" value=""></label><label>T in ps = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="d-t" value=""></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+                <details class="te-mission" data-te-mission="real-e">
+                  <summary>Earth’s field<span data-te-done hidden>✓ Complete</span></summary>
+                  <p>Protons in Earth’s magnetic field, about 50 µT. Find the frequency and the period.</p><div class="te-fields"><label>f in Hz = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="e-f" value=""></label><label>T in ms = <input class="te-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="e-t" value=""></label></div>
+                  <button class="te-primary" type="button" data-te-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="te-math">
+              <summary>Show the math</summary>
+              <p>f = (γ/2π)B, ω = 2πf = γB, T = 1/f and ΔE = hf = ℏω, with h = 4.135667696 × 10⁻¹⁵ eV·s.</p>
+              <p>The precession frequency is the energy gap over h, exactly as in the Energy Ladder: ΔE = ℏω. A larger field means a larger gap and faster precession. Here only the size of ω matters; the sign of γ sets the sense of rotation.</p>
+            </details>
+          </section>
+        </div>
+        <template id="te-figure-template">
+          <figure class="te-figure">
+            <figcaption id="te-title">Station diagram</figcaption>
+            <div class="te-viewport" id="te-viewport" data-renderer="svg">
+              <canvas class="te-canvas" id="te-canvas" aria-hidden="true" hidden></canvas>
+              <svg class="te-diagram" id="te-diagram" viewBox="0 0 560 300" role="img" aria-labelledby="te-title" aria-describedby="te-desc">
+                <desc id="te-desc"></desc>
+                <g data-te-geometry></g>
+                <g data-te-labels></g>
+              </svg>
+            </div>
+            <p class="te-note" id="te-render-status"></p>
+          </figure>
+        </template>
+        <template id="te-mission-template">
+          <div class="te-mission-tools">
+            <button type="button" data-te-hint>Show first hint</button>
+            <ol data-te-hint-list aria-live="polite" hidden></ol>
+            <p class="te-feedback" data-te-feedback role="status"></p>
+            <details data-te-work hidden><summary>Worked steps</summary><p data-te-work-text></p></details>
+          </div>
+        </template>
+      </div>
+    </details>
 
     <nav class="evo-navigation" aria-label="Lesson navigation">
       <a rel="prev" href="../16_spin_and_stern_gerlach/16_spin_and_stern_gerlach.html">
