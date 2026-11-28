@@ -6,10 +6,10 @@
   <meta name="theme-color" content="#050906">
   <meta name="description" content="Compare individual quantum readings, their expected average, and their spread in the Expectation and Uncertainty Lab.">
   <title>Expectation and Uncertainty | Quantum Mechanics Class</title>
-  <link rel="stylesheet" href="./styles/main.css">
+  <link rel="stylesheet" href="./styles/main.css?v=15-uncertainty-arcade">
   <script src="./scripts/app.js" defer></script>
   <script src="./scripts/lessons-menu.js" defer></script>
-  <script type="module" src="./scripts/lesson.js"></script>
+  <script type="module" src="./scripts/lesson.js?v=15-uncertainty-arcade"></script>
 </head>
 <body>
   <header class="site-header">
@@ -130,6 +130,7 @@
       <h2 id="expect-title">Expectation and Uncertainty</h2>
       <p class="lesson-lead">This instrument displays only +1 or −1. How can quantum mechanics predict an expectation value of −0.28, and what does its uncertainty of 0.96 describe?</p>
       <p>Start with the complex preparation from Lesson 14 and select Z. Picture the two possible readings on a number line, with more weight at −1 than at +1. Make a prediction about what one measurement can report, then collect a batch.</p>
+      <p><a id="eu-arcade-link" href="#uncertainty-arcade">Open the optional Uncertainty Arcade</a></p>
     </header>
 
     <section class="lesson-panel expect-lab" aria-labelledby="expect-lab-title">
@@ -457,6 +458,695 @@
         </fieldset>
       </form>
     </section>
+
+    <details class="lesson-panel eu-arcade" id="uncertainty-arcade">
+      <summary><strong>Uncertainty Arcade</strong><span>Optional practice</span></summary>
+      <div class="eu-body">
+        <p>Pick a station, try its controls, and open a mission when you’re ready. Each mission has two hints. Progress lasts while this page is open. Every observable here is dimensionless.</p>
+        <p class="lesson-note" id="eu-tolerance">Answer boxes accept whole numbers, decimals, fractions such as 576/625 or 24/25, and square roots such as 1/√2 or √(2/3). Each complex number has one box for its real part and one for its imaginary part. Answers that end as decimals, such as 0.28 or 2.4, are checked exactly. Answers such as 1/3 or √3/2 can be typed exactly, or as decimals within 0.002 of the exact value, separately for each real and imaginary part. Means, spreads and probabilities of a state or distribution you build count within 0.005, fulcrum positions within 0.01, and angles within 1°. Simulated trials use a fixed seed, so resetting a station replays the same run, and missions about runs check your reasoning, never a lucky result.</p>
+        <div class="eu-toolbar">
+          <label for="eu-station">Station
+            <select id="eu-station" aria-controls="eu-panels" disabled>
+              <optgroup label="The mean">
+                <option value="balance" selected>1 · Balance Point</option>
+                <option value="sandwich">2 · Sandwich Calculator</option>
+                <option value="hunter">3 · Mean Hunter</option>
+              </optgroup>
+              <optgroup label="The spread">
+                <option value="sculptor">4 · Spread Sculptor</option>
+                <option value="ledger">5 · Deviation Ledger</option>
+                <option value="shift">6 · Shift and Stretch Statistics</option>
+                <option value="zero">7 · Zero Spread Detector</option>
+              </optgroup>
+              <optgroup label="Samples vs the model">
+                <option value="trials">8 · How Many Trials?</option>
+              </optgroup>
+              <optgroup label="The uncertainty relation">
+                <option value="robertson">9 · Robertson Bound Explorer</option>
+                <option value="minimum">10 · Minimum Uncertainty Hunt</option>
+                <option value="budget">11 · The Spread Budget</option>
+              </optgroup>
+              <optgroup label="Recurring formats">
+                <option value="designer">12 · Statistics Designer</option>
+                <option value="detective">13 · Error Detective</option>
+                <option value="preview">14 · Quantum Preview: Position and Momentum</option>
+              </optgroup>
+              <optgroup label="Extras">
+                <option value="sphere">15 · Means on the Bloch Sphere (3D)</option>
+                <option value="noise">16 · Instrument Noise vs Quantum Spread</option>
+              </optgroup>
+            </select>
+          </label>
+          <p id="eu-progress" role="status">0 of 72 missions completed this session.</p>
+          <button id="eu-reset" type="button" disabled>Reset this station</button>
+          <label class="eu-reduced" for="eu-reduced"><input id="eu-reduced" type="checkbox" disabled> Reduced effects</label>
+        </div>
+        <p class="lesson-note" id="eu-status" role="status" aria-atomic="true"></p>
+        <noscript><p class="lesson-note">JavaScript runs the arcade diagrams, controls, simulated trials and mission checks.</p></noscript>
+        <div id="eu-panels">
+          <section class="eu-station" data-eu-station="balance" data-eu-accent="yellow" aria-labelledby="eu-balance-title">
+            <h4 id="eu-balance-title">Balance Point</h4>
+            <p>Each possible reading a sits on the beam with a weight equal to its probability P(a). The expectation value ⟨A⟩ is the point where the beam balances. Drag the fulcrum along the line, or drag a column up or down to change its weight. The sliders and boxes do the same from the keyboard. Opening a mission loads its readings and weights.</p>
+            <div data-eu-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eu-sr-only">Balance Point controls</legend>
+              <div class="eu-fields"><label>Weight P(<span data-eu-text="r1">−1</span>) <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="w1" value="3/4"></label><label>Weight P(<span data-eu-text="r2">3</span>) <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="w2" value="1/4"></label><label hidden>Weight P(<span data-eu-text="r3">0</span>) <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="w3" value="0"></label><label>Fulcrum position f <output data-eu-for="f">1</output><input type="range" name="f" min="-3" max="5" step="0.01" value="1"></label></div><p class="eu-readout" data-eu-read="state" aria-live="polite"></p>
+              <div class="eu-missions">
+                <details class="eu-mission" data-eu-mission="balance-a">
+                  <summary>Off the ±1 scale<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Readings −1 and 3 have weights 3/4 and 1/4. Slide the fulcrum to the balance point and enter ⟨A⟩.</p><div class="eu-fields"><label>⟨A⟩ = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-mean"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="balance-b">
+                  <summary>Three outcomes<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Readings −2, 0 and 3 have weights 1/2, 1/3 and 1/6. Balance the beam and enter ⟨A⟩.</p><div class="eu-fields"><label>⟨A⟩ = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-mean"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="balance-c">
+                  <summary>Balance at 1.5<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Readings 0 and 4. Put the fulcrum at 1.5, then choose the weights so the beam balances there. The two weights must add to 1.</p>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="balance-d">
+                  <summary>Between the readings<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Readings −1, 1 and 2. Choose three weights, none of them zero, that balance at 0.5, and put the fulcrum there. Many answers work. Then answer the question.</p><div class="eu-fields"><label>Can a single trial read 0.5? <select name="d-pick" required><option value="">Choose</option><option value="yes">Yes. It is the most likely reading.</option><option value="some">Only on a few trials.</option><option value="no">No. Each trial reads −1, 1 or 2.</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eu-math">
+              <summary>Show the math</summary>
+              <p>The beam balances when the weighted signed distances cancel: Σ P(a)(a − f) = 0. Because Σ P(a) = 1, that gives f = Σ a·P(a) = ⟨A⟩. The balance point need not be a reading. With readings −1 and 3 at weights 3/4 and 1/4 it is 0, a value no trial shows.</p>
+            </details>
+          </section>
+
+          <section class="eu-station" data-eu-station="sandwich" data-eu-accent="blue" aria-labelledby="eu-sandwich-title" hidden>
+            <h4 id="eu-sandwich-title">Sandwich Calculator</h4>
+            <p>⟨A⟩ = ⟨ψ|A|ψ⟩ is computed in two steps. First multiply the column |ψ⟩ by the matrix to get A|ψ⟩. Then take the inner product with the bra ⟨ψ|, which conjugates the coefficients of |ψ⟩. Open a mission to load its matrix and state. Each mission also asks for the Born probability of one reading, so you can confirm that Σ a·P(a) gives the same number.</p>
+            <div data-eu-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eu-sr-only">Sandwich Calculator controls</legend>
+              <p class="eu-readout" data-eu-read="state" aria-live="polite"></p>
+              <div class="eu-missions">
+                <details class="eu-mission" data-eu-mission="sandwich-a">
+                  <summary>Readings 2 and −3<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [1, 2i] and [−2i, −2], with readings 2 and −3. |ψ⟩ = (2|0⟩ + |1⟩)/√5. The eigenket for 2 is (2i|0⟩ + |1⟩)/√5.</p><div class="eu-fields"><div class="eu-complex" role="group" aria-label="row 1 of A|ψ⟩"><label>Real part of row 1 of A|ψ⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-p0-re"></label><label>Imaginary part of row 1 of A|ψ⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-p0-im"></label></div><div class="eu-complex" role="group" aria-label="row 2 of A|ψ⟩"><label>Real part of row 2 of A|ψ⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-p1-re"></label><label>Imaginary part of row 2 of A|ψ⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-p1-im"></label></div><div class="eu-complex" role="group" aria-label="⟨ψ|A|ψ⟩"><label>Real part of ⟨ψ|A|ψ⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-s-re"></label><label>Imaginary part of ⟨ψ|A|ψ⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-s-im"></label></div><label>P(2) <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-p"></label><label>Σ a·P(a) <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-sum"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="sandwich-b">
+                  <summary>A complex corner<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [0, 1 − i] and [1 + i, 1], with readings 2 and −1. |ψ⟩ = (3|0⟩ + 4|1⟩)/5. The eigenket for 2 is ((1 − i)|0⟩ + 2|1⟩)/√6.</p><div class="eu-fields"><div class="eu-complex" role="group" aria-label="row 1 of A|ψ⟩"><label>Real part of row 1 of A|ψ⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-p0-re"></label><label>Imaginary part of row 1 of A|ψ⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-p0-im"></label></div><div class="eu-complex" role="group" aria-label="row 2 of A|ψ⟩"><label>Real part of row 2 of A|ψ⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-p1-re"></label><label>Imaginary part of row 2 of A|ψ⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-p1-im"></label></div><div class="eu-complex" role="group" aria-label="⟨ψ|A|ψ⟩"><label>Real part of ⟨ψ|A|ψ⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-s-re"></label><label>Imaginary part of ⟨ψ|A|ψ⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-s-im"></label></div><label>P(2) <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-p"></label><label>Σ a·P(a) <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-sum"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="sandwich-c">
+                  <summary>Complex state, complex matrix<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>A has rows [2, i] and [−i, 2], with readings 1 and 3. |ψ⟩ = (|0⟩ + (1 + i)|1⟩)/√3. The eigenket for 3 is (i|0⟩ + |1⟩)/√2.</p><div class="eu-fields"><div class="eu-complex" role="group" aria-label="row 1 of A|ψ⟩"><label>Real part of row 1 of A|ψ⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-p0-re"></label><label>Imaginary part of row 1 of A|ψ⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-p0-im"></label></div><div class="eu-complex" role="group" aria-label="row 2 of A|ψ⟩"><label>Real part of row 2 of A|ψ⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-p1-re"></label><label>Imaginary part of row 2 of A|ψ⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-p1-im"></label></div><div class="eu-complex" role="group" aria-label="⟨ψ|A|ψ⟩"><label>Real part of ⟨ψ|A|ψ⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-s-re"></label><label>Imaginary part of ⟨ψ|A|ψ⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-s-im"></label></div><label>P(3) <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-p"></label><label>Σ a·P(a) <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-sum"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="sandwich-d">
+                  <summary>Not an observable<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>M has rows [1, 2] and [0, 1]. Compute the sandwich ⟨ψ|M|ψ⟩ for |ψ⟩ = (|0⟩ + i|1⟩)/√2, then decide what it means.</p><div class="eu-fields"><div class="eu-complex" role="group" aria-label="⟨ψ|M|ψ⟩"><label>Real part of ⟨ψ|M|ψ⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="d-s-re"></label><label>Imaginary part of ⟨ψ|M|ψ⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="d-s-im"></label></div><label>This number <select name="d-pick" required><option value="">Choose</option><option value="avg">is the average reading of M</option><option value="real">has real part 1, the average reading</option><option value="not">is no average reading, because M ≠ M†</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eu-math">
+              <summary>Show the math</summary>
+              <p>Write A = Σ a|a⟩⟨a|. Then ⟨ψ|A|ψ⟩ = Σ a⟨ψ|a⟩⟨a|ψ⟩ = Σ a|⟨a|ψ⟩|² = Σ a·P(a). For a Hermitian A the imaginary parts always cancel, because ⟨ψ|A|ψ⟩* = ⟨ψ|A†|ψ⟩ = ⟨ψ|A|ψ⟩. A non-Hermitian matrix can give a complex sandwich, and that number is no average of readings.</p>
+            </details>
+          </section>
+
+          <section class="eu-station" data-eu-station="hunter" data-eu-accent="green" aria-labelledby="eu-hunter-title" hidden>
+            <h4 id="eu-hunter-title">Mean Hunter</h4>
+            <p>Tune the state cos(θ/2)|0⟩ + e^(iφ) sin(θ/2)|1⟩ with the two angles and watch its three means. Pin a state to keep it on the gauges. One target mean is easy to hit. The real discovery is how many different states hit the same one.</p>
+            <div data-eu-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eu-sr-only">Mean Hunter controls</legend>
+              <div class="eu-fields"><label>Polar angle θ <output data-eu-for="theta" data-eu-angle>60</output><input type="range" name="theta-range" data-eu-pair="theta" min="0" max="180" step="0.5" value="60"></label><label>θ in degrees <input class="eu-answer" type="number" name="theta" min="0" max="180" step="any" value="60"></label><label>Azimuth φ <output data-eu-for="phi" data-eu-angle>0</output><input type="range" name="phi-range" data-eu-pair="phi" min="0" max="360" step="1" value="0"></label><label>φ in degrees <input class="eu-answer" type="number" name="phi" min="0" max="360" step="any" value="0"></label></div><div class="eu-button-row"><button class="eu-primary" type="button" data-eu-action="pin">Pin this state</button><button type="button" data-eu-action="unpin">Clear pins</button></div><ol class="eu-log" data-eu-log="pins" aria-label="Pinned states"></ol><p class="eu-readout" data-eu-read="state" aria-live="polite"></p>
+              <div class="eu-missions">
+                <details class="eu-mission" data-eu-mission="hunter-a">
+                  <summary>⟨Z⟩ = −0.6<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Tune the state so that ⟨Z⟩ = −0.6.</p>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="hunter-b">
+                  <summary>⟨X⟩ = 1/2, off the equator<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Hit ⟨X⟩ = 1/2 with a state whose ⟨Z⟩ is not near zero (|⟨Z⟩| &gt; 0.1).</p>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="hunter-c">
+                  <summary>Three of a kind<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Pin three states with ⟨Z⟩ = 0.28 whose ⟨X⟩ values differ from each other by at least 0.2. Then say what the three share.</p><div class="eu-fields"><label>All three states share <select name="c-pick" required><option value="">Choose</option><option value="phi">the same azimuth φ</option><option value="theta">the same polar angle θ, so they lie on one circle</option><option value="ket">the same ket, up to a global phase</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="hunter-d">
+                  <summary>Zero, two ways<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Pin two states with ⟨X⟩ = 0: one with ⟨Z⟩ &gt; 0.1 and one with ⟨Z⟩ &lt; −0.1.</p><div class="eu-fields"><label>Does the value of ⟨X⟩ alone fix the state? <select name="d-pick" required><option value="">Choose</option><option value="yes">Yes. Each mean belongs to one state.</option><option value="no">No. A whole family of states shares each mean.</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eu-math">
+              <summary>Show the math</summary>
+              <p>For this state ⟨Z⟩ = cos θ, ⟨X⟩ = sin θ cos φ and ⟨Y⟩ = sin θ sin φ. A target ⟨Z⟩ fixes θ and leaves φ free, so every state on that circle of latitude has the same Z mean. A target ⟨X⟩ fixes one combination of θ and φ. One mean never pins down the state.</p>
+            </details>
+          </section>
+
+          <section class="eu-station" data-eu-station="sculptor" data-eu-accent="orange" aria-labelledby="eu-sculptor-title" hidden>
+            <h4 id="eu-sculptor-title">Spread Sculptor</h4>
+            <p>Type the two coefficients of your ket. They need not be normalized, because the page divides by the length. For every Pauli observable A² = I, so ⟨A²⟩ = 1 and (ΔA)² = 1 − ⟨A⟩². Every state therefore sits on the same parabola. Its mean sets how far it is from the top.</p>
+            <div data-eu-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eu-sr-only">Spread Sculptor controls</legend>
+              <div class="eu-complex" role="group" aria-label="coefficient α of |0⟩"><label>Real part of coefficient α of |0⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-re" value="1"></label><label>Imaginary part of coefficient α of |0⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-im" value="0"></label></div><div class="eu-complex" role="group" aria-label="coefficient β of |1⟩"><label>Real part of coefficient β of |1⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-re" value="2"></label><label>Imaginary part of coefficient β of |1⟩ <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-im" value="0"></label></div><div class="eu-fields"><label>Observable A <select name="obs"><option value="z" selected>Z</option><option value="x">X</option><option value="y">Y</option></select></label></div><p class="eu-readout" data-eu-read="state" aria-live="polite"></p>
+              <div class="eu-missions">
+                <details class="eu-mission" data-eu-mission="sculptor-a">
+                  <summary>Zero spread, complex coefficient<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Build a ket with ΔZ = 0 in which some coefficient has a nonzero imaginary part.</p>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="sculptor-b">
+                  <summary>ΔZ = 1/2<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Build a ket with ΔZ = 1/2, then enter the size of its Z mean.</p><div class="eu-fields"><label>|⟨Z⟩| = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-absz"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="sculptor-c">
+                  <summary>Full spread, new direction<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Build a ket with ΔZ = 1 that is not |±x⟩ or |±y⟩: both |⟨X⟩| and |⟨Y⟩| must stay below 0.99.</p>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="sculptor-d">
+                  <summary>ΔX = 4/5, real coefficients<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Build a ket with ΔX = 4/5 using real coefficients only.</p>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eu-math">
+              <summary>Show the math</summary>
+              <p>(ΔA)² = ⟨A²⟩ − ⟨A⟩². For A = X, Y or Z, A² = I, so ⟨A²⟩ = ⟨ψ|ψ⟩ = 1 and (ΔA)² = 1 − ⟨A⟩². ΔA = 0 exactly when ⟨A⟩ = ±1. ΔA = 1 exactly when ⟨A⟩ = 0. ΔZ = 1/2 needs ⟨Z⟩² = 3/4. For a ket (α, β), ⟨Z⟩ = |α|² − |β|² and ⟨X⟩ = 2 Re(α*β), after normalizing.</p>
+            </details>
+          </section>
+
+          <section class="eu-station" data-eu-station="ledger" data-eu-accent="violet" aria-labelledby="eu-ledger-title" hidden>
+            <h4 id="eu-ledger-title">Deviation Ledger</h4>
+            <p>Keep the books both ways. First find ⟨A⟩. Then fill one ledger row per reading and add up the columns. The weighted signed deviations always total zero, which is why the variance squares them. The two variance totals must agree. The diagram plots your own column of squared deviations.</p>
+            <div data-eu-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eu-sr-only">Deviation Ledger controls</legend>
+              <p class="eu-readout" data-eu-read="state" aria-live="polite"></p>
+              <div class="eu-missions">
+                <details class="eu-mission" data-eu-mission="ledger-a">
+                  <summary>Three readings, one mean<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Readings −2, 1 and 4 have probabilities 1/4, 1/2 and 1/4.</p><div class="eu-table-wrap"><table class="eu-ledger"><caption>Ledger, one row per reading</caption><thead><tr><th scope="col">Reading a</th><th scope="col">P(a)</th><th scope="col">P·(a − ⟨A⟩)</th><th scope="col">P·(a − ⟨A⟩)²</th><th scope="col">P·a²</th></tr></thead><tbody><tr><th scope="row">−2</th><td data-col="P(a)">1/4</td><td data-col="P·(a − ⟨A⟩)"><label><span class="eu-sr-only">Row a = −2, P·(a − ⟨A⟩)</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-1-d"></label></td><td data-col="P·(a − ⟨A⟩)²"><label><span class="eu-sr-only">Row a = −2, P·(a − ⟨A⟩)²</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-1-d2"></label></td><td data-col="P·a²"><label><span class="eu-sr-only">Row a = −2, P·a²</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-1-a2"></label></td></tr><tr><th scope="row">1</th><td data-col="P(a)">1/2</td><td data-col="P·(a − ⟨A⟩)"><label><span class="eu-sr-only">Row a = 1, P·(a − ⟨A⟩)</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-2-d"></label></td><td data-col="P·(a − ⟨A⟩)²"><label><span class="eu-sr-only">Row a = 1, P·(a − ⟨A⟩)²</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-2-d2"></label></td><td data-col="P·a²"><label><span class="eu-sr-only">Row a = 1, P·a²</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-2-a2"></label></td></tr><tr><th scope="row">4</th><td data-col="P(a)">1/4</td><td data-col="P·(a − ⟨A⟩)"><label><span class="eu-sr-only">Row a = 4, P·(a − ⟨A⟩)</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-3-d"></label></td><td data-col="P·(a − ⟨A⟩)²"><label><span class="eu-sr-only">Row a = 4, P·(a − ⟨A⟩)²</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-3-d2"></label></td><td data-col="P·a²"><label><span class="eu-sr-only">Row a = 4, P·a²</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-3-a2"></label></td></tr></tbody></table></div><div class="eu-fields"><label>⟨A⟩ = Σ a·P(a) <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-mean"></label><label>Σ P·(a − ⟨A⟩) <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-dsum"></label><label>(ΔA)² = Σ P·(a − ⟨A⟩)² <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-var"></label><label>⟨A²⟩ = Σ P·a² <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-sq"></label><label>⟨A²⟩ − ⟨A⟩² <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-short"></label><label>ΔA <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-sd"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="ledger-b">
+                  <summary>Lopsided pair<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Readings 0 and 3 have probabilities 2/3 and 1/3.</p><div class="eu-table-wrap"><table class="eu-ledger"><caption>Ledger, one row per reading</caption><thead><tr><th scope="col">Reading a</th><th scope="col">P(a)</th><th scope="col">P·(a − ⟨A⟩)</th><th scope="col">P·(a − ⟨A⟩)²</th><th scope="col">P·a²</th></tr></thead><tbody><tr><th scope="row">0</th><td data-col="P(a)">2/3</td><td data-col="P·(a − ⟨A⟩)"><label><span class="eu-sr-only">Row a = 0, P·(a − ⟨A⟩)</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-1-d"></label></td><td data-col="P·(a − ⟨A⟩)²"><label><span class="eu-sr-only">Row a = 0, P·(a − ⟨A⟩)²</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-1-d2"></label></td><td data-col="P·a²"><label><span class="eu-sr-only">Row a = 0, P·a²</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-1-a2"></label></td></tr><tr><th scope="row">3</th><td data-col="P(a)">1/3</td><td data-col="P·(a − ⟨A⟩)"><label><span class="eu-sr-only">Row a = 3, P·(a − ⟨A⟩)</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-2-d"></label></td><td data-col="P·(a − ⟨A⟩)²"><label><span class="eu-sr-only">Row a = 3, P·(a − ⟨A⟩)²</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-2-d2"></label></td><td data-col="P·a²"><label><span class="eu-sr-only">Row a = 3, P·a²</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-2-a2"></label></td></tr></tbody></table></div><div class="eu-fields"><label>⟨A⟩ = Σ a·P(a) <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-mean"></label><label>Σ P·(a − ⟨A⟩) <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-dsum"></label><label>(ΔA)² = Σ P·(a − ⟨A⟩)² <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-var"></label><label>⟨A²⟩ = Σ P·a² <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-sq"></label><label>⟨A²⟩ − ⟨A⟩² <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-short"></label><label>ΔA <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-sd"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="ledger-c">
+                  <summary>Three levels from a ket<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>A = diag(−1, 0, 2) on |ψ⟩ = (|0⟩ + 2|1⟩ + 2|2⟩)/3. Fill in the Born probabilities too: the reading on |k⟩ has P = |⟨k|ψ⟩|².</p><div class="eu-table-wrap"><table class="eu-ledger"><caption>Ledger, one row per reading</caption><thead><tr><th scope="col">Reading a</th><th scope="col">P(a)</th><th scope="col">P·(a − ⟨A⟩)</th><th scope="col">P·(a − ⟨A⟩)²</th><th scope="col">P·a²</th></tr></thead><tbody><tr><th scope="row">−1</th><td data-col="P(a)"><label><span class="eu-sr-only">Row a = −1, P(a)</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-1-p"></label></td><td data-col="P·(a − ⟨A⟩)"><label><span class="eu-sr-only">Row a = −1, P·(a − ⟨A⟩)</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-1-d"></label></td><td data-col="P·(a − ⟨A⟩)²"><label><span class="eu-sr-only">Row a = −1, P·(a − ⟨A⟩)²</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-1-d2"></label></td><td data-col="P·a²"><label><span class="eu-sr-only">Row a = −1, P·a²</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-1-a2"></label></td></tr><tr><th scope="row">0</th><td data-col="P(a)"><label><span class="eu-sr-only">Row a = 0, P(a)</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-2-p"></label></td><td data-col="P·(a − ⟨A⟩)"><label><span class="eu-sr-only">Row a = 0, P·(a − ⟨A⟩)</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-2-d"></label></td><td data-col="P·(a − ⟨A⟩)²"><label><span class="eu-sr-only">Row a = 0, P·(a − ⟨A⟩)²</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-2-d2"></label></td><td data-col="P·a²"><label><span class="eu-sr-only">Row a = 0, P·a²</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-2-a2"></label></td></tr><tr><th scope="row">2</th><td data-col="P(a)"><label><span class="eu-sr-only">Row a = 2, P(a)</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-3-p"></label></td><td data-col="P·(a − ⟨A⟩)"><label><span class="eu-sr-only">Row a = 2, P·(a − ⟨A⟩)</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-3-d"></label></td><td data-col="P·(a − ⟨A⟩)²"><label><span class="eu-sr-only">Row a = 2, P·(a − ⟨A⟩)²</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-3-d2"></label></td><td data-col="P·a²"><label><span class="eu-sr-only">Row a = 2, P·a²</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-3-a2"></label></td></tr></tbody></table></div><div class="eu-fields"><label>⟨A⟩ = Σ a·P(a) <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-mean"></label><label>Σ P·(a − ⟨A⟩) <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-dsum"></label><label>(ΔA)² = Σ P·(a − ⟨A⟩)² <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-var"></label><label>⟨A²⟩ = Σ P·a² <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-sq"></label><label>⟨A²⟩ − ⟨A⟩² <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-short"></label><label>ΔA <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-sd"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="ledger-d">
+                  <summary>Square, then average<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Readings 1 and 5, each with probability 1/2. Fill the ledger, then compare ⟨A²⟩ with ⟨A⟩².</p><div class="eu-table-wrap"><table class="eu-ledger"><caption>Ledger, one row per reading</caption><thead><tr><th scope="col">Reading a</th><th scope="col">P(a)</th><th scope="col">P·(a − ⟨A⟩)</th><th scope="col">P·(a − ⟨A⟩)²</th><th scope="col">P·a²</th></tr></thead><tbody><tr><th scope="row">1</th><td data-col="P(a)">1/2</td><td data-col="P·(a − ⟨A⟩)"><label><span class="eu-sr-only">Row a = 1, P·(a − ⟨A⟩)</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="d-1-d"></label></td><td data-col="P·(a − ⟨A⟩)²"><label><span class="eu-sr-only">Row a = 1, P·(a − ⟨A⟩)²</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="d-1-d2"></label></td><td data-col="P·a²"><label><span class="eu-sr-only">Row a = 1, P·a²</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="d-1-a2"></label></td></tr><tr><th scope="row">5</th><td data-col="P(a)">1/2</td><td data-col="P·(a − ⟨A⟩)"><label><span class="eu-sr-only">Row a = 5, P·(a − ⟨A⟩)</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="d-2-d"></label></td><td data-col="P·(a − ⟨A⟩)²"><label><span class="eu-sr-only">Row a = 5, P·(a − ⟨A⟩)²</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="d-2-d2"></label></td><td data-col="P·a²"><label><span class="eu-sr-only">Row a = 5, P·a²</span><input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="d-2-a2"></label></td></tr></tbody></table></div><div class="eu-fields"><label>⟨A⟩ = Σ a·P(a) <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="d-mean"></label><label>Σ P·(a − ⟨A⟩) <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="d-dsum"></label><label>(ΔA)² = Σ P·(a − ⟨A⟩)² <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="d-var"></label><label>⟨A²⟩ = Σ P·a² <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="d-sq"></label><label>⟨A²⟩ − ⟨A⟩² <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="d-short"></label><label>ΔA <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="d-sd"></label></div><div class="eu-fields"><label>⟨A⟩² = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="d-sqmean"></label><label>Why is ⟨A²⟩ − ⟨A⟩² never negative? <select name="d-pick" required><option value="">Choose</option><option value="bigger">A square is always bigger than the number</option><option value="sum">It equals Σ P·(a − ⟨A⟩)², a weighted sum of squares</option><option value="trials">⟨A²⟩ counts more trials than ⟨A⟩</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eu-math">
+              <summary>Show the math</summary>
+              <p>Σ P(a)(a − ⟨A⟩) = ⟨A⟩ − ⟨A⟩·1 = 0 for every distribution, so signed deviations can’t measure spread. Squaring keeps every term non-negative: (ΔA)² = Σ P(a)(a − ⟨A⟩)². Expanding the square gives Σ P a² − 2⟨A⟩ Σ P a + ⟨A⟩² Σ P = ⟨A²⟩ − ⟨A⟩². ⟨A²⟩ averages the squared readings. ⟨A⟩² squares the average reading.</p>
+            </details>
+          </section>
+
+          <section class="eu-station" data-eu-station="shift" data-eu-accent="blue" aria-labelledby="eu-shift-title" hidden>
+            <h4 id="eu-shift-title">Shift and Stretch Statistics</h4>
+            <p>Build the new observable aA + bI from A with the two sliders. Each reading a becomes a·a + b, with the same probability. Predict the new mean and spread first, then press the button to see the new distribution. Opening a mission loads its starting distribution.</p>
+            <p>Lesson 14’s Scale and Shift station did this to the readings and eigenkets. Here the same move acts on the statistics.</p>
+            <div data-eu-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eu-sr-only">Shift and Stretch Statistics controls</legend>
+              <div class="eu-fields"><label>Scale a <output data-eu-for="a">1</output><input type="range" name="a" min="-3" max="3" step="0.5" value="1"></label><label>Shift b <output data-eu-for="b">0</output><input type="range" name="b" min="-6" max="6" step="0.1" value="0"></label></div><div class="eu-button-row"><button class="eu-primary" type="button" data-eu-action="apply">Show the new distribution</button></div><p class="eu-readout" data-eu-read="state" aria-live="polite"></p>
+              <div class="eu-missions">
+                <details class="eu-mission" data-eu-mission="shift-a">
+                  <summary>Triple and lift<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Start from Z on (2|0⟩ + |1⟩)/√5: ⟨Z⟩ = 0.6 and ΔZ = 0.8. Set a = 3 and b = 1, then predict the mean and spread of 3Z + I.</p><div class="eu-fields"><label>⟨3Z + I⟩ = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-mean"></label><label>Δ(3Z + I) = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-spread"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="shift-b">
+                  <summary>A negative scale<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Start from X with ⟨X⟩ = −1/2. Set a = −2 and b = 5, then predict the mean and spread of −2X + 5I.</p><div class="eu-fields"><label>⟨−2X + 5I⟩ = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-mean"></label><label>Δ(−2X + 5I) = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-spread"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="shift-c">
+                  <summary>Center it<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Start from Z with ⟨Z⟩ = 0.6 and ΔZ = 0.8. Keep a = 1 and choose b so the new mean is 0. Then enter the new spread.</p><div class="eu-fields"><label>Δ(Z + bI) = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-spread"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="shift-d">
+                  <summary>A yes-or-no meter<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Start from Z with P(+1) = 0.9. Choose a and b so the readings become 1 and 0, giving Q = (I + Z)/2. Then predict ⟨Q⟩ and ΔQ.</p><div class="eu-fields"><label>⟨Q⟩ = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="d-mean"></label><label>ΔQ = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="d-spread"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eu-math">
+              <summary>Show the math</summary>
+              <p>⟨aA + bI⟩ = a⟨A⟩ + b⟨I⟩ = a⟨A⟩ + b, because ⟨I⟩ = 1. Every deviation becomes (a·a + b) − (a⟨A⟩ + b) = a(a − ⟨A⟩): the shift cancels and the scale multiplies. So (Δ(aA + bI))² = a²(ΔA)² and Δ(aA + bI) = |a|ΔA. Shifting moves the mean and never the spread. A negative scale flips the readings and leaves the spread positive.</p>
+            </details>
+          </section>
+
+          <section class="eu-station" data-eu-station="zero" data-eu-accent="red" aria-labelledby="eu-zero-title" hidden>
+            <h4 id="eu-zero-title">Zero Spread Detector</h4>
+            <p>ΔA = 0 means every trial gives the same reading. That happens exactly when |ψ⟩ is an eigenket of A, so the detector compares A|ψ⟩ with ⟨A⟩|ψ⟩. Pick a card to inspect it, then tag each card in a deck. G has rows [2, 1] and [1, 2]. B has rows [1, i] and [−i, 1].</p>
+            <div data-eu-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eu-sr-only">Zero Spread Detector controls</legend>
+              <div class="eu-fields"><label>Card to inspect <select name="card"><option value="p1" selected>|−x⟩ with X</option><option value="p2">|−x⟩ with Z</option><option value="p3">|−y⟩ with Y</option><option value="p4">i|1⟩ with Z</option><option value="p5">(3|0⟩ + 4|1⟩)/5 with X</option><option value="g1">(|0⟩ + |1⟩)/√2 with G</option><option value="g2">(|0⟩ − |1⟩)/√2 with G</option><option value="g3">|0⟩ with G</option><option value="g4">(|0⟩ − i|1⟩)/√2 with B</option></select></label></div><p class="eu-readout" data-eu-read="state" aria-live="polite"></p>
+              <div class="eu-missions">
+                <details class="eu-mission" data-eu-mission="zero-pauli">
+                  <summary>Pauli deck<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Tag each card in the Pauli deck.</p><ol class="eu-statements"><li><label>|−x⟩ with X <select name="pauli-p1" required><option value="">Choose</option><option value="zero">ΔA = 0</option><option value="pos">ΔA &gt; 0</option></select></label></li><li><label>|−x⟩ with Z <select name="pauli-p2" required><option value="">Choose</option><option value="zero">ΔA = 0</option><option value="pos">ΔA &gt; 0</option></select></label></li><li><label>|−y⟩ with Y <select name="pauli-p3" required><option value="">Choose</option><option value="zero">ΔA = 0</option><option value="pos">ΔA &gt; 0</option></select></label></li><li><label>i|1⟩ with Z <select name="pauli-p4" required><option value="">Choose</option><option value="zero">ΔA = 0</option><option value="pos">ΔA &gt; 0</option></select></label></li><li><label>(3|0⟩ + 4|1⟩)/5 with X <select name="pauli-p5" required><option value="">Choose</option><option value="zero">ΔA = 0</option><option value="pos">ΔA &gt; 0</option></select></label></li></ol>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="zero-general">
+                  <summary>Beyond Pauli<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Tag each card in the deck with G and B.</p><ol class="eu-statements"><li><label>(|0⟩ + |1⟩)/√2 with G <select name="general-g1" required><option value="">Choose</option><option value="zero">ΔA = 0</option><option value="pos">ΔA &gt; 0</option></select></label></li><li><label>(|0⟩ − |1⟩)/√2 with G <select name="general-g2" required><option value="">Choose</option><option value="zero">ΔA = 0</option><option value="pos">ΔA &gt; 0</option></select></label></li><li><label>|0⟩ with G <select name="general-g3" required><option value="">Choose</option><option value="zero">ΔA = 0</option><option value="pos">ΔA &gt; 0</option></select></label></li><li><label>(|0⟩ − i|1⟩)/√2 with B <select name="general-g4" required><option value="">Choose</option><option value="zero">ΔA = 0</option><option value="pos">ΔA &gt; 0</option></select></label></li></ol>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="zero-pin">
+                  <summary>ΔZ = 0 pins down X<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>A state has ΔZ = 0. Without choosing the state, find ⟨X⟩ and ΔX.</p><div class="eu-fields"><label>⟨X⟩ = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="pin-mean"></label><label>ΔX = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="pin-spread"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="zero-floor">
+                  <summary>Both small?<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>A pure state has ΔZ = 0.2. Find the smallest ΔX it can have, then say why ΔX and ΔZ can’t both be zero.</p><div class="eu-fields"><label>Smallest ΔX = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="floor-dx"></label><label>ΔX = 0 and ΔZ = 0 can’t both hold, because <select name="floor-pick" required><option value="">Choose</option><option value="instrument">no instrument can measure X and Z at once</option><option value="eigen">ΔX = 0 needs an X eigenket, and no X eigenket is a Z eigenket</option><option value="sum">ΔX and ΔZ always add to 1</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="zero-ident">
+                  <summary>The do-nothing observable<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>A = 3I reads 3 on every state. What is ΔA?</p><div class="eu-fields"><label>For A = 3I, <select name="ident-pick" required><option value="">Choose</option><option value="basis">ΔA = 0 only for |0⟩ and |1⟩</option><option value="three">ΔA = 3</option><option value="all">ΔA = 0 for every state</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eu-math">
+              <summary>Show the math</summary>
+              <p>If A|ψ⟩ = a|ψ⟩, every trial reads a, so ⟨A⟩ = a and (ΔA)² = ⟨(A − aI)²⟩ = 0. Conversely, (ΔA)² = ‖(A − ⟨A⟩I)|ψ⟩‖², which vanishes only when A|ψ⟩ = ⟨A⟩|ψ⟩. For a pure qubit ⟨X⟩² + ⟨Y⟩² + ⟨Z⟩² = 1, so (ΔX)² = 1 − ⟨X⟩² ≥ ⟨Z⟩² = 1 − (ΔZ)². The eigenkets of X and Z are different, so the two spreads are never both zero.</p>
+            </details>
+          </section>
+
+          <section class="eu-station" data-eu-station="trials" data-eu-accent="yellow" aria-labelledby="eu-trials-title" hidden>
+            <h4 id="eu-trials-title">How Many Trials?</h4>
+            <p>A finite run of N trials gives a sample mean ā = (n₊ − n₋)/N, which lands near ⟨A⟩ but rarely on it. Over many repeated runs, ā spreads out by about ΔA/√N. Lesson 13 saw counts spread like √N. Here you use the same fact to plan an experiment. “Repeat 100 experiments” simulates 100 separate labs and doesn’t use your budget. “Run one experiment” is your own lab, with a budget of 2000 trials.</p>
+            <div data-eu-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eu-sr-only">How Many Trials? controls</legend>
+              <div class="eu-fields"><label>Setup <select name="setup"><option value="zx" selected>Z on (2|0⟩ + |1⟩)/√5</option><option value="xx">X on (2|0⟩ + |1⟩)/√5</option><option value="mx">X on |−x⟩</option></select></label><label>Trials per experiment N <input class="eu-answer" type="number" name="n" min="1" max="5000" step="1" value="100"></label></div><div class="eu-button-row"><button class="eu-primary" type="button" data-eu-action="one">Run one experiment</button><button type="button" data-eu-action="repeat">Repeat 100 experiments</button><button type="button" data-eu-action="clear">Clear experiments</button><button type="button" data-eu-action="reseed">New seed</button></div><p class="eu-readout" data-eu-read="state" aria-live="polite"></p>
+              <div class="eu-missions">
+                <details class="eu-mission" data-eu-mission="trials-wobble">
+                  <summary>Predict the wobble<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>For Z on (2|0⟩ + |1⟩)/√5, ΔZ = 0.8. Predict how much ā wobbles from run to run when N = 100. Then repeat at least 20 experiments at N = 100 and compare.</p><div class="eu-fields"><label>Predicted wobble ΔZ/√N = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="wobble-pred"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="trials-plan">
+                  <summary>Plan for ±0.02<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Choose N so that ΔZ/√N is at most 0.02 for the same setup, without going more than 10% above the smallest such N. Run one experiment inside the 2000-trial budget, then report on your own run.</p><div class="eu-fields"><label>Did your ā land within ±0.02 of ⟨Z⟩ = 0.6? <select name="plan-in" required><option value="">Choose</option><option value="yes">Yes</option><option value="no">No</option></select></label><label>Over many such runs, about what share land within ±ΔZ/√N? <select name="plan-share" required><option value="">Choose</option><option value="50">About half</option><option value="68">About two thirds</option><option value="100">All of them</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="trials-four">
+                  <summary>Half the wobble<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>To make the wobble half as big, by what factor must N grow?</p><div class="eu-fields"><label>N is multiplied by <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="four-factor"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="trials-compare">
+                  <summary>Same state, two observables<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>For (2|0⟩ + |1⟩)/√5, which mean needs more trials to reach the same precision, and by what ratio?</p><div class="eu-fields"><label>More trials are needed for <select name="compare-pick" required><option value="">Choose</option><option value="z">⟨Z⟩</option><option value="x">⟨X⟩</option><option value="same">neither: the same N</option></select></label><label>N for that mean ÷ N for the other = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="compare-ratio"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="trials-eigen">
+                  <summary>Zero spread, one trial<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>For X on |−x⟩, what is the smallest N that gives ⟨X⟩ exactly?</p><div class="eu-fields"><label>Smallest N = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="eigen-n"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eu-math">
+              <summary>Show the math</summary>
+              <p>Each trial gives a reading with mean ⟨A⟩ and variance (ΔA)². The sample mean of N independent trials has variance (ΔA)²/N, so its spread is ΔA/√N. About 68% of runs land within one such spread of ⟨A⟩, and about 95% within two. To reach precision ε you need N ≥ (ΔA/ε)². Halving ε multiplies N by 4. If ΔA = 0, one trial already gives ⟨A⟩. The preparation’s own ΔA never shrinks with N.</p>
+            </details>
+          </section>
+
+          <section class="eu-station" data-eu-station="robertson" data-eu-accent="violet" aria-labelledby="eu-robertson-title" hidden>
+            <h4 id="eu-robertson-title">Robertson Bound Explorer</h4>
+            <p>For two observables measured on separate, freshly prepared groups, ΔA · ΔB ≥ ½|⟨[A, B]⟩|. Opening a mission loads its pair and state. Compute both spreads and the bound, then classify the case. The diagram shows the commutator, and it fills in the bars once you complete the matching mission.</p>
+            <div data-eu-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eu-sr-only">Robertson Bound Explorer controls</legend>
+              <div class="eu-fields"><label>Pair A, B <select name="pair"><option value="xy">X and Y</option><option value="yz" selected>Y and Z</option><option value="zx">Z and X</option><option value="zd">Z and D = diag(2, −1)</option><option value="xh">X and H = (X + Z)/√2</option></select></label><label>State |ψ⟩ <select name="psi"><option value="s1" selected>(2|0⟩ + |1⟩)/√5</option><option value="s2">(|0⟩ + (1 + i)|1⟩)/√3</option><option value="s3">(|0⟩ + e^(iπ/3)|1⟩)/√2</option><option value="s4">(3|0⟩ + 4|1⟩)/5</option><option value="s5">(2|0⟩ + i|1⟩)/√5</option></select></label></div><p class="eu-readout" data-eu-read="state" aria-live="polite"></p>
+              <div class="eu-missions">
+                <details class="eu-mission" data-eu-mission="robertson-yz">
+                  <summary>Y and Z<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>A = Y and B = Z on (2|0⟩ + |1⟩)/√5. [Y, Z] = 2iX.</p><div class="eu-fields"><label>ΔY = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="yz-da"></label><label>ΔZ = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="yz-db"></label><label>ΔY · ΔZ = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="yz-prod"></label><label>½|⟨[A, B]⟩| = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="yz-bound"></label><label>Is the bound zero? <select name="yz-zero" required><option value="">Choose</option><option value="yes">Yes</option><option value="no">No</option></select></label><label>The relation holds with <select name="yz-kind" required><option value="">Choose</option><option value="eq">equality</option><option value="strict">strict inequality</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="robertson-zx">
+                  <summary>Z and X<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>A = Z and B = X on (|0⟩ + (1 + i)|1⟩)/√3. [Z, X] = 2iY.</p><div class="eu-fields"><label>ΔZ = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="zx-da"></label><label>ΔX = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="zx-db"></label><label>ΔZ · ΔX = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="zx-prod"></label><label>½|⟨[A, B]⟩| = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="zx-bound"></label><label>Is the bound zero? <select name="zx-zero" required><option value="">Choose</option><option value="yes">Yes</option><option value="no">No</option></select></label><label>The relation holds with <select name="zx-kind" required><option value="">Choose</option><option value="eq">equality</option><option value="strict">strict inequality</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="robertson-xy">
+                  <summary>X and Y on the equator<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>A = X and B = Y on (|0⟩ + e^(iπ/3)|1⟩)/√2.</p><div class="eu-fields"><label>ΔX = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="xy-da"></label><label>ΔY = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="xy-db"></label><label>ΔX · ΔY = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="xy-prod"></label><label>½|⟨[A, B]⟩| = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="xy-bound"></label><label>Is the bound zero? <select name="xy-zero" required><option value="">Choose</option><option value="yes">Yes</option><option value="no">No</option></select></label><label>The relation holds with <select name="xy-kind" required><option value="">Choose</option><option value="eq">equality</option><option value="strict">strict inequality</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="robertson-zd">
+                  <summary>A commuting pair<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>A = Z and B = D = diag(2, −1) on (3|0⟩ + 4|1⟩)/5.</p><div class="eu-fields"><label>ΔZ = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="zd-da"></label><label>ΔD = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="zd-db"></label><label>ΔZ · ΔD = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="zd-prod"></label><label>½|⟨[A, B]⟩| = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="zd-bound"></label><label>Is the bound zero? <select name="zd-zero" required><option value="">Choose</option><option value="yes">Yes</option><option value="no">No</option></select></label><label>The relation holds with <select name="zd-kind" required><option value="">Choose</option><option value="eq">equality</option><option value="strict">strict inequality</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="robertson-xh">
+                  <summary>A tilted partner<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>A = X and B = H = (X + Z)/√2 on (2|0⟩ + i|1⟩)/√5. First find c in [X, H] = c·iY.</p><div class="eu-fields"><label>c = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="xh-c"></label></div><div class="eu-fields"><label>ΔX = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="xh-da"></label><label>ΔH = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="xh-db"></label><label>ΔX · ΔH = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="xh-prod"></label><label>½|⟨[A, B]⟩| = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="xh-bound"></label><label>Is the bound zero? <select name="xh-zero" required><option value="">Choose</option><option value="yes">Yes</option><option value="no">No</option></select></label><label>The relation holds with <select name="xh-kind" required><option value="">Choose</option><option value="eq">equality</option><option value="strict">strict inequality</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eu-math">
+              <summary>Show the math</summary>
+              <p>[X, Y] = 2iZ, [Y, Z] = 2iX and [Z, X] = 2iY, so each Pauli pair has bound |⟨third⟩|. D = (1/2)I + (3/2)Z commutes with Z, so the bound is 0 for every state, yet both spreads can be large. [X, H] = [X, Z]/√2 = −√2 iY, so the bound is |⟨Y⟩|/√2. The relation can hold with equality, hold strictly, or have a zero bound with positive spreads. A bound of zero says nothing about the individual spreads.</p>
+            </details>
+          </section>
+
+          <section class="eu-station" data-eu-station="minimum" data-eu-accent="green" aria-labelledby="eu-minimum-title" hidden>
+            <h4 id="eu-minimum-title">Minimum Uncertainty Hunt</h4>
+            <p>The map covers every state, with θ across and φ up. Brighter cells have a larger gap ΔX·ΔY − |⟨Z⟩| between the product and its bound. Dark cells are close to equality. Click or tap the map to move the crosshair. You can also focus the map and use the arrow keys (Shift for steps of 10°), or type the angles.</p>
+            <div data-eu-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eu-sr-only">Minimum Uncertainty Hunt controls</legend>
+              <div class="eu-fields"><label>Polar angle θ <output data-eu-for="theta" data-eu-angle>60</output><input type="range" name="theta-range" data-eu-pair="theta" min="0" max="180" step="0.5" value="60"></label><label>θ in degrees <input class="eu-answer" type="number" name="theta" min="0" max="180" step="any" value="60"></label><label>Azimuth φ <output data-eu-for="phi" data-eu-angle>45</output><input type="range" name="phi-range" data-eu-pair="phi" min="0" max="360" step="1" value="45"></label><label>φ in degrees <input class="eu-answer" type="number" name="phi" min="0" max="360" step="any" value="45"></label></div><div class="eu-button-row"><button class="eu-primary" type="button" data-eu-action="mark">Mark this state</button><button type="button" data-eu-action="unmark">Clear marks</button></div><ol class="eu-log" data-eu-log="marks" aria-label="Pinned states"></ol><p class="eu-readout" data-eu-read="state" aria-live="polite"></p>
+              <div class="eu-missions">
+                <details class="eu-mission" data-eu-mission="minimum-a">
+                  <summary>Equality at |⟨Z⟩| = 0.6<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Find a state where ΔX·ΔY = |⟨Z⟩| and |⟨Z⟩| = 0.6.</p>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="minimum-b">
+                  <summary>Equality, the other way<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Find a state with equality, ⟨Z⟩ &lt; −0.1 and |⟨Y⟩| &gt; 0.1.</p>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="minimum-c">
+                  <summary>Measure the gap<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Move to a state with φ = 45° and θ away from 90°. From the readout, compute (ΔX·ΔY)² − ⟨Z⟩². Then say when equality holds.</p><div class="eu-fields"><label>(ΔX·ΔY)² − ⟨Z⟩² = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="c-gap2"></label><label>Equality ΔX·ΔY = |⟨Z⟩| holds exactly when <select name="c-pick" required><option value="">Choose</option><option value="z0">⟨Z⟩ = 0</option><option value="axis">⟨X⟩ = 0 or ⟨Y⟩ = 0</option><option value="t45">θ = 45°</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="minimum-d">
+                  <summary>The biggest gap<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Find a state where ΔX·ΔY exceeds |⟨Z⟩| by at least 0.495.</p>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eu-math">
+              <summary>Show the math</summary>
+              <p>For a pure qubit (ΔX)² = 1 − ⟨X⟩², (ΔY)² = 1 − ⟨Y⟩² and ⟨Z⟩² = 1 − ⟨X⟩² − ⟨Y⟩². Multiplying out, (ΔX·ΔY)² − ⟨Z⟩² = ⟨X⟩²⟨Y⟩² ≥ 0. Equality needs ⟨X⟩ = 0 or ⟨Y⟩ = 0, which puts the state on one of the two great circles through the poles at φ = 0°, 90°, 180° or 270°. The gap is largest, 1/2, on the equator at φ = 45° + k·90°. The lab’s π/4 preset is one of those four points.</p>
+            </details>
+          </section>
+
+          <section class="eu-station" data-eu-station="budget" data-eu-accent="orange" aria-labelledby="eu-budget-title" hidden>
+            <h4 id="eu-budget-title">The Spread Budget</h4>
+            <p>For every pure qubit state, (ΔX)² + (ΔY)² + (ΔZ)² = 2. Treat it as a budget. Set two variances with the sliders and the third is forced. It turns red when no state can pay for it. When the budget balances, the readout shows a state that does.</p>
+            <div data-eu-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eu-sr-only">The Spread Budget controls</legend>
+              <div class="eu-fields"><label>(ΔX)² <output data-eu-for="vx">0.5</output><input type="range" name="vx" min="0" max="1" step="0.01" value="0.5"></label><label>(ΔY)² <output data-eu-for="vy">0.75</output><input type="range" name="vy" min="0" max="1" step="0.01" value="0.75"></label></div><p class="eu-readout" data-eu-read="state" aria-live="polite"></p>
+              <div class="eu-missions">
+                <details class="eu-mission" data-eu-mission="budget-zero">
+                  <summary>Spend nothing on Z<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Make (ΔZ)² = 0. Then say which states those are.</p><div class="eu-fields"><label>The states with ΔZ = 0 are <select name="zero-pick" required><option value="">Choose</option><option value="poles">|0⟩ and |1⟩, up to a global phase</option><option value="eq">the states on the equator</option><option value="none">none: ΔZ is never 0</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="budget-given">
+                  <summary>Two spreads given<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Set (ΔX)² = 0.36 and (ΔY)² = 0.64, then find ΔZ.</p><div class="eu-fields"><label>ΔZ = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="given-dz"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="budget-even">
+                  <summary>Spread it evenly<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Set all three variances equal. That makes the largest spread as small as it can be. Enter that common spread.</p><div class="eu-fields"><label>ΔX = ΔY = ΔZ = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="even-d"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="budget-cap">
+                  <summary>A tight cap<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Can a pure state keep all three spreads at or below 0.75?</p><div class="eu-fields"><label>All three spreads ≤ 0.75 is <select name="cap-pick" required><option value="">Choose</option><option value="yes">possible, near the equator</option><option value="no">impossible: three variances of at most 0.5625 total at most 1.6875, less than 2</option><option value="pole">possible, at the poles</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eu-math">
+              <summary>Show the math</summary>
+              <p>Each Pauli variance is 1 − ⟨A⟩², so the sum is 3 − (⟨X⟩² + ⟨Y⟩² + ⟨Z⟩²). For a pure state the three means are the coordinates of a point on the unit sphere, so their squares add to 1 and the variances add to 2. Making one variance small forces the other two up: (ΔZ)² = 0 needs (ΔX)² = (ΔY)² = 1. The fairest split is 2/3 each, at ⟨X⟩ = ⟨Y⟩ = ⟨Z⟩ = ±1/√3.</p>
+            </details>
+          </section>
+
+          <section class="eu-station" data-eu-station="designer" data-eu-accent="violet" aria-labelledby="eu-designer-title" hidden>
+            <h4 id="eu-designer-title">Statistics Designer</h4>
+            <p>Here you work the problem the other way round. Each card sets targets for two observables at once, and you design the state. Give the probability P(0) of the Z reading +1 and the relative phase φ. The state is √P(0)|0⟩ + e^(iφ)√(1 − P(0))|1⟩. Many answers work where the card allows it. The checker tests the state you actually build.</p>
+            <div data-eu-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eu-sr-only">Statistics Designer controls</legend>
+              <div class="eu-fields"><label>P(0) = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="p0" value="1/2"></label><label>Relative phase φ in degrees <input class="eu-answer" type="number" name="phi" min="-360" max="360" step="any" value="0"></label></div><p class="eu-readout" data-eu-read="state" aria-live="polite"></p>
+              <div class="eu-missions">
+                <details class="eu-mission" data-eu-mission="designer-a">
+                  <summary>Mean and spread<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Build a state with ⟨Z⟩ = 0.6 and ΔX = 0.8.</p>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="designer-b">
+                  <summary>Matching spreads<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Build a state with ⟨Y⟩ = 0.6 and ΔZ = ΔX.</p>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="designer-c">
+                  <summary>Twins in the plane<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Build a state with ⟨X⟩ = 1/2 and ΔY = ΔX.</p>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="designer-d">
+                  <summary>A card that can’t be built<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>The card asks for ΔY = 0 and ⟨Z⟩ = 0.3.</p><div class="eu-fields"><label>This card <select name="d-pick" required><option value="">Choose</option><option value="yes">can be built with P(0) = 0.65</option><option value="phase">needs a complex P(0)</option><option value="no">can’t be built: ΔY = 0 forces ⟨Y⟩ = ±1, so ⟨X⟩ = ⟨Z⟩ = 0</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eu-math">
+              <summary>Show the math</summary>
+              <p>For √p|0⟩ + e^(iφ)√(1 − p)|1⟩: ⟨Z⟩ = 2p − 1, ⟨X⟩ = 2√(p(1 − p)) cos φ and ⟨Y⟩ = 2√(p(1 − p)) sin φ. Each Pauli spread is √(1 − mean²), so a target spread is a target on the size of a mean. Two targets fix two of the three means, up to sign. The third mean follows from ⟨X⟩² + ⟨Y⟩² + ⟨Z⟩² = 1, and must not need more than the 1 that is available.</p>
+            </details>
+          </section>
+
+          <section class="eu-station" data-eu-station="detective" data-eu-accent="red" aria-labelledby="eu-detective-title" hidden>
+            <h4 id="eu-detective-title">Error Detective</h4>
+            <p>Each case file holds a worked solution with exactly one planted mistake. Find the first line that goes wrong, and name the mistake. The diagram shows what the solution claims next to what is actually true.</p>
+            <div data-eu-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eu-sr-only">Error Detective controls</legend>
+              <p class="eu-readout" data-eu-read="state"></p>
+              <div class="eu-missions">
+                <details class="eu-mission" data-eu-mission="detective-mean">
+                  <summary>Case 1 · The likeliest reading<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Prepare (2|0⟩ + |1⟩)/√5 and measure Z. What will the next reading most likely be?</p><ol class="eu-worked"><li>P(+1) = 4/5 and P(−1) = 1/5.</li><li>⟨Z⟩ = 4/5 − 1/5 = 3/5.</li><li>So the next reading will most likely be 0.6.</li><li>Over 100 trials, about 60 readings will show 0.6.</li></ol><div class="eu-fields"><label>First wrong line <select name="mean-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="mean-kind" required><option value="">Choose</option><option value="mean">Treated the mean as a possible reading</option><option value="square">Used ⟨A⟩² in place of ⟨A²⟩</option><option value="instrument">Treated Δ as instrument error</option><option value="equality">Read the bound as an equality</option><option value="same">Measured both observables on the same systems</option><option value="half">Dropped the ½ or the magnitude in the bound</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="detective-square">
+                  <summary>Case 2 · No spread at all<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Readings 0 and 2 each have probability 1/2. Find ΔA.</p><ol class="eu-worked"><li>⟨A⟩ = 0·(1/2) + 2·(1/2) = 1.</li><li>⟨A²⟩ = ⟨A⟩² = 1.</li><li>(ΔA)² = ⟨A²⟩ − ⟨A⟩² = 1 − 1 = 0.</li><li>So every reading equals 1.</li></ol><div class="eu-fields"><label>First wrong line <select name="square-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="square-kind" required><option value="">Choose</option><option value="mean">Treated the mean as a possible reading</option><option value="square">Used ⟨A⟩² in place of ⟨A²⟩</option><option value="instrument">Treated Δ as instrument error</option><option value="equality">Read the bound as an equality</option><option value="same">Measured both observables on the same systems</option><option value="half">Dropped the ½ or the magnitude in the bound</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="detective-instrument">
+                  <summary>Case 3 · A better meter<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Prepare (2|0⟩ + |1⟩)/√5 and measure X with an ideal instrument.</p><ol class="eu-worked"><li>⟨X⟩ = 2 Re(α*β) = 4/5.</li><li>(ΔX)² = 1 − (4/5)² = 9/25, so ΔX = 3/5.</li><li>ΔX = 3/5 is the instrument’s error bar, so a better instrument would shrink it.</li><li>With a perfect instrument every reading would be 4/5.</li></ol><div class="eu-fields"><label>First wrong line <select name="instrument-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="instrument-kind" required><option value="">Choose</option><option value="mean">Treated the mean as a possible reading</option><option value="square">Used ⟨A⟩² in place of ⟨A²⟩</option><option value="instrument">Treated Δ as instrument error</option><option value="equality">Read the bound as an equality</option><option value="same">Measured both observables on the same systems</option><option value="half">Dropped the ½ or the magnitude in the bound</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="detective-equality">
+                  <summary>Case 4 · Exactly the bound<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>A state has ⟨Z⟩ = 1/2 and ΔX = √3/2. What can you say about ΔY?</p><ol class="eu-worked"><li>For X and Y, ΔX·ΔY ≥ ½|⟨[X, Y]⟩| = |⟨Z⟩|.</li><li>Here |⟨Z⟩| = 1/2.</li><li>So ΔX·ΔY = 1/2, which gives ΔY = (1/2)/(√3/2) = 1/√3.</li><li>So every state with these values has ΔY ≈ 0.577.</li></ol><div class="eu-fields"><label>First wrong line <select name="equality-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="equality-kind" required><option value="">Choose</option><option value="mean">Treated the mean as a possible reading</option><option value="square">Used ⟨A⟩² in place of ⟨A²⟩</option><option value="instrument">Treated Δ as instrument error</option><option value="equality">Read the bound as an equality</option><option value="same">Measured both observables on the same systems</option><option value="half">Dropped the ½ or the magnitude in the bound</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="detective-same">
+                  <summary>Case 5 · One batch for both<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Estimate ΔX and ΔY for a preparation, using 2000 systems.</p><ol class="eu-worked"><li>Prepare 2000 systems in the same state.</li><li>Measure X on each system and record the readings.</li><li>Then measure Y on those same 2000 systems and record those readings.</li><li>Use the two lists to compute ΔX and ΔY for the preparation.</li></ol><div class="eu-fields"><label>First wrong line <select name="same-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="same-kind" required><option value="">Choose</option><option value="mean">Treated the mean as a possible reading</option><option value="square">Used ⟨A⟩² in place of ⟨A²⟩</option><option value="instrument">Treated Δ as instrument error</option><option value="equality">Read the bound as an equality</option><option value="same">Measured both observables on the same systems</option><option value="half">Dropped the ½ or the magnitude in the bound</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="detective-half">
+                  <summary>Case 6 · Twice the bound<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Find the X·Y lower bound for a state with ⟨Z⟩ = −0.4.</p><ol class="eu-worked"><li>[X, Y] = 2iZ.</li><li>So ⟨[X, Y]⟩ = 2i⟨Z⟩ = −0.8i.</li><li>So ΔX·ΔY ≥ |⟨[X, Y]⟩| = 0.8.</li><li>A state with ΔX·ΔY = 0.6 would therefore break the relation.</li></ol><div class="eu-fields"><label>First wrong line <select name="half-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="half-kind" required><option value="">Choose</option><option value="mean">Treated the mean as a possible reading</option><option value="square">Used ⟨A⟩² in place of ⟨A²⟩</option><option value="instrument">Treated Δ as instrument error</option><option value="equality">Read the bound as an equality</option><option value="same">Measured both observables on the same systems</option><option value="half">Dropped the ½ or the magnitude in the bound</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eu-math">
+              <summary>Show the math</summary>
+              <p>A mean is an average over many trials, not a reading. ⟨A²⟩ averages squared readings, and it is ⟨A⟩² only when ΔA = 0. ΔA is a property of the state and the observable, and it is still there with a perfect instrument. The Robertson relation is an inequality with ½ and a magnitude. Each spread is estimated from its own fresh systems, because measuring X first changes the state that Y would see.</p>
+            </details>
+          </section>
+
+          <section class="eu-station" data-eu-station="preview" data-eu-accent="yellow" aria-labelledby="eu-preview-title" hidden>
+            <h4 id="eu-preview-title">Quantum Preview: Position and Momentum</h4>
+            <p class="lesson-kicker">Optional preview</p>
+            <p>This is a preview of Lesson 21. Position x and momentum p are not two-level observables and they carry units, but their uncertainty relation has the same shape as the one in this lesson. Here you only compare the structure and read the trade-off. Lesson 21 builds the wavefunctions. Δx is measured in a chosen length unit L, and Δp in units of ħ/L.</p>
+            <div data-eu-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eu-sr-only">Quantum Preview: Position and Momentum controls</legend>
+              <div class="eu-fields"><label>Δx in units of L <output data-eu-for="dx">1</output><input type="range" name="dx" min="0.1" max="2" step="0.05" value="1"></label></div><p class="eu-readout" data-eu-read="state" aria-live="polite"></p>
+              <div class="eu-missions">
+                <details class="eu-mission" data-eu-mission="preview-map">
+                  <summary>Map the pieces<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Match each part of the position–momentum relation to its qubit counterpart.</p><div class="eu-fields"><label>[x, p] equals <select name="map-comm" required><option value="">Choose</option><option value="zero">0</option><option value="ihbar">iħI</option><option value="2iz">2iZ</option></select></label><label>½|⟨[x, p]⟩| equals <select name="map-bound" required><option value="">Choose</option><option value="z">|⟨Z⟩|</option><option value="hbar">ħ</option><option value="hbar2">ħ/2</option></select></label><label>In [X, Y], the part that plays the role of iħI is <select name="map-role" required><option value="">Choose</option><option value="half">the ½</option><option value="2iz">2iZ</option><option value="x">X itself</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="preview-state">
+                  <summary>Does the state matter?<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>The X·Y bound |⟨Z⟩| changes from state to state. What about ħ/2?</p><div class="eu-fields"><label>The bound ħ/2 <select name="state-pick" required><option value="">Choose</option><option value="always">is the same for every state, because ⟨I⟩ = 1</option><option value="zero">can be zero, like the X·Y bound</option><option value="depends">depends on ⟨x⟩</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="preview-quarter">
+                  <summary>Squeeze the position<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Set Δx = L/4 and find the smallest possible Δp.</p><div class="eu-fields"><label>Smallest Δp, in units of ħ/L = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="quarter-dp"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="preview-halve">
+                  <summary>Halve it again<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>If Δx is halved, by what factor does the smallest possible Δp grow?</p><div class="eu-fields"><label>Factor = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="halve-f"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="preview-meaning">
+                  <summary>What Δx and Δp describe<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Which reading of Δx·Δp ≥ ħ/2 matches this lesson?</p><div class="eu-fields"><label>Δx and Δp are <select name="meaning-pick" required><option value="">Choose</option><option value="kick">the kick a position measurement gives the momentum</option><option value="fresh">spreads of readings over separate, freshly prepared copies of one state</option><option value="res">the resolutions of the two instruments</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eu-math">
+              <summary>Show the math</summary>
+              <p>Robertson: ΔA·ΔB ≥ ½|⟨[A, B]⟩|. For X and Y, [X, Y] = 2iZ and the bound is |⟨Z⟩|, which depends on the state and can vanish. For position and momentum, [x, p] = iħI. Its expectation is iħ⟨I⟩ = iħ in every normalized state, so the bound is always ħ/2. Δp ≥ ħ/(2Δx): squeezing one spread forces the other up, and neither can reach zero.</p>
+            </details>
+          </section>
+
+          <section class="eu-station" data-eu-station="sphere" data-eu-accent="blue" aria-labelledby="eu-sphere-title" hidden>
+            <h4 id="eu-sphere-title">Means on the Bloch Sphere (3D)</h4>
+            <p>The point for a pure state has coordinates (⟨X⟩, ⟨Y⟩, ⟨Z⟩). Its distance from the Z axis is √(⟨X⟩² + ⟨Y⟩²) = √(1 − ⟨Z⟩²) = ΔZ, and the same holds for each axis. The dashed segments show the three distances. Drag the point to move it, or drag elsewhere to turn the view. The angle sliders and boxes do the same from the keyboard.</p>
+            <div data-eu-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eu-sr-only">Means on the Bloch Sphere (3D) controls</legend>
+              <div class="eu-fields"><label>Polar angle θ <output data-eu-for="theta" data-eu-angle>60</output><input type="range" name="theta-range" data-eu-pair="theta" min="0" max="180" step="0.5" value="60"></label><label>θ in degrees <input class="eu-answer" type="number" name="theta" min="0" max="180" step="any" value="60"></label><label>Azimuth φ <output data-eu-for="phi" data-eu-angle>30</output><input type="range" name="phi-range" data-eu-pair="phi" min="0" max="360" step="0.5" value="30"></label><label>φ in degrees <input class="eu-answer" type="number" name="phi" min="0" max="360" step="any" value="30"></label><label>View turn <output data-eu-for="yaw" data-eu-angle>35</output><input type="range" name="yaw" min="-180" max="180" step="5" value="35"></label><label>View tilt <output data-eu-for="tilt" data-eu-angle>20</output><input type="range" name="tilt" min="-60" max="60" step="5" value="20"></label></div><p class="eu-readout" data-eu-read="state" aria-live="polite"></p>
+              <div class="eu-missions">
+                <details class="eu-mission" data-eu-mission="sphere-a">
+                  <summary>Rebuild from three means<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Place the point at (⟨X⟩, ⟨Y⟩, ⟨Z⟩) = (0.6, 0, −0.8), then write the state as √P(0)|0⟩ + e^(iφ)√(1 − P(0))|1⟩.</p><div class="eu-fields"><label>P(0) = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-p0"></label><label>φ in degrees = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="a-phi"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="sphere-b">
+                  <summary>The missing mean<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>A state has ⟨X⟩ = 0, ⟨Y⟩ = 0.6 and ⟨Z⟩ &gt; 0. Find ⟨Z⟩, then place the point.</p><div class="eu-fields"><label>⟨Z⟩ = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="b-z"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="sphere-c">
+                  <summary>Distance is spread<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Place the point so that its distance from the X axis is 0.6, with ⟨X⟩ &gt; 0.</p>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="sphere-d">
+                  <summary>Means that don’t fit<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Someone reports means (0.8, 0.6, 0.3) for a pure state.</p><div class="eu-fields"><label>These means <select name="d-pick" required><option value="">Choose</option><option value="yes">fit a pure state near the equator</option><option value="no">can’t belong to a pure state: their squares add to 1.09</option><option value="scale">fit after rescaling the ket</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="sphere-e">
+                  <summary>The opposite point<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Place the point opposite (0.48, 0.6, 0.64), the orthogonal state. Then compare the spreads.</p><div class="eu-fields"><label>Compared with the original state, the spreads <select name="e-pick" required><option value="">Choose</option><option value="swap">swap between the axes</option><option value="same">are all unchanged</option><option value="zero">all drop to zero</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eu-math">
+              <summary>Show the math</summary>
+              <p>For cos(θ/2)|0⟩ + e^(iφ) sin(θ/2)|1⟩ the means are (sin θ cos φ, sin θ sin φ, cos θ), a point on the unit sphere. The distance from that point to the X axis is √(⟨Y⟩² + ⟨Z⟩²) = √(1 − ⟨X⟩²) = ΔX, and the same goes for Y and Z. Three means fix the point, and the point fixes the state up to a global phase. P(0) = (1 + ⟨Z⟩)/2 and φ = atan2(⟨Y⟩, ⟨X⟩). The opposite point negates every mean and keeps every spread.</p>
+            </details>
+          </section>
+
+          <section class="eu-station" data-eu-station="noise" data-eu-accent="green" aria-labelledby="eu-noise-title" hidden>
+            <h4 id="eu-noise-title">Instrument Noise vs Quantum Spread</h4>
+            <p>A real meter adds its own random error. Each displayed value here is the quantum reading +1 or −1 plus independent noise with spread σ. Independent spreads add in quadrature, so the observed variance is (ΔA)² + σ². Turn the noise down to zero and watch what is left.</p>
+            <div data-eu-plot-slot></div>
+            <fieldset disabled>
+              <legend class="eu-sr-only">Instrument Noise vs Quantum Spread controls</legend>
+              <div class="eu-fields"><label>Setup <select name="setup"><option value="zs" selected>Z on (2|0⟩ + |1⟩)/√5</option><option value="xs">X on (2|0⟩ + |1⟩)/√5</option><option value="mx">X on |−x⟩</option></select></label><label>Instrument noise σ <output data-eu-for="sigma">0.3</output><input type="range" name="sigma" min="0" max="1" step="0.05" value="0.3"></label></div><div class="eu-button-row"><button class="eu-primary" type="button" data-eu-action="run">Add 1000 readings</button><button type="button" data-eu-action="clear">Clear readings</button><button type="button" data-eu-action="reseed">New seed</button></div><p class="eu-readout" data-eu-read="state" aria-live="polite"></p>
+              <div class="eu-missions">
+                <details class="eu-mission" data-eu-mission="noise-predict">
+                  <summary>Predict the blur<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Set Z on (2|0⟩ + |1⟩)/√5, where (ΔZ)² = 0.64, and σ = 0.6. Predict the observed variance, then run to compare.</p><div class="eu-fields"><label>Observed variance = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="predict-s2"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="noise-perfect">
+                  <summary>A perfect meter<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Set σ = 0 for the same setup. Predict the observed spread, then say what remains.</p><div class="eu-fields"><label>Observed spread = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="perfect-d"></label><label>With σ = 0, the spread that remains is <select name="perfect-pick" required><option value="">Choose</option><option value="none">nothing: a perfect meter shows no spread</option><option value="quantum">the quantum spread ΔZ of the state</option><option value="half">half of the old spread</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="noise-infer">
+                  <summary>Subtract the noise<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>A meter with σ = 0.3 shows an observed variance of 0.73. What is ΔA?</p><div class="eu-fields"><label>ΔA = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="infer-d"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="noise-own">
+                  <summary>Your own estimate<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Set σ = 0.5 and collect at least 2000 readings for any setup. Subtract σ² from your observed variance.</p><div class="eu-fields"><label>Your estimate of (ΔA)² = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="own-q"></label><label>To bring your estimate closer to (ΔA)², you would <select name="own-pick" required><option value="">Choose</option><option value="sigma">raise σ</option><option value="more">collect more readings</option><option value="none">change nothing: it is already exact</option></select></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+                <details class="eu-mission" data-eu-mission="noise-eigen">
+                  <summary>All noise<span data-eu-done hidden>✓ Complete</span></summary>
+                  <p>Set X on |−x⟩ and σ = 0.4. What observed variance do you expect?</p><div class="eu-fields"><label>Observed variance = <input class="eu-answer" type="text" autocomplete="off" spellcheck="false" name="eigen-s2"></label></div>
+                  <button class="eu-primary" type="button" data-eu-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="eu-math">
+              <summary>Show the math</summary>
+              <p>Displayed value = reading + noise, with the noise independent of the reading and averaging to zero. Variances of independent parts add: (observed spread)² = (ΔA)² + σ². A better instrument lowers σ and can never remove ΔA. For an eigenstate ΔA = 0, so all of the observed spread is instrument noise. To reduce the quantum spread you change the state, not the meter.</p>
+            </details>
+          </section>
+
+        </div>
+        <template id="eu-figure-template">
+          <figure class="eu-figure">
+            <figcaption id="eu-title">Station diagram</figcaption>
+            <div class="eu-viewport" id="eu-viewport" data-renderer="svg">
+              <canvas class="eu-canvas" id="eu-canvas" aria-hidden="true" hidden></canvas>
+              <svg class="eu-diagram" id="eu-diagram" viewBox="0 0 560 300" role="img" aria-labelledby="eu-title" aria-describedby="eu-desc">
+                <desc id="eu-desc"></desc>
+                <g data-eu-geometry></g>
+                <g data-eu-labels></g>
+              </svg>
+            </div>
+            <p class="lesson-note" id="eu-render-status"></p>
+          </figure>
+        </template>
+        <template id="eu-mission-template">
+          <div class="eu-mission-tools">
+            <button type="button" data-eu-hint>Show first hint</button>
+            <ol data-eu-hint-list aria-live="polite" hidden></ol>
+            <p class="eu-feedback" data-eu-feedback role="status"></p>
+            <details data-eu-work hidden><summary>Worked steps</summary><p data-eu-work-text></p></details>
+          </div>
+        </template>
+      </div>
+    </details>
 
     <nav class="lesson-next" aria-label="Lesson navigation">
       <a href="../14_observables_and_operators/14_observables_and_operators.html">
