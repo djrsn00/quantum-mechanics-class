@@ -6,10 +6,10 @@
   <meta name="theme-color" content="#050906">
   <meta name="description" content="Build two-qubit states with tensor products and see how identical single-qubit probabilities can hide different joint outcomes.">
   <title>Composite Systems | Quantum Mechanics Class</title>
-  <link rel="stylesheet" href="./styles/main.css">
+  <link rel="stylesheet" href="./styles/main.css?v=18-composite-arcade">
   <script src="./scripts/app.js" defer></script>
   <script src="./scripts/lessons-menu.js" defer></script>
-  <script type="module" src="./scripts/lesson.js"></script>
+  <script type="module" src="./scripts/lesson.js?v=18-composite-arcade"></script>
 </head>
 <body>
   <header class="site-header">
@@ -130,6 +130,7 @@
       <h2 id="cs-title">Composite Systems</h2>
       <p class="cs-lead"><strong>Two preparations each give 50/50 results when you look at qubit A alone or qubit B alone. How could measuring the pair reveal which preparation you have?</strong></p>
       <p>A and B are two distinguishable qubits. Keep A first and B second in every record. The pair <span class="cs-token">01</span> means A gave 0 and B gave 1 on the same trial, and |01⟩ names the corresponding joint basis state.</p>
+      <p><a id="ca-arcade-link" href="#composite-arcade">Open the optional Composite Systems Arcade</a></p>
     </header>
 
     <section class="cs-panel" aria-labelledby="cs-lab-title">
@@ -367,6 +368,622 @@
         </fieldset>
       </form>
     </section>
+
+    <details class="lesson-panel ca-arcade" id="composite-arcade">
+      <summary><strong>Composite Systems Arcade</strong><span>Optional practice</span></summary>
+      <div class="ca-body">
+        <p>Pick a station, try its controls, and open a mission when you’re ready. Each mission has two hints. Progress lasts while this page is open. Every station keeps A first and B second: |ij⟩ = |i⟩<sub>A</sub> ⊗ |j⟩<sub>B</sub>, and a pair state is the ordered column (α00, α01, α10, α11) in the basis (|00⟩, |01⟩, |10⟩, |11⟩).</p>
+        <p class="ca-note" id="ca-tolerance">Amplitudes are entered as a real part and an imaginary part, each in its own box. Boxes accept whole numbers, decimals, fractions such as 3/5, and square roots such as 1/√2, √3/2 or √(2/3) (type √ or sqrt). Answers that end as decimals, such as 0.25, are checked exactly. Answers such as 1/3 or 1/√2 can be typed exactly, or as decimals within 0.002 of the exact value, separately for each real and imaginary part. Where a mission says so, a state counts up to a global phase. Factors you find count when their product is within 0.004 per part, and states you build count when each probability is within 0.005.</p>
+        <div class="ca-toolbar">
+          <label for="ca-station">Station
+            <select id="ca-station" aria-controls="ca-panels" disabled>
+              <optgroup label="Building pair states">
+                <option value="expand" selected>1 · Tensor Expander</option>
+                <option value="order">2 · Order Matters</option>
+                <option value="factor">3 · Factor Finder</option>
+                <option value="test">4 · Product or Entangled?</option>
+              </optgroup>
+              <optgroup label="Probabilities">
+                <option value="ledger">5 · Joint and Marginal Ledger</option>
+                <option value="cond">6 · Conditional Odds</option>
+                <option value="measure">7 · Measure Just One</option>
+                <option value="records">8 · Correlation Detective</option>
+              </optgroup>
+              <optgroup label="Operators on pairs">
+                <option value="local">9 · Local Gates</option>
+                <option value="cnot">10 · Entangling Gate (CNOT)</option>
+                <option value="dims">11 · Dimension Counter</option>
+              </optgroup>
+              <optgroup label="Recurring formats">
+                <option value="designer">12 · Pair Designer</option>
+                <option value="detective">13 · Error Detective</option>
+              </optgroup>
+              <optgroup label="Extras">
+                <option value="interact">14 · Interaction Builds Entanglement</option>
+              </optgroup>
+            </select>
+          </label>
+          <p id="ca-progress" role="status">0 of 61 missions completed this session.</p>
+          <button id="ca-reset" type="button" disabled>Reset this station</button>
+          <label class="ca-reduced" for="ca-reduced"><input id="ca-reduced" type="checkbox" disabled> Reduced effects</label>
+        </div>
+        <p class="ca-note" id="ca-status" role="status" aria-atomic="true"></p>
+        <noscript><p class="ca-note">JavaScript runs the arcade diagrams, controls and mission checks.</p></noscript>
+        <div id="ca-panels">
+          <section class="ca-station" data-ca-station="expand" data-ca-accent="blue" aria-labelledby="ca-expand-title">
+            <h4 id="ca-expand-title">Tensor Expander</h4>
+            <p>Enter A’s amplitudes a, b and B’s amplitudes c, d as real and imaginary parts. The tensor product pairs each term of A with each term of B and multiplies their amplitudes: (a|0⟩ + b|1⟩) ⊗ (c|0⟩ + d|1⟩) = ac|00⟩ + ad|01⟩ + bc|10⟩ + bd|11⟩.</p>
+            <p>The diagram is a multiplication grid: A’s amplitudes down the side, B’s across the top. Each cell is one joint amplitude, with its phase as a small arrow and its probability as the filled square. Tick the box to see the products, or work them out first.</p>
+            <div data-ca-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ca-sr-only">Tensor Expander controls</legend>
+              <div class="ca-fields ca-factor-fields"><div class="ca-complex" role="group" aria-label="a"><label>a, real part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-re" value="3/5"></label><label>a, imaginary part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-im" value="0"></label></div><div class="ca-complex" role="group" aria-label="b"><label>b, real part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-re" value="4/5"></label><label>b, imaginary part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-im" value="0"></label></div><div class="ca-complex" role="group" aria-label="c"><label>c, real part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-re" value="1/√2"></label><label>c, imaginary part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-im" value="0"></label></div><div class="ca-complex" role="group" aria-label="d"><label>d, real part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-re" value="0"></label><label>d, imaginary part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-im" value="1/√2"></label></div></div><div class="ca-fields"><label class="ca-check-row"><input type="checkbox" name="show"> Show the products in the diagram</label></div><p class="ca-readout" data-ca-read="state" aria-live="polite"></p>
+              <div class="ca-missions">
+                <details class="ca-mission" data-ca-mission="expand-a">
+                  <summary>Card 1 · a complex factor on B<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission loads |u⟩<sub>A</sub> = (3/5)|0⟩ + (4/5)|1⟩ and |v⟩<sub>B</sub> = (1/√2)|0⟩ + (i/√2)|1⟩. Expand |u⟩<sub>A</sub> ⊗ |v⟩<sub>B</sub> into the ordered column (ac, ad, bc, bd).</p><div class="ca-matrix-entry"><p class="ca-step">Your column for card 1</p><div class="ca-matrix" role="group" aria-label="Your column for card 1, entered by basis ket"><div class="ca-cell" role="group" aria-label="Your column for card 1, |00⟩ amplitude α00"><span class="ca-cell-tag" aria-hidden="true">|00⟩ · α00</span><label><span class="ca-sr-only">Your column for card 1, |00⟩ amplitude α00, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-col-00-re" value=""></label><label><span class="ca-sr-only">Your column for card 1, |00⟩ amplitude α00, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-col-00-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Your column for card 1, |01⟩ amplitude α01"><span class="ca-cell-tag" aria-hidden="true">|01⟩ · α01</span><label><span class="ca-sr-only">Your column for card 1, |01⟩ amplitude α01, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-col-01-re" value=""></label><label><span class="ca-sr-only">Your column for card 1, |01⟩ amplitude α01, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-col-01-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Your column for card 1, |10⟩ amplitude α10"><span class="ca-cell-tag" aria-hidden="true">|10⟩ · α10</span><label><span class="ca-sr-only">Your column for card 1, |10⟩ amplitude α10, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-col-10-re" value=""></label><label><span class="ca-sr-only">Your column for card 1, |10⟩ amplitude α10, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-col-10-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Your column for card 1, |11⟩ amplitude α11"><span class="ca-cell-tag" aria-hidden="true">|11⟩ · α11</span><label><span class="ca-sr-only">Your column for card 1, |11⟩ amplitude α11, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-col-11-re" value=""></label><label><span class="ca-sr-only">Your column for card 1, |11⟩ amplitude α11, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-col-11-im" value="0"></label></div></div></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="expand-b">
+                  <summary>Card 2 · complex on A, a sign on B<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission loads a = (1 + i)/2, b = 1/√2, c = √3/2 and d = −1/2. Expand the product.</p><div class="ca-matrix-entry"><p class="ca-step">Your column for card 2</p><div class="ca-matrix" role="group" aria-label="Your column for card 2, entered by basis ket"><div class="ca-cell" role="group" aria-label="Your column for card 2, |00⟩ amplitude α00"><span class="ca-cell-tag" aria-hidden="true">|00⟩ · α00</span><label><span class="ca-sr-only">Your column for card 2, |00⟩ amplitude α00, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-col-00-re" value=""></label><label><span class="ca-sr-only">Your column for card 2, |00⟩ amplitude α00, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-col-00-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Your column for card 2, |01⟩ amplitude α01"><span class="ca-cell-tag" aria-hidden="true">|01⟩ · α01</span><label><span class="ca-sr-only">Your column for card 2, |01⟩ amplitude α01, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-col-01-re" value=""></label><label><span class="ca-sr-only">Your column for card 2, |01⟩ amplitude α01, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-col-01-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Your column for card 2, |10⟩ amplitude α10"><span class="ca-cell-tag" aria-hidden="true">|10⟩ · α10</span><label><span class="ca-sr-only">Your column for card 2, |10⟩ amplitude α10, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-col-10-re" value=""></label><label><span class="ca-sr-only">Your column for card 2, |10⟩ amplitude α10, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-col-10-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Your column for card 2, |11⟩ amplitude α11"><span class="ca-cell-tag" aria-hidden="true">|11⟩ · α11</span><label><span class="ca-sr-only">Your column for card 2, |11⟩ amplitude α11, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-col-11-re" value=""></label><label><span class="ca-sr-only">Your column for card 2, |11⟩ amplitude α11, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-col-11-im" value="0"></label></div></div></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="expand-c">
+                  <summary>Card 3 · one probability, then all of them<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission loads a = 1/√3, b = √(2/3), c = 3/5 and d = −4i/5. Find P(01) without writing out the whole column, then add all four joint probabilities.</p><div class="ca-fields"><label>P(01) = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-p" value=""></label><label>P(00) + P(01) + P(10) + P(11) = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-sum" value=""></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="expand-d">
+                  <summary>Card 4 · a phase on one factor<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Go back to card 1 (opening this mission loads it) and multiply A’s factor by i, so a = 3i/5 and b = 4i/5. Give the new |10⟩ amplitude, and say what happened to the state.</p><div class="ca-complex" role="group" aria-label="New α10"><label>New α10, real part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-a10-re" value=""></label><label>New α10, imaginary part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-a10-im" value="0"></label></div><div class="ca-fields"><label>Multiplying A’s factor by i <select name="d-pick" required><option value="">Choose</option><option value="half">changes only α00 and α01, the terms with A = 0</option><option value="global">multiplies all four amplitudes by i: a global phase, so no probability changes</option><option value="probs">multiplies every joint probability by −1</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ca-math">
+              <summary>Show the math</summary>
+              <p>Distribute: (a|0⟩ + b|1⟩) ⊗ (c|0⟩ + d|1⟩) = ac|0⟩⊗|0⟩ + ad|0⟩⊗|1⟩ + bc|1⟩⊗|0⟩ + bd|1⟩⊗|1⟩. The first index of each ket is A’s bit, so the column is (ac, ad, bc, bd).</p>
+              <p>Complex amplitudes multiply as complex numbers: (p + qi)(r + si) = (pr − qs) + (ps + qr)i. Magnitudes multiply too, so P(ij) = |a_i|²|b_j|², and the four probabilities add to (|a|² + |b|²)(|c|² + |d|²) = 1.</p>
+            </details>
+          </section>
+
+          <section class="ca-station" data-ca-station="order" data-ca-accent="orange" aria-labelledby="ca-order-title" hidden>
+            <h4 id="ca-order-title">Order Matters</h4>
+            <p>The lesson always writes A first and B second, so |01⟩ means A = 0 and B = 1. Swapping which qubit you call A changes the name of every ket with unequal bits: |01⟩ and |10⟩ trade places, and so do their amplitudes in the ordered column. The physical pair is the same, but its column is written differently. Tick Swap to see where each amplitude goes.</p>
+            <div data-ca-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ca-sr-only">Order Matters controls</legend>
+              <div class="ca-fields"><label>State <select name="state"><option value="s1" selected>|1⟩A ⊗ ((3/5)|0⟩ + (4/5)|1⟩)B</option><option value="s2">(1/2)|00⟩ + (i/2)|01⟩ + (1/√2)|10⟩</option><option value="s3">√0.1|00⟩ + √0.2|01⟩ + √0.3|10⟩ + √0.4|11⟩</option></select></label><label class="ca-check-row"><input type="checkbox" name="swap"> Swap the labels: call the second qubit A and the first B</label></div><p class="ca-readout" data-ca-read="state" aria-live="polite"></p>
+              <div class="ca-missions">
+                <details class="ca-mission" data-ca-mission="order-a">
+                  <summary>Swap a product<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks |1⟩<sub>A</sub> ⊗ ((3/5)|0⟩ + (4/5)|1⟩)<sub>B</sub>, whose column is (0, 0, 3/5, 4/5). Swap which qubit is called A and which B. Enter the new ordered column.</p><div class="ca-matrix-entry"><p class="ca-step">Column after the swap</p><div class="ca-matrix" role="group" aria-label="Column after the swap, entered by basis ket"><div class="ca-cell" role="group" aria-label="Column after the swap, |00⟩ amplitude α00"><span class="ca-cell-tag" aria-hidden="true">|00⟩ · α00</span><label><span class="ca-sr-only">Column after the swap, |00⟩ amplitude α00, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-col-00-re" value=""></label><label><span class="ca-sr-only">Column after the swap, |00⟩ amplitude α00, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-col-00-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Column after the swap, |01⟩ amplitude α01"><span class="ca-cell-tag" aria-hidden="true">|01⟩ · α01</span><label><span class="ca-sr-only">Column after the swap, |01⟩ amplitude α01, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-col-01-re" value=""></label><label><span class="ca-sr-only">Column after the swap, |01⟩ amplitude α01, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-col-01-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Column after the swap, |10⟩ amplitude α10"><span class="ca-cell-tag" aria-hidden="true">|10⟩ · α10</span><label><span class="ca-sr-only">Column after the swap, |10⟩ amplitude α10, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-col-10-re" value=""></label><label><span class="ca-sr-only">Column after the swap, |10⟩ amplitude α10, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-col-10-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Column after the swap, |11⟩ amplitude α11"><span class="ca-cell-tag" aria-hidden="true">|11⟩ · α11</span><label><span class="ca-sr-only">Column after the swap, |11⟩ amplitude α11, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-col-11-re" value=""></label><label><span class="ca-sr-only">Column after the swap, |11⟩ amplitude α11, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-col-11-im" value="0"></label></div></div></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="order-b">
+                  <summary>The general rule<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>A state has the column (α00, α01, α10, α11). What is its column once the labels A and B are swapped?</p><div class="ca-fields"><label>After the swap the column is <select name="b-pick" required><option value="">Choose</option><option value="rev">(α11, α10, α01, α00)</option><option value="same">(α00, α01, α10, α11): the order of the factors doesn’t matter</option><option value="swap">(α00, α10, α01, α11)</option><option value="conj">(α00, α01*, α10*, α11): the swapped terms are conjugated</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="order-c">
+                  <summary>Swap a complex state<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks (1/2)|00⟩ + (i/2)|01⟩ + (1/√2)|10⟩. Enter its column after the swap.</p><div class="ca-matrix-entry"><p class="ca-step">Column after the swap</p><div class="ca-matrix" role="group" aria-label="Column after the swap, entered by basis ket"><div class="ca-cell" role="group" aria-label="Column after the swap, |00⟩ amplitude α00"><span class="ca-cell-tag" aria-hidden="true">|00⟩ · α00</span><label><span class="ca-sr-only">Column after the swap, |00⟩ amplitude α00, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-col-00-re" value=""></label><label><span class="ca-sr-only">Column after the swap, |00⟩ amplitude α00, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-col-00-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Column after the swap, |01⟩ amplitude α01"><span class="ca-cell-tag" aria-hidden="true">|01⟩ · α01</span><label><span class="ca-sr-only">Column after the swap, |01⟩ amplitude α01, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-col-01-re" value=""></label><label><span class="ca-sr-only">Column after the swap, |01⟩ amplitude α01, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-col-01-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Column after the swap, |10⟩ amplitude α10"><span class="ca-cell-tag" aria-hidden="true">|10⟩ · α10</span><label><span class="ca-sr-only">Column after the swap, |10⟩ amplitude α10, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-col-10-re" value=""></label><label><span class="ca-sr-only">Column after the swap, |10⟩ amplitude α10, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-col-10-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Column after the swap, |11⟩ amplitude α11"><span class="ca-cell-tag" aria-hidden="true">|11⟩ · α11</span><label><span class="ca-sr-only">Column after the swap, |11⟩ amplitude α11, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-col-11-re" value=""></label><label><span class="ca-sr-only">Column after the swap, |11⟩ amplitude α11, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-col-11-im" value="0"></label></div></div></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="order-d">
+                  <summary>Marginals trade places too<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks √0.1|00⟩ + √0.2|01⟩ + √0.3|10⟩ + √0.4|11⟩. After the swap, what are P(A = 0) and P(A = 1, B = 0)?</p><div class="ca-fields"><label>P(A = 0) after the swap = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="d-a0" value=""></label><label>P(10) after the swap = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="d-p10" value=""></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ca-math">
+              <summary>Show the math</summary>
+              <p>Renaming the qubits sends |i⟩A ⊗ |j⟩B to |j⟩A ⊗ |i⟩B, so the amplitude αij moves to position ji. |00⟩ and |11⟩ keep their places; α01 and α10 trade.</p>
+              <p>For a product state the factors trade places: |u⟩A ⊗ |v⟩B becomes |v⟩A ⊗ |u⟩B, with column (ca, cb, da, db). Marginals trade too: the new P(A = i) is the old P(B = i).</p>
+            </details>
+          </section>
+
+          <section class="ca-station" data-ca-station="factor" data-ca-accent="green" aria-labelledby="ca-factor-title" hidden>
+            <h4 id="ca-factor-title">Factor Finder</h4>
+            <p>Here you run the Tensor Expander backwards. Each target is a column of four amplitudes. Enter single-qubit factors a, b for A and c, d for B so that (ac, ad, bc, bd) matches the target, or tick the box if no factors exist. Factors are never unique: multiplying A’s factor by any nonzero number k and dividing B’s by k gives the same product, so the checker tests the product of the factors you enter. The diagram shows the target next to your product.</p>
+            <p class="ca-note">Your product counts when each real and imaginary part is within 0.004 of the target. Factors may be unnormalized.</p>
+            <div data-ca-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ca-sr-only">Factor Finder controls</legend>
+              <div class="ca-fields"><label>Target state <select name="target"><option value="t1" selected>Target 1</option><option value="t2">Target 2</option><option value="t3">Target 3</option><option value="t4">Target 4</option></select></label></div><div class="ca-fields ca-factor-fields"><div class="ca-complex" role="group" aria-label="a"><label>a, real part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-re" value="1"></label><label>a, imaginary part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-im" value="0"></label></div><div class="ca-complex" role="group" aria-label="b"><label>b, real part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-re" value="0"></label><label>b, imaginary part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-im" value="0"></label></div><div class="ca-complex" role="group" aria-label="c"><label>c, real part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-re" value="1"></label><label>c, imaginary part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-im" value="0"></label></div><div class="ca-complex" role="group" aria-label="d"><label>d, real part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-re" value="0"></label><label>d, imaginary part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-im" value="0"></label></div></div><div class="ca-fields"><label class="ca-check-row"><input type="checkbox" name="none"> No factors exist for this target</label></div><p class="ca-readout" data-ca-read="state" aria-live="polite"></p>
+              <div class="ca-missions">
+                <details class="ca-mission" data-ca-mission="factor-a">
+                  <summary>Target 1 · real and unequal<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks the target (√3/4, 1/4, 3/4, √3/4). Find a, b, c, d whose product gives it.</p>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="factor-b">
+                  <summary>Target 2 · a complex factor<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks the target (1/√6, i/√6, 1/√3, i/√3). Find factors.</p>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="factor-c">
+                  <summary>Target 3 · zeros in the column<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks the target (0, 0, 3/5, 4i/5). Find factors.</p>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="factor-d">
+                  <summary>Target 4 · can it be factored?<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks the target (1/√3, 1/√3, 0, 1/√3), that is (|00⟩ + |01⟩ + |11⟩)/√3. Find factors, or tick “No factors exist” if there are none.</p>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ca-math">
+              <summary>Show the math</summary>
+              <p>Read the factors off ratios. If a ≠ 0, the A = 0 row (ac, ad) is a times (c, d), so B’s factor is proportional to the first row. If b ≠ 0, the second row (bc, bd) is b times the same (c, d). For a product, the two rows of the 2×2 grid must be proportional.</p>
+              <p>A quick recipe: pick a nonzero row as (c, d), then a and b are the numbers that scale it into each row. Normalizing each factor is optional; the product test α00α11 − α01α10 = 0 is the condition that the rows are proportional.</p>
+            </details>
+          </section>
+
+          <section class="ca-station" data-ca-station="test" data-ca-accent="violet" aria-labelledby="ca-test-title" hidden>
+            <h4 id="ca-test-title">Product or Entangled?</h4>
+            <p>A pure pair state is a product exactly when D = α00α11 − α01α10 = 0. The grid shows the two diagonals: the solid one multiplies α00α11, the dashed one α01α10. Equal diagonal products mean the rows are proportional, so the state factors; any difference, however small, means it is entangled. Pick a card and compute D yourself, or tick the box to see it.</p>
+            <div data-ca-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ca-sr-only">Product or Entangled? controls</legend>
+              <div class="ca-fields"><label>State card <select name="card"><option value="phip" selected>|Φ⁺⟩ = (|00⟩ + |11⟩)/√2</option><option value="phim">|Φ⁻⟩ = (|00⟩ − |11⟩)/√2</option><option value="psip">|Ψ⁺⟩ = (|01⟩ + |10⟩)/√2</option><option value="psim">|Ψ⁻⟩ = (|01⟩ − |10⟩)/√2</option><option value="dis">(|00⟩ − |01⟩ + |10⟩ − |11⟩)/2</option><option value="sign">(|00⟩ + |01⟩ + |10⟩ − |11⟩)/2</option><option value="cplx">(|00⟩ + i|01⟩ + i|10⟩ − |11⟩)/2</option></select></label><label class="ca-check-row"><input type="checkbox" name="show"> Show D in the diagram</label></div><p class="ca-readout" data-ca-read="state" aria-live="polite"></p>
+              <div class="ca-missions">
+                <details class="ca-mission" data-ca-mission="test-a">
+                  <summary>All four Bell states<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Compute D = α00α11 − α01α10 for each Bell state. Each D is real here, so one box each.</p><div class="ca-fields"><label>D for |Φ⁺⟩ = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-phip" value=""></label><label>D for |Φ⁻⟩ = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-phim" value=""></label><label>D for |Ψ⁺⟩ = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-psip" value=""></label><label>D for |Ψ⁻⟩ = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-psim" value=""></label><label>The four Bell states are <select name="a-pick" required><option value="">Choose</option><option value="all">all entangled</option><option value="two">entangled only for |Φ±⟩</option><option value="none">all products: each has 50/50 marginals</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="test-b">
+                  <summary>A disguised product<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks (|00⟩ − |01⟩ + |10⟩ − |11⟩)/2. Four nonzero amplitudes and two minus signs. Compute D and classify it.</p><div class="ca-complex" role="group" aria-label="D"><label>D, real part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-d-re" value=""></label><label>D, imaginary part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-d-im" value="0"></label></div><div class="ca-fields"><label>This state is <select name="b-pick" required><option value="">Choose</option><option value="product">product</option><option value="entangled">entangled</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="test-c">
+                  <summary>One sign changes everything<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks (|00⟩ + |01⟩ + |10⟩ − |11⟩)/2. Every probability is 1/4, as for a product. Compute D and classify it.</p><div class="ca-complex" role="group" aria-label="D"><label>D, real part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-d-re" value=""></label><label>D, imaginary part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-d-im" value="0"></label></div><div class="ca-fields"><label>This state is <select name="c-pick" required><option value="">Choose</option><option value="product">product</option><option value="entangled">entangled</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="test-d">
+                  <summary>Complex amplitudes<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks (|00⟩ + i|01⟩ + i|10⟩ − |11⟩)/2. Compute D, keeping i² = −1, and classify it.</p><div class="ca-complex" role="group" aria-label="D"><label>D, real part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-d-re" value=""></label><label>D, imaginary part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-d-im" value="0"></label></div><div class="ca-fields"><label>This state is <select name="d-pick" required><option value="">Choose</option><option value="product">product</option><option value="entangled">entangled</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ca-math">
+              <summary>Show the math</summary>
+              <p>For a product, α00α11 − α01α10 = (ac)(bd) − (ad)(bc) = 0. Conversely, if D = 0 the two rows (α00, α01) and (α10, α11) are proportional, which is exactly the condition for factors to exist.</p>
+              <p>D is the determinant of the 2×2 grid of amplitudes. Its size |D| runs from 0 for products to 1/2 for the Bell states. Disguised products hide their factors behind signs: (|00⟩ − |01⟩ + |10⟩ − |11⟩)/2 = |+⟩A ⊗ |−⟩B.</p>
+            </details>
+          </section>
+
+          <section class="ca-station" data-ca-station="ledger" data-ca-accent="yellow" aria-labelledby="ca-ledger-title" hidden>
+            <h4 id="ca-ledger-title">Joint and Marginal Ledger</h4>
+            <p>A ledger lists the four joint probabilities P(A = i, B = j) = |αij|² in a 2×2 table, with A’s outcome down the side and B’s across the top. Each row adds to a marginal P(A = i), each column to a marginal P(B = j), and everything adds to 1. In the diagram the filled square in each cell shows its probability.</p>
+            <div data-ca-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ca-sr-only">Joint and Marginal Ledger controls</legend>
+              <div class="ca-fields"><label>State card <select name="card"><option value="l1" selected>(|00⟩ + 2|01⟩ + 2|10⟩ + |11⟩)/√10</option><option value="l2">(1/2)|00⟩ + (i/2)|01⟩ + ((1 + i)/2)|11⟩</option><option value="l3">proportional to |00⟩ + i|01⟩ + 2|10⟩ − 2i|11⟩</option></select></label><label class="ca-check-row"><input type="checkbox" name="show"> Show the probabilities in the diagram</label></div><p class="ca-readout" data-ca-read="state" aria-live="polite"></p>
+              <div class="ca-missions">
+                <details class="ca-mission" data-ca-mission="ledger-a">
+                  <summary>Ledger 1 · even margins, uneven pairs<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks (|00⟩ + 2|01⟩ + 2|10⟩ + |11⟩)/√10. Fill in the whole ledger.</p><table class="ca-ledger"><caption>Ledger 1</caption><tr><th scope="col"><span class="ca-sr-only">A row, B column</span></th><th scope="col">B = 0</th><th scope="col">B = 1</th><th scope="col">P(A = i)</th></tr><tr><th scope="row">A = 0</th><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 1, P(A = 0, B = 0), that is P(00)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-p00" value=""></label></td><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 1, P(A = 0, B = 1), that is P(01)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-p01" value=""></label></td><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 1, P(A = 0)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-a0" value=""></label></td></tr><tr><th scope="row">A = 1</th><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 1, P(A = 1, B = 0), that is P(10)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-p10" value=""></label></td><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 1, P(A = 1, B = 1), that is P(11)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-p11" value=""></label></td><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 1, P(A = 1)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-a1" value=""></label></td></tr><tr><th scope="row">P(B = j)</th><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 1, P(B = 0)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-b0" value=""></label></td><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 1, P(B = 1)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-b1" value=""></label></td><td aria-hidden="true">1</td></tr></table>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="ledger-b">
+                  <summary>Ledger 2 · complex amplitudes<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks (1/2)|00⟩ + (i/2)|01⟩ + ((1 + i)/2)|11⟩. Fill in the ledger.</p><table class="ca-ledger"><caption>Ledger 2</caption><tr><th scope="col"><span class="ca-sr-only">A row, B column</span></th><th scope="col">B = 0</th><th scope="col">B = 1</th><th scope="col">P(A = i)</th></tr><tr><th scope="row">A = 0</th><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 2, P(A = 0, B = 0), that is P(00)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-p00" value=""></label></td><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 2, P(A = 0, B = 1), that is P(01)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-p01" value=""></label></td><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 2, P(A = 0)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-a0" value=""></label></td></tr><tr><th scope="row">A = 1</th><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 2, P(A = 1, B = 0), that is P(10)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-p10" value=""></label></td><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 2, P(A = 1, B = 1), that is P(11)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-p11" value=""></label></td><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 2, P(A = 1)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-a1" value=""></label></td></tr><tr><th scope="row">P(B = j)</th><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 2, P(B = 0)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-b0" value=""></label></td><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 2, P(B = 1)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-b1" value=""></label></td><td aria-hidden="true">1</td></tr></table>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="ledger-c">
+                  <summary>Ledger 3 · normalize first<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks a state proportional to |00⟩ + i|01⟩ + 2|10⟩ − 2i|11⟩. These amplitudes aren’t normalized. Fill in the ledger.</p><table class="ca-ledger"><caption>Ledger 3</caption><tr><th scope="col"><span class="ca-sr-only">A row, B column</span></th><th scope="col">B = 0</th><th scope="col">B = 1</th><th scope="col">P(A = i)</th></tr><tr><th scope="row">A = 0</th><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 3, P(A = 0, B = 0), that is P(00)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="c-p00" value=""></label></td><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 3, P(A = 0, B = 1), that is P(01)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="c-p01" value=""></label></td><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 3, P(A = 0)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="c-a0" value=""></label></td></tr><tr><th scope="row">A = 1</th><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 3, P(A = 1, B = 0), that is P(10)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="c-p10" value=""></label></td><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 3, P(A = 1, B = 1), that is P(11)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="c-p11" value=""></label></td><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 3, P(A = 1)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="c-a1" value=""></label></td></tr><tr><th scope="row">P(B = j)</th><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 3, P(B = 0)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="c-b0" value=""></label></td><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 3, P(B = 1)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="c-b1" value=""></label></td><td aria-hidden="true">1</td></tr></table>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="ledger-d">
+                  <summary>Ledger 4 · fill in the gaps<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>A pair has P(A = 0) = 0.7, P(B = 0) = 0.4 and P(00) = 0.3. Complete the ledger, including the given values.</p><table class="ca-ledger"><caption>Ledger 4</caption><tr><th scope="col"><span class="ca-sr-only">A row, B column</span></th><th scope="col">B = 0</th><th scope="col">B = 1</th><th scope="col">P(A = i)</th></tr><tr><th scope="row">A = 0</th><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 4, P(A = 0, B = 0), that is P(00)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="d-p00" value=""></label></td><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 4, P(A = 0, B = 1), that is P(01)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="d-p01" value=""></label></td><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 4, P(A = 0)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="d-a0" value=""></label></td></tr><tr><th scope="row">A = 1</th><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 4, P(A = 1, B = 0), that is P(10)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="d-p10" value=""></label></td><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 4, P(A = 1, B = 1), that is P(11)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="d-p11" value=""></label></td><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 4, P(A = 1)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="d-a1" value=""></label></td></tr><tr><th scope="row">P(B = j)</th><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 4, P(B = 0)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="d-b0" value=""></label></td><td><label class="ca-m4-cell"><span class="ca-sr-only">Ledger 4, P(B = 1)</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="d-b1" value=""></label></td><td aria-hidden="true">1</td></tr></table>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ca-math">
+              <summary>Show the math</summary>
+              <p>P(ij) = |αij|²/N, with N = |α00|² + |α01|² + |α10|² + |α11|² (N = 1 for a normalized state). P(A = 0) = P(00) + P(01) and P(B = 0) = P(00) + P(10).</p>
+              <p>The margins don’t fix the table: (|00⟩ + 2|01⟩ + 2|10⟩ + |11⟩)/√10 and |+⟩|+⟩ both have 50/50 margins. Given both margins and one joint cell, the other three cells follow by subtraction.</p>
+            </details>
+          </section>
+
+          <section class="ca-station" data-ca-station="cond" data-ca-accent="red" aria-labelledby="ca-cond-title" hidden>
+            <h4 id="ca-cond-title">Conditional Odds</h4>
+            <p>A conditional probability answers: given that A gave i, how likely is each result for B? Keep only the pairs with A = i, then rescale them to add to 1: P(B = j | A = i) = P(A = i, B = j)/P(A = i). Pick a condition to spotlight that row of the grid; tick the box to see the rescaled odds beside B’s unconditioned odds.</p>
+            <div data-ca-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ca-sr-only">Conditional Odds controls</legend>
+              <div class="ca-fields"><label>State card <select name="card"><option value="c1" selected>((√3/2)|0⟩ + (i/2)|1⟩)A ⊗ ((3/5)|0⟩ + (4/5)|1⟩)B</option><option value="c2">√0.3|00⟩ + √0.7|11⟩</option><option value="c3">(2|00⟩ + |01⟩ + |11⟩)/√6</option><option value="c4">(|00⟩ + |01⟩ + |10⟩ + i|11⟩)/2</option></select></label><label>Condition on <select name="given"><option value="none" selected>nothing: all four pairs</option><option value="0">A = 0</option><option value="1">A = 1</option></select></label><label class="ca-check-row"><input type="checkbox" name="show"> Show the conditional odds</label></div><p class="ca-readout" data-ca-read="state" aria-live="polite"></p>
+              <div class="ca-missions">
+                <details class="ca-mission" data-ca-mission="cond-a">
+                  <summary>A product: does A tell you anything?<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks the product ((√3/2)|0⟩ + (i/2)|1⟩)<sub>A</sub> ⊗ ((3/5)|0⟩ + (4/5)|1⟩)<sub>B</sub>. Find B’s odds of giving 1 in each case.</p><div class="ca-fields"><label>P(B = 1 | A = 0) = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-0" value=""></label><label>P(B = 1 | A = 1) = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-1" value=""></label><label>Learning A’s result <select name="a-pick" required><option value="">Choose</option><option value="same">leaves B’s odds where they were</option><option value="flip">makes B more likely to disagree with A</option><option value="fix">fixes B’s result</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="cond-b">
+                  <summary>Uneven but perfectly matched<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks √0.3|00⟩ + √0.7|11⟩. Its marginals are uneven: P(A = 0) = 0.3.</p><div class="ca-fields"><label>P(B = 0 | A = 0) = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-0" value=""></label><label>P(B = 1 | A = 1) = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-1" value=""></label><label>Learning A’s result <select name="b-pick" required><option value="">Choose</option><option value="same">leaves B’s odds where they were</option><option value="fix">determines B’s result</option><option value="half">makes B 50/50</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="cond-c">
+                  <summary>Partly correlated, and lopsided<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks (2|00⟩ + |01⟩ + |11⟩)/√6. Condition both ways.</p><div class="ca-fields"><label>P(B = 1 | A = 0) = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-0" value=""></label><label>P(B = 1 | A = 1) = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-1" value=""></label><label>P(A = 0 | B = 1) = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-b" value=""></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="cond-d">
+                  <summary>Odds that look independent<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks (|00⟩ + |01⟩ + |10⟩ + i|11⟩)/2. Find B’s odds after each result of A, then decide what they show.</p><div class="ca-fields"><label>P(B = 1 | A = 0) = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="d-0" value=""></label><label>P(B = 1 | A = 1) = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="d-1" value=""></label><label>For this pure state <select name="d-pick" required><option value="">Choose</option><option value="product">the odds for B don’t depend on A, so it must be a product state</option><option value="entangled">it is entangled anyway: D = (i − 1)/4 ≠ 0, and computational-basis odds don’t see the phase i</option><option value="undefined">the conditional odds are undefined, since every P(ij) is equal</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ca-math">
+              <summary>Show the math</summary>
+              <p>P(B = j | A = i) = P(ij)/P(A = i), defined when P(A = i) > 0. Conditioning the other way, P(A = i | B = j) = P(ij)/P(B = j), uses a column instead of a row.</p>
+              <p>For a product state P(ij) = P(A = i)P(B = j), so P(B = j | A = i) = P(B = j): knowing A tells you nothing about B. The converse fails: equal conditional odds in this one basis don’t prove a product, because phases such as the i in (|00⟩ + |01⟩ + |10⟩ + i|11⟩)/2 never show up in computational-basis probabilities.</p>
+            </details>
+          </section>
+
+          <section class="ca-station" data-ca-station="measure" data-ca-accent="blue" aria-labelledby="ca-measure-title" hidden>
+            <h4 id="ca-measure-title">Measure Just One</h4>
+            <p>Measure only qubit A in the computational basis. If A gives i, the pair’s state keeps just the terms with A = i, and that piece is rescaled back to length 1. B is not measured, but its odds can change, because the surviving terms decide what B can do. Pick a card and A’s result. The diagram strikes out the discarded row, then rescales what survives.</p>
+            <div data-ca-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ca-sr-only">Measure Just One controls</legend>
+              <div class="ca-fields"><label>State card <select name="card"><option value="m1" selected>(1/2)|00⟩ + (1/2)|01⟩ + (1/√2)|11⟩</option><option value="m2">(|00⟩ + i|01⟩ − |10⟩)/√3</option><option value="m3">((3/5)|0⟩ + (4/5)|1⟩)A ⊗ ((|0⟩ + i|1⟩)/√2)B</option></select></label><label>A’s result <select name="result"><option value="0" selected>A gave 0</option><option value="1">A gave 1</option></select></label><label class="ca-check-row"><input type="checkbox" name="show"> Show the state after the measurement</label></div><p class="ca-readout" data-ca-read="state" aria-live="polite"></p>
+              <div class="ca-missions">
+                <details class="ca-mission" data-ca-mission="measure-a">
+                  <summary>Card 1 · A gives 0<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks (1/2)|00⟩ + (1/2)|01⟩ + (1/√2)|11⟩ and A’s result 0. How likely was that result, what is the pair’s state afterwards, and what are B’s odds now?</p><div class="ca-fields"><label>P(A = 0) = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-p" value=""></label></div><div class="ca-matrix-entry"><p class="ca-step">Pair state after A gave 0</p><div class="ca-matrix" role="group" aria-label="Pair state after A gave 0, entered by basis ket"><div class="ca-cell" role="group" aria-label="Pair state after A gave 0, |00⟩ amplitude α00"><span class="ca-cell-tag" aria-hidden="true">|00⟩ · α00</span><label><span class="ca-sr-only">Pair state after A gave 0, |00⟩ amplitude α00, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-post-00-re" value=""></label><label><span class="ca-sr-only">Pair state after A gave 0, |00⟩ amplitude α00, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-post-00-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Pair state after A gave 0, |01⟩ amplitude α01"><span class="ca-cell-tag" aria-hidden="true">|01⟩ · α01</span><label><span class="ca-sr-only">Pair state after A gave 0, |01⟩ amplitude α01, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-post-01-re" value=""></label><label><span class="ca-sr-only">Pair state after A gave 0, |01⟩ amplitude α01, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-post-01-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Pair state after A gave 0, |10⟩ amplitude α10"><span class="ca-cell-tag" aria-hidden="true">|10⟩ · α10</span><label><span class="ca-sr-only">Pair state after A gave 0, |10⟩ amplitude α10, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-post-10-re" value=""></label><label><span class="ca-sr-only">Pair state after A gave 0, |10⟩ amplitude α10, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-post-10-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Pair state after A gave 0, |11⟩ amplitude α11"><span class="ca-cell-tag" aria-hidden="true">|11⟩ · α11</span><label><span class="ca-sr-only">Pair state after A gave 0, |11⟩ amplitude α11, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-post-11-re" value=""></label><label><span class="ca-sr-only">Pair state after A gave 0, |11⟩ amplitude α11, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-post-11-im" value="0"></label></div></div></div><div class="ca-fields"><label>P(B = 0) afterwards = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-b" value=""></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="measure-b">
+                  <summary>Card 1 · A gives 1<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Same state, but A’s result is 1 (opening this mission sets it).</p><div class="ca-fields"><label>P(A = 1) = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-p" value=""></label></div><div class="ca-matrix-entry"><p class="ca-step">Pair state after A gave 1</p><div class="ca-matrix" role="group" aria-label="Pair state after A gave 1, entered by basis ket"><div class="ca-cell" role="group" aria-label="Pair state after A gave 1, |00⟩ amplitude α00"><span class="ca-cell-tag" aria-hidden="true">|00⟩ · α00</span><label><span class="ca-sr-only">Pair state after A gave 1, |00⟩ amplitude α00, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-post-00-re" value=""></label><label><span class="ca-sr-only">Pair state after A gave 1, |00⟩ amplitude α00, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-post-00-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Pair state after A gave 1, |01⟩ amplitude α01"><span class="ca-cell-tag" aria-hidden="true">|01⟩ · α01</span><label><span class="ca-sr-only">Pair state after A gave 1, |01⟩ amplitude α01, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-post-01-re" value=""></label><label><span class="ca-sr-only">Pair state after A gave 1, |01⟩ amplitude α01, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-post-01-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Pair state after A gave 1, |10⟩ amplitude α10"><span class="ca-cell-tag" aria-hidden="true">|10⟩ · α10</span><label><span class="ca-sr-only">Pair state after A gave 1, |10⟩ amplitude α10, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-post-10-re" value=""></label><label><span class="ca-sr-only">Pair state after A gave 1, |10⟩ amplitude α10, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-post-10-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Pair state after A gave 1, |11⟩ amplitude α11"><span class="ca-cell-tag" aria-hidden="true">|11⟩ · α11</span><label><span class="ca-sr-only">Pair state after A gave 1, |11⟩ amplitude α11, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-post-11-re" value=""></label><label><span class="ca-sr-only">Pair state after A gave 1, |11⟩ amplitude α11, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-post-11-im" value="0"></label></div></div></div><div class="ca-fields"><label>P(B = 1) afterwards = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-b" value=""></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="measure-c">
+                  <summary>Card 2 · complex amplitudes<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks (|00⟩ + i|01⟩ − |10⟩)/√3 and A’s result 0. Your state after the measurement counts up to a global phase.</p><div class="ca-fields"><label>P(A = 0) = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-p" value=""></label></div><div class="ca-matrix-entry"><p class="ca-step">Pair state after A gave 0</p><div class="ca-matrix" role="group" aria-label="Pair state after A gave 0, entered by basis ket"><div class="ca-cell" role="group" aria-label="Pair state after A gave 0, |00⟩ amplitude α00"><span class="ca-cell-tag" aria-hidden="true">|00⟩ · α00</span><label><span class="ca-sr-only">Pair state after A gave 0, |00⟩ amplitude α00, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-post-00-re" value=""></label><label><span class="ca-sr-only">Pair state after A gave 0, |00⟩ amplitude α00, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-post-00-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Pair state after A gave 0, |01⟩ amplitude α01"><span class="ca-cell-tag" aria-hidden="true">|01⟩ · α01</span><label><span class="ca-sr-only">Pair state after A gave 0, |01⟩ amplitude α01, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-post-01-re" value=""></label><label><span class="ca-sr-only">Pair state after A gave 0, |01⟩ amplitude α01, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-post-01-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Pair state after A gave 0, |10⟩ amplitude α10"><span class="ca-cell-tag" aria-hidden="true">|10⟩ · α10</span><label><span class="ca-sr-only">Pair state after A gave 0, |10⟩ amplitude α10, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-post-10-re" value=""></label><label><span class="ca-sr-only">Pair state after A gave 0, |10⟩ amplitude α10, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-post-10-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Pair state after A gave 0, |11⟩ amplitude α11"><span class="ca-cell-tag" aria-hidden="true">|11⟩ · α11</span><label><span class="ca-sr-only">Pair state after A gave 0, |11⟩ amplitude α11, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-post-11-re" value=""></label><label><span class="ca-sr-only">Pair state after A gave 0, |11⟩ amplitude α11, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-post-11-im" value="0"></label></div></div></div><div class="ca-fields"><label>P(B = 1) afterwards = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-b" value=""></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="measure-d">
+                  <summary>Card 3 · measuring one half of a product<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks ((3/5)|0⟩ + (4/5)|1⟩)<sub>A</sub> ⊗ ((|0⟩ + i|1⟩)/√2)<sub>B</sub> and A’s result 1. Give B’s normalized state afterwards, c|0⟩ + d|1⟩ (up to a global phase).</p><div class="ca-fields"><label>P(A = 1) = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="d-p" value=""></label></div><div class="ca-fields ca-factor-fields"><div class="ca-complex" role="group" aria-label="c after"><label>c after, real part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-c-re" value=""></label><label>c after, imaginary part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-c-im" value="0"></label></div><div class="ca-complex" role="group" aria-label="d after"><label>d after, real part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-d-re" value=""></label><label>d after, imaginary part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-d-im" value="0"></label></div></div><div class="ca-fields"><label>Measuring A <select name="d-pick" required><option value="">Choose</option><option value="same">leaves B’s state exactly as it was</option><option value="collapse">collapses B to |1⟩ as well</option><option value="phase">changes B’s relative phase</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ca-math">
+              <summary>Show the math</summary>
+              <p>If A gives i, which happens with P(A = i) = |αi0|² + |αi1|², the state becomes (αi0|i0⟩ + αi1|i1⟩)/√P(A = i). Amplitudes keep their phases; only the overall size changes.</p>
+              <p>Afterwards the pair is |i⟩A ⊗ (αi0|0⟩ + αi1|1⟩)B/√P(A = i), a product. For a product state |u⟩ ⊗ |v⟩, B’s part is always |v⟩, so measuring A leaves B alone; for an entangled state B’s part depends on A’s result.</p>
+            </details>
+          </section>
+
+          <section class="ca-station" data-ca-station="records" data-ca-accent="orange" aria-labelledby="ca-records-title" hidden>
+            <h4 id="ca-records-title">Correlation Detective</h4>
+            <p>Each trial measures both qubits in the computational basis and records the ordered pair, A first. Run trials, read the tallies and the match and mismatch rates, and reason from your own records: the checker grades your reasoning against the run you actually made. The seed makes runs repeatable: Reset run, with the same seed, gives the same records again.</p>
+            <p>The mixture is not a pure pair state: each trial the source flips a fair coin and sends either |00⟩ or |11⟩.</p>
+            <p class="ca-note">Computational basis only. |Φ⁺⟩ and the 50/50 mixture give the same records here; telling them apart needs measurements in other bases, which Lesson 19 covers.</p>
+            <div data-ca-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ca-sr-only">Correlation Detective controls</legend>
+              <div class="ca-fields"><label>Source <select name="source"><option value="x" selected>Mystery source X</option><option value="phi">|Φ⁺⟩ = (|00⟩ + |11⟩)/√2</option><option value="mix">50/50 mixture: |00⟩ or |11⟩, chosen at random</option><option value="p8">(√0.8|0⟩ + √0.2|1⟩)A ⊗ (√0.8|0⟩ + √0.2|1⟩)B</option><option value="p9">(√0.9|0⟩ + √0.1|1⟩)A ⊗ (√0.9|0⟩ + √0.1|1⟩)B</option></select></label><label>Seed (a whole number) <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="seed" value="18"></label><label>Trials per run <select name="trials"><option value="10">10</option><option value="50" selected>50</option><option value="200">200</option></select></label></div><div class="ca-button-row"><button class="ca-primary" type="button" data-ca-action="run">Run trials</button><button type="button" data-ca-action="clear">Reset run (same seed)</button></div><p class="ca-readout" data-ca-read="state" aria-live="polite"></p><ol class="ca-log" data-ca-log="records" aria-label="The last 20 records, A first"></ol>
+              <div class="ca-missions">
+                <details class="ca-mission" data-ca-mission="records-a">
+                  <summary>Case 1 · Mystery source X<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Run at least 50 trials of mystery source X. Count the mismatched records (01 or 10) in your run and give your verdict.</p><div class="ca-fields"><label>Mismatches in your run = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="a-n" value=""></label><label>Verdict <select name="a-pick" required><option value="">Choose</option><option value="product">X is a product state: its bits don’t always match</option><option value="phi">X is consistent with the ideal |Φ⁺⟩: no record mismatches</option><option value="proof">the records prove that X is entangled</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="records-b">
+                  <summary>Case 2 · an unequal product<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Run at least 50 trials of (√0.8|0⟩ + √0.2|1⟩) ⊗ (√0.8|0⟩ + √0.2|1⟩). Give the fraction of matching records in your run, and the exact probability that the bits match.</p><div class="ca-fields"><label>Matching fraction in your run = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-f" value=""></label><label>P(bits match) = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="b-p" value=""></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="records-c">
+                  <summary>Case 3 · |Φ⁺⟩ or a coin flip?<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Run at least 20 trials of |Φ⁺⟩ and at least 20 of the 50/50 mixture of |00⟩ and |11⟩. Compare the records.</p><div class="ca-fields"><label>In the computational basis <select name="c-pick" required><option value="">Choose</option><option value="more">the mixture shows some 01 and 10 records, given enough trials</option><option value="same">both give 00 and 11 half the time each and never a mismatch, so these records can’t tell them apart</option><option value="fewer">the mixture never gives 11</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="records-d">
+                  <summary>Case 4 · how many trials?<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>The product (√0.9|0⟩ + √0.1|1⟩) ⊗ (√0.9|0⟩ + √0.1|1⟩) mismatches only rarely. How likely is one mismatch per trial, and what is the fewest number of trials for which seeing no mismatch at all is less than 1% likely?</p><div class="ca-fields"><label>P(mismatch) per trial = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="d-p" value=""></label><label>Fewest trials n = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="d-n" value=""></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ca-math">
+              <summary>Show the math</summary>
+              <p>For a product, P(match) = P(A = 0)P(B = 0) + P(A = 1)P(B = 1). For (√0.8, √0.2) on both, that is 0.64 + 0.04 = 0.68. One mismatched record rules out the ideal |Φ⁺⟩, whose mismatch probability is 0.</p>
+              <p>With mismatch probability q per trial, n independent trials show none with probability (1 − q)ⁿ. For q = 0.18, (0.82)²³ ≈ 0.0105 and (0.82)²⁴ ≈ 0.0086.</p>
+            </details>
+          </section>
+
+          <section class="ca-station" data-ca-station="local" data-ca-accent="green" aria-labelledby="ca-local-title" hidden>
+            <h4 id="ca-local-title">Local Gates</h4>
+            <p>A gate on one qubit acts on the pair as a tensor product: U on A and V on B is the 4×4 matrix U ⊗ V, with entry (U ⊗ V)⟨ij|kl⟩ = U⟨i|k⟩ V⟨j|l⟩. Rows and columns are labelled in the ordered basis |00⟩, |01⟩, |10⟩, |11⟩. Choose a gate for each qubit and an input, and read the output below. Tick the box to see the matrix.</p>
+            <div data-ca-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ca-sr-only">Local Gates controls</legend>
+              <div class="ca-fields"><label>Gate on A <select name="ga"><option value="I" selected>I</option><option value="X">X</option><option value="Z">Z</option></select></label><label>Gate on B <select name="gb"><option value="I" selected>I</option><option value="X">X</option><option value="Z">Z</option></select></label><label>Input state <select name="input"><option value="phip" selected>|Φ⁺⟩ = (|00⟩ + |11⟩)/√2</option><option value="prod">((3/5)|0⟩ + (4i/5)|1⟩)A ⊗ ((√3/2)|0⟩ + (1/2)|1⟩)B</option></select></label><label class="ca-check-row"><input type="checkbox" name="show"> Show the 4×4 matrix</label></div><p class="ca-readout" data-ca-read="state" aria-live="polite"></p>
+              <div class="ca-missions">
+                <details class="ca-mission" data-ca-mission="local-a">
+                  <summary>Build X ⊗ I<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>X flips a qubit: X|0⟩ = |1⟩ and X|1⟩ = |0⟩. Enter the 4×4 matrix of X ⊗ I, which flips A and leaves B alone. Column |ij⟩ holds the image of |ij⟩.</p><div class="ca-matrix-entry"><p class="ca-step">X ⊗ I</p><p class="ca-note">Rows ⟨00| to ⟨11| down the side, columns |00⟩ to |11⟩ across the top.</p><div class="ca-m4" role="group" aria-label="X ⊗ I, a 4 by 4 grid entered row by row; rows ⟨00| to ⟨11|, columns |00⟩ to |11⟩"><span class="ca-m4-corner" aria-hidden="true"></span><span class="ca-m4-head" aria-hidden="true">|00⟩</span><span class="ca-m4-head" aria-hidden="true">|01⟩</span><span class="ca-m4-head" aria-hidden="true">|10⟩</span><span class="ca-m4-head" aria-hidden="true">|11⟩</span><span class="ca-m4-head" aria-hidden="true">⟨00|</span><label class="ca-m4-cell"><span class="ca-sr-only">X ⊗ I, row ⟨00|, column |00⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-m-00-00" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">X ⊗ I, row ⟨00|, column |01⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-m-00-01" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">X ⊗ I, row ⟨00|, column |10⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-m-00-10" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">X ⊗ I, row ⟨00|, column |11⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-m-00-11" value=""></label><span class="ca-m4-head" aria-hidden="true">⟨01|</span><label class="ca-m4-cell"><span class="ca-sr-only">X ⊗ I, row ⟨01|, column |00⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-m-01-00" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">X ⊗ I, row ⟨01|, column |01⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-m-01-01" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">X ⊗ I, row ⟨01|, column |10⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-m-01-10" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">X ⊗ I, row ⟨01|, column |11⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-m-01-11" value=""></label><span class="ca-m4-head" aria-hidden="true">⟨10|</span><label class="ca-m4-cell"><span class="ca-sr-only">X ⊗ I, row ⟨10|, column |00⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-m-10-00" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">X ⊗ I, row ⟨10|, column |01⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-m-10-01" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">X ⊗ I, row ⟨10|, column |10⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-m-10-10" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">X ⊗ I, row ⟨10|, column |11⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-m-10-11" value=""></label><span class="ca-m4-head" aria-hidden="true">⟨11|</span><label class="ca-m4-cell"><span class="ca-sr-only">X ⊗ I, row ⟨11|, column |00⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-m-11-00" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">X ⊗ I, row ⟨11|, column |01⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-m-11-01" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">X ⊗ I, row ⟨11|, column |10⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-m-11-10" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">X ⊗ I, row ⟨11|, column |11⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="a-m-11-11" value=""></label></div></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="local-b">
+                  <summary>Build I ⊗ Z<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Z leaves |0⟩ alone and gives |1⟩ a minus sign. Enter the 4×4 matrix of I ⊗ Z.</p><div class="ca-matrix-entry"><p class="ca-step">I ⊗ Z</p><p class="ca-note">Rows ⟨00| to ⟨11| down the side, columns |00⟩ to |11⟩ across the top.</p><div class="ca-m4" role="group" aria-label="I ⊗ Z, a 4 by 4 grid entered row by row; rows ⟨00| to ⟨11|, columns |00⟩ to |11⟩"><span class="ca-m4-corner" aria-hidden="true"></span><span class="ca-m4-head" aria-hidden="true">|00⟩</span><span class="ca-m4-head" aria-hidden="true">|01⟩</span><span class="ca-m4-head" aria-hidden="true">|10⟩</span><span class="ca-m4-head" aria-hidden="true">|11⟩</span><span class="ca-m4-head" aria-hidden="true">⟨00|</span><label class="ca-m4-cell"><span class="ca-sr-only">I ⊗ Z, row ⟨00|, column |00⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-m-00-00" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">I ⊗ Z, row ⟨00|, column |01⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-m-00-01" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">I ⊗ Z, row ⟨00|, column |10⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-m-00-10" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">I ⊗ Z, row ⟨00|, column |11⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-m-00-11" value=""></label><span class="ca-m4-head" aria-hidden="true">⟨01|</span><label class="ca-m4-cell"><span class="ca-sr-only">I ⊗ Z, row ⟨01|, column |00⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-m-01-00" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">I ⊗ Z, row ⟨01|, column |01⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-m-01-01" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">I ⊗ Z, row ⟨01|, column |10⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-m-01-10" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">I ⊗ Z, row ⟨01|, column |11⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-m-01-11" value=""></label><span class="ca-m4-head" aria-hidden="true">⟨10|</span><label class="ca-m4-cell"><span class="ca-sr-only">I ⊗ Z, row ⟨10|, column |00⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-m-10-00" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">I ⊗ Z, row ⟨10|, column |01⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-m-10-01" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">I ⊗ Z, row ⟨10|, column |10⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-m-10-10" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">I ⊗ Z, row ⟨10|, column |11⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-m-10-11" value=""></label><span class="ca-m4-head" aria-hidden="true">⟨11|</span><label class="ca-m4-cell"><span class="ca-sr-only">I ⊗ Z, row ⟨11|, column |00⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-m-11-00" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">I ⊗ Z, row ⟨11|, column |01⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-m-11-01" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">I ⊗ Z, row ⟨11|, column |10⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-m-11-10" value=""></label><label class="ca-m4-cell"><span class="ca-sr-only">I ⊗ Z, row ⟨11|, column |11⟩</span><input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="b-m-11-11" value=""></label></div></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="local-c">
+                  <summary>From |Φ⁺⟩ to the other Bell states<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>For each target, choose one gate for A and one for B that turn |Φ⁺⟩ into it. Each target counts up to a global phase, and more than one choice can work.</p><div class="ca-fields"><label>|Φ⁻⟩: gate on A <select name="c-1a" required><option value="">Choose</option><option value="I">I</option><option value="X">X</option><option value="Z">Z</option></select></label><label>|Φ⁻⟩: gate on B <select name="c-1b" required><option value="">Choose</option><option value="I">I</option><option value="X">X</option><option value="Z">Z</option></select></label><label>|Ψ⁺⟩: gate on A <select name="c-2a" required><option value="">Choose</option><option value="I">I</option><option value="X">X</option><option value="Z">Z</option></select></label><label>|Ψ⁺⟩: gate on B <select name="c-2b" required><option value="">Choose</option><option value="I">I</option><option value="X">X</option><option value="Z">Z</option></select></label><label>|Ψ⁻⟩: gate on A <select name="c-3a" required><option value="">Choose</option><option value="I">I</option><option value="X">X</option><option value="Z">Z</option></select></label><label>|Ψ⁻⟩: gate on B <select name="c-3b" required><option value="">Choose</option><option value="I">I</option><option value="X">X</option><option value="Z">Z</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="local-d">
+                  <summary>Local gates can’t entangle<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission picks the product input. Choose any gates for A and B above, then compute D = α00α11 − α01α10 for the output.</p><div class="ca-complex" role="group" aria-label="D of the output"><label>D of the output, real part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-d-re" value=""></label><label>D of the output, imaginary part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-d-im" value="0"></label></div><div class="ca-fields"><label>Why does D come out as it does? <select name="d-pick" required><option value="">Choose</option><option value="lucky">X and Z happen to keep products; other single-qubit gates could entangle</option><option value="norm">the gates keep the state normalized</option><option value="det">for gates U on A and V on B, D after = det(U) · det(V) · D before, so D = 0 stays 0</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ca-math">
+              <summary>Show the math</summary>
+              <p>X ⊗ I swaps |0j⟩ ↔ |1j⟩, so its columns are the images |10⟩, |11⟩, |00⟩, |01⟩. I ⊗ Z is diagonal: (+1, −1, +1, −1), a minus sign wherever B = 1.</p>
+              <p>Arrange the four amplitudes as a 2×2 grid M with A’s bit as the row and B’s as the column. U on A and V on B send M to U M Vᵀ, so D = det M becomes det(U) det(V) det M. Gates on one qubit at a time can change D’s phase, never whether it is zero.</p>
+            </details>
+          </section>
+
+          <section class="ca-station" data-ca-station="cnot" data-ca-accent="violet" aria-labelledby="ca-cnot-title" hidden>
+            <p class="ca-kicker">Gentle preview · quantum circuits</p>
+            <h4 id="ca-cnot-title">Entangling Gate (CNOT)</h4>
+            <p>This is a gentle preview of quantum circuits. Time runs left to right: qubit A on the top wire, B below. CNOT uses A as the control and B as the target: it flips B when A is 1 and does nothing when A is 0, so |10⟩ ↔ |11⟩. Unlike gates on one qubit at a time, it can turn a product input into an entangled output. Enter the input factors and read D for the input and the output.</p>
+            <div data-ca-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ca-sr-only">Entangling Gate (CNOT) controls</legend>
+              <div class="ca-fields ca-factor-fields"><div class="ca-complex" role="group" aria-label="a"><label>a, real part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-re" value="1"></label><label>a, imaginary part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="a-im" value="0"></label></div><div class="ca-complex" role="group" aria-label="b"><label>b, real part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-re" value="0"></label><label>b, imaginary part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-im" value="0"></label></div><div class="ca-complex" role="group" aria-label="c"><label>c, real part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-re" value="1"></label><label>c, imaginary part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="c-im" value="0"></label></div><div class="ca-complex" role="group" aria-label="d"><label>d, real part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-re" value="0"></label><label>d, imaginary part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-im" value="0"></label></div></div><div class="ca-fields"><label class="ca-check-row"><input type="checkbox" name="show"> Show the output</label></div><p class="ca-readout" data-ca-read="state" aria-live="polite"></p>
+              <div class="ca-missions">
+                <details class="ca-mission" data-ca-mission="cnot-a">
+                  <summary>The truth table<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>CNOT flips B exactly when A is 1. Where does each basis state go?</p><div class="ca-fields"><label>|00⟩ goes to <select name="a-00" required><option value="">Choose</option><option value="00">|00⟩</option><option value="01">|01⟩</option><option value="10">|10⟩</option><option value="11">|11⟩</option></select></label><label>|01⟩ goes to <select name="a-01" required><option value="">Choose</option><option value="00">|00⟩</option><option value="01">|01⟩</option><option value="10">|10⟩</option><option value="11">|11⟩</option></select></label><label>|10⟩ goes to <select name="a-10" required><option value="">Choose</option><option value="00">|00⟩</option><option value="01">|01⟩</option><option value="10">|10⟩</option><option value="11">|11⟩</option></select></label><label>|11⟩ goes to <select name="a-11" required><option value="">Choose</option><option value="00">|00⟩</option><option value="01">|01⟩</option><option value="10">|10⟩</option><option value="11">|11⟩</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="cnot-b">
+                  <summary>Make |Φ⁺⟩<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Choose normalized inputs a, b for A and c, d for B so that CNOT outputs |Φ⁺⟩ = (|00⟩ + |11⟩)/√2, up to a global phase.</p>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="cnot-c">
+                  <summary>Make |Ψ⁻⟩<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Choose normalized inputs so that CNOT outputs |Ψ⁻⟩ = (|01⟩ − |10⟩)/√2, up to a global phase.</p>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="cnot-d">
+                  <summary>An uneven Bell-like state<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission loads A = (√3/2)|0⟩ + (1/2)|1⟩ and B = |0⟩. Enter the output column and its D.</p><div class="ca-matrix-entry"><p class="ca-step">CNOT output</p><div class="ca-matrix" role="group" aria-label="CNOT output, entered by basis ket"><div class="ca-cell" role="group" aria-label="CNOT output, |00⟩ amplitude α00"><span class="ca-cell-tag" aria-hidden="true">|00⟩ · α00</span><label><span class="ca-sr-only">CNOT output, |00⟩ amplitude α00, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-col-00-re" value=""></label><label><span class="ca-sr-only">CNOT output, |00⟩ amplitude α00, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-col-00-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="CNOT output, |01⟩ amplitude α01"><span class="ca-cell-tag" aria-hidden="true">|01⟩ · α01</span><label><span class="ca-sr-only">CNOT output, |01⟩ amplitude α01, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-col-01-re" value=""></label><label><span class="ca-sr-only">CNOT output, |01⟩ amplitude α01, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-col-01-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="CNOT output, |10⟩ amplitude α10"><span class="ca-cell-tag" aria-hidden="true">|10⟩ · α10</span><label><span class="ca-sr-only">CNOT output, |10⟩ amplitude α10, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-col-10-re" value=""></label><label><span class="ca-sr-only">CNOT output, |10⟩ amplitude α10, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-col-10-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="CNOT output, |11⟩ amplitude α11"><span class="ca-cell-tag" aria-hidden="true">|11⟩ · α11</span><label><span class="ca-sr-only">CNOT output, |11⟩ amplitude α11, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-col-11-re" value=""></label><label><span class="ca-sr-only">CNOT output, |11⟩ amplitude α11, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="d-col-11-im" value="0"></label></div></div></div><div class="ca-fields"><label>D of the output = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="d-D" value=""></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="cnot-e">
+                  <summary>When CNOT doesn’t entangle<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Find normalized inputs with both a ≠ 0 and b ≠ 0 for which the CNOT output is still a product state (D = 0).</p>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ca-math">
+              <summary>Show the math</summary>
+              <p>CNOT sends (α00, α01, α10, α11) to (α00, α01, α11, α10). On a product input (a|0⟩ + b|1⟩) ⊗ (c|0⟩ + d|1⟩) the output is (ac, ad, bd, bc), with D = ac·bc − ad·bd = ab(c² − d²).</p>
+              <p>So the output is entangled unless a = 0, b = 0 or c² = d²; the last holds for B in (|0⟩ ± |1⟩)/√2, which X leaves alone up to a sign. |+⟩A ⊗ |0⟩B gives (|00⟩ + |11⟩)/√2 = |Φ⁺⟩.</p>
+            </details>
+          </section>
+
+          <section class="ca-station" data-ca-station="dims" data-ca-accent="yellow" aria-labelledby="ca-dims-title" hidden>
+            <h4 id="ca-dims-title">Dimension Counter</h4>
+            <p>Each qubit you add doubles the number of joint basis states: n qubits have 2ⁿ of them, from |00…0⟩ to |11…1⟩, and a general state needs a complex amplitude for each. n classical bits also have 2ⁿ configurations, but they sit in just one of them at a time, written down with n bits. Slide n and compare the counts, or tick the box to pair a qubit with a three-level system.</p>
+            <div data-ca-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ca-sr-only">Dimension Counter controls</legend>
+              <div class="ca-fields"><label>Number of qubits n <output data-ca-for="n">3</output><input type="range" name="n-range" data-ca-pair="n" min="1" max="10" step="1" value="3"></label><label>n (number) <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="n" value="3"></label><label class="ca-check-row"><input type="checkbox" name="qutrit"> Show a qubit paired with a three-level system instead</label></div><p class="ca-readout" data-ca-read="state" aria-live="polite"></p>
+              <div class="ca-missions">
+                <details class="ca-mission" data-ca-mission="dims-a">
+                  <summary>Three qubits<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>For n = 3, how many complex amplitudes does a general state need? And how many of the 2³ configurations can three classical bits be in at one time?</p><div class="ca-fields"><label>Amplitudes for 3 qubits = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="a-amps" value=""></label><label>Configurations at one time = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="a-at" value=""></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="dims-b">
+                  <summary>Ten qubits<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>For n = 10, how many amplitudes does a general state need, and how many bits does it take to write down one classical configuration?</p><div class="ca-fields"><label>Amplitudes for 10 qubits = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="b-amps" value=""></label><label>Bits for one configuration = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="b-bits" value=""></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="dims-c">
+                  <summary>A qubit and a three-level system<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Pair qubit A (basis |0⟩, |1⟩) with a three-level system C (basis |0⟩, |1⟩, |2⟩). Keep A first: the ordered basis is |0,0⟩, |0,1⟩, |0,2⟩, |1,0⟩, |1,1⟩, |1,2⟩.</p><div class="ca-fields"><label>dim(ℋA ⊗ ℋC) = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="c-dim" value=""></label><label>Position of |1,2⟩ in the ordered basis = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="c-pos" value=""></label><label>In (a|0⟩ + b|1⟩)A ⊗ (c|0⟩ + d|1⟩ + e|2⟩)C, the coefficient of |1,2⟩ is <select name="c-coef" required><option value="">Choose</option><option value="ae">ae</option><option value="be">be</option><option value="bd">bd</option><option value="ce">ce</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="dims-d">
+                  <summary>Products are a small corner<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>For n = 5, a product of five single-qubit states is fixed by five pairs of amplitudes. How many amplitudes is that, and how many does a general 5-qubit state need?</p><div class="ca-fields"><label>Amplitudes in the five factors = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="d-prod" value=""></label><label>Amplitudes for a general state = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" name="d-gen" value=""></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ca-math">
+              <summary>Show the math</summary>
+              <p>Dimensions multiply: dim(ℋ₁ ⊗ ℋ₂) = dim ℋ₁ × dim ℋ₂. For n qubits, 2 × 2 × … × 2 = 2ⁿ; for a qubit and a three-level system, 2 × 3 = 6.</p>
+              <p>A product of n qubit states is fixed by 2n amplitudes, two per factor, while a general state needs 2ⁿ. Already at n = 5 that is 10 against 32, so most states of many qubits are entangled. Normalization and the global phase remove one complex number’s worth of freedom from each count.</p>
+            </details>
+          </section>
+
+          <section class="ca-station" data-ca-station="designer" data-ca-accent="violet" aria-labelledby="ca-designer-title" hidden>
+            <h4 id="ca-designer-title">Pair Designer</h4>
+            <p>Here you work the problem the other way round. Each card names joint targets, and you design a two-qubit state that meets them by entering its four amplitudes. Many answers work where the card allows it. The checker tests the state you actually build: it must be normalized, and each probability must be within 0.005 of the target.</p>
+            <div data-ca-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ca-sr-only">Pair Designer controls</legend>
+              <div class="ca-matrix-entry"><p class="ca-step">Your state</p><div class="ca-matrix" role="group" aria-label="Your state, entered by basis ket"><div class="ca-cell" role="group" aria-label="Your state, |00⟩ amplitude α00"><span class="ca-cell-tag" aria-hidden="true">|00⟩ · α00</span><label><span class="ca-sr-only">Your state, |00⟩ amplitude α00, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="s-00-re" value="1/2"></label><label><span class="ca-sr-only">Your state, |00⟩ amplitude α00, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="s-00-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Your state, |01⟩ amplitude α01"><span class="ca-cell-tag" aria-hidden="true">|01⟩ · α01</span><label><span class="ca-sr-only">Your state, |01⟩ amplitude α01, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="s-01-re" value="1/2"></label><label><span class="ca-sr-only">Your state, |01⟩ amplitude α01, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="s-01-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Your state, |10⟩ amplitude α10"><span class="ca-cell-tag" aria-hidden="true">|10⟩ · α10</span><label><span class="ca-sr-only">Your state, |10⟩ amplitude α10, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="s-10-re" value="1/2"></label><label><span class="ca-sr-only">Your state, |10⟩ amplitude α10, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="s-10-im" value="0"></label></div><div class="ca-cell" role="group" aria-label="Your state, |11⟩ amplitude α11"><span class="ca-cell-tag" aria-hidden="true">|11⟩ · α11</span><label><span class="ca-sr-only">Your state, |11⟩ amplitude α11, </span>real <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="s-11-re" value="1/2"></label><label><span class="ca-sr-only">Your state, |11⟩ amplitude α11, </span>imaginary <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="s-11-im" value="0"></label></div></div></div><p class="ca-readout" data-ca-read="state" aria-live="polite"></p>
+              <div class="ca-missions">
+                <details class="ca-mission" data-ca-mission="designer-a">
+                  <summary>Card 1 · even margins, 80% matching<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Build a state with P(A = 0) = P(B = 0) = 1/2 whose bits match 80% of the time: P(00) + P(11) = 0.8.</p>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="designer-b">
+                  <summary>Card 2 · a lopsided product<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Build a product state (D = 0) with P(A = 0) = 0.9 and P(B = 1) = 0.25.</p>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="designer-c">
+                  <summary>Card 3 · uniform but entangled<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Build a state with all four joint probabilities equal to 1/4 that is clearly entangled: |D| ≥ 0.1.</p>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="designer-d">
+                  <summary>Card 4 · never 11<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Build a state that never gives 11, with P(A = 0) = 1/2 and P(B = 0) = 2/3.</p>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="designer-e">
+                  <summary>Card 5 · can it be built?<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>The card asks for a product state with 50/50 marginals for both qubits whose bits match 80% of the time.</p><div class="ca-fields"><label>This card <select name="e-pick" required><option value="">Choose</option><option value="yes">can be built, for example with column (√0.4, √0.1, √0.1, √0.4)</option><option value="no">can’t be built: a product with 50/50 marginals matches exactly half the time</option><option value="complex">can be built, but only with complex amplitudes</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ca-math">
+              <summary>Show the math</summary>
+              <p>Probabilities fix only magnitudes: pick |αij| = √P(ij), then choose phases freely, unless the card also asks for D. For 50/50 margins with an 80% match, P(00) = P(11) = 0.4 and P(01) = P(10) = 0.1.</p>
+              <p>A product has P(ij) = P(A = i)P(B = j). With 50/50 margins every P(ij) = 1/4, so P(match) = 1/2. With all P(ij) = 1/4, D = (1/4)(e^(i(φ00 + φ11)) − e^(i(φ01 + φ10))), so one minus sign gives |D| = 1/2.</p>
+            </details>
+          </section>
+
+          <section class="ca-station" data-ca-station="detective" data-ca-accent="red" aria-labelledby="ca-detective-title" hidden>
+            <h4 id="ca-detective-title">Error Detective</h4>
+            <p>Each case file holds a worked solution with exactly one planted mistake. Find the first line that goes wrong, and name the mistake. The diagram shows what the solution claims next to what is actually true.</p>
+            <div data-ca-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ca-sr-only">Error Detective controls</legend>
+              <p class="ca-readout" data-ca-read="state" aria-live="polite"></p>
+              <div class="ca-missions">
+                <details class="ca-mission" data-ca-mission="detective-add">
+                  <summary>Case 1 · expanding a product<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Expand ((3/5)|0⟩ + (4/5)|1⟩)<sub>A</sub> ⊗ ((1/√2)|0⟩ + (1/√2)|1⟩)<sub>B</sub> and find P(01).</p><ol class="ca-worked"><li>The |01⟩ term pairs A’s |0⟩ amplitude 3/5 with B’s |1⟩ amplitude 1/√2.</li><li>So α01 = 3/5 + 1/√2 ≈ 1.307.</li><li>P(01) = |α01|² ≈ 1.709.</li><li>So 01 is the most likely record.</li></ol><div class="ca-fields"><label>First wrong line <select name="add-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="add-kind" required><option value="">Choose</option><option value="add">Added amplitudes instead of multiplying them</option><option value="order">Put B’s bit first</option><option value="negative">Gave a negative probability</option><option value="marginal">Multiplied marginals to get a joint probability for an entangled state</option><option value="proof">Claimed computational-basis frequencies alone prove entanglement</option><option value="sign">Ignored a sign that changes the state</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="detective-order">
+                  <summary>Case 2 · which bit comes first<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Prepare |1⟩<sub>A</sub> ⊗ ((3/5)|0⟩ + (4/5)|1⟩)<sub>B</sub>. Find P(A = 0).</p><ol class="ca-worked"><li>A is certainly 1; B gives 0 with probability 9/25.</li><li>The joint state is (3/5)|01⟩ + (4/5)|11⟩.</li><li>P(A = 0) = P(00) + P(01) = 0 + 9/25.</li><li>So A gives 0 on about a third of the trials.</li></ol><div class="ca-fields"><label>First wrong line <select name="order-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="order-kind" required><option value="">Choose</option><option value="add">Added amplitudes instead of multiplying them</option><option value="order">Put B’s bit first</option><option value="negative">Gave a negative probability</option><option value="marginal">Multiplied marginals to get a joint probability for an entangled state</option><option value="proof">Claimed computational-basis frequencies alone prove entanglement</option><option value="sign">Ignored a sign that changes the state</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="detective-negative">
+                  <summary>Case 3 · a negative amplitude<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Find the joint probabilities for (1/2)|00⟩ + (1/2)|01⟩ − (1/√2)|11⟩.</p><ol class="ca-worked"><li>The amplitudes are α00 = 1/2, α01 = 1/2, α10 = 0 and α11 = −1/√2.</li><li>P(00) = P(01) = 1/4 and P(10) = 0.</li><li>P(11) = −1/2, because its amplitude is negative.</li><li>The total is 1/4 + 1/4 + 0 − 1/2 = 0, so the state is not normalized.</li></ol><div class="ca-fields"><label>First wrong line <select name="negative-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="negative-kind" required><option value="">Choose</option><option value="add">Added amplitudes instead of multiplying them</option><option value="order">Put B’s bit first</option><option value="negative">Gave a negative probability</option><option value="marginal">Multiplied marginals to get a joint probability for an entangled state</option><option value="proof">Claimed computational-basis frequencies alone prove entanglement</option><option value="sign">Ignored a sign that changes the state</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="detective-marginal">
+                  <summary>Case 4 · a joint probability<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>For √0.3|00⟩ + √0.7|11⟩, find P(00).</p><ol class="ca-worked"><li>P(A = 0) = |α00|² + |α01|² = 0.3.</li><li>P(B = 0) = |α00|² + |α10|² = 0.3.</li><li>Both qubits are measured, so P(00) = P(A = 0) × P(B = 0) = 0.09.</li><li>So the bits disagree with probability 1 − 0.09 − 0.49 = 0.42.</li></ol><div class="ca-fields"><label>First wrong line <select name="marginal-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="marginal-kind" required><option value="">Choose</option><option value="add">Added amplitudes instead of multiplying them</option><option value="order">Put B’s bit first</option><option value="negative">Gave a negative probability</option><option value="marginal">Multiplied marginals to get a joint probability for an entangled state</option><option value="proof">Claimed computational-basis frequencies alone prove entanglement</option><option value="sign">Ignored a sign that changes the state</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="detective-proof">
+                  <summary>Case 5 · what the records show<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>A source gives 1000 computational-basis records: 503 of 00, 497 of 11 and no 01 or 10.</p><ol class="ca-worked"><li>The bits matched on 1000 of 1000 trials.</li><li>P(A = 0) ≈ 0.503 and P(B = 0) ≈ 0.503, both close to 1/2.</li><li>No pure product state gives perfectly matched bits with 50/50 marginals.</li><li>So the source must be sending the entangled state |Φ⁺⟩.</li></ol><div class="ca-fields"><label>First wrong line <select name="proof-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="proof-kind" required><option value="">Choose</option><option value="add">Added amplitudes instead of multiplying them</option><option value="order">Put B’s bit first</option><option value="negative">Gave a negative probability</option><option value="marginal">Multiplied marginals to get a joint probability for an entangled state</option><option value="proof">Claimed computational-basis frequencies alone prove entanglement</option><option value="sign">Ignored a sign that changes the state</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="detective-sign">
+                  <summary>Case 6 · four equal magnitudes<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Is (|00⟩ − |01⟩ − |10⟩ − |11⟩)/2 a product state?</p><ol class="ca-worked"><li>Every amplitude has magnitude 1/2, so every P(ij) = 1/4.</li><li>Both marginals are 50/50.</li><li>The minus signs change no probability, so this is the same state as (|00⟩ + |01⟩ + |10⟩ + |11⟩)/2 = |+⟩|+⟩.</li><li>So it is a product state, with D = 0.</li></ol><div class="ca-fields"><label>First wrong line <select name="sign-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="sign-kind" required><option value="">Choose</option><option value="add">Added amplitudes instead of multiplying them</option><option value="order">Put B’s bit first</option><option value="negative">Gave a negative probability</option><option value="marginal">Multiplied marginals to get a joint probability for an entangled state</option><option value="proof">Claimed computational-basis frequencies alone prove entanglement</option><option value="sign">Ignored a sign that changes the state</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ca-math">
+              <summary>Show the math</summary>
+              <p>The planted mistakes: joint amplitudes multiply, αij = (A’s amplitude for i) × (B’s amplitude for j). A comes first: |ij⟩ has A’s bit i. A probability is a squared magnitude, never negative. P(ij) = P(A = i)P(B = j) only for a product state.</p>
+              <p>Perfectly matched computational-basis records are consistent with |Φ⁺⟩, but a classical 50/50 mixture of |00⟩ and |11⟩ gives the same records. A relative sign can turn a product into an entangled state even when no single probability changes.</p>
+            </details>
+          </section>
+
+          <section class="ca-station" data-ca-station="interact" data-ca-accent="green" aria-labelledby="ca-interact-title" hidden>
+            <p class="ca-kicker">Builds on Lesson 17</p>
+            <h4 id="ca-interact-title">Interaction Builds Entanglement</h4>
+            <p>Lesson 17’s Two Spins preview kept two spins independent, each in its own field. Now couple them with the interaction H = J Z⊗Z. Each joint basis ket is an energy eigenstate: Z⊗Z|ij⟩ = +|ij⟩ when the bits match and −|ij⟩ when they differ, so α_ij(t) = α_ij(0) e^(∓iJt/ℏ). The matched and mismatched terms drift apart in phase, and a product start becomes entangled.</p>
+            <p>Watch D = α00α11 − α01α10: it starts at 0 and rises as the pair entangles. Play respects your reduced-motion setting and the Reduced effects box; Step always works.</p>
+            <p class="ca-note">Units: J is an energy, measured for example in eV, and J/ℏ is an angular frequency in rad/s. The box takes J/ℏ, which may include π.</p>
+            <p class="ca-note">Builds on Lesson 17: the time evolution U(t) = exp(−iHt/ℏ), now for a Hamiltonian that acts on both qubits at once.</p>
+            <div data-ca-plot-slot></div>
+            <fieldset disabled>
+              <legend class="ca-sr-only">Interaction Builds Entanglement controls</legend>
+              <div class="ca-fields"><label>J/ℏ in rad/s <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="w" value="π"></label><label>Start state <select name="start"><option value="pp" selected>|+⟩A ⊗ |+⟩B</option><option value="zp">|0⟩A ⊗ |+⟩B</option><option value="tp">((√3/2)|0⟩ + (1/2)|1⟩)A ⊗ |+⟩B</option></select></label><label>Time t in s <output data-ca-for="t" data-ca-unit=" s">0</output><input type="range" name="t-range" data-ca-pair="t" min="0" max="2" step="0.01" value="0"></label><label>Time t in s (number) <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="decimal" name="t" value="0"></label></div><div class="ca-button-row"><button class="ca-primary" type="button" data-ca-action="play">Play</button><button type="button" data-ca-action="step">Step +1/24 s</button><button type="button" data-ca-action="zero">Back to t = 0</button></div><p class="ca-readout" data-ca-read="state" aria-live="polite"></p>
+              <div class="ca-missions">
+                <details class="ca-mission" data-ca-mission="interact-a">
+                  <summary>When is it most entangled?<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>J/ℏ = π rad/s, starting in |+⟩<sub>A</sub> ⊗ |+⟩<sub>B</sub> (opening this mission sets them). When does |D| first reach its largest value, 1/2? Later times that work count too.</p><div class="ca-fields"><label>t in s = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="a-t" value=""></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="interact-b">
+                  <summary>D at that moment<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Same setup. Give D = α00α11 − α01α10 at that first moment of largest |D|.</p><div class="ca-complex" role="group" aria-label="D"><label>D, real part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-d-re" value=""></label><label>D, imaginary part <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" name="b-d-im" value="0"></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="interact-c">
+                  <summary>Back to a product<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Same setup. When, after t = 0, is the pair first a product state again, and which product is it?</p><div class="ca-fields"><label>First time t in s = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="c-t" value=""></label><label>At that time the state is <select name="c-pick" required><option value="">Choose</option><option value="pp">|+⟩A ⊗ |+⟩B again</option><option value="mm">|−⟩A ⊗ |−⟩B, up to a global phase</option><option value="phi">|Φ⁺⟩</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="interact-d">
+                  <summary>A start that never entangles<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission starts the pair in |0⟩<sub>A</sub> ⊗ |+⟩<sub>B</sub>. Play or step through the evolution.</p><div class="ca-fields"><label>Under H = J Z⊗Z this pair <select name="d-pick" required><option value="">Choose</option><option value="quarter">is maximally entangled at t = 1/4 s, like |+⟩|+⟩</option><option value="slow">becomes entangled, but more slowly</option><option value="never">never becomes entangled: A is in |0⟩, a Z eigenstate, so the coupling acts on B alone, as Z weighted by A’s definite value +1</option></select></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+                <details class="ca-mission" data-ca-mission="interact-e">
+                  <summary>An unbalanced start<span data-ca-done hidden>✓ Complete</span></summary>
+                  <p>Opening this mission starts the pair in ((√3/2)|0⟩ + (1/2)|1⟩)<sub>A</sub> ⊗ |+⟩<sub>B</sub>. What is the largest |D| it ever reaches?</p><div class="ca-fields"><label>Largest |D| = <input class="ca-answer" type="text" autocomplete="off" spellcheck="false" inputmode="text" name="e-max" value=""></label></div>
+                  <button class="ca-primary" type="button" data-ca-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="ca-math">
+              <summary>Show the math</summary>
+              <p>For a product start (a|0⟩ + b|1⟩) ⊗ (c|0⟩ + d|1⟩), α(t) = (ac e^(−iθ), ad e^(iθ), bc e^(iθ), bd e^(−iθ)) with θ = Jt/ℏ, so D(t) = abcd (e^(−2iθ) − e^(2iθ)) = −2i abcd sin 2θ.</p>
+              <p>For |+⟩|+⟩, abcd = 1/4 and D = −(i/2) sin 2θ: |D| peaks at θ = π/4 and returns to 0 at θ = π/2, where the state is −i|−⟩|−⟩. If a, b, c or d is 0, D stays 0 forever.</p>
+            </details>
+          </section>
+        </div>
+        <template id="ca-figure-template">
+          <figure class="ca-figure">
+            <figcaption id="ca-title">Station diagram</figcaption>
+            <div class="ca-viewport" id="ca-viewport">
+              <svg class="ca-diagram" id="ca-diagram" viewBox="0 0 560 300" role="img" aria-labelledby="ca-title" aria-describedby="ca-desc">
+                <desc id="ca-desc"></desc>
+                <g data-ca-geometry></g>
+                <g data-ca-labels></g>
+              </svg>
+            </div>
+          </figure>
+        </template>
+        <template id="ca-mission-template">
+          <div class="ca-mission-tools">
+            <button type="button" data-ca-hint>Show first hint</button>
+            <ol data-ca-hint-list aria-live="polite" hidden></ol>
+            <p class="ca-feedback" data-ca-feedback role="status"></p>
+            <details data-ca-work hidden><summary>Worked steps</summary><p data-ca-work-text></p></details>
+          </div>
+        </template>
+      </div>
+    </details>
 
     <nav class="cs-navigation" aria-label="Lesson navigation">
       <a rel="prev" href="../17_time_evolution/17_time_evolution.html">
