@@ -1352,7 +1352,7 @@ try {
         c.put("state", "Vector model for a state with definite S_" + axis + " = +ℏ/2: length |S| = (√3/2)ℏ ≈ 0.866ℏ, tilted " + sgFmt(sgRound(SG_CONE, 0.01)) + "° from the " + axis
           + " axis. The azimuth " + sgFmt(az) + "° is only for the picture: the other two components have no definite values.");
         return {
-          panels: [{ kind: "cone", caption: "vector model: a picture only", axis, az }],
+          panels: [{ kind: "cone", caption: "vector model (picture)", axis, az }],
           caption: "definite S_" + axis,
           desc: "A cone around the " + axis + " axis. A vector of length 0.866ℏ lies on the cone, with its " + axis + " component ℏ/2. The axis length ℏ/2 is shorter than the vector, so the vector can never lie along the axis."
         };
@@ -1414,7 +1414,279 @@ try {
     }
   };
 
-  const sgStations = { ...sgStations1, ...sgStations2 };
+  // ---------------------------------------------------------------------------
+  // Stations 11–14 · Recurring formats and extras.
+  // ---------------------------------------------------------------------------
+
+  // 11 · Error Detective.
+  const SG_ERRORS = {
+    half: { line: 2, text: "Case 1 · the 60° analyzer", claim: "P(+) = 1/4", truth: "P(+) = 3/4",
+      work: "Line 2 uses cos²θ. The rule is P(+) = cos²(θ/2) = cos²30° = 3/4, so P(−) = 1/4 and most atoms read +ℏ/2. cos²θ is the polarizer rule, where opposite states are 90° apart; for spin they are 180° apart." },
+    blocked: { line: 3, text: "Case 2 · the share at B−", claim: "1/2 of all sent", truth: "1/4 of all sent",
+      work: "Lines 1 and 2 are right. Line 3 forgets the atoms blocked at A: only 1/2 of the atoms sent reach B, so B− gets 1/2 × 1/2 = 1/4 of all atoms sent. B+ gets 1/4, and the other 1/2 never reach B." },
+    chain: { line: 4, text: "Case 3 · three analyzers", claim: "1/4 at C+", truth: "1/8 at C+",
+      work: "Lines 1–3 are right. Line 4 multiplies the two conditional probabilities but leaves out P_A(+) = 1/2, the chance of getting past A at all. The share of all atoms sent is 1/2 × 1/2 × 1/2 = 1/8. The product 1/4 is the share among atoms that pass A." },
+    selector: { line: 2, text: "Case 4 · what the selector does", claim: "nothing reaches B", truth: "P_B(+ | A = +) = 1",
+      work: "Line 2 treats the selector as an absorbing detector. The selector only blocks A−; the A+ atoms pass untouched in |+x⟩. B measures X again, so P_B(+ | A = +) = 1, with 1/2 of the atoms sent reaching B+." },
+    points: { line: 2, text: "Case 5 · where |+z⟩ points", claim: "S along +z, S_x = 0", truth: "|S| = (√3/2)ℏ, S_x = ±ℏ/2",
+      work: "Line 1 is right. Line 2 says the spin points along z. |S| = (√3/2)ℏ is larger than S_z = ℏ/2, so it can’t lie along z, and S_x is not definite: an S_x analyzer gives +ℏ/2 or −ℏ/2 with probability 1/2 each. It never reads 0." }
+  };
+  function sgErrorGrader(key) {
+    return c => {
+      const card = SG_ERRORS[key], line = Number(c.choice(key + "-line")), kind = c.choice(key + "-kind");
+      if (line !== card.line && kind === key) return sgGrade(false, "That names the mistake, but it first appears on a different line.");
+      if (line === card.line && kind !== key) return sgGrade(false, "That is the first wrong line. Name what goes wrong there more precisely.");
+      return sgGrade(line === card.line && kind === key, "Check each line in order, and stop at the first one that is false.", card.work);
+    };
+  }
+
+  // 12 · Quantum Preview: Precession. The spin turns from +x toward +y once per period T.
+  const SG_PREVIEW_AXES = { "+x": [1, 0, 0], "+y": [0, 1, 0], "-x": [-1, 0, 0], "+z": [0, 0, 1] };
+  function sgPreviewModel(c) {
+    const t = sgClamp(Number.isFinite(c.num("t")) ? c.num("t") : 0, 0, 3), input = c.val("input"), axis = c.val("axis");
+    const s = input === "+z" ? [0, 0, 1] : [Math.cos(2 * Math.PI * t), Math.sin(2 * Math.PI * t), 0];
+    const n = SG_PREVIEW_AXES[axis];
+    const curve = tt => input === "+z" ? sgP([0, 0, 1], n) : sgP([Math.cos(2 * Math.PI * tt), Math.sin(2 * Math.PI * tt), 0], n);
+    return { t, input, axis, s, n, p: sgP(s, n), curve };
+  }
+
+  // 13 · 3D Stern–Gerlach Bench. The beam runs along +y. Each magnet rolls about
+  // the beam, so its axis is n = (sin ρ, 0, cos ρ). Every channel continues; the
+  // screen shows one spot per path with nonzero probability.
+  const SG_BENCH = { source: -1.3, screen: 1.3, kick: 0.2, half: 0.95, places: { 1: [0], 2: [-0.45, 0.35], 3: [-0.75, -0.1, 0.55] } };
+  function sgBenchModel(c) {
+    const count = Number(c.val("count")), src = sgDirOf(c, "src");
+    const ys = SG_BENCH.places[count];
+    const magnets = ys.map((y, k) => { const roll = sgDeg(c, "roll" + (k + 1)); return { y, roll, n: sgDir(roll, 0) }; });
+    const segments = [], leaves = [];
+    const offset = (kicks, y) => kicks.reduce((p, kick) => [p[0] + kick.v[0] * (y - kick.y), p[1] + kick.v[2] * (y - kick.y)], [0, 0]);
+    const point = (kicks, y) => { const [x, z] = offset(kicks, y); return [x, y, z]; };
+    segments.push({ from: [0, SG_BENCH.source, 0], to: [0, magnets[0].y, 0], prob: 1, tone: "guide" });
+    (function walk(k, state, prob, kicks, signs) {
+      if (k === magnets.length) {
+        const [x, z] = offset(kicks, SG_BENCH.screen);
+        leaves.push({ signs, prob, x, z });
+        return;
+      }
+      const m = magnets[k], up = sgP(state, m.n);
+      for (const [q, p] of [[1, up], [-1, 1 - up]]) {
+        if (p < 1e-9) continue;
+        const next = [...kicks, { y: m.y, v: m.n.map(v => -q * SG_BENCH.kick * v) }];
+        const end = k + 1 < magnets.length ? magnets[k + 1].y : SG_BENCH.screen;
+        segments.push({ from: point(kicks, m.y), to: point(next, end), prob: prob * p, tone: q > 0 ? "plus" : "minus" });
+        walk(k + 1, q > 0 ? m.n : sgNeg(m.n), prob * p, next, signs + (q > 0 ? "+" : "−"));
+      }
+    })(0, src, 1, [], "");
+    return { count, src, magnets, segments, leaves };
+  }
+  function sgBenchSend(c, k) {
+    const m = sgBenchModel(c), tally = {};
+    for (let t = 0; t < k; t++) {
+      let r = c.s.rng(), leaf = m.leaves.at(-1);
+      for (const candidate of m.leaves) { if (r < candidate.prob) { leaf = candidate; break; } r -= candidate.prob; }
+      c.s.hits.push({ x: leaf.x + 0.03 * sgGauss(c.s.rng), z: leaf.z + 0.03 * sgGauss(c.s.rng) });
+      tally[leaf.signs] = (tally[leaf.signs] ?? 0) + 1;
+    }
+    if (c.s.hits.length > 600) c.s.hits.splice(0, c.s.hits.length - 600);
+    c.s.sent += k;
+    return sgOneIn(k, "atom") + " on the screen: " + Object.entries(tally).map(([signs, n]) => "spot " + signs + " " + n).join(", ") + ". " + c.s.sent + " atoms sent since the last change.";
+  }
+  const sgBenchClear = c => { c.s.hits = []; c.s.sent = 0; };
+  const SG_BENCH_CARDS = { a: { src: [90, 90], count: 1 }, b: { src: [0, 0], count: 3, rolls: [0, 90, 0] }, c: { src: [90, 0], count: 3 }, d: { src: [0, 0], count: 2 } };
+  function sgBenchSetup(c, key) {
+    const card = SG_BENCH_CARDS[key], m = sgBenchModel(c);
+    if (m.count !== card.count) return "Use " + sgOneIn(card.count, "magnet") + ".";
+    if (!sgSameDir(m.src, sgDir(...card.src))) return "Set the source as the mission says. Reopening the mission sets it.";
+    if (card.rolls && !card.rolls.every((roll, k) => sgAngleFits(m.magnets[k].roll, roll))) return "Roll the magnets to " + card.rolls.join("°, ") + "°.";
+    return null;
+  }
+
+  // 14 · Spin-1 Preview. A |m = +1⟩ state along z, analyzed along an axis θ from z.
+  function sgSpin1(theta) {
+    const c = Math.cos(sgRad(theta));
+    return { plus: ((1 + c) / 2) ** 2, zero: (1 - c * c) / 2, minus: ((1 - c) / 2) ** 2 };
+  }
+
+  const sgStations3 = {
+    // 11 · Error Detective --------------------------------------------------------------------------------
+    detective: {
+      show(c) {
+        const key = c.open() ?? "half", card = SG_ERRORS[key];
+        c.put("state", c.open() ? "Case file open: " + card.text + "." : "Open a case file. Showing case 1.");
+        const done = c.revealed(key);
+        return {
+          panels: [sgChain("claimed vs actual", [
+            { title: "the solution", sub: card.claim, tone: "warn" },
+            { title: "actually", sub: done ? card.truth : "?", tone: "plus" }], { note: done ? "Case solved." : "The truth fills in once you solve the case." })],
+          caption: card.text,
+          desc: "Two boxes. The solution claims: " + card.claim + ". " + (done ? "Actually: " + card.truth + "." : "The second box fills in once the case is solved.")
+        };
+      },
+      checks: {
+        half: ["Line 1 is correct.", "Which angle goes inside the cosine for spin?", sgErrorGrader("half")],
+        blocked: ["Lines 1 and 2 are correct.", "How many of the atoms sent ever reach B?", sgErrorGrader("blocked")],
+        chain: ["Lines 1, 2 and 3 are correct.", "Which factor is missing from line 4?", sgErrorGrader("chain")],
+        selector: ["Line 1 is correct.", "What does a selector do to the channel it passes?", sgErrorGrader("selector")],
+        points: ["Line 1 is correct.", "Compare |S| with S_z.", sgErrorGrader("points")]
+      }
+    },
+
+    // 12 · Quantum Preview: Precession --------------------------------------------------------------------
+    preview: {
+      load(c, check) {
+        c.field("input").value = check === "d" ? "+z" : "+x";
+        c.field("axis").value = check === "d" ? "+z" : "+x";
+        c.set("t", 0);
+      },
+      moving: c => c.checked("run"),
+      tick(c, dt) {
+        let t = c.num("t") + dt * 0.25;
+        if (!Number.isFinite(t) || t > 3) t = 0;
+        c.set("t", sgRound(t, 0.0001));
+      },
+      settle(c) { if (c.reduced()) c.say("Reduced effects: the clock stays still. Move the delay slider by hand."); },
+      show(c) {
+        const m = sgPreviewModel(c), running = c.checked("run") && !c.reduced();
+        c.put("state", "Delay t = " + sgFmt(m.t) + " T. The spin points along " + sgDirText(m.s) + ". Analyzer along " + m.axis + ": P(+) = " + sgFmt(m.p) + "."
+          + (c.checked("run") && c.reduced() ? " Reduced effects are on, so the clock doesn’t run." : ""));
+        return {
+          panels: [
+            sgPlane("top view (B along +z)", [sgArrow(sgXY(m.s), "plus", m.input === "+z" ? "" : "spin"), sgArrow(sgXY(m.n), "angle", m.axis === "+z" ? "" : "analyzer")], { axes: ["x", "y"], weight: 1,
+              paths: m.input === "+z" ? [] : [{ pts: Array.from({ length: 49 }, (_, k) => sgPolar(0.55, k * 360 * Math.min(1, m.t) / 48)), tone: "plus", dashed: true }] }),
+            sgChart("P(+) along " + m.axis + " vs delay", { x: [0, 3], y: [0, 1], xTicks: [0, 0.5, 1, 1.5, 2, 2.5, 3], yTicks: [0, 0.5, 1], xLabel: "delay t in periods T",
+              series: [{ pts: sgSweep(m.curve, 0, 3, 240), tone: "plus" }], vlines: [{ x: m.t }], dots: [{ x: m.t, y: m.p, tone: "angle" }], weight: 1.5 })
+          ],
+          caption: "t = " + sgFmt(m.t) + " T" + (running ? " (running)" : ""),
+          desc: "Top view with the field out of the page. The spin arrow points along " + sgDirText(m.s) + " and the analyzer along " + m.axis + ". The chart shows P(+) against the delay; at t = " + sgFmt(m.t) + " T it is " + sgFmt(m.p) + "."
+        };
+      },
+      checks: {
+        a: ["P(+x) = cos²(angle turned/2), and the spin turns 360° per period.", "P = 0 when the spin points along −x: half a turn.", c => {
+          const m = sgPreviewModel(c);
+          if (m.input !== "+x" || m.axis !== "+x") return sgSetup("Use input |+x⟩ and the analyzer along +x.");
+          return sgGrade(sgNear(m.p, 0), "P(+x) is " + sgFmt(m.p) + ". Change the delay.",
+            "After half a period the spin has turned 180° from +x to −x, so P(+x) = cos²90° = 0. It happens again at 3T/2 and 5T/2: the probability oscillates with the delay.");
+        }],
+        b: ["At T/4 the spin has turned 90°, from +x to +y.", "Choose the analyzer along the spin’s direction at T/4.", c => {
+          const m = sgPreviewModel(c), p = c.ans("b-p");
+          if (m.input !== "+x") return sgSetup("Use input |+x⟩.");
+          if (!sgFits(p, 0.5)) return sgGrade(false, "Find P(+x) for a spin along +y.");
+          return sgGrade(m.axis === "+y" && sgNear(m.p, 1), m.axis !== "+y" ? "Which analyzer axis matches the spin at T/4?" : "Set the delay to T/4 so the +y analyzer gives P = 1.",
+            "At t = T/4 the spin points along +y, so an x analyzer gives 1/2, and a y analyzer gives +ℏ/2 every time. A later analyzer must be aimed where the spin will be.");
+        }],
+        c: ["At T/3 the spin has turned 120°.", "P = cos²(120°/2).", c => sgGrade(sgFits(c.ans("c-p"), 0.25), "Use the half-angle rule with the angle turned.",
+          "At T/3 the spin is 120° from +x, so P(+x) = cos²60° = 1/4. The curve is cos²(πt/T), which repeats every T.")],
+        d: ["A spin along the field’s axis has nothing to turn around.", "Try input |+z⟩ with the analyzer along +z at several delays.", c => sgGrade(c.choice("d-pick") === "stays", "Watch P(+z) as the delay changes.",
+          "A |+z⟩ spin is already along the field, so it stays put: P(+z) = 1 at every delay. Only spins with a component across the field precess. Lesson 17 shows how the field sets the turning rate, using time evolution.")]
+      }
+    },
+
+    // 13 · 3D Stern–Gerlach Bench -------------------------------------------------------------------------
+    bench: {
+      start(c) { sgSeed(c); sgBenchClear(c); },
+      load(c, check) {
+        const card = SG_BENCH_CARDS[check];
+        sgSetDir(c, "src", ...card.src);
+        c.field("count").value = String(card.count);
+        if (card.rolls) card.rolls.forEach((roll, k) => c.set("roll" + (k + 1), roll));
+        sgBenchClear(c);
+      },
+      edit(c, name) { if (name !== "yaw" && name !== "tilt") sgBenchClear(c); },
+      drag(c, dx, dy) {
+        c.set("yaw", sgWrap(Math.round((c.num("yaw") - dx * 0.5) / 5) * 5 + 180) - 180);
+        c.set("tilt", sgClamp(Math.round((c.num("tilt") + dy * 0.3) / 5) * 5, -60, 60));
+      },
+      show(c) {
+        const m = sgBenchModel(c);
+        for (let k = 1; k <= 3; k++) { const group = c.node('[data-sg-stage="' + k + '"]'); if (group) group.hidden = k > m.count; }
+        const spots = m.leaves.map(leaf => "spot " + leaf.signs + " " + sgFmt(sgRound(leaf.prob, 0.0001))).join(", ");
+        c.put("state", "Source along " + sgDirText(m.src) + ". " + m.magnets.map((mag, k) => "Magnet " + (k + 1) + " rolled " + sgFmt(mag.roll) + "° (axis " + sgDirText(mag.n) + ")").join("; ")
+          + ". " + sgOneIn(m.leaves.length, "spot") + ": " + spots + ". Seed " + c.s.seed + ", " + c.s.sent + " atoms on the screen.");
+        return {
+          bench: { yaw: c.num("yaw"), tilt: c.num("tilt"), magnets: m.magnets, segments: m.segments, leaves: m.leaves, hits: c.s.hits },
+          caption: sgOneIn(m.count, "magnet") + ", " + sgOneIn(m.leaves.length, "spot"),
+          desc: "A beam along +y from the oven on the left passes " + sgOneIn(m.count, "magnet") + " and reaches a screen on the right. Every channel continues to the screen, which shows " + sgOneIn(m.leaves.length, "spot") + ": " + spots + "."
+        };
+      },
+      actions: {
+        send1: c => sgBenchSend(c, 1),
+        send10: c => sgBenchSend(c, 10),
+        send100: c => sgBenchSend(c, 100),
+        clear: c => { sgBenchClear(c); return "Screen cleared."; },
+        reseed: c => { sgBenchClear(c); return sgReseed(c, " The screen is cleared."); }
+      },
+      checks: {
+        a: ["|+y⟩ points along the beam, and every magnet axis is perpendicular to the beam.", "s·n = 0 for every roll.", c => {
+          const setup = sgBenchSetup(c, "a");
+          if (setup) return sgSetup(setup);
+          return sgGrade(sgFits(c.ans("a-p"), 0.5) && c.choice("a-pick") === "always", "Compute s·n for s = +y and n = (sin ρ, 0, cos ρ).",
+            "Every roll gives an axis perpendicular to +y, so s·n = 0 and the two spots get 1/2 each, whatever the roll. A magnet can never measure the spin component along its own beam.");
+        }],
+        b: ["Magnet 1 (Z) sends every |+z⟩ atom up the + channel.", "Magnet 2 (X) splits that beam; magnet 3 (Z) splits each half again.", c => {
+          const setup = sgBenchSetup(c, "b");
+          if (setup) return sgSetup(setup);
+          const n = c.ans("b-n"), max = c.ans("b-max");
+          return sgGrade(sgFits(n, 4) && sgFits(max, 0.25), !sgFits(n, 4) ? "Count the paths with nonzero probability." : "Multiply the probabilities along one path.",
+            "Magnet 1 gives + with certainty. Magnet 2 splits into |±x⟩ at 1/2 each, and magnet 3 splits each of those into |±z⟩ at 1/2 each: 4 spots (+ + +, + + −, + − +, + − −), each with 1/4. Spots from magnet 1’s − channel never appear.");
+        }],
+        c: ["A magnet along the state’s own axis sends every atom one way.", "Roll every magnet to 90° or 270°.", c => {
+          const setup = sgBenchSetup(c, "c");
+          if (setup) return sgSetup(setup);
+          const m = sgBenchModel(c);
+          return sgGrade(m.leaves.length === 1, "Your screen shows " + sgOneIn(m.leaves.length, "spot") + ".",
+            "With every magnet along ±x, each one meets an x eigenstate and sends every atom into one channel. A 270° magnet is the 90° magnet with its channels swapped, so it still keeps a single spot.");
+        }],
+        d: ["9/16 = 3/4 × 3/4.", "Two 60° steps: rolls 60° and 120°, or 60° and 0°.", c => {
+          const setup = sgBenchSetup(c, "d");
+          if (setup) return sgSetup(setup);
+          const best = Math.max(...sgBenchModel(c).leaves.map(leaf => leaf.prob));
+          return sgGrade(sgNear(best, 9 / 16), "Your brightest spot has " + sgFmt(best) + ".",
+            "Rolls 60° then 120°: the + channel of magnet 1 keeps 3/4 and leaves in its own axis state; magnet 2 is 60° further, so its + channel keeps 3/4 of that. 3/4 × 3/4 = 9/16. The checker tested your rolls.");
+        }]
+      }
+    },
+
+    // 14 · Spin-1 Preview -------------------------------------------------------------------------------
+    spin1: {
+      show(c) {
+        const theta = sgDeg(c, "theta"), p = sgSpin1(theta), half = Math.cos(sgRad(theta) / 2) ** 2;
+        c.put("state", "Analyzer " + sgFmt(theta) + "° from z. Spin-1 beams: +ℏ " + sgFmt(p.plus) + ", 0 " + sgFmt(p.zero) + ", −ℏ " + sgFmt(p.minus) + ". For comparison, spin-½ at the same angle: +ℏ/2 " + sgFmt(half) + ".");
+        return {
+          panels: [
+            sgBars("spin-1 beams", [{ label: "+ℏ", value: p.plus, tone: "plus" }, { label: "0", value: p.zero, tone: "angle" }, { label: "−ℏ", value: p.minus, tone: "minus" }], { weight: 1 }),
+            sgChart("probabilities vs analyzer angle", { x: [0, 360], y: [0, 1], xTicks: [0, 90, 180, 270, 360], yTicks: [0, 0.5, 1], xLabel: "θ in degrees (dashed: spin-½ P(+))",
+              series: [{ pts: sgSweep(t => sgSpin1(t).plus, 0, 360), tone: "plus" }, { pts: sgSweep(t => sgSpin1(t).zero, 0, 360), tone: "angle" },
+                { pts: sgSweep(t => sgSpin1(t).minus, 0, 360), tone: "minus" }, { pts: sgSweep(t => Math.cos(sgRad(t) / 2) ** 2, 0, 360), tone: "guide", dashed: true }],
+              vlines: [{ x: sgWrap(theta) }], weight: 1.5 })
+          ],
+          caption: "θ = " + sgFmt(theta) + "°",
+          desc: "Three bars for the spin-1 beams +ℏ, 0 and −ℏ, with probabilities " + sgFmt(p.plus) + ", " + sgFmt(p.zero) + " and " + sgFmt(p.minus) + ". The chart shows all three against the analyzer angle, with the spin-½ P(+) dashed."
+        };
+      },
+      checks: {
+        a: ["Spin-1 has readings −ℏ, 0 and +ℏ along any axis.", "One spot per reading.", c => {
+          const n = c.ans("a-n"), mid = c.ans("a-mid");
+          return sgGrade(sgFits(n, 3) && sgFits(mid, 0), !sgFits(n, 3) ? "Count the readings of a spin-1 component." : "Which reading sits between +ℏ and −ℏ?",
+            "A spin-s particle has 2s + 1 readings along any axis, from −sℏ to +sℏ in steps of ℏ. Spin-½ gives 2 spots; spin-1 gives 3: +ℏ, 0 and −ℏ. The middle beam is undeflected.");
+        }],
+        b: ["Set θ = 90°, so cos θ = 0.", "Use ((1 + cos θ)/2)², sin²θ/2 and ((1 − cos θ)/2)².", c => {
+          const theta = sgDeg(c, "theta");
+          if (!sgAngleFits(theta, 90, 180)) return sgSetup("Turn the analyzer to 90° from z.");
+          const v = ["b-p1", "b-p0", "b-m1"].map(name => c.ans(name)), want = [0.25, 0.5, 0.25];
+          return sgGrade(v.every((x, i) => sgFits(x, want[i])), "Check each of the three probabilities.",
+            "At 90°: +ℏ gets (1/2)² = 1/4, 0 gets 1/2 and −ℏ gets 1/4. Spin-½ at 90° would give 1/2 and 1/2. The three still add to 1.");
+        }],
+        c: ["sin²θ/2 is largest at θ = 90°.", "Its largest value is 1/2, never 1.", c => {
+          const theta = sgDeg(c, "theta");
+          if (!sgAngleFits(theta, 90, 180)) return sgSetup("Turn the analyzer to where P(0) is largest.");
+          return sgGrade(sgFits(c.ans("c-max"), 0.5) && c.choice("c-pick") === "notall", "Compare the most P(0) can be with 1.",
+            "P(0) peaks at 1/2. So the m = 0 state along an axis is not |m = +1⟩ along any other axis: some spin-1 states don’t point anywhere. For spin-½, every state is |+n⟩ for some direction n, which is what makes the Bloch sphere work. Lesson 26 develops general spin.");
+        }]
+      }
+    }
+  };
+
+  const sgStations = { ...sgStations1, ...sgStations2, ...sgStations3 };
 
   function sgPalette(root) {
     const css = getComputedStyle(root);
@@ -2227,10 +2499,159 @@ try {
     lines.forEach(([text, tone], k) => words.push(sgNode("text", { class: k > 3 ? "sg-tick" : "sg-label", "data-tone": tone, x: 352, y: 96 + 30 * k, "text-anchor": "start" }, text)));
   }
 
+  // The bench view, drawn in SVG (and as the fallback when Three.js is unavailable).
+  const SG_BENCH_SCALE = 120;
+  // The two pole pieces of a magnet: centres at ±0.2 n, faces spanned by the beam
+  // direction and t = (cos ρ, 0, −sin ρ).
+  function sgPoles(mag) {
+    const t = [Math.cos(sgRad(mag.roll)), 0, -Math.sin(sgRad(mag.roll))];
+    return [1, -1].map(side => ({ side, centre: [0.2 * side * mag.n[0], mag.y, 0.2 * side * mag.n[2]], t }));
+  }
+  function sgDrawBench(view, shapes, words) {
+    const frame = sgFrame(view.yaw, view.tilt), P = point => sgProject(frame, point, SG_BENCH_SCALE);
+    const poly = (pts, cls, tone) => shapes.push(sgNode("polygon", { class: cls, "data-tone": tone, points: pts.map(p => { const q = P(p); return q.x.toFixed(1) + "," + q.y.toFixed(1); }).join(" ") }));
+    const h = SG_BENCH.half, Y = SG_BENCH.screen;
+    poly([[-h, Y, -h], [h, Y, -h], [h, Y, h], [-h, Y, h]], "sg-glass", null);
+    poly([[-0.12, SG_BENCH.source - 0.12, -0.12], [0.12, SG_BENCH.source - 0.12, -0.12], [0.12, SG_BENCH.source + 0.12, 0.12], [-0.12, SG_BENCH.source + 0.12, 0.12]], "sg-part", "beta");
+    for (const mag of view.magnets) {
+      for (const pole of sgPoles(mag)) {
+        const c = pole.centre, t = pole.t, corner = (a, b) => [c[0] + a * 0.16 * t[0], c[1] + b * 0.1, c[2] + a * 0.16 * t[2]];
+        poly([corner(-1, -1), corner(1, -1), corner(1, 1), corner(-1, 1)], "sg-part", pole.side > 0 ? "angle" : "alpha");
+      }
+    }
+    for (const seg of view.segments) {
+      const a = P(seg.from), b = P(seg.to);
+      // Beams, hits and spots go in the label layer, so they show over the WebGL picture too.
+      words.push(sgNode("line", { class: "sg-path" + (seg.tone === "minus" ? " sg-dashed" : ""), "data-tone": seg.tone, x1: a.x, y1: a.y, x2: b.x, y2: b.y, "stroke-opacity": (0.35 + 0.65 * seg.prob).toFixed(2) }));
+    }
+    for (const hit of view.hits) { const q = P([hit.x, Y, hit.z]); words.push(sgNode("circle", { class: "sg-hit", "data-tone": "plus", cx: q.x.toFixed(1), cy: q.y.toFixed(1), r: 2 })); }
+    view.leaves.forEach(leaf => {
+      const q = P([leaf.x, Y, leaf.z]);
+      words.push(sgNode("circle", { class: "sg-ring", "data-tone": "angle", cx: q.x, cy: q.y, r: 4 + 8 * leaf.prob }));
+      words.push(sgNode("text", { class: "sg-tick", x: q.x + 12, y: q.y + 4, "text-anchor": "start" }, leaf.signs + " " + sgFmt(sgRound(leaf.prob, 0.001))));
+    });
+    view.magnets.forEach((mag, k) => {
+      const q = P([0.32 * mag.n[0], mag.y, 0.32 * mag.n[2]]);
+      words.push(sgNode("text", { class: "sg-label", "data-tone": "angle", x: q.x, y: q.y - 6, "text-anchor": "middle" }, "M" + (k + 1) + " +n"));
+    });
+    const oven = P([0, SG_BENCH.source, -0.22]);
+    words.push(sgNode("text", { class: "sg-tick", x: oven.x, y: oven.y + 16, "text-anchor": "middle" }, "oven"));
+    const screen = P([0, Y, -h]);
+    words.push(sgNode("text", { class: "sg-tick", x: screen.x, y: Math.min(292, screen.y + 16), "text-anchor": "middle" }, "screen"));
+    // A small set of axes beside the oven.
+    const o = [0, SG_BENCH.source - 0.1, 0.55], O = P(o);
+    for (const [d, name] of [[[0.25, 0, 0], "x"], [[0, 0.25, 0], "y"], [[0, 0, 0.25], "z"]]) {
+      const e = P(o.map((v, i) => v + d[i]));
+      shapes.push(sgNode("line", { class: "sg-axis", x1: O.x, y1: O.y, x2: e.x, y2: e.y }));
+      const tag = P(o.map((v, i) => v + d[i] * 1.45));
+      words.push(sgNode("text", { class: "sg-tick", x: tag.x, y: tag.y + 4, "text-anchor": "middle" }, "+" + name));
+    }
+  }
+
   const SG_PANEL_DRAW = {
     plane: sgDrawPlane, chart: sgDrawChart, bars: sgDrawBars, line: sgDrawLine, chain: sgDrawChain,
     plate: sgDrawPlate, magnet: sgDrawMagnet, loop: sgDrawLoop, cone: sgDrawCone
   };
+
+  // Three.js view of the bench: oven, pole pieces and screen. Beams, hits, spots
+  // and labels stay in the SVG label layer on top, for both renderers.
+  function sgCreateGraphics(THREE, canvas, colors) {
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setClearColor(0x000000, 0);
+    const camera = new THREE.OrthographicCamera(-SG_VIEW.cx, 560 - SG_VIEW.cx, SG_VIEW.cy, SG_VIEW.cy - 300, 1, 2000);
+    camera.position.set(0, 0, 800);
+    camera.lookAt(0, 0, 0);
+    const disposables = [];
+    const keep = item => { disposables.push(item); return item; };
+    const materials = new Map();
+    const lambert = tone => {
+      const key = "lambert-" + tone;
+      if (!materials.has(key)) materials.set(key, keep(new THREE.MeshLambertMaterial({ color: colors[tone] ?? colors.plus })));
+      return materials.get(key);
+    };
+    const scenes = {};
+
+    function place(group, scale, frame) {
+      group.matrix.set(
+        scale * frame.right[0], scale * frame.right[1], scale * frame.right[2], 0,
+        scale * frame.up[0], scale * frame.up[1], scale * frame.up[2], 0,
+        scale * frame.toward[0], scale * frame.toward[1], scale * frame.toward[2], 0,
+        0, 0, 0, 1);
+      group.matrixWorldNeedsUpdate = true;
+    }
+    function pool(group, geometry, material) {
+      const meshes = [];
+      return (count, each) => {
+        while (meshes.length < count) {
+          const mesh = new THREE.Mesh(geometry, material);
+          group.add(mesh);
+          meshes.push(mesh);
+        }
+        meshes.forEach((mesh, k) => {
+          mesh.visible = k < count;
+          if (k < count) each(mesh, k);
+        });
+      };
+    }
+
+    function buildBench() {
+      const scene = new THREE.Scene();
+      scene.add(new THREE.AmbientLight(0xffffff, 1.2));
+      const sun = new THREE.DirectionalLight(0xffffff, 1.5);
+      sun.position.set(-300, 400, 600);
+      scene.add(sun);
+      const group = new THREE.Group();
+      group.matrixAutoUpdate = false;
+      scene.add(group);
+      const h = SG_BENCH.half;
+      const screen = new THREE.Mesh(keep(new THREE.PlaneGeometry(2 * h, 2 * h)),
+        keep(new THREE.MeshBasicMaterial({ color: colors.glass, transparent: true, opacity: 0.16, side: THREE.DoubleSide, depthWrite: false })));
+      screen.rotation.x = Math.PI / 2;
+      screen.position.y = SG_BENCH.screen;
+      group.add(screen);
+      const rim = new THREE.LineLoop(keep(new THREE.BufferGeometry().setFromPoints([[-h, -h], [h, -h], [h, h], [-h, h]].map(([x, z]) => new THREE.Vector3(x, SG_BENCH.screen, z)))),
+        keep(new THREE.LineBasicMaterial({ color: colors.axis })));
+      group.add(rim);
+      const oven = new THREE.Mesh(keep(new THREE.BoxGeometry(0.24, 0.24, 0.24)), lambert("beta"));
+      oven.position.y = SG_BENCH.source;
+      group.add(oven);
+      const o = [0, SG_BENCH.source - 0.1, 0.55];
+      group.add(new THREE.LineSegments(keep(new THREE.BufferGeometry().setFromPoints([[0.25, 0, 0], [0, 0.25, 0], [0, 0, 0.25]].flatMap(d =>
+        [new THREE.Vector3(...o), new THREE.Vector3(o[0] + d[0], o[1] + d[1], o[2] + d[2])]))), keep(new THREE.LineBasicMaterial({ color: colors.axis }))));
+      const poleGeometry = keep(new THREE.BoxGeometry(1, 1, 1));
+      const poles = { angle: pool(group, poleGeometry, lambert("angle")), alpha: pool(group, poleGeometry, lambert("alpha")) };
+      return {
+        draw(view) {
+          place(group, SG_BENCH_SCALE, sgFrame(view.yaw, view.tilt));
+          const bySide = { angle: [], alpha: [] };
+          for (const mag of view.magnets) for (const pole of sgPoles(mag)) bySide[pole.side > 0 ? "angle" : "alpha"].push({ pole, mag });
+          for (const side of ["angle", "alpha"]) {
+            poles[side](bySide[side].length, (mesh, k) => {
+              const { pole, mag } = bySide[side][k];
+              mesh.position.set(...pole.centre);
+              mesh.rotation.set(0, sgRad(mag.roll), 0);
+              mesh.scale.set(0.32, 0.2, 0.1);
+            });
+          }
+          renderer.render(scene, camera);
+        }
+      };
+    }
+
+    return {
+      draw(kind, view, width, height, low) {
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, low ? 1 : 2));
+        renderer.setSize(width, height, false);
+        scenes[kind] ??= buildBench();
+        scenes[kind].draw(view);
+      },
+      invalidate() { /* Geometry is rebuilt on every draw; nothing to restore. */ },
+      dispose() {
+        for (const item of disposables) item.dispose();
+        renderer.dispose();
+      }
+    };
+  }
 
   if (lesson) initializeSternGerlachArcade(lesson);
 } catch (error) {

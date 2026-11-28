@@ -431,10 +431,16 @@
               </optgroup>
               <optgroup label="Recurring formats">
                 <option value="designer">10 · Beamline Designer</option>
+                <option value="detective">11 · Error Detective</option>
+                <option value="preview">12 · Quantum Preview: Precession</option>
+              </optgroup>
+              <optgroup label="Extras">
+                <option value="bench">13 · 3D Stern–Gerlach Bench</option>
+                <option value="spin1">14 · Spin-1 Preview</option>
               </optgroup>
             </select>
           </label>
-          <p id="sg-progress" role="status">0 of 44 missions completed this session.</p>
+          <p id="sg-progress" role="status">0 of 60 missions completed this session.</p>
           <button id="sg-reset" type="button" disabled>Reset this station</button>
           <label class="sg-reduced" for="sg-reduced"><input id="sg-reduced" type="checkbox" disabled> Reduced effects</label>
         </div>
@@ -831,6 +837,155 @@
               <summary>Show the math</summary>
               <p>The output state is q n for the last analyzer’s direction n and selection q. The share is the product of each stage’s P(pass | reached) = (1 + q n·s)/2, where s is the state reaching that stage.</p>
               <p>To turn a state through an angle Θ with k equal steps, each step keeps cos²(Θ/2k), so the share is cos^(2k)(Θ/2k). For Θ = 180°: one step keeps 0, two keep 1/4, three keep 27/64 and four keep about 0.53.</p>
+            </details>
+          </section>
+
+          <section class="sg-station" data-sg-station="detective" data-sg-accent="red" aria-labelledby="sg-detective-title" hidden>
+            <h4 id="sg-detective-title">Error Detective</h4>
+            <p>Each case file holds a worked solution with exactly one planted mistake. Find the first line that goes wrong, and name the mistake. The diagram shows what the solution claims next to what is actually true.</p>
+            <div data-sg-plot-slot></div>
+            <fieldset disabled>
+              <legend class="sg-sr-only">Error Detective controls</legend>
+              <p class="sg-readout" data-sg-read="state" aria-live="polite"></p>
+              <div class="sg-missions">
+                <details class="sg-mission" data-sg-mission="detective-half">
+                  <summary>Case 1 · the 60° analyzer<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>|+z⟩ enters an analyzer at η = 60°. Find P(+).</p><ol class="sg-worked"><li>The separation angle is θ = 60°.</li><li>P(+) = cos²θ = cos²60° = 1/4.</li><li>So P(−) = 1 − 1/4 = 3/4.</li><li>Most atoms read −ℏ/2.</li></ol><div class="sg-fields"><label>First wrong line <select name="half-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="half-kind" required><option value="">Choose</option><option value="half">Used cos²θ instead of cos²(θ/2)</option><option value="blocked">Left the blocked atoms out of the overall share</option><option value="chain">Multiplied conditional probabilities without P(A)</option><option value="selector">Treated the selector as an absorbing detector</option><option value="points">Said the spin points along z</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="detective-blocked">
+                  <summary>Case 2 · the share at B−<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>|+z⟩ → A along x, passing A+ → B along z. What share of all atoms sent reaches B−?</p><ol class="sg-worked"><li>P_A(+) = 1/2.</li><li>The passed atoms are in |+x⟩, so P_B(− | A = +) = 1/2.</li><li>So B− receives 1/2 of all atoms sent.</li><li>B+ receives the other 1/2.</li></ol><div class="sg-fields"><label>First wrong line <select name="blocked-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="blocked-kind" required><option value="">Choose</option><option value="half">Used cos²θ instead of cos²(θ/2)</option><option value="blocked">Left the blocked atoms out of the overall share</option><option value="chain">Multiplied conditional probabilities without P(A)</option><option value="selector">Treated the selector as an absorbing detector</option><option value="points">Said the spin points along z</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="detective-chain">
+                  <summary>Case 3 · three analyzers<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>|+z⟩ → A along x passing + → B along z passing − → C along x. What share of all atoms sent reaches C+?</p><ol class="sg-worked"><li>P_A(+) = 1/2, and the passed atoms are in |+x⟩.</li><li>P_B(− | A = +) = 1/2, and the passed atoms are in |−z⟩.</li><li>P_C(+ | B = −) = 1/2.</li><li>Share at C+ = P_B(− | A = +) × P_C(+ | B = −) = 1/4.</li></ol><div class="sg-fields"><label>First wrong line <select name="chain-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="chain-kind" required><option value="">Choose</option><option value="half">Used cos²θ instead of cos²(θ/2)</option><option value="blocked">Left the blocked atoms out of the overall share</option><option value="chain">Multiplied conditional probabilities without P(A)</option><option value="selector">Treated the selector as an absorbing detector</option><option value="points">Said the spin points along z</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="detective-selector">
+                  <summary>Case 4 · what the selector does<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>|+z⟩ → A along x, with the selector passing A+ → B along x. Find P_B(+ | A = +).</p><ol class="sg-worked"><li>P_A(+) = 1/2.</li><li>The selector is a detector that absorbs each atom it registers in A+.</li><li>So no atoms reach B, and P_B(+ | A = +) is undefined.</li><li>Only the A− atoms could ever reach B.</li></ol><div class="sg-fields"><label>First wrong line <select name="selector-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="selector-kind" required><option value="">Choose</option><option value="half">Used cos²θ instead of cos²(θ/2)</option><option value="blocked">Left the blocked atoms out of the overall share</option><option value="chain">Multiplied conditional probabilities without P(A)</option><option value="selector">Treated the selector as an absorbing detector</option><option value="points">Said the spin points along z</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="detective-points">
+                  <summary>Case 5 · where |+z⟩ points<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>A source prepares |+z⟩. Describe its spin.</p><ol class="sg-worked"><li>An S_z analyzer gives +ℏ/2 with certainty.</li><li>So the spin vector points exactly along +z, with length ℏ/2.</li><li>Its x component is therefore exactly 0.</li><li>So an S_x analyzer reads 0 on every atom.</li></ol><div class="sg-fields"><label>First wrong line <select name="points-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="points-kind" required><option value="">Choose</option><option value="half">Used cos²θ instead of cos²(θ/2)</option><option value="blocked">Left the blocked atoms out of the overall share</option><option value="chain">Multiplied conditional probabilities without P(A)</option><option value="selector">Treated the selector as an absorbing detector</option><option value="points">Said the spin points along z</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="sg-math">
+              <summary>Show the math</summary>
+              <p>The planted mistakes: the spin rule is P(+) = cos²(θ/2), not cos²θ. A share of all atoms sent includes every factor from the source onward, so blocked atoms count, and P_A(q) multiplies the conditionals. A selector blocks one channel and lets the other pass untouched. A definite S_z doesn’t make the spin point along z: |S| = (√3/2)ℏ > ℏ/2, and S_x stays ±ℏ/2.</p>
+            </details>
+          </section>
+
+          <section class="sg-station" data-sg-station="preview" data-sg-accent="yellow" aria-labelledby="sg-preview-title" hidden>
+            <p class="sg-kicker">Optional preview · Lesson 17</p>
+            <h4 id="sg-preview-title">Quantum Preview: Precession</h4>
+            <p>This is a preview of Lesson 17. So far the spin stayed fixed between analyzers. In a steady magnetic field along +z, a spin that points across the field turns around it at a steady rate. In this preview it turns from +x toward +y once per period T. Wait a delay t, then measure: the analyzer’s probability oscillates with t. Lesson 17 derives the turning from time evolution; here you only read the pattern. The clock respects your reduced-motion setting and the Reduced effects box.</p>
+            <div data-sg-plot-slot></div>
+            <fieldset disabled>
+              <legend class="sg-sr-only">Quantum Preview: Precession controls</legend>
+              <div class="sg-fields"><label>Delay t in periods T <output data-sg-for="t" data-sg-unit=" T">0</output><input type="range" name="t-range" data-sg-pair="t" min="0" max="3" step="0.01" value="0"></label><label>Delay t in periods T (number) <input class="sg-answer" type="number" name="t" min="0" max="3" step="any" value="0"></label><label>Input state <select name="input"><option value="+x" selected>|+x⟩ (across the field)</option><option value="+z">|+z⟩ (along the field)</option></select></label><label>Analyzer axis <select name="axis"><option value="+x" selected>+x</option><option value="+y">+y</option><option value="-x">−x</option><option value="+z">+z</option></select></label><label class="sg-check-row"><input type="checkbox" name="run"> Run the clock</label></div><p class="sg-readout" data-sg-read="state" aria-live="polite"></p>
+              <div class="sg-missions">
+                <details class="sg-mission" data-sg-mission="preview-a">
+                  <summary>Half a turn<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Input |+x⟩, analyzer along +x. Set a delay where no atom gives +ℏ/2.</p>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="preview-b">
+                  <summary>A quarter turn<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Input |+x⟩. What is P(+x) at t = T/4? Then choose an analyzer and delay that give +ℏ/2 every time at T/4.</p><div class="sg-fields"><label>P(+x) at T/4 = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="b-p"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="preview-c">
+                  <summary>Read the oscillation<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Input |+x⟩, analyzer along +x. Find P(+) at t = T/3.</p><div class="sg-fields"><label>P(+x) at T/3 = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="c-p"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="preview-d">
+                  <summary>Along the field<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Input |+z⟩ with the analyzer along +z. What does the delay do?</p><div class="sg-fields"><label>As the delay grows, P(+z) <select name="d-pick" required><option value="">Choose</option><option value="osc">oscillates like the |+x⟩ case</option><option value="stays">stays 1: a spin along the field doesn’t turn</option><option value="decay">decays to 1/2</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="sg-math">
+              <summary>Show the math</summary>
+              <p>The spin direction after a delay t is s(t) = (cos 2πt/T, sin 2πt/T, 0) for a |+x⟩ start. An analyzer along n gives P(+) = (1 + s(t)·n)/2, so along +x, P(+) = cos²(πt/T).</p>
+              <p>This is only the pattern. Why the spin turns, and how the field sets T, is time evolution, which Lesson 17 develops.</p>
+            </details>
+          </section>
+
+          <section class="sg-station" data-sg-station="bench" data-sg-accent="blue" aria-labelledby="sg-bench-title" hidden>
+            <h4 id="sg-bench-title">3D Stern–Gerlach Bench</h4>
+            <p>A full bench in 3D: an oven, one to three magnets and a screen. The beam runs along +y. Each magnet rolls about the beam, so its axis n = (sin ρ, 0, cos ρ) can point in any direction across the beam. No selectors here: every channel continues, so each magnet can split every beam it receives, and the screen shows one spot per path. The source can point anywhere. Drag the bench to turn it, or use the view sliders. Every spot and simulated atom is also listed as text.</p>
+            <div data-sg-plot-slot></div>
+            <fieldset disabled>
+              <legend class="sg-sr-only">3D Stern–Gerlach Bench controls</legend>
+              <div class="sg-fields"><label>Number of magnets <select name="count"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option></select></label><label>Source tilt η_s <output data-sg-for="src-eta" data-sg-angle>0</output><input type="range" name="src-eta-range" data-sg-pair="src-eta" min="0" max="360" step="1" value="0"></label><label>η_s in degrees <input class="sg-answer" type="number" name="src-eta" step="any" value="0"></label><label>Source azimuth φ_s <output data-sg-for="src-phi" data-sg-angle>0</output><input type="range" name="src-phi-range" data-sg-pair="src-phi" min="0" max="360" step="1" value="0"></label><label>φ_s in degrees <input class="sg-answer" type="number" name="src-phi" step="any" value="0"></label></div><div class="sg-fields" data-sg-stage="1"><label>Magnet 1 roll ρ <output data-sg-for="roll1" data-sg-angle>0</output><input type="range" name="roll1-range" data-sg-pair="roll1" min="0" max="360" step="1" value="0"></label><label>Magnet 1 ρ in degrees <input class="sg-answer" type="number" name="roll1" step="any" value="0"></label></div><div class="sg-fields" data-sg-stage="2"><label>Magnet 2 roll ρ <output data-sg-for="roll2" data-sg-angle>90</output><input type="range" name="roll2-range" data-sg-pair="roll2" min="0" max="360" step="1" value="90"></label><label>Magnet 2 ρ in degrees <input class="sg-answer" type="number" name="roll2" step="any" value="90"></label></div><div class="sg-fields" data-sg-stage="3" hidden><label>Magnet 3 roll ρ <output data-sg-for="roll3" data-sg-angle>0</output><input type="range" name="roll3-range" data-sg-pair="roll3" min="0" max="360" step="1" value="0"></label><label>Magnet 3 ρ in degrees <input class="sg-answer" type="number" name="roll3" step="any" value="0"></label></div><div class="sg-fields"><label>View turn <output data-sg-for="yaw" data-sg-angle>30</output><input type="range" name="yaw" min="-180" max="180" step="5" value="30"></label><label>View tilt <output data-sg-for="tilt" data-sg-angle>20</output><input type="range" name="tilt" min="-60" max="60" step="5" value="20"></label></div><div class="sg-button-row"><button class="sg-primary" type="button" data-sg-action="send1">Send one</button><button type="button" data-sg-action="send10">Send 10</button><button type="button" data-sg-action="send100">Send 100</button><button type="button" data-sg-action="clear">Clear screen</button><button type="button" data-sg-action="reseed">New seed</button></div><p class="sg-readout" data-sg-read="state" aria-live="polite"></p>
+              <div class="sg-missions">
+                <details class="sg-mission" data-sg-mission="bench-a">
+                  <summary>Along the beam<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Source |+y⟩, along the beam itself, and one magnet. Try several rolls.</p><div class="sg-fields"><label>Share in each spot = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="a-p"></label><label>For every roll <select name="a-pick" required><option value="">Choose</option><option value="always">the two spots stay equal</option><option value="one">one roll puts every atom in one spot</option><option value="none">no atoms are deflected</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="bench-b">
+                  <summary>Count the spots<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Source |+z⟩, three magnets rolled 0°, 90° and 0°. How many spots appear, and what share does the brightest get?</p><div class="sg-fields"><label>Number of spots = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="b-n"></label><label>Brightest spot’s share = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="b-max"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="bench-c">
+                  <summary>One spot from three magnets<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Source |+x⟩ and three magnets. Roll them so the screen shows a single spot.</p>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="bench-d">
+                  <summary>Brightest spot 9/16<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Source |+z⟩ and two magnets. Roll them so the brightest spot gets 9/16 of the atoms.</p>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="sg-math">
+              <summary>Show the math</summary>
+              <p>Each magnet sends a beam in state s into + with probability (1 + s·n)/2, leaving in |+n⟩, and into − with the rest, leaving in |−n⟩. A spot’s share is the product of its path’s probabilities, and the shares of all spots add to 1.</p>
+              <p>A magnet’s gradient is across the beam, so rolling covers every axis perpendicular to +y. For a source along +y, s·n = 0 for every roll.</p>
+            </details>
+          </section>
+
+          <section class="sg-station" data-sg-station="spin1" data-sg-accent="green" aria-labelledby="sg-spin1-title" hidden>
+            <p class="sg-kicker">Optional preview · Lesson 26</p>
+            <h4 id="sg-spin1-title">Spin-1 Preview</h4>
+            <p>This is a preview of Lesson 26. A spin-1 particle has three readings along any axis: +ℏ, 0 and −ℏ, so the beam splits into three. Start in |m = +1⟩ along z and turn the analyzer by θ. The dashed curve is spin-½ P(+) for comparison.</p>
+            <div data-sg-plot-slot></div>
+            <fieldset disabled>
+              <legend class="sg-sr-only">Spin-1 Preview controls</legend>
+              <div class="sg-fields"><label>Analyzer angle θ from z <output data-sg-for="theta" data-sg-angle>60</output><input type="range" name="theta-range" data-sg-pair="theta" min="0" max="360" step="1" value="60"></label><label>θ in degrees <input class="sg-answer" type="number" name="theta" step="any" value="60"></label></div><p class="sg-readout" data-sg-read="state" aria-live="polite"></p>
+              <div class="sg-missions">
+                <details class="sg-mission" data-sg-mission="spin1-a">
+                  <summary>Count the beams<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>How many beams does a spin-1 analyzer make, and what is the middle reading in units of ℏ?</p><div class="sg-fields"><label>Number of beams = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="a-n"></label><label>Middle reading = (?) ℏ: <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="a-mid"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="spin1-b">
+                  <summary>Perpendicular analyzer<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Turn the analyzer to 90°. Give the three probabilities.</p><div class="sg-fields"><label>P(+ℏ) = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="b-p1"></label><label>P(0) = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="b-p0"></label><label>P(−ℏ) = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="b-m1"></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+                <details class="sg-mission" data-sg-mission="spin1-c">
+                  <summary>Why spin-½ is special<span data-sg-done hidden>✓ Complete</span></summary>
+                  <p>Turn the analyzer to where P(0) is largest. Give that largest value and say what it shows.</p><div class="sg-fields"><label>Largest P(0) = <input class="sg-answer" type="text" autocomplete="off" spellcheck="false" name="c-max"></label><label>Since P(0) never reaches 1, <select name="c-pick" required><option value="">Choose</option><option value="notall">not every spin-1 state is |m = +1⟩ along some axis, unlike spin-½</option><option value="broken">the analyzer is losing atoms</option><option value="same">spin-1 behaves just like spin-½</option></select></label></div>
+                  <button class="sg-primary" type="button" data-sg-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="sg-math">
+              <summary>Show the math</summary>
+              <p>For |m = +1⟩ along z and an analyzer at θ: P(+ℏ) = ((1 + cos θ)/2)², P(0) = sin²θ/2 and P(−ℏ) = ((1 − cos θ)/2)². They add to 1.</p>
+              <p>For spin-½, every state is |+n⟩ for some direction n. For spin-1 that fails: P(0) for this state is at most 1/2. Lesson 26 develops general angular momentum.</p>
             </details>
           </section>
 
