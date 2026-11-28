@@ -6,10 +6,10 @@
   <meta name="theme-color" content="#050906">
   <meta name="description" content="Change the measurement basis, calculate quantum outcome probabilities, and compare the Born rule with simulated measurements.">
   <title>Measurement and the Born Rule | Quantum Mechanics Class</title>
-  <link rel="stylesheet" href="./styles/main.css">
+  <link rel="stylesheet" href="./styles/main.css?v=13-measurement-arcade">
   <script src="./scripts/app.js" defer></script>
   <script src="./scripts/lessons-menu.js" defer></script>
-  <script type="module" src="./scripts/lesson.js"></script>
+  <script type="module" src="./scripts/lesson.js?v=13-measurement-arcade"></script>
 </head>
 <body>
   <header class="site-header">
@@ -132,6 +132,7 @@
       <h2 id="born-title">Measurement and the Born Rule</h2>
       <p class="lesson-lead">You prepare the same state 100 times. One measurement setting predicts outcome 1 with probability 64%. Another predicts outcome + with probability 98%. How can both predictions be right, and what will a single measurement actually show?</p>
       <p>The preparation specifies the state. The apparatus setting specifies which basis you measure in. Each run gives one outcome from that setting. Here we use an ideal projective measurement with two outcomes, each associated with one basis ket.</p>
+      <p><a id="br-arcade-link" href="#measurement-arcade">Open the optional Measurement Arcade</a></p>
     </header>
 
     <section class="lesson-panel born-lab" id="born-lab" aria-labelledby="born-lab-title">
@@ -426,6 +427,844 @@
         </fieldset>
       </form>
     </section>
+
+    <details class="lesson-panel br-arcade" id="measurement-arcade">
+      <summary><strong>Measurement Arcade</strong><span>Optional practice</span></summary>
+      <div class="br-body">
+        <p>Pick a station, try its controls, and open a mission when you’re ready. Each mission has two hints. Progress lasts while this page is open.</p>
+        <p class="lesson-note" id="br-tolerance">Answer boxes accept whole numbers, decimals, fractions such as 3/16, and square roots such as 1/√2 or (2 + √2)/4. Each complex number has one box for its real part and one for its imaginary part. Answers that end as decimals, such as 0.25 or 0.16, are checked exactly. Answers such as 1/3 or √3/2 can be typed exactly, or as decimals within 0.002 of the exact value, separately for each real and imaginary part. Angles are typed in degrees and shown with radians alongside. A measurement basis at θ is the same basis at θ + 180°, and typed angles count within 1°. Probabilities computed from a setting you build count when they are within 0.005 of the target. Simulated trials use a fixed seed, so resetting a station replays the same run, and missions about random runs check your prediction or reasoning, never a lucky result.</p>
+        <div class="br-toolbar">
+          <label for="br-station">Station
+            <select id="br-station" aria-controls="br-panels" disabled>
+              <optgroup label="Computing predictions">
+                <option value="tilt">1 · Tilted Detector</option>
+                <option value="complete">2 · Completeness Check</option>
+                <option value="single">3 · Single Shot Limits</option>
+              </optgroup>
+              <optgroup label="Statistics">
+                <option value="forecast">4 · Frequency Forecaster</option>
+                <option value="tomo">5 · State Detective</option>
+              </optgroup>
+              <optgroup label="After the measurement">
+                <option value="chain">6 · Collapse Chain</option>
+                <option value="refresh">7 · Repeat or Refresh</option>
+                <option value="stack">8 · Polarizer Stack</option>
+                <option value="guess">9 · Best Guess</option>
+              </optgroup>
+              <optgroup label="Recurring formats">
+                <option value="designer">10 · Measurement Designer</option>
+                <option value="detective">11 · Error Detective</option>
+                <option value="values">12 · Quantum Preview: Outcomes With Values</option>
+              </optgroup>
+              <optgroup label="Extras">
+                <option value="axis">13 · Measurement Axis on the Bloch Sphere (3D)</option>
+                <option value="qrng">14 · Quantum Random Number Generator</option>
+                <option value="bomb">15 · Bomb Tester (3D)</option>
+              </optgroup>
+            </select>
+          </label>
+          <p id="br-progress" role="status">0 of 70 missions completed this session.</p>
+          <button id="br-reset" type="button" disabled>Reset this station</button>
+          <label class="br-reduced" for="br-reduced"><input id="br-reduced" type="checkbox" disabled> Reduced effects</label>
+        </div>
+        <p class="lesson-note" id="br-status" role="status" aria-atomic="true"></p>
+        <p><a href="#born-lab-title">Return to the Measurement Lab</a></p>
+        <noscript><p class="lesson-note">JavaScript runs the arcade diagrams, controls, simulated trials and mission checks.</p></noscript>
+
+        <div id="br-panels">
+          <section class="br-station" data-br-station="tilt" data-br-accent="blue" aria-labelledby="br-tilt-title">
+            <h4 id="br-tilt-title">Tilted Detector</h4>
+            <p>Z and X aren’t the only settings. This detector measures in the basis |θ⟩ = cos θ|0⟩ + sin θ|1⟩ and |θ⊥⟩ = −sin θ|0⟩ + cos θ|1⟩. θ = 0° is Z and θ = 45° is X. Turn θ, watch P(θ) = |⟨θ|ψ⟩|², and record the settings you find.</p>
+            <div data-br-plot-slot></div>
+            <fieldset disabled>
+              <legend class="br-sr-only">Tilted Detector controls</legend>
+              <div class="br-fields">
+                <label>Prepared state <select name="prep"><option value="sixty" selected>(1/2)|0⟩ + (√3/2)|1⟩</option><option value="minus30">(√3/2)|0⟩ − (1/2)|1⟩</option><option value="zero">|0⟩</option><option value="plusi">|+i⟩ = (|0⟩ + i|1⟩)/√2</option></select></label>
+                <label>Detector angle θ <output data-br-for="theta" data-br-angle>0° · 0 rad</output><input type="range" name="theta" min="0" max="179" step="1" value="0"></label>
+                <label>Or type θ in degrees <input class="br-answer" type="text" name="typed" autocomplete="off" spellcheck="false"></label>
+              </div>
+              <div class="br-button-row"><button class="br-primary" type="button" data-br-action="record">Record the slider’s θ</button><button type="button" data-br-action="typed">Record the typed θ</button><button type="button" data-br-action="clear">Clear recorded settings</button></div>
+              <p class="br-readout" data-br-read="state" aria-live="polite"></p>
+              <ul class="br-log" data-br-log="log" aria-label="Recorded settings"></ul>
+              <div class="br-missions">
+                <details class="br-mission" data-br-mission="tilt-certain">
+                  <summary>Make it certain<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Prepare (1/2)|0⟩ + (√3/2)|1⟩. Record a detector angle where outcome θ is certain.</p>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="tilt-blind">
+                  <summary>Make it impossible<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Same state. Record a detector angle where outcome θ never happens.</p>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="tilt-halves">
+                  <summary>Two fair coins<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Prepare (√3/2)|0⟩ − (1/2)|1⟩. Record two different angles in 0° to 180° that each give P(θ) = 1/2.</p>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="tilt-target">
+                  <summary>Three quarters from |0⟩<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>For the state |0⟩, type a detector angle with P(θ) = 3/4.</p>
+                  <div class="br-fields"><label>θ in degrees <input class="br-answer" type="text" name="target-theta" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="tilt-never">
+                  <summary>The state no tilt can catch<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Prepare |+i⟩ and sweep θ. What do you find?</p>
+                  <div class="br-fields"><label>Finding <select name="never-pick" required><option value="">Choose</option><option value="half">Every real θ gives P(θ) = 1/2</option><option value="certain45">θ = 45° makes outcome θ certain</option><option value="zero">θ = 0° makes outcome θ impossible</option></select></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="br-math">
+              <summary>Show the math</summary>
+              <p>For a real state |ψ⟩ = cos φ|0⟩ + sin φ|1⟩, the amplitude is c_θ = ⟨θ|ψ⟩ = cos θ cos φ + sin θ sin φ = cos(θ − φ), so P(θ) = cos²(θ − φ) and P(θ⊥) = sin²(θ − φ). Outcome θ is certain when the detector lines up with the state (θ = φ) and impossible a quarter-turn away. Turning the detector by 180° only flips the sign of |θ⟩, a global phase, so θ and θ + 180° are the same measurement. A complex state such as |+i⟩ gives |e^(iθ)|²/2 = 1/2 for every real θ.</p>
+            </details>
+          </section>
+
+          <section class="br-station" data-br-station="complete" data-br-accent="orange" aria-labelledby="br-complete-title" hidden>
+            <h4 id="br-complete-title">Completeness Check</h4>
+            <p>In an orthonormal basis, the outcome probabilities add to 1 for every state. Choose a candidate pair of kets and a state, and watch |⟨a|ψ⟩|² + |⟨b|ψ⟩|². Some candidates aren’t orthonormal, and their “probabilities” don’t add up.</p>
+            <div data-br-plot-slot></div>
+            <fieldset disabled>
+              <legend class="br-sr-only">Completeness Check controls</legend>
+              <div class="br-fields">
+                <label>Candidate pair <select name="cand"><option value="z" selected>Z: |0⟩ and |1⟩</option><option value="x">X: |+⟩ and |−⟩</option><option value="y">Y: |+i⟩ and |−i⟩</option><option value="t30">|30°⟩ and |30°⊥⟩</option><option value="zi">|0⟩ and i|1⟩</option><option value="mixed">|0⟩ and |+⟩</option><option value="long">|0⟩ + |1⟩ and |0⟩ − |1⟩, no √2</option></select></label>
+                <label>State angle t <output data-br-for="t" data-br-unit="°">0°</output><input type="range" name="t" min="0" max="180" step="0.5" value="0"></label>
+                <label>Phase on |1⟩ <select name="phase"><option value="0" selected>none: cos t|0⟩ + sin t|1⟩</option><option value="90">i: cos t|0⟩ + i sin t|1⟩</option></select></label>
+              </div>
+              <p class="br-readout" data-br-read="state" aria-live="polite"></p>
+              <div class="br-missions">
+                <details class="br-mission" data-br-mission="complete-sort">
+                  <summary>Sort the candidates<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Tick every candidate pair that is an orthonormal basis.</p>
+                  <div class="br-fields">
+                    <label class="br-check-row"><input type="checkbox" name="s-z"> |0⟩, |1⟩</label>
+                    <label class="br-check-row"><input type="checkbox" name="s-x"> |+⟩, |−⟩</label>
+                    <label class="br-check-row"><input type="checkbox" name="s-y"> |+i⟩, |−i⟩</label>
+                    <label class="br-check-row"><input type="checkbox" name="s-t30"> |30°⟩, |30°⊥⟩</label>
+                    <label class="br-check-row"><input type="checkbox" name="s-zi"> |0⟩, i|1⟩</label>
+                    <label class="br-check-row"><input type="checkbox" name="s-mixed"> |0⟩, |+⟩</label>
+                    <label class="br-check-row"><input type="checkbox" name="s-long"> |0⟩ ± |1⟩, no √2</label>
+                  </div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="complete-overlap">
+                  <summary>Counted twice<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>For the state |0⟩ and the pair |0⟩, |+⟩, what is |⟨0|0⟩|² + |⟨+|0⟩|²?</p>
+                  <div class="br-fields"><label>Sum <input class="br-answer" type="text" name="overlap-sum" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="complete-long">
+                  <summary>Too long<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>For the state |0⟩ and the unnormalized pair |0⟩ + |1⟩, |0⟩ − |1⟩, what do the two squared overlaps add to?</p>
+                  <div class="br-fields"><label>Sum <input class="br-answer" type="text" name="long-sum" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="complete-finish">
+                  <summary>Finish the basis<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>|a⟩ = (1/√3)|0⟩ + i√(2/3)|1⟩. Enter a normalized |b⟩ with ⟨a|b⟩ = 0. The checker tests the ket you enter.</p>
+                  <div class="br-complex" role="group" aria-label="First entry of |b⟩"><label>Real part of b₀ <input class="br-answer" type="text" name="b0-re" autocomplete="off" spellcheck="false"></label><label>Imaginary part of b₀ <input class="br-answer" type="text" name="b0-im" value="0" autocomplete="off" spellcheck="false"></label></div>
+                  <div class="br-complex" role="group" aria-label="Second entry of |b⟩"><label>Real part of b₁ <input class="br-answer" type="text" name="b1-re" value="0" autocomplete="off" spellcheck="false"></label><label>Imaginary part of b₁ <input class="br-answer" type="text" name="b1-im" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="complete-lucky">
+                  <summary>A lucky sum<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Choose the pair |0⟩, |+⟩ and find a state where their squared overlaps happen to add to exactly 1. The checker reads your setting.</p>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="br-math">
+              <summary>Show the math</summary>
+              <p>Expand the state in an orthonormal basis: |ψ⟩ = c_a|a⟩ + c_b|b⟩ with c_a = ⟨a|ψ⟩ and c_b = ⟨b|ψ⟩. Then ⟨ψ|ψ⟩ = |c_a|² + |c_b|² + (cross terms that contain ⟨a|b⟩ = 0), so the probabilities add to ⟨ψ|ψ⟩ = 1. If ⟨a|b⟩ ≠ 0, the cross terms don’t vanish and the sum depends on the state. If a ket is longer than 1, it inflates every overlap. Either way the numbers are not probabilities. A single state that happens to give 1 proves nothing. Completeness is a statement about every state.</p>
+            </details>
+          </section>
+
+          <section class="br-station" data-br-station="single" data-br-accent="green" aria-labelledby="br-single-title" hidden>
+            <h4 id="br-single-title">Single Shot Limits</h4>
+            <p>You see one outcome from one system. Which preparations can you rule out? Only those with an amplitude of exactly zero for that outcome. Each mission card lists six candidates. The bars stay hidden until you check, so work out each amplitude first.</p>
+            <div data-br-plot-slot></div>
+            <fieldset disabled>
+              <legend class="br-sr-only">Single Shot Limits controls</legend>
+              <p class="br-readout" data-br-read="state" aria-live="polite"></p>
+              <div class="br-missions">
+                <details class="br-mission" data-br-mission="single-z1">
+                  <summary>Z gave 1<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>A Z measurement gave 1. Tick each preparation this rules out.</p>
+                  <div class="br-fields">
+                    <label class="br-check-row"><input type="checkbox" name="z1-c1"> |0⟩</label>
+                    <label class="br-check-row"><input type="checkbox" name="z1-c2"> |1⟩</label>
+                    <label class="br-check-row"><input type="checkbox" name="z1-c3"> |+⟩</label>
+                    <label class="br-check-row"><input type="checkbox" name="z1-c4"> |−⟩</label>
+                    <label class="br-check-row"><input type="checkbox" name="z1-c5"> (√3|0⟩ + |1⟩)/2</label>
+                    <label class="br-check-row"><input type="checkbox" name="z1-c6"> i|0⟩</label>
+                  </div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="single-xm">
+                  <summary>X gave −<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>An X measurement gave −. Tick each preparation this rules out.</p>
+                  <div class="br-fields">
+                    <label class="br-check-row"><input type="checkbox" name="xm-c1"> |0⟩</label>
+                    <label class="br-check-row"><input type="checkbox" name="xm-c2"> |+⟩</label>
+                    <label class="br-check-row"><input type="checkbox" name="xm-c3"> −|+⟩</label>
+                    <label class="br-check-row"><input type="checkbox" name="xm-c4"> |−⟩</label>
+                    <label class="br-check-row"><input type="checkbox" name="xm-c5"> (|0⟩ + i|1⟩)/√2</label>
+                    <label class="br-check-row"><input type="checkbox" name="xm-c6"> |1⟩</label>
+                  </div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="single-tilt">
+                  <summary>Small is not zero<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>The tilted detector at θ = 60° gave outcome θ. Here |φ°⟩ means cos φ|0⟩ + sin φ|1⟩. Tick each preparation this rules out.</p>
+                  <div class="br-fields">
+                    <label class="br-check-row"><input type="checkbox" name="tilt-c1"> |60°⟩</label>
+                    <label class="br-check-row"><input type="checkbox" name="tilt-c2"> |150°⟩</label>
+                    <label class="br-check-row"><input type="checkbox" name="tilt-c3"> |148°⟩</label>
+                    <label class="br-check-row"><input type="checkbox" name="tilt-c4"> |0⟩</label>
+                    <label class="br-check-row"><input type="checkbox" name="tilt-c5"> |1⟩</label>
+                    <label class="br-check-row"><input type="checkbox" name="tilt-c6"> |+⟩</label>
+                  </div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="single-click">
+                  <summary>What one click says<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>An unknown preparation gave 0 in Z, once. What can you conclude?</p>
+                  <div class="br-fields"><label>Conclusion <select name="click-pick" required><option value="">Choose</option><option value="zero">The state was |0⟩</option><option value="nonzero">c₀ ≠ 0, and many different states could give this</option><option value="majority">|c₀|² > 1/2, because 0 is what happened</option></select></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="br-math">
+              <summary>Show the math</summary>
+              <p>Outcome a has probability P(a) = |⟨a|ψ⟩|². Seeing a proves only that P(a) > 0. A preparation with ⟨a|ψ⟩ = 0 can never produce a, so it is ruled out. Every preparation with ⟨a|ψ⟩ ≠ 0 remains possible, however small the amplitude. A global phase never makes an amplitude zero or nonzero, so i|0⟩ behaves exactly like |0⟩.</p>
+            </details>
+          </section>
+
+          <section class="br-station" data-br-station="forecast" data-br-accent="yellow" aria-labelledby="br-forecast-title" hidden>
+            <h4 id="br-forecast-title">Frequency Forecaster</h4>
+            <p>The Born rule predicts probabilities, not counts. Before each run, forecast a range of counts. Then run batches of different sizes and compare how the counts and the frequencies scatter. Every trial uses a fresh copy of the state, measured in Z.</p>
+            <div data-br-plot-slot></div>
+            <fieldset disabled>
+              <legend class="br-sr-only">Frequency Forecaster controls</legend>
+              <div class="br-fields">
+                <label>Prepared state <select name="prep"><option value="q34" selected>|30°⟩ = (√3/2)|0⟩ + (1/2)|1⟩</option><option value="q20">(|0⟩ + 2|1⟩)/√5</option><option value="qhalf">|+i⟩</option></select></label>
+                <label>Trials per batch N <select name="n"><option value="10">10</option><option value="100" selected>100</option><option value="1000">1000</option><option value="10000">10 000</option></select></label>
+                <label>Forecast: fewest 0s <input class="br-answer" type="text" name="low" autocomplete="off" spellcheck="false"></label>
+                <label>Forecast: most 0s <input class="br-answer" type="text" name="high" autocomplete="off" spellcheck="false"></label>
+              </div>
+              <div class="br-button-row"><button class="br-primary" type="button" data-br-action="run">Run N trials</button><button type="button" data-br-action="batches">Run 20 batches of N</button><button type="button" data-br-action="reseed">New seed</button></div>
+              <p class="br-readout" data-br-read="state" aria-live="polite"></p>
+              <ul class="br-log" data-br-log="log" aria-label="Runs so far"></ul>
+              <div class="br-missions">
+                <details class="br-mission" data-br-mission="forecast-range">
+                  <summary>Call the range<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Choose |30°⟩ and N = 100. Type a forecast range no wider than 20 counts that you expect to hold most runs, then press Run N trials. The checker grades the forecast, not the luck.</p>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="forecast-expected">
+                  <summary>Expected count<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>For (|0⟩ + 2|1⟩)/√5 and N = 1000, what count of 0 do you expect?</p>
+                  <div class="br-fields"><label>Expected count <input class="br-answer" type="text" name="exp-count" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="forecast-spread">
+                  <summary>Two kinds of spread<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>For one state, run 20 batches at N = 100 and 20 batches at N = 10 000. What do you observe?</p>
+                  <div class="br-fields"><label>Observation <select name="spread-pick" required><option value="">Choose</option><option value="both">Both the count spread and the frequency spread grow</option><option value="count-up">The count spread grows while the frequency spread shrinks</option><option value="count-down">Both spreads shrink</option></select></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="forecast-sqrt">
+                  <summary>How much wider?<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>N grew 100-fold between those runs. By roughly what whole-number factor did the typical count spread grow?</p>
+                  <div class="br-fields"><label>Growth factor <input class="br-answer" type="text" name="sqrt-ratio" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="br-math">
+              <summary>Show the math</summary>
+              <p>With N fresh copies and P(0) = p, the expected count is Np, and the observed frequency is count ÷ N. Runs show a pattern: when N grows 100-fold, the typical distance between the count and Np grows only about 10-fold, roughly like √N. Dividing by N, the frequency’s typical distance from p shrinks roughly like 1/√N. That is why frequencies settle toward the probability even though counts wander. Lesson 15 explains where the √N comes from. Here it is an observation from runs.</p>
+            </details>
+          </section>
+
+          <section class="br-station" data-br-station="tomo" data-br-accent="violet" aria-labelledby="br-tomo-title" hidden>
+            <h4 id="br-tomo-title">State Detective</h4>
+            <p>Each case hides a state. You get a budget of fresh copies to measure in Z, X or Y (the +i/−i basis). Estimate the state from your counts. Take α real and not negative, since the global phase can’t be measured. The checker asks that your estimate fits your own counts, then scores it against the truth and reveals the true state.</p>
+            <div data-br-plot-slot></div>
+            <fieldset disabled>
+              <legend class="br-sr-only">State Detective controls</legend>
+              <div class="br-fields">
+                <label>Case <select name="case"><option value="c1" selected>Case 1 · budget 300</option><option value="c2">Case 2 · budget 300</option><option value="c3">Case 3 · budget 60</option></select></label>
+                <label>Basis <select name="basis"><option value="z" selected>Z · 0/1</option><option value="x">X · +/−</option><option value="y">Y · +i/−i</option></select></label>
+                <label>Copies per press <select name="batch"><option value="10">10</option><option value="20" selected>20</option><option value="50">50</option></select></label>
+              </div>
+              <div class="br-button-row"><button class="br-primary" type="button" data-br-action="measure">Measure fresh copies</button><button type="button" data-br-action="reveal">Reveal this case’s state</button><button type="button" data-br-action="reseed">New seed</button></div>
+              <p class="br-readout" data-br-read="state" aria-live="polite"></p>
+              <p class="lesson-note">Fit rule: for each basis with at least 20 trials, your estimate’s probability for the first outcome must lie within 0.1 + 1/√n of the frequency you observed in n trials.</p>
+              <div class="br-missions">
+                <details class="br-mission" data-br-mission="tomo-c1">
+                  <summary>Case 1<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Choose case 1, measure at least 20 copies in each basis, and enter your estimate.</p>
+                  <div class="br-fields"><label>α (real, ≥ 0) <input class="br-answer" type="text" name="c1-a" autocomplete="off" spellcheck="false"></label></div>
+                  <div class="br-complex" role="group" aria-label="β for case 1"><label>Real part of β <input class="br-answer" type="text" name="c1-bre" autocomplete="off" spellcheck="false"></label><label>Imaginary part of β <input class="br-answer" type="text" name="c1-bim" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="tomo-c2">
+                  <summary>Case 2 · Which way round?<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Choose case 2. Z and X alone won’t settle this one.</p>
+                  <div class="br-fields"><label>α (real, ≥ 0) <input class="br-answer" type="text" name="c2-a" autocomplete="off" spellcheck="false"></label></div>
+                  <div class="br-complex" role="group" aria-label="β for case 2"><label>Real part of β <input class="br-answer" type="text" name="c2-bre" autocomplete="off" spellcheck="false"></label><label>Imaginary part of β <input class="br-answer" type="text" name="c2-bim" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="tomo-c3">
+                  <summary>Case 3 · Tight budget<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Choose case 3. Only 60 copies: spend them evenly.</p>
+                  <div class="br-fields"><label>α (real, ≥ 0) <input class="br-answer" type="text" name="c3-a" autocomplete="off" spellcheck="false"></label></div>
+                  <div class="br-complex" role="group" aria-label="β for case 3"><label>Real part of β <input class="br-answer" type="text" name="c3-bre" autocomplete="off" spellcheck="false"></label><label>Imaginary part of β <input class="br-answer" type="text" name="c3-bim" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="tomo-global">
+                  <summary>What counts can’t tell<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Which property of a state can no number of Z, X and Y counts reveal?</p>
+                  <div class="br-fields"><label>Hidden property <select name="global-pick" required><option value="">Choose</option><option value="global">Its global phase</option><option value="relative">Its relative phase</option><option value="magnitude">The size of |α|</option></select></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="br-math">
+              <summary>Show the math</summary>
+              <p>Write |ψ⟩ = α|0⟩ + β|1⟩ with α real and ≥ 0, and β = |β|e^(iφ). Then P(0) = α², P(+) = 1/2 + α|β| cos φ and P(+i) = 1/2 + α|β| sin φ. Z gives α. X gives cos φ and Y gives sin φ, which together pin down φ. Each frequency is only an estimate of its probability, so a small budget gives a rough answer. This is called state tomography. The overlap score |⟨estimate|true⟩|² is 1 for a perfect estimate.</p>
+            </details>
+          </section>
+
+          <section class="br-station" data-br-station="chain" data-br-accent="red" aria-labelledby="br-chain-title" hidden>
+            <h4 id="br-chain-title">Collapse Chain</h4>
+            <p>Send one system through up to three measurements in a row. Each stage reports one outcome and leaves the system in that outcome’s ket, which is what the next stage receives. These are abstract measurement settings. No particular hardware is involved. Predict each step before you send systems.</p>
+            <div data-br-plot-slot></div>
+            <fieldset disabled>
+              <legend class="br-sr-only">Collapse Chain controls</legend>
+              <div class="br-fields">
+                <label>Prepare <select name="start"><option value="zero" selected>|0⟩</option><option value="root">|30°⟩ = (√3/2)|0⟩ + (1/2)|1⟩</option><option value="plus">|+⟩</option></select></label>
+                <label>Stage 1 <select name="s1"><option value="z" selected>Z</option><option value="x">X</option><option value="y">Y</option><option value="none">none</option></select></label>
+                <label>Stage 2 <select name="s2"><option value="z">Z</option><option value="x" selected>X</option><option value="y">Y</option><option value="none">none</option></select></label>
+                <label>Stage 3 <select name="s3"><option value="z" selected>Z</option><option value="x">X</option><option value="y">Y</option><option value="none">none</option></select></label>
+              </div>
+              <div class="br-button-row"><button class="br-primary" type="button" data-br-action="send1">Send one system</button><button type="button" data-br-action="send100">Send 100 systems</button><button type="button" data-br-action="reseed">New seed</button></div>
+              <p class="br-readout" data-br-read="state" aria-live="polite"></p>
+              <ul class="br-log" data-br-log="log" aria-label="Path counts"></ul>
+              <div class="br-missions">
+                <details class="br-mission" data-br-mission="chain-zz">
+                  <summary>Z, then Z again<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Prepare |30°⟩ and measure Z twice in a row. What is the probability that the second Z agrees with the first?</p>
+                  <div class="br-fields"><label>P(agree) <input class="br-answer" type="text" name="zz-p" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="chain-zxz">
+                  <summary>X in the middle<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Prepare |0⟩ and run Z → X → Z. What is the probability that the final Z gives 0?</p>
+                  <div class="br-fields"><label>P(final 0) <input class="br-answer" type="text" name="zxz-p" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="chain-joint">
+                  <summary>One whole path<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Prepare |30°⟩ and run Z → X. What is the probability of the path 0 → +?</p>
+                  <div class="br-fields"><label>P(0 then +) <input class="br-answer" type="text" name="joint-p" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="chain-xyx">
+                  <summary>Y in the middle<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Prepare |+⟩ and run X → Y → X. What is the probability that the final X gives +?</p>
+                  <div class="br-fields"><label>P(final +) <input class="br-answer" type="text" name="xyx-p" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="chain-remove">
+                  <summary>Take the middle out<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Remove the middle stage from Z → X → Z, leaving Z → Z. What happens to the final Z?</p>
+                  <div class="br-fields"><label>Final Z <select name="remove-pick" required><option value="">Choose</option><option value="certain">It repeats the first Z result with certainty</option><option value="half">It is still 50/50</option><option value="depends">It depends on the prepared state</option></select></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="br-math">
+              <summary>Show the math</summary>
+              <p>A path’s probability is a product. Each factor is the Born rule for the ket the system is in at that stage: P(a then b) = |⟨a|ψ⟩|² × |⟨b|a⟩|². After X gives +, the system is |+⟩, and the information that an earlier Z gave 0 is gone: |⟨0|+⟩|² = 1/2. Repeating the same measurement with nothing in between gives |⟨a|a⟩|² = 1.</p>
+            </details>
+          </section>
+
+          <section class="br-station" data-br-station="refresh" data-br-accent="blue" aria-labelledby="br-refresh-title" hidden>
+            <h4 id="br-refresh-title">Repeat or Refresh</h4>
+            <p>Each story ends with a next readout. First decide whether it is on the same undisturbed system or on a fresh copy from the source. Then predict it. A measured system sits in its outcome’s ket, and a fresh copy is in the prepared state. Each card can simulate 20 next readouts.</p>
+            <div data-br-plot-slot></div>
+            <fieldset disabled>
+              <legend class="br-sr-only">Repeat or Refresh controls</legend>
+              <div class="br-button-row"><button type="button" data-br-action="reseed">New seed</button></div>
+              <p class="br-readout" data-br-read="state" aria-live="polite"></p>
+              <div class="br-missions">
+                <details class="br-mission" data-br-mission="refresh-echo">
+                  <summary>Echo<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>A system is prepared in |+⟩ and Z gives 1. You immediately measure Z again on that system. Predict P(1).</p>
+                  <div class="br-fields"><label>Next readout is on <select name="echo-who" required><option value="">Choose</option><option value="same">the same undisturbed system</option><option value="fresh">a fresh copy</option></select></label><label>P(1) <input class="br-answer" type="text" name="echo-p" autocomplete="off" spellcheck="false"></label></div>
+                  <div class="br-button-row"><button type="button" data-br-action="sim">Simulate 20 next readouts</button></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="refresh-next">
+                  <summary>Next in line<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>A source prepares |30°⟩ = (√3/2)|0⟩ + (1/2)|1⟩. The first system gives 1 in Z. You measure the next system from the source in Z. Predict P(1).</p>
+                  <div class="br-fields"><label>Next readout is on <select name="next-who" required><option value="">Choose</option><option value="same">the same undisturbed system</option><option value="fresh">a fresh copy</option></select></label><label>P(1) <input class="br-answer" type="text" name="next-p" autocomplete="off" spellcheck="false"></label></div>
+                  <div class="br-button-row"><button type="button" data-br-action="sim">Simulate 20 next readouts</button></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="refresh-switch">
+                  <summary>Switch the basis<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>A system prepared in |30°⟩ gives 0 in Z. You then measure X on that same system. Predict P(+).</p>
+                  <div class="br-fields"><label>Next readout is on <select name="switch-who" required><option value="">Choose</option><option value="same">the same undisturbed system</option><option value="fresh">a fresh copy</option></select></label><label>P(+) <input class="br-answer" type="text" name="switch-p" autocomplete="off" spellcheck="false"></label></div>
+                  <div class="br-button-row"><button type="button" data-br-action="sim">Simulate 20 next readouts</button></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="refresh-lab">
+                  <summary>The lab button<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>In the Measurement Lab, with the opening preparation and Z selected, Measure one reports 1. You press Measure one again. Predict P(1).</p>
+                  <div class="br-fields"><label>Next readout is on <select name="lab-who" required><option value="">Choose</option><option value="same">the same undisturbed system</option><option value="fresh">a fresh copy</option></select></label><label>P(1) <input class="br-answer" type="text" name="lab-p" autocomplete="off" spellcheck="false"></label></div>
+                  <div class="br-button-row"><button type="button" data-br-action="sim">Simulate 20 next readouts</button></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="refresh-wait">
+                  <summary>The unlikely outcome<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>A system prepared in (1/2)|0⟩ + (√3/2)|1⟩ gives 0 in Z, the less likely outcome. Nothing acts on it while you wait, and then you measure Z on it again. Predict P(0).</p>
+                  <div class="br-fields"><label>Next readout is on <select name="wait-who" required><option value="">Choose</option><option value="same">the same undisturbed system</option><option value="fresh">a fresh copy</option></select></label><label>P(0) <input class="br-answer" type="text" name="wait-p" autocomplete="off" spellcheck="false"></label></div>
+                  <div class="br-button-row"><button type="button" data-br-action="sim">Simulate 20 next readouts</button></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="br-math">
+              <summary>Show the math</summary>
+              <p>For an ideal two-outcome projective measurement, outcome a leaves the measured system in |a⟩, up to a global phase. A next readout on that same system, with nothing acting on it in between, uses |a⟩: P(b) = |⟨b|a⟩|². That is 1 when b = a in the same basis. A fresh copy uses the prepared |ψ⟩: P(b) = |⟨b|ψ⟩|², no matter what earlier copies showed.</p>
+            </details>
+          </section>
+
+          <section class="br-station" data-br-station="stack" data-br-accent="orange" aria-labelledby="br-stack-title" hidden>
+            <h4 id="br-stack-title">Polarizer Stack</h4>
+            <p>Lesson 12 linked polarization to qubit states: |H⟩ = |0⟩ (horizontal) and |V⟩ = |1⟩ (vertical). A polarizer at angle θ measures in {|θ⟩, |θ⊥⟩}, passes the |θ⟩ outcome and absorbs the rest. Horizontal light meets a 0° polarizer, then optional middle polarizers, then a 90° polarizer.</p>
+            <div data-br-plot-slot></div>
+            <fieldset disabled>
+              <legend class="br-sr-only">Polarizer Stack controls</legend>
+              <div class="br-fields">
+                <label>Middle polarizers <select name="mode"><option value="even" selected>evenly spaced</option><option value="one">one, at a custom angle</option></select></label>
+                <label>How many, evenly spaced <output data-br-for="n">0</output><input type="range" name="n" min="0" max="8" step="1" value="0"></label>
+                <label>Custom angle <output data-br-for="custom" data-br-angle>45° · π/4 rad</output><input type="range" name="custom" min="0" max="90" step="1" value="45"></label>
+              </div>
+              <p class="br-readout" data-br-read="state" aria-live="polite"></p>
+              <div class="br-missions">
+                <details class="br-mission" data-br-mission="stack-crossed">
+                  <summary>Crossed<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>With no middle polarizer, what fraction of the |H⟩ light passes the 0° and 90° pair?</p>
+                  <div class="br-fields"><label>Fraction passing <input class="br-answer" type="text" name="crossed-t" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="stack-ff">
+                  <summary>Insert 45°<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Put one polarizer at 45° between them. What fraction passes now?</p>
+                  <div class="br-fields"><label>Fraction passing <input class="br-answer" type="text" name="ff-t" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="stack-thirty">
+                  <summary>Off-centre<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Move the one middle polarizer to 30°. What fraction passes?</p>
+                  <div class="br-fields"><label>Fraction passing <input class="br-answer" type="text" name="thirty-t" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="stack-sixty">
+                  <summary>Past 60%<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Use the fewest evenly spaced middle polarizers that let more than 60% of the light through. The checker reads your stack.</p>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="stack-why">
+                  <summary>Why adding helps<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>A polarizer can only absorb light, so why does adding one let more through?</p>
+                  <div class="br-fields"><label>Reason <select name="why-pick" required><option value="">Choose</option><option value="reset">Each polarizer leaves passing light in its own |θ⟩, so the next one sees a new state</option><option value="adds">The middle polarizer adds light of its own</option><option value="filter">It can’t: the readout must be wrong</option></select></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="br-math">
+              <summary>Show the math</summary>
+              <p>Light passing a polarizer at θ₁ is left in |θ₁⟩. The next polarizer at θ₂ passes a fraction |⟨θ₂|θ₁⟩|² = cos²(θ₂ − θ₁) of it. Through a whole stack, the passing fraction is the product of cos² of each step. With n evenly spaced middle polarizers each step is 90°/(n + 1), so the fraction is cos^(2(n+1))(90°/(n + 1)). This climbs toward 1 as the steps shrink: 0, 1/4, 0.42, 0.53, 0.61, …</p>
+            </details>
+          </section>
+
+          <section class="br-station" data-br-station="guess" data-br-accent="green" aria-labelledby="br-guess-title" hidden>
+            <h4 id="br-guess-title">Best Guess</h4>
+            <p>Someone hands you one copy of one of two states, each equally likely. You get one measurement and then must name the state. Choose the detector angle and a rule for what to guess after each outcome. Lesson 12’s Pick the Measurement asked when you can be certain. Here the states overlap, so ask how often you can be right.</p>
+            <div data-br-plot-slot></div>
+            <fieldset disabled>
+              <legend class="br-sr-only">Best Guess controls</legend>
+              <div class="br-fields">
+                <label>The two states <select name="pair"><option value="zp" selected>|0⟩ or |+⟩</option><option value="z30">|0⟩ or |30°⟩</option><option value="pm">|+⟩ or |−⟩</option></select></label>
+                <label>Detector angle θ <output data-br-for="theta" data-br-angle>0° · 0 rad</output><input type="range" name="theta" min="0" max="179.5" step="0.5" value="0"></label>
+                <label>If the outcome is θ, guess <select name="rule0"><option value="a" selected>the first state</option><option value="b">the second state</option></select></label>
+                <label>If the outcome is θ⊥, guess <select name="rule1"><option value="a">the first state</option><option value="b" selected>the second state</option></select></label>
+              </div>
+              <p class="br-readout" data-br-read="state" aria-live="polite"></p>
+              <div class="br-missions">
+                <details class="br-mission" data-br-mission="guess-naive">
+                  <summary>The obvious detector<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>For |0⟩ or |+⟩, measure Z and guess |0⟩ after 0 and |+⟩ after 1. What is your overall chance of being right?</p>
+                  <div class="br-fields"><label>P(right) <input class="br-answer" type="text" name="naive-p" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="guess-optimal">
+                  <summary>Beat the obvious<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>For |0⟩ or |+⟩, set a detector and rule that reach the best possible success. The checker reads your setting.</p>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="guess-best30">
+                  <summary>A closer pair<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>For |0⟩ or |30°⟩, what is the best possible chance of guessing right?</p>
+                  <div class="br-fields"><label>Best P(right) <input class="br-answer" type="text" name="best30-p" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="guess-ortho">
+                  <summary>Never wrong<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>For |+⟩ or |−⟩, set a detector and rule that are right every time.</p>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="guess-never">
+                  <summary>Why not perfect?<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Why can no detector identify |0⟩ versus |+⟩ every time?</p>
+                  <div class="br-fields"><label>Reason <select name="never-pick" required><option value="">Choose</option><option value="overlap">They aren’t orthogonal, so every outcome can come from either state</option><option value="angle">The slider doesn’t reach the right angle</option><option value="random">Measurement is random, so no pair can be told apart perfectly</option></select></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="br-math">
+              <summary>Show the math</summary>
+              <p>With equal chances, P(right) = ½[P(guess A | A) + P(guess B | B)]. For two real states Δ apart, the best detector puts its axes symmetrically around them, 45° − Δ/2 outside each. That gives P(right) = cos²(45° − Δ/2) = ½(1 + sin Δ). In general the best is ½(1 + √(1 − |⟨A|B⟩|²)). It reaches 1 only when ⟨A|B⟩ = 0.</p>
+            </details>
+          </section>
+
+          <section class="br-station" data-br-station="designer" data-br-accent="violet" aria-labelledby="br-designer-title" hidden>
+            <h4 id="br-designer-title">Measurement Designer</h4>
+            <p>Here you work the problem the other way round. Each card fixes the state and a target probability, and you design the measurement basis {|a⟩, |b⟩}. Many answers work. The checker tests the basis you actually build: both kets normalized, ⟨a|b⟩ = 0, and P(a) on target.</p>
+            <div data-br-plot-slot></div>
+            <fieldset disabled>
+              <legend class="br-sr-only">Measurement Designer controls</legend>
+              <div class="br-complex" role="group" aria-label="First entry of |a⟩"><label>Real part of a₀ <input class="br-answer" type="text" name="a0-re" value="1" autocomplete="off" spellcheck="false"></label><label>Imaginary part of a₀ <input class="br-answer" type="text" name="a0-im" value="0" autocomplete="off" spellcheck="false"></label></div>
+              <div class="br-complex" role="group" aria-label="Second entry of |a⟩"><label>Real part of a₁ <input class="br-answer" type="text" name="a1-re" value="0" autocomplete="off" spellcheck="false"></label><label>Imaginary part of a₁ <input class="br-answer" type="text" name="a1-im" value="0" autocomplete="off" spellcheck="false"></label></div>
+              <div class="br-complex" role="group" aria-label="First entry of |b⟩"><label>Real part of b₀ <input class="br-answer" type="text" name="b0-re" value="0" autocomplete="off" spellcheck="false"></label><label>Imaginary part of b₀ <input class="br-answer" type="text" name="b0-im" value="0" autocomplete="off" spellcheck="false"></label></div>
+              <div class="br-complex" role="group" aria-label="Second entry of |b⟩"><label>Real part of b₁ <input class="br-answer" type="text" name="b1-re" value="1" autocomplete="off" spellcheck="false"></label><label>Imaginary part of b₁ <input class="br-answer" type="text" name="b1-im" value="0" autocomplete="off" spellcheck="false"></label></div>
+              <p class="br-readout" data-br-read="state" aria-live="polite"></p>
+              <div class="br-missions">
+                <details class="br-mission" data-br-mission="designer-certain">
+                  <summary>Certain outcome<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>State (1/2)|0⟩ + (√3/2)|1⟩. Design a basis with P(a) = 1.</p>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="designer-half">
+                  <summary>A fair coin from |0⟩<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>State |0⟩. Design a basis with P(a) = 1/2.</p>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="designer-quarter">
+                  <summary>One in four from |+⟩<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>State |+⟩. Design a basis with P(a) = 1/4.</p>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="designer-complex">
+                  <summary>Nine in ten from |+i⟩<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>State |+i⟩. Design a basis with P(a) = 0.9.</p>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="br-math">
+              <summary>Show the math</summary>
+              <p>For a basis {|a⟩, |b⟩}, P(a) = |⟨a|ψ⟩|² = |a₀*α + a₁*β|². Normalization ⟨a|a⟩ = ⟨b|b⟩ = 1 and orthogonality ⟨a|b⟩ = a₀*b₀ + a₁*b₁ = 0 make P(a) + P(b) = 1 automatically. Given a normalized |a⟩ = (a₀, a₁), one partner is |b⟩ = (−a₁*, a₀*), and any phase times it also works. Many different bases hit the same P(a), so there are many valid designs.</p>
+            </details>
+          </section>
+
+          <section class="br-station" data-br-station="detective" data-br-accent="red" aria-labelledby="br-detective-title" hidden>
+            <h4 id="br-detective-title">Error Detective</h4>
+            <p>Each case file holds a worked solution with exactly one planted mistake. Find the first line that goes wrong, and name the mistake. The diagram shows what the solution claims next to what is actually true.</p>
+            <div data-br-plot-slot></div>
+            <fieldset disabled>
+              <legend class="br-sr-only">Error Detective controls</legend>
+              <p class="br-readout" data-br-read="state"></p>
+              <div class="br-missions">
+                <details class="br-mission" data-br-mission="detective-square">
+                  <summary>Case 1 · Square first<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Find P(+) for |ψ⟩ = (1/2)|0⟩ − (√3/2)|1⟩.</p>
+                  <ol class="br-worked"><li>In X, c₊ = ⟨+|ψ⟩ = (α + β)/√2, with α = 1/2 and β = −√3/2.</li><li>|α|² = 1/4 and |β|² = 3/4.</li><li>So P(+) = (|α|² + |β|²)/2 = (1/4 + 3/4)/2 = 1/2.</li><li>Then P(−) = 1 − P(+) = 1/2.</li></ol>
+                  <div class="br-fields"><label>First wrong line <select name="square-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="square-kind" required><option value="">Choose</option><option value="square">Squared before combining amplitudes</option><option value="over">Accepted a probability above 1</option><option value="conj">Forgot the conjugate on the bra</option><option value="freq">Treated an observed frequency as the exact probability</option><option value="click">Believed one click reveals the state</option><option value="fresh">Confused remeasuring with a fresh copy</option></select></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="detective-over">
+                  <summary>Case 2 · More than certain<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Find P(+) for |ψ⟩ = (√3/2)|0⟩ + (1/2)|1⟩.</p>
+                  <ol class="br-worked"><li>c₊ = (α + β)/√2 = (√3/2 + 1/2)/√2 = (√3 + 1)/(2√2).</li><li>P(+) = |c₊|² = (√3 + 1)²/4 = (4 + 2√3)/4 ≈ 1.866.</li><li>So P(−) = 1 − 1.866 = −0.866.</li></ol>
+                  <div class="br-fields"><label>First wrong line <select name="over-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option></select></label><label>Mistake <select name="over-kind" required><option value="">Choose</option><option value="square">Squared before combining amplitudes</option><option value="over">Accepted a probability above 1</option><option value="conj">Forgot the conjugate on the bra</option><option value="freq">Treated an observed frequency as the exact probability</option><option value="click">Believed one click reveals the state</option><option value="fresh">Confused remeasuring with a fresh copy</option></select></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="detective-conj">
+                  <summary>Case 3 · Missing its own state<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Find P(+i) for |ψ⟩ = |+i⟩ = (|0⟩ + i|1⟩)/√2.</p>
+                  <ol class="br-worked"><li>|+i⟩ has coordinates (1, i)/√2 in the 0/1 basis.</li><li>So the bra is ⟨+i| = (⟨0| + i⟨1|)/√2.</li><li>c₊ᵢ = ⟨+i|+i⟩ = (1·1 + i·i)/2 = (1 − 1)/2 = 0.</li><li>So P(+i) = 0.</li></ol>
+                  <div class="br-fields"><label>First wrong line <select name="conj-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="conj-kind" required><option value="">Choose</option><option value="square">Squared before combining amplitudes</option><option value="over">Accepted a probability above 1</option><option value="conj">Forgot the conjugate on the bra</option><option value="freq">Treated an observed frequency as the exact probability</option><option value="click">Believed one click reveals the state</option><option value="fresh">Confused remeasuring with a fresh copy</option></select></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="detective-freq">
+                  <summary>Case 4 · Seven out of ten<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>An unknown state gave 0 in 7 of 10 fresh Z trials. Find P(0).</p>
+                  <ol class="br-worked"><li>The observed frequency of 0 is 7/10 = 0.7.</li><li>So P(0) = 0.7 exactly, and |α| = √0.7.</li><li>So 100 more trials will give exactly 70 zeros.</li></ol>
+                  <div class="br-fields"><label>First wrong line <select name="freq-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option></select></label><label>Mistake <select name="freq-kind" required><option value="">Choose</option><option value="square">Squared before combining amplitudes</option><option value="over">Accepted a probability above 1</option><option value="conj">Forgot the conjugate on the bra</option><option value="freq">Treated an observed frequency as the exact probability</option><option value="click">Believed one click reveals the state</option><option value="fresh">Confused remeasuring with a fresh copy</option></select></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="detective-click">
+                  <summary>Case 5 · One plus<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>A single X measurement of an unknown state gave +. Predict a Z measurement on a fresh copy.</p>
+                  <ol class="br-worked"><li>Outcome + happened, so c₊ = ⟨+|ψ⟩ ≠ 0.</li><li>So the prepared state was |+⟩.</li><li>So a fresh copy gives 0 in Z with probability |⟨0|+⟩|² = 1/2.</li></ol>
+                  <div class="br-fields"><label>First wrong line <select name="click-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option></select></label><label>Mistake <select name="click-kind" required><option value="">Choose</option><option value="square">Squared before combining amplitudes</option><option value="over">Accepted a probability above 1</option><option value="conj">Forgot the conjugate on the bra</option><option value="freq">Treated an observed frequency as the exact probability</option><option value="click">Believed one click reveals the state</option><option value="fresh">Confused remeasuring with a fresh copy</option></select></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="detective-fresh">
+                  <summary>Case 6 · The next one<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>A source prepares |30°⟩ = (√3/2)|0⟩ + (1/2)|1⟩. One system gives 1 in Z. Predict Z for the next system from the source.</p>
+                  <ol class="br-worked"><li>P(1) = (1/2)² = 1/4 for each system from the source.</li><li>After outcome 1, that measured system is in |1⟩.</li><li>So the next system from the source gives 1 with certainty.</li><li>Therefore P(0) = 0 for the next system.</li></ol>
+                  <div class="br-fields"><label>First wrong line <select name="fresh-line" required><option value="">Choose</option><option value="1">Line 1</option><option value="2">Line 2</option><option value="3">Line 3</option><option value="4">Line 4</option></select></label><label>Mistake <select name="fresh-kind" required><option value="">Choose</option><option value="square">Squared before combining amplitudes</option><option value="over">Accepted a probability above 1</option><option value="conj">Forgot the conjugate on the bra</option><option value="freq">Treated an observed frequency as the exact probability</option><option value="click">Believed one click reveals the state</option><option value="fresh">Confused remeasuring with a fresh copy</option></select></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="br-math">
+              <summary>Show the math</summary>
+              <p>Four checks catch most measurement errors. Combine amplitudes before you square: P(a) = |⟨a|ψ⟩|². Conjugate the bra. Every probability lies between 0 and 1, and in one basis they add to 1. A finite run gives frequencies that estimate the probabilities, and one outcome only rules out states with zero amplitude for it. Finally, ask which system is measured: a measured system sits in its outcome’s ket, while a fresh copy is in the prepared state.</p>
+            </details>
+          </section>
+
+          <section class="br-station" data-br-station="values" data-br-accent="yellow" aria-labelledby="br-values-title" hidden>
+            <h4 id="br-values-title">Quantum Preview: Outcomes With Values</h4>
+            <p class="lesson-kicker">Optional preview</p>
+            <p>This is a preview of measured quantities. Give each Z outcome a number: outcome 0 is worth +1 and outcome 1 is worth −1. Run trials and watch the average of the values. Lesson 14 turns labelled outcomes into observables, and Lesson 15 studies their averages and spread. Here you only run trials and average.</p>
+            <div data-br-plot-slot></div>
+            <fieldset disabled>
+              <legend class="br-sr-only">Outcomes With Values controls</legend>
+              <div class="br-fields">
+                <label>State cos t|0⟩ + sin t|1⟩, t <output data-br-for="t" data-br-angle>45° · π/4 rad</output><input type="range" name="t" min="0" max="180" step="1" value="45"></label>
+              </div>
+              <div class="br-button-row"><button class="br-primary" type="button" data-br-action="run10">Run 10</button><button type="button" data-br-action="run100">Run 100</button><button type="button" data-br-action="run1000">Run 1000</button><button type="button" data-br-action="clear">Clear values</button><button type="button" data-br-action="reseed">New seed</button></div>
+              <p class="br-readout" data-br-read="state" aria-live="polite"></p>
+              <div class="br-missions">
+                <details class="br-mission" data-br-mission="values-plus">
+                  <summary>Balanced<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>At t = 45° the state is |+⟩. Predict the long-run average of the values.</p>
+                  <div class="br-fields"><label>Long-run average <input class="br-answer" type="text" name="plus-avg" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="values-quarter">
+                  <summary>Tilted toward +1<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>At t = 30°, P(0) = 3/4. Predict the long-run average.</p>
+                  <div class="br-fields"><label>Long-run average <input class="br-answer" type="text" name="quarter-avg" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="values-reverse">
+                  <summary>Work backward<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>A state’s long-run average is −0.6. What is its P(0)?</p>
+                  <div class="br-fields"><label>P(0) <input class="br-answer" type="text" name="reverse-p0" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="values-single">
+                  <summary>One trial, one value<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>At t = 30° the long-run average is 1/2. Can a single trial show the value 1/2?</p>
+                  <div class="br-fields"><label>Answer <select name="single-pick" required><option value="">Choose</option><option value="no">No: each trial shows +1 or −1</option><option value="yes">Yes: about half the trials show 1/2</option></select></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="br-math">
+              <summary>Show the math</summary>
+              <p>Over N trials, the average is (+1 × number of 0s + (−1) × number of 1s)/N = (frequency of 0) − (frequency of 1). As the frequencies settle toward the probabilities, the average settles toward (+1)P(0) + (−1)P(1) = P(0) − P(1). For cos t|0⟩ + sin t|1⟩ that is cos²t − sin²t = cos 2t. The notation and theory for this long-run value come in Lessons 14 and 15.</p>
+            </details>
+          </section>
+
+          <section class="br-station" data-br-station="axis" data-br-accent="blue" aria-labelledby="br-axis-title" hidden>
+            <h4 id="br-axis-title">Measurement Axis on the Bloch Sphere (3D)</h4>
+            <p>Lessons 11 and 12 put every qubit state on a sphere. A two-outcome measurement is an axis through the centre: outcome a at one end and a⊥ at the other. If the state point is γ away from the a end, P(a) = cos²(γ/2). After a trial, the point snaps to the end of the observed outcome. The axis is abstract and stands for no particular hardware. Drag the sphere or use the view sliders to turn it.</p>
+            <div data-br-plot-slot></div>
+            <fieldset disabled>
+              <legend class="br-sr-only">Measurement Axis controls</legend>
+              <div class="br-fields">
+                <label>State: angle from |0⟩ <output data-br-for="sp" data-br-unit="°">0°</output><input type="range" name="sp" min="0" max="180" step="1" value="0"></label>
+                <label>State: longitude <output data-br-for="sa" data-br-unit="°">0°</output><input type="range" name="sa" min="0" max="359" step="1" value="0"></label>
+                <label>Axis: angle from |0⟩ <output data-br-for="ap" data-br-unit="°">90°</output><input type="range" name="ap" min="0" max="180" step="1" value="90"></label>
+                <label>Axis: longitude <output data-br-for="aa" data-br-unit="°">0°</output><input type="range" name="aa" min="0" max="359" step="1" value="0"></label>
+                <label>Turn the view <output data-br-for="yaw" data-br-unit="°">30°</output><input type="range" name="yaw" min="0" max="355" step="5" value="30"></label>
+                <label>Tilt the view <output data-br-for="tilt" data-br-unit="°">20°</output><input type="range" name="tilt" min="-60" max="60" step="5" value="20"></label>
+              </div>
+              <div class="br-button-row"><button class="br-primary" type="button" data-br-action="measure">Measure once along the axis</button><button type="button" data-br-action="reseed">New seed</button></div>
+              <p class="br-readout" data-br-read="state" aria-live="polite"></p>
+              <div class="br-missions">
+                <details class="br-mission" data-br-mission="axis-eq">
+                  <summary>Axis on the equator<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>The state is |0⟩ and the axis lies on the equator. What is P(a)?</p>
+                  <div class="br-fields"><label>P(a) <input class="br-answer" type="text" name="eq-p" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="axis-sixty">
+                  <summary>Three quarters<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>With the state at |0⟩, tilt the axis until P(a) = 3/4. The checker reads your setting.</p>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="axis-ha">
+                  <summary>Half the angle<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>The state is |+⟩ (90° from |0⟩, longitude 0°) and the axis is 45° from |0⟩ at longitude 0°. What is P(a)?</p>
+                  <div class="br-fields"><label>P(a) <input class="br-answer" type="text" name="ha-p" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="axis-opp">
+                  <summary>Pointing away<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>The a end of the axis points exactly opposite the state point. What is P(a)?</p>
+                  <div class="br-fields"><label>P(a) <input class="br-answer" type="text" name="opp-p" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="axis-rep">
+                  <summary>After the snap<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Run one trial. Without moving the sliders, what is the probability that an immediate second trial gives the same outcome?</p>
+                  <div class="br-fields"><label>P(same again) <input class="br-answer" type="text" name="rep-p" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="br-math">
+              <summary>Show the math</summary>
+              <p>A state cos(θ/2)|0⟩ + e^(iφ)sin(θ/2)|1⟩ sits θ from the top at longitude φ. Points on the sphere carry half-angles, so states 180° apart on the sphere are orthogonal. For a measurement whose outcome ket |a⟩ sits at the a end of the axis, |⟨a|ψ⟩|² = cos²(γ/2), where γ is the angle on the sphere between |ψ⟩ and |a⟩. Z is the vertical axis, X runs through |+⟩ and |−⟩, and Y through |+i⟩ and |−i⟩. After outcome a the state is |a⟩, the end of the axis.</p>
+            </details>
+          </section>
+
+          <section class="br-station" data-br-station="qrng" data-br-accent="green" aria-labelledby="br-qrng-title" hidden>
+            <h4 id="br-qrng-title">Quantum Random Number Generator</h4>
+            <p>Measure fresh copies of |+⟩ in Z and each outcome is a fair random bit. Tilt the state and the bits become biased. Von Neumann’s pairing trick repairs the bias: read the raw bits in pairs, output 0 for 01 and 1 for 10, and discard 00 and 11.</p>
+            <div data-br-plot-slot></div>
+            <fieldset disabled>
+              <legend class="br-sr-only">Random Number Generator controls</legend>
+              <div class="br-fields">
+                <label>State cos t|0⟩ + sin t|1⟩, t <output data-br-for="t" data-br-angle>45° · π/4 rad</output><input type="range" name="t" min="0" max="90" step="0.5" value="45"></label>
+                <label class="br-check-row"><input type="checkbox" name="pair"> Apply von Neumann pairing</label>
+              </div>
+              <div class="br-button-row"><button class="br-primary" type="button" data-br-action="gen100">Generate 100 bits</button><button type="button" data-br-action="gen1000">Generate 1000 bits</button><button type="button" data-br-action="clear">Clear bits</button><button type="button" data-br-action="reseed">New seed</button></div>
+              <p class="br-readout" data-br-read="state" aria-live="polite"></p>
+              <p class="br-bits" data-br-read="bits"></p>
+              <p class="br-bits" data-br-read="out"></p>
+              <div class="br-missions">
+                <details class="br-mission" data-br-mission="qrng-bias">
+                  <summary>Load the coin<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>Set the state so that P(1) = 0.9. The checker reads your setting.</p>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="qrng-pair">
+                  <summary>Zero then one<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>If P(1) = 0.8, what is the probability that a pair of raw bits reads 01?</p>
+                  <div class="br-fields"><label>P(01) <input class="br-answer" type="text" name="pair-p" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="qrng-rate">
+                  <summary>The price of fairness<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>For fair raw bits, P(1) = 1/2, how many output bits does pairing give per raw bit, on average?</p>
+                  <div class="br-fields"><label>Output bits per raw bit <input class="br-answer" type="text" name="rate-r" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="qrng-fair">
+                  <summary>Repair the bias<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>With P(1) = 0.9 and pairing on, generate at least 1000 raw bits. What do you see in the paired output?</p>
+                  <div class="br-fields"><label>Paired output <select name="fair-pick" required><option value="">Choose</option><option value="half">About half 1s, whatever the bias</option><option value="bias">About 90% 1s, like the raw bits</option><option value="zero">No output bits at all</option></select></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="br-math">
+              <summary>Show the math</summary>
+              <p>Each raw bit is an independent Z measurement of a fresh copy, with P(1) = p = sin²t. A pair reads 01 with probability (1 − p)p and 10 with probability p(1 − p). These are equal, so the kept output is fair for every p, as long as the raw bits are independent. A pair is kept with probability 2p(1 − p), so the output rate is p(1 − p) bits per raw bit: 1/4 at best, when p = 1/2.</p>
+            </details>
+          </section>
+
+          <section class="br-station" data-br-station="bomb" data-br-accent="orange" aria-labelledby="br-bomb-title" hidden>
+            <h4 id="br-bomb-title">Bomb Tester (3D)</h4>
+            <p>This is Lesson 12’s interferometer bench with a twist. A bomb may sit in the lower arm. A live bomb explodes if a photon passes through it, which amounts to measuring which path the photon took. A dud lets photons through. Tune the bench so D1 stays dark, then learn to spot live bombs with photons that never touch them. Drag the bench or use the view sliders to turn it.</p>
+            <div data-br-plot-slot></div>
+            <fieldset disabled>
+              <legend class="br-sr-only">Bomb Tester controls</legend>
+              <div class="br-fields">
+                <label>Phase shifter θ <output data-br-for="theta" data-br-angle>90° · π/2 rad</output><input type="range" name="theta" min="0" max="359" step="1" value="90"></label>
+                <label>Lower arm <select name="arm"><option value="empty" selected>empty</option><option value="live">live bomb</option><option value="dud">dud</option></select></label>
+                <label>Turn the view <output data-br-for="turn" data-br-unit="°">0°</output><input type="range" name="turn" min="-60" max="60" step="5" value="0"></label>
+                <label>Tilt the view <output data-br-for="tilt" data-br-unit="°">55°</output><input type="range" name="tilt" min="15" max="90" step="5" value="55"></label>
+              </div>
+              <div class="br-button-row"><button class="br-primary" type="button" data-br-action="send1">Send one photon</button><button type="button" data-br-action="test100">Test 100 bombs</button><button type="button" data-br-action="reseed">New seed</button></div>
+              <p class="br-readout" data-br-read="state" aria-live="polite"></p>
+              <div class="br-missions">
+                <details class="br-mission" data-br-mission="bomb-dark">
+                  <summary>Keep D1 dark<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>With the lower arm empty, set the phase shifter so that D1 never clicks. The checker reads your bench.</p>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="bomb-single">
+                  <summary>One photon, live bomb<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>On the tuned bench with a live bomb in the lower arm, give the probabilities for a single photon.</p>
+                  <div class="br-fields"><label>P(explode) <input class="br-answer" type="text" name="single-e" autocomplete="off" spellcheck="false"></label><label>P(D1) <input class="br-answer" type="text" name="single-d1" autocomplete="off" spellcheck="false"></label><label>P(D0) <input class="br-answer" type="text" name="single-d0" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="bomb-dud">
+                  <summary>What a D1 click means<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>On the tuned bench, D1 clicks. What does that tell you?</p>
+                  <div class="br-fields"><label>Conclusion <select name="dud-pick" required><option value="">Choose</option><option value="live">The bomb is live, and this photon never reached it</option><option value="dud">The bomb is a dud</option><option value="touched">The photon passed through the bomb without setting it off</option></select></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="bomb-twice">
+                  <summary>Second time lucky<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>With a live bomb, what is the probability that the first photon gives D0 (inconclusive) and the second gives D1?</p>
+                  <div class="br-fields"><label>P(D0, then D1) <input class="br-answer" type="text" name="twice-p" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+                <details class="br-mission" data-br-mission="bomb-repeat">
+                  <summary>Keep trying<span data-br-done hidden>✓ Complete</span></summary>
+                  <p>For each live bomb you keep sending photons until D1 clicks or it explodes. What fraction of live bombs are flagged safely?</p>
+                  <div class="br-fields"><label>P(flagged by D1) <input class="br-answer" type="text" name="repeat-p" autocomplete="off" spellcheck="false"></label></div>
+                  <button class="br-primary" type="button" data-br-check>Check mission</button>
+                </details>
+              </div>
+            </fieldset>
+            <details class="br-math">
+              <summary>Show the math</summary>
+              <p>With empty arms, the path amplitudes (upper, lower) = (e^(iθ)/√2, 1/√2) recombine at splitter 2, so P(D0) = cos²(θ/2) and P(D1) = sin²(θ/2). At θ = 0, D1 is dark. A live bomb measures the path. With probability 1/2 the photon is found in the lower arm and the bomb explodes. Otherwise the photon is left in the upper path alone, and splitter 2 sends it to D0 or D1 with probability 1/4 each. Without the lower path nothing cancels at D1, so a D1 click flags a live bomb. Repeating on D0 gives P(D1 eventually) = (1/4)/(1/4 + 1/2) = 1/3.</p>
+            </details>
+          </section>
+        </div>
+
+        <template id="br-figure-template">
+          <figure class="br-figure">
+            <figcaption id="br-title">Station diagram</figcaption>
+            <div class="br-viewport" id="br-viewport" data-renderer="svg">
+              <canvas class="br-canvas" id="br-canvas" aria-hidden="true" hidden></canvas>
+              <svg class="br-diagram" id="br-diagram" viewBox="0 0 560 300" role="img" aria-labelledby="br-title" aria-describedby="br-desc">
+                <desc id="br-desc"></desc>
+                <g data-br-geometry></g>
+                <g data-br-labels></g>
+              </svg>
+            </div>
+            <p class="lesson-note" id="br-render-status"></p>
+          </figure>
+        </template>
+        <template id="br-mission-template">
+          <div class="br-mission-tools">
+            <button type="button" data-br-hint>Show first hint</button>
+            <ol data-br-hint-list aria-live="polite" hidden></ol>
+            <p class="br-feedback" data-br-feedback role="status"></p>
+            <details data-br-work hidden><summary>Worked steps</summary><p data-br-work-text></p></details>
+          </div>
+        </template>
+      </div>
+    </details>
 
     <nav class="lesson-next" aria-label="Lesson navigation">
       <a href="../12_superposition_and_relative_phase/12_superposition_and_relative_phase.html">

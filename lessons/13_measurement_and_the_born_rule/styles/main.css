@@ -733,3 +733,594 @@ body {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* Measurement Arcade */
+
+
+.site-main.born-rule-lesson {
+  --br-surface: #0b1612;
+  --br-plot: var(--born-plot);
+  --br-grid: #284235;
+  --br-axis: #b4c9bc;
+}
+
+.born-rule-lesson #measurement-arcade {
+  scroll-margin-block-start: 1rem;
+}
+
+.born-rule-lesson :is(.br-body, .br-station, .br-figure, .br-missions, .br-mission-tools, .br-station > fieldset) {
+  display: grid;
+  gap: 0.75rem;
+  min-inline-size: 0;
+}
+
+.born-rule-lesson .br-body {
+  padding-block-start: 0.75rem;
+}
+
+.born-rule-lesson :is(.br-arcade, .br-mission, .br-math, .br-mission-tools details) > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem 0.75rem;
+  list-style: none;
+}
+
+.born-rule-lesson :is(.br-arcade, .br-mission, .br-math, .br-mission-tools details) > summary::-webkit-details-marker {
+  display: none;
+}
+
+.born-rule-lesson :is(.br-arcade, .br-mission, .br-math, .br-mission-tools details) > summary::before {
+  content: "+";
+  inline-size: 1ch;
+}
+
+.born-rule-lesson :is(.br-arcade, .br-mission, .br-math, .br-mission-tools details)[open] > summary::before {
+  content: "−";
+}
+
+/* Long mission titles wrap beside the +/− marker instead of dropping below it. */
+.born-rule-lesson details.br-mission > summary {
+  flex-wrap: nowrap;
+}
+
+.born-rule-lesson .br-arcade > summary strong {
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+}
+
+.born-rule-lesson .br-arcade > summary span {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.born-rule-lesson .br-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto auto;
+  align-items: end;
+  gap: 0.75rem;
+  min-inline-size: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--br-surface);
+}
+
+.born-rule-lesson .br-toolbar > label:not(.br-reduced) {
+  display: grid;
+  gap: 0.25rem;
+  min-inline-size: 0;
+  font-size: 0.875rem;
+}
+
+.born-rule-lesson #br-progress {
+  align-self: center;
+  color: var(--phosphor);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.born-rule-lesson .br-reduced,
+.born-rule-lesson .br-check-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-block-size: 44px;
+  font-size: 0.875rem;
+}
+
+.born-rule-lesson .br-reduced {
+  color: var(--muted);
+}
+
+.born-rule-lesson :is(.br-reduced, .br-check-row) input {
+  flex: none;
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+  margin: 0;
+  accent-color: var(--phosphor);
+}
+
+.born-rule-lesson .br-arcade select,
+.born-rule-lesson input.br-answer {
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 44px;
+  padding: 0.45rem 0.625rem;
+  border: 1px solid #4b6c5b;
+  border-radius: 0.375rem;
+  background: #101e18;
+  color: var(--ink);
+  font: inherit;
+}
+
+.born-rule-lesson .br-arcade select:disabled,
+.born-rule-lesson input.br-answer:disabled {
+  cursor: default;
+  opacity: 0.62;
+}
+
+.born-rule-lesson input.br-answer:user-invalid {
+  border-color: var(--red);
+}
+
+.born-rule-lesson .br-arcade :is(select, input):focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 3px;
+}
+
+.born-rule-lesson .br-station {
+  --br-accent: var(--phosphor);
+  padding: clamp(0.75rem, 2vw, 1.35rem);
+  border: 1px solid var(--line);
+  border-block-start: 3px solid var(--br-accent);
+  border-radius: 0.6rem;
+  background: var(--br-surface);
+}
+
+.born-rule-lesson [data-br-accent="blue"] { --br-accent: var(--blue); }
+.born-rule-lesson [data-br-accent="violet"] { --br-accent: var(--violet); }
+.born-rule-lesson [data-br-accent="orange"] { --br-accent: var(--orange); }
+.born-rule-lesson [data-br-accent="green"] { --br-accent: var(--green); }
+.born-rule-lesson [data-br-accent="yellow"] { --br-accent: var(--yellow); }
+.born-rule-lesson [data-br-accent="red"] { --br-accent: var(--red); }
+
+.born-rule-lesson .br-station h4 {
+  color: var(--br-accent);
+  font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+}
+
+.born-rule-lesson .br-station > fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.born-rule-lesson .br-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+  align-items: end;
+  gap: 0.65rem 0.85rem;
+}
+
+/* A complex number: one box for the real part and one for the imaginary part. */
+.born-rule-lesson .br-complex {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: end;
+  gap: 0.5rem 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-inline: 3px solid var(--br-accent);
+  border-radius: 0.5rem;
+}
+
+.born-rule-lesson :is(.br-fields, .br-complex) label:not(.br-check-row) {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: end;
+  gap: 0.25rem 0.3em;
+  min-inline-size: 0;
+  font-size: 0.875rem;
+}
+
+.born-rule-lesson :is(.br-fields, .br-complex) label > :is(input:not([type="checkbox"]), select) {
+  flex: 1 0 100%;
+}
+
+.born-rule-lesson :is(.br-fields, .br-complex) label > output {
+  color: var(--br-accent);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.born-rule-lesson .br-station input[type="range"] {
+  inline-size: 100%;
+  min-block-size: 44px;
+  margin: 0;
+  accent-color: var(--br-accent);
+}
+
+.born-rule-lesson .br-step {
+  color: var(--br-accent);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.born-rule-lesson .br-button-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.born-rule-lesson .br-arcade button {
+  max-inline-size: 100%;
+  font-size: 0.9375rem;
+}
+
+.born-rule-lesson .br-arcade button.br-primary {
+  border-color: var(--br-accent);
+  color: var(--br-accent);
+  font-weight: 700;
+}
+
+.born-rule-lesson .br-readout {
+  padding: 0.5rem 0.7rem;
+  border-inline-start: 3px solid var(--br-accent);
+  background: #081310;
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.born-rule-lesson .br-readout:empty,
+.born-rule-lesson .br-log:empty {
+  display: none;
+}
+
+.born-rule-lesson .br-log {
+  max-block-size: 10rem;
+  margin: 0;
+  overflow: auto;
+  padding-inline-start: 2.2rem;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.born-rule-lesson .br-worked {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0.6rem 0.75rem 0.6rem 2.2rem;
+  border-inline-start: 3px solid var(--br-accent);
+  background: #07110d;
+  font-variant-numeric: tabular-nums;
+}
+
+.born-rule-lesson .br-mission {
+  padding: 0.15rem 0.75rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+  background: #0a1410;
+}
+
+.born-rule-lesson .br-mission[open] {
+  border-color: color-mix(in srgb, var(--br-accent) 55%, var(--line));
+}
+
+.born-rule-lesson .br-mission > :not(summary) {
+  margin-block-start: 0.65rem;
+}
+
+.born-rule-lesson .br-mission [data-br-done] {
+  margin-inline-start: auto;
+  color: var(--green);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.born-rule-lesson .br-mission-tools > button {
+  justify-self: start;
+}
+
+.born-rule-lesson .br-mission-tools ol {
+  margin: 0;
+  padding-inline-start: 1.25rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.born-rule-lesson .br-mission-tools details > summary {
+  font-size: 0.875rem;
+}
+
+.born-rule-lesson .br-mission-tools details p {
+  margin-block-start: 0.4rem;
+  padding: 0.5rem 0.7rem;
+  border-inline-start: 3px solid var(--line);
+  background: #07110d;
+  font-size: 0.875rem;
+}
+
+.born-rule-lesson .br-feedback:not(:empty) {
+  padding: 0.55rem 0.7rem;
+  border-inline-start: 3px solid var(--br-accent);
+  background: #11241a;
+  font-size: 0.9rem;
+}
+
+.born-rule-lesson .br-math > p {
+  margin-block-start: 0.5rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.born-rule-lesson .br-figure figcaption {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.born-rule-lesson .br-viewport {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  inline-size: 100%;
+  aspect-ratio: 560 / 300;
+  border: 1px solid #36465b;
+  border-radius: 0.5rem;
+  background: var(--br-plot);
+  touch-action: pan-y;
+}
+
+.born-rule-lesson .br-viewport[data-space="true"] {
+  cursor: grab;
+}
+
+.born-rule-lesson :is(.br-canvas, .br-diagram) {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.born-rule-lesson .br-viewport[data-renderer="webgl"] [data-br-geometry] {
+  visibility: hidden;
+}
+
+.born-rule-lesson .br-diagram {
+  --tone: var(--violet);
+  pointer-events: none;
+}
+
+.born-rule-lesson .br-diagram [data-tone="alpha"] { --tone: var(--blue); }
+.born-rule-lesson .br-diagram [data-tone="beta"] { --tone: var(--orange); }
+.born-rule-lesson .br-diagram [data-tone="plus"] { --tone: var(--green); }
+.born-rule-lesson .br-diagram [data-tone="minus"] { --tone: var(--violet); }
+.born-rule-lesson .br-diagram [data-tone="angle"] { --tone: var(--yellow); }
+.born-rule-lesson .br-diagram [data-tone="warn"] { --tone: var(--red); }
+.born-rule-lesson .br-diagram [data-tone="guide"] { --tone: var(--br-axis); }
+.born-rule-lesson .br-diagram [data-tone="ink"] { --tone: var(--ink); }
+
+.born-rule-lesson .br-diagram .br-frame {
+  fill: none;
+  stroke: #36465b;
+}
+
+.born-rule-lesson .br-diagram .br-grid {
+  fill: none;
+  stroke: var(--br-grid);
+  stroke-width: 1;
+}
+
+.born-rule-lesson .br-diagram .br-axis {
+  fill: none;
+  stroke: var(--br-axis);
+  stroke-width: 1.5;
+}
+
+.born-rule-lesson .br-diagram :is(.br-ring, .br-ray) {
+  fill: none;
+  stroke: var(--tone);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 5;
+  opacity: 0.85;
+}
+
+.born-rule-lesson .br-diagram .br-arrow {
+  stroke: var(--tone);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
+.born-rule-lesson .br-diagram .br-arrow.br-dashed {
+  stroke-width: 2;
+  stroke-dasharray: 6 5;
+  opacity: 0.8;
+}
+
+.born-rule-lesson .br-diagram :is(.br-head, .br-dot, .br-bar) {
+  fill: var(--tone);
+  stroke: var(--tone);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.born-rule-lesson .br-diagram :is(.br-head, .br-dot, .br-bar).br-hollow {
+  fill: var(--br-plot);
+}
+
+.born-rule-lesson .br-diagram .br-sphere {
+  fill: #0d1a2a;
+  stroke: var(--br-axis);
+  stroke-width: 1.5;
+}
+
+.born-rule-lesson .br-diagram .br-wire {
+  fill: none;
+  stroke: var(--br-axis);
+  stroke-width: 1;
+  opacity: 0.6;
+}
+
+.born-rule-lesson .br-diagram .br-back {
+  opacity: 0.4;
+  stroke-dasharray: 3 4;
+}
+
+.born-rule-lesson .br-diagram text {
+  paint-order: stroke;
+  stroke: var(--br-plot);
+  stroke-width: 3.5;
+  stroke-linejoin: round;
+  fill: var(--ink);
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.born-rule-lesson .br-diagram text:is(.br-label, .br-caption)[data-tone] {
+  fill: var(--tone);
+}
+
+.born-rule-lesson .br-diagram text.br-tick {
+  fill: var(--br-axis);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.born-rule-lesson .br-diagram text.br-caption {
+  font-size: 13px;
+}
+
+.born-rule-lesson .br-diagram text.br-back {
+  stroke-dasharray: none;
+}
+
+.born-rule-lesson .br-sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 42rem) {
+  .born-rule-lesson .br-toolbar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 24rem) {
+  .born-rule-lesson .br-complex {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Arcade drawing additions: curves, rays, wide resultants and the bench. */
+.born-rule-lesson .br-diagram {
+  --tone: var(--green);
+}
+
+.born-rule-lesson .br-diagram .br-curve {
+  fill: none;
+  stroke: var(--tone);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.born-rule-lesson .br-diagram .br-curve.br-dashed {
+  stroke-dasharray: 8 5;
+}
+
+.born-rule-lesson .br-diagram .br-curve.br-dotted {
+  stroke-dasharray: 2 4;
+  stroke-linecap: round;
+}
+
+.born-rule-lesson .br-diagram .br-ray.br-solid {
+  stroke-dasharray: none;
+  stroke-width: 1.7;
+}
+
+.born-rule-lesson .br-diagram .br-arrow.br-wide {
+  stroke-width: 8;
+  opacity: 0.62;
+}
+
+.born-rule-lesson .br-diagram .br-frame {
+  fill: none;
+  stroke: var(--line);
+}
+
+.born-rule-lesson .br-diagram .br-beam {
+  fill: none;
+  stroke: var(--tone);
+  stroke-linecap: round;
+}
+
+.born-rule-lesson .br-diagram .br-part {
+  fill: color-mix(in srgb, var(--tone) 28%, var(--born-plot));
+  stroke: var(--tone);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.born-rule-lesson .br-diagram .br-table {
+  fill: #0d1d16;
+  stroke: var(--line);
+  stroke-width: 1.5;
+}
+
+.born-rule-lesson .br-toolbar > p,
+.born-rule-lesson #br-status:empty {
+  margin: 0;
+}
+
+.born-rule-lesson .br-body > p {
+  margin: 0;
+}
+
+.born-rule-lesson .br-station > p {
+  margin: 0;
+}
+
+.born-rule-lesson .br-arcade input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--phosphor);
+  outline-offset: 3px;
+}
+
+/* Measurement Arcade additions: polarizer discs, chains and wrapped toolbars. */
+.born-rule-lesson .br-diagram .br-ring.br-disc {
+  fill: color-mix(in srgb, var(--violet) 12%, var(--born-plot));
+  stroke-dasharray: none;
+  stroke-width: 2;
+}
+
+.born-rule-lesson .br-station .br-fields .br-check-row {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #344b42;
+  border-radius: 0.35rem;
+  background: #101e17;
+}
+
+.born-rule-lesson .br-missions .lesson-note,
+.born-rule-lesson .br-station > fieldset > .lesson-note {
+  margin: 0;
+}
+
+.born-rule-lesson .br-bits {
+  margin: 0;
+  padding: 0.5rem 0.7rem;
+  border-inline-start: 3px solid var(--br-accent);
+  background: #081310;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  overflow-wrap: anywhere;
+}
+
+.born-rule-lesson .br-bits:empty {
+  display: none;
+}
